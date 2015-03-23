@@ -86,6 +86,7 @@ public class CGMemberDefinition: CGEntity {
 public class CGMethodDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
+	public var Inline = false
 }
 
 public class CGOperatorDefinition: CGMemberDefinition {
