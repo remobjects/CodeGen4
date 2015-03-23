@@ -3,7 +3,15 @@ import Sugar.Collections
 
 /* Type References */
 
-public class CGTypeReference : CGExpression {
+public class CGTypeReference : CGEntity {
+}
+
+public class CGTypeReferenceExpression {
+	public var `Type`: CGTypeReference
+
+	init(_ type: CGTypeReference) {
+		`Type` = type
+	}
 }
 
 public enum CGTypeNullabilityKind {
