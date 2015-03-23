@@ -6,7 +6,7 @@ public enum CGCPlusPlusCodeGeneratorDialect {
 	case CPlusPlusBuilder
 }
 
-public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
+public class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGCPlusPlusCodeGeneratorDialect = .Standard
 }

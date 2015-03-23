@@ -7,4 +7,13 @@ import Sugar.Collections
 
 public class CGCStyleCodeGenerator : CGCodeGenerator {
 
+	override init() {
+		useTabs = true
+		tabSize = 4
+	}
+
+	override func generateInlineComment(comment: String) {
+		comment = comment.Replace("*/", "* /")
+		Append("/* \(comment) */")
+	}
 }

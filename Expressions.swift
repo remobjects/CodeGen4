@@ -181,6 +181,13 @@ public class CGPropertyValueExpression: CGExpression { /* "value" or "newValue" 
 public class CGLiteralExpression: CGExpression {
 }
 
+public class CGLanguageAgnosticLiteralExpression: CGExpression {
+	var stringRepresentation: String {
+		assert(false, "stringRepresentation not implemented")
+		return "###";
+	}
+}
+
 public class CGStringLiteralExpression: CGLiteralExpression {
 	var value: String = ""
 }
@@ -189,16 +196,29 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 	var value: Char = "\0"
 }
 
-public class CGIntegerLiteralExpression: CGLiteralExpression {
+public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Int64 = 0
+	override var stringRepresentation: String {
+		return Value.ToString() // todo: force dot?
+	}
 }
 
-public class CGFloatLiteralExpression: CGLiteralExpression {
+public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Double = 0
+	override var stringRepresentation: String {
+		return Value.ToString() // todo: force dot?
+	}
 }
 
-public class CGFBooleanLiteralExpression: CGLiteralExpression {
+public class CGFBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Boolean = false
+	override var stringRepresentation: String {
+		if Value {
+			return "true"
+		} else {
+			return "false"
+		}
+	}
 }
 
 public enum CGArrayLiteralExpressionKind {
@@ -207,10 +227,10 @@ public enum CGArrayLiteralExpressionKind {
 	case HighLevel /* Swift only */
 }
 
-public class CGArrayLiteralExpression: CGLiteralExpression {
+public class CGArrayLiteralExpression: CGExpression {
 	public var ArrayKind: CGArrayLiteralExpressionKind = .Dynamic
 	//incomplete	
 }
 
-public class CGDictionaryLiteralExpression: CGLiteralExpression { /* Swift only */
+public class CGDictionaryLiteralExpression: CGExpression { /* Swift only */
 }

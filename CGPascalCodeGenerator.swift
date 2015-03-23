@@ -8,18 +8,34 @@ import Sugar.Collections
 
 public class CGPascalCodeGenerator : CGCodeGenerator {
 
+	override init() {
+		useTabs = false
+		tabSize = 2
+	}
+
+	override func generateInlineComment(comment: String) {
+		comment = comment.Replace("}", "*)")
+		Append("{ \(comment) }")
+	}
+
 	override func generateImports() {
 		
-		currentCode.AppendLine("uses")
+		AppendLine("uses")
 		incIndent()
 		for var i: Int32 = 0; i < currentUnit.Imports.Count; i++ {
-			currentCode.Append(currentUnit.Imports[i].Namespace.Name)
+			AppendIndent()
+			Append(currentUnit.Imports[i].Name)
 			if i < currentUnit.Imports.Count-1 {
-				currentCode.Append(",")
+				AppendLine(",")
 			} else {
-				currentCode.Append(";")
+				AppendLine(";")
 			}
 		}
+		AppendLine()
 		decIndent()
+	}
+	
+	override func generateFooter() {
+		AppendLine("end.")
 	}
 }

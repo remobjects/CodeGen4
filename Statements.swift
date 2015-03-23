@@ -1,10 +1,24 @@
 ﻿import Sugar
 import Sugar.Collections
-
+#if ECHOES
+import System.Linq
+#endif
 
 /* Statements */
 
 public class CGStatement: CGEntity {
+}
+
+public class CGRawStatement : CGStatement { // not language-agnistic. obviosuly.
+	public var Lines: List<String>
+
+	init(_ lines: List<String>) {
+		Lines = lines
+	}
+
+	init(_ lines: String) {
+		Lines = lines.Replace("\r", "").Split("\n").ToList()
+	}
 }
 
 public class CGBlockStatement : CGStatement { // Abstract base for anhy block statement
@@ -63,7 +77,7 @@ public class CGLockingStatement: CGNestingStatement {
 	var Expression: CGExpression
 	
 	init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
-		init(nestedStatement)
+		super.init(nestedStatement)
 		Expression = expression
 	}
 }
@@ -72,7 +86,7 @@ public class CGUsingStatement: CGNestingStatement {
 	var Expression: CGExpression
 	
 	init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
-		init(nestedStatement)
+		super.init(nestedStatement)
 		Expression = expression
 	}
 }

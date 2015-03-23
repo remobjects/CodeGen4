@@ -21,7 +21,8 @@ public class CGTypeDefinition: CGEntity {
 public class CGTypeAliasDefinition : CGTypeDefinition {
 	public var ActualType: CGTypeReference
 	
-	init (_ actualType: CGTypeReference) {
+	init(_ name: String, _ actualType: CGTypeReference) {
+		super.init(name)
 		ActualType = actualType
 	}
 }

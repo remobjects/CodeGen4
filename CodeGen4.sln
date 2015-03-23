@@ -1,7 +1,11 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4", "CodeGen4.elements", "{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Echoes", "CodeGen4.Echoes.elements", "{2C3408F4-2270-4310-9A38-6A5296129576}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Nougat", "CodeGen4.Nougat.elements", "{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Codegen4.Shared", "Codegen4.Shared.elements", "{615FC69D-8D8A-4996-9D58-B042CD883941}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +13,16 @@ Global
 		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C3408F4-2270-4310-9A38-6A5296129576}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{2C3408F4-2270-4310-9A38-6A5296129576}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{2C3408F4-2270-4310-9A38-6A5296129576}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{2C3408F4-2270-4310-9A38-6A5296129576}.Release|AnyCPU.Build.0 = Release|AnyCPU
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{615FC69D-8D8A-4996-9D58-B042CD883941}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{615FC69D-8D8A-4996-9D58-B042CD883941}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

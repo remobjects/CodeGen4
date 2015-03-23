@@ -9,4 +9,9 @@ public enum CGSwiftCodeGeneratorDialect {
 public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
+
+	override func generateImport(imp: CGImport) {
+		Append("import \(imp.Name)")
+	}
+
 }

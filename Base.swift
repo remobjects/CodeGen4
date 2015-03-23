@@ -17,13 +17,26 @@ public class CGCodeUnit {
 }
 
 public class CGImport {
-	public var Namespace: CGNamespaceReferene
+	public var Namespace: CGNamespaceReferene?
+	public var StaticClass: CGNamedTypeReference?
+	
+	public var Name: String? {
+		if let ns = Namespace {
+			return ns.Name
+		} else if let sc = StaticClass {
+			return sc.Name
+		}
+		return nil;
+	}
 
 	init (_ name: String) {
 		Namespace = CGNamespaceReferene(name)
 	}
 	init (_ nameSpace: CGNamespaceReferene) {
 		Namespace = nameSpace
+	}
+	init (_ staticClass: CGNamedTypeReference) {
+		StaticClass = staticClass
 	}
 }
 
