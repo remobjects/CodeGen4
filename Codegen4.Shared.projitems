@@ -64,8 +64,35 @@
         <Compile Include="$(MSBuildThisFileDirectory)CGSkeletonCodeGenerator.swift">
             <VirtualFolder>Code Generation</VirtualFolder>
         </Compile>
+        <Compile Include="$(MSBuildThisFileDirectory)Extensions.swift">
+            <VirtualFolder>Code Generation</VirtualFolder>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Code Definition">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation — C-Style Languages">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation — Pascal">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Definition">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation — C-Style Languages">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation — Pascal">
+            <Virtual>True</Virtual>
+        </Folder>
         <Folder Include="Code Definition">
             <Virtual>True</Virtual>
         </Folder>

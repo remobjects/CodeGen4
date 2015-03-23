@@ -189,15 +189,28 @@ public class CGLanguageAgnosticLiteralExpression: CGExpression {
 }
 
 public class CGStringLiteralExpression: CGLiteralExpression {
-	var value: String = ""
+	var Value: String = ""
+	
+	init() {
+	}
+	init(_ string: String) {
+		Value = string
+	}	
 }
 
 public class CGCharacterLiteralExpression: CGLiteralExpression {
-	var value: Char = "\0"
+	var Value: Char = "\0"
 }
 
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Int64 = 0
+
+	init() {
+	}
+	init(_ int: Int64) {
+		Value = int
+	}
+
 	override var stringRepresentation: String {
 		return Value.ToString() // todo: force dot?
 	}
@@ -210,8 +223,19 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	}
 }
 
-public class CGFBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
+public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Boolean = false
+	
+	var True: CGBooleanLiteralExpression { return CGBooleanLiteralExpression(true) }
+	var False: CGBooleanLiteralExpression { return CGBooleanLiteralExpression(false) }
+	
+	init() {
+	}
+	init(_ bool: Boolean) {
+		Value = bool
+	}
+
+
 	override var stringRepresentation: String {
 		if Value {
 			return "true"
