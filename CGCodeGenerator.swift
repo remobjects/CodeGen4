@@ -237,7 +237,7 @@ public class CGCodeGenerator {
 		} //...
 		
 		else {
-			assert(false, "unsupported type reference found: \(typeOf(type).ToString)")
+			assert(false, "unsupported type member found: \(typeOf(type).ToString)")
 		}
 	}
 				
