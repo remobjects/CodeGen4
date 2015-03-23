@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+    <PropertyGroup>
+        <RootNamespace>CodeGen4</RootNamespace>
+        <ProjectGuid>EA4135EC-C7A2-454F-A53C-A9B6FE92DA94</ProjectGuid>
+        <OutputType>StaticLibrary</OutputType>
+        <AssemblyName>CodeGen4</AssemblyName>
+        <AllowGlobals>False</AllowGlobals>
+        <AllowLegacyWith>False</AllowLegacyWith>
+        <AllowLegacyOutParams>False</AllowLegacyOutParams>
+        <AllowLegacyCreate>False</AllowLegacyCreate>
+        <AllowUnsafeCode>False</AllowUnsafeCode>
+        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+        <SDK>OS X</SDK>
+        <CreateHeaderFile>True</CreateHeaderFile>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <Optimize>false</Optimize>
+        <OutputPath>.\bin\Debug</OutputPath>
+        <DefineConstants>DEBUG;TRACE;</DefineConstants>
+        <GenerateDebugInfo>True</GenerateDebugInfo>
+        <EnableAsserts>True</EnableAsserts>
+        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+        <CaptureConsoleOutput>False</CaptureConsoleOutput>
+        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <Optimize>true</Optimize>
+        <OutputPath>.\bin\Release</OutputPath>
+        <GenerateDebugInfo>False</GenerateDebugInfo>
+        <EnableAsserts>False</EnableAsserts>
+        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+        <CaptureConsoleOutput>False</CaptureConsoleOutput>
+        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Foundation.fx"/>
+        <Reference Include="rtl.fx"/>
+        <Reference Include="libNougat.fx"/>
+        <Reference Include="libSugar">
+            <HintPath>..\..\Xcode\DerivedData\Fire-gudanmcdbkoejsaanfhrydpjbude\Build\Products\Debug\libSugar.fx</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="TypeDefinitions.swift"/>
+        <Compile Include="Base.swift"/>
+        <Compile Include="Statements.swift"/>
+        <Compile Include="TypeReferences.swift"/>
+        <Compile Include="Expressions.swift"/>
+        <None Include="README.md"/>
+    </ItemGroup>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
+</Project>

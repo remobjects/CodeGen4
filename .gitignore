@@ -1,0 +1,5 @@
+bin
+obj
+*.sln.fire.cache
+*.sln.fire.user
+
