@@ -11,6 +11,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override init() {
 		useTabs = false
 		tabSize = 2
+		keywordsAreCaseSensitive = false
+	}
+
+	override func escapeIdentifier(name: String) -> String {
+		return "&\(name)"
 	}
 
 	override func generateInlineComment(comment: String) {

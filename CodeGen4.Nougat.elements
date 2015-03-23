@@ -46,19 +46,6 @@
     </ItemGroup>
     <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
-    <ItemGroup>
-        <Folder Include="Code Definition">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — C-Style Languages">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — Pascal">
-            <Virtual>True</Virtual>
-        </Folder>
-    </ItemGroup>
+    <ItemGroup/>
     <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
 </Project>

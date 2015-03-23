@@ -3,7 +3,16 @@ import Sugar.Collections
 
 /* Type References */
 
+public enum CGTypeNullabilityKind {
+	case Unknown
+	case Default
+	case NotNullable
+	case NullableUnwrapped
+	case NullableNotUnwrapped
+}
+
 public class CGTypeReference : CGEntity {
+	public var Nullability: CGTypeNullabilityKind = .Default
 }
 
 public class CGTypeReferenceExpression {
@@ -14,28 +23,35 @@ public class CGTypeReferenceExpression {
 	}
 }
 
-public enum CGTypeNullabilityKind {
-	case Unknown
-	case Default
-	case Nullable
-	case NotNullable
-}
-
 public class CGNamedTypeReference : CGTypeReference {
 	public var Name: String
-	public var Nullability: CGTypeNullabilityKind = .Default
-	public var DefaultNullabiltyName: CGTypeNullabilityKind = .Unknown
+	public var DefaultNullability: CGTypeNullabilityKind = .Unknown
 
 	init (_ name: String) {
 		Name = name
 	}
 }
 
+public class CGInlineBlockTypeReference : CGTypeReference {
+	public var Block: CGBlockTypeDefinition
+
+	init(_ block: CGBlockTypeDefinition) {
+		Block = block
+	}
+}
+
 /* Arrays */
+
+public enum CGArrayKind {
+	case Static
+	case Dynamic
+	case HighLevel /* Swift only */
+}
 
 public class CGArrayTypeReference : CGTypeReference {
 	public var `Type`: CGTypeReference
 	public var Bounds = List<CGArrayTypeReferenceBounds>()
+	public var ArrayKind: CGArrayKind = .Dynamic
 
 	init(_ type: CGTypeReference, _ bounds: List<CGArrayTypeReferenceBounds>? = default) {
 		`Type` = type;
@@ -67,7 +83,7 @@ public class CGDictionaryTypeReference : CGTypeReference {
 	public var ValueType: CGTypeReference
 
 	init(_ keyType: CGTypeReference, _ valueType: CGTypeReference) {
-		KeyType = keyType;
-		ValueType = valueType;
+		KeyType = keyType
+		ValueType = valueType
 	}
 }

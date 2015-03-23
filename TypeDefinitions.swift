@@ -29,7 +29,7 @@ public class CGTypeAliasDefinition : CGTypeDefinition {
 
 public class CGBlockTypeDefinition : CGTypeDefinition {
 	public var Parameters = List<CGParameterDefinition>()
-	public var ReturnValue: CGParameterDefinition?
+	public var ReturnType: CGTypeReference?
 }
 
 public class CGEnumTypeDefinition : CGTypeDefinition {
@@ -44,7 +44,7 @@ public class CGClassOrStructTypeDefinition : CGTypeDefinition {
 public class CGClassTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
-public class CGStrucTypeDefinition : CGClassOrStructTypeDefinition {
+public class CGStructTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
 /* Type members */
@@ -85,12 +85,12 @@ public class CGMemberDefinition: CGEntity {
 
 public class CGMethodDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
-	public var ReturnValue: CGParameterDefinition?
+	public var ReturnType: CGTypeReference?
 }
 
 public class CGOperatorDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
-	public var ReturnValue: CGParameterDefinition?
+	public var ReturnType: CGTypeReference?
 }
 
 public class CGConstructorDefinition: CGMethodDefinition {

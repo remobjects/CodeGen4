@@ -10,6 +10,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	public var Dialect: CGCSharpCodeGeneratorDialect = .Standard
 
+	override func escapeIdentifier(name: String) -> String {
+		return "@\(name)"
+	}
+
 	override func generateImport(imp: CGImport) {
 		if imp.StaticClass != nil {
 			Append("using static "+imp.StaticClass!.Name+";")

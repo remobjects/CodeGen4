@@ -6,7 +6,7 @@ import Sugar.Collections
 public class CGExpression: CGStatement {
 }
 
-public class CGAssigedExpression: CGExpression {
+public class CGAssignedExpression: CGExpression {
 	var Value: CGExpression
 	
 	init(_ value: CGExpression) {
@@ -139,7 +139,7 @@ public enum CGOperatorKind {
 	case Shr
 	case BitwiseAnd
 	case BitwiseOr
-	case Bitwiseor
+	case BitwiseXor
 	case Implies /* Oxygene only */
 	case Is
 	case IsNot
@@ -221,14 +221,8 @@ public class CGFBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	}
 }
 
-public enum CGArrayLiteralExpressionKind {
-	case Static
-	case Dynamic
-	case HighLevel /* Swift only */
-}
-
 public class CGArrayLiteralExpression: CGExpression {
-	public var ArrayKind: CGArrayLiteralExpressionKind = .Dynamic
+	public var ArrayKind: CGArrayKind = .Dynamic
 	//incomplete	
 }
 
