@@ -2,12 +2,12 @@
 import Sugar.Collections
 
 public enum CGCSharpCodeGeneratorDialect {
-	case VisualCSharp
+	case Standard
 	case Hydrogene
 }
 
 public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
-	public var Dialect: CGCSharpCodeGeneratorDialect = .VisualCSharp
+	public var Dialect: CGCSharpCodeGeneratorDialect = .Standard
 
 }

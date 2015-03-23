@@ -94,6 +94,9 @@
         <Compile Include="CGCSharpCodeGenerator.swift">
             <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
         </Compile>
+        <Compile Include="CGCPlusPlusCodeGenerator.swift">
+            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+        </Compile>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
     <ItemGroup>
@@ -305,6 +308,18 @@
             <Virtual>True</Virtual>
         </Folder>
         <Folder Include="New Folder">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Definition">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation — C-Style Languages">
+            <Virtual>True</Virtual>
+        </Folder>
+        <Folder Include="Code Generation — Pascal">
             <Virtual>True</Virtual>
         </Folder>
         <Folder Include="Code Definition">

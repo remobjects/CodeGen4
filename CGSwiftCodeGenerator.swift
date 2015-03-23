@@ -2,11 +2,11 @@
 import Sugar.Collections
 
 public enum CGSwiftCodeGeneratorDialect {
-	case AppleSwift
+	case Standard
 	case Silver
 }
 
 public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
-	public var Dialect: CGSwiftCodeGeneratorDialect = .AppleSwift
+	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
 }
