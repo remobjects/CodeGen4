@@ -18,7 +18,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("import \(imp.Name)")
 	}
 
-	/* Types */
+	//
+	// Types
+	//
 	
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 		Append("typealias ")
@@ -65,10 +67,47 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	func generateClassOrStructType(type: CGClassOrStructTypeDefinition) {
+		
+		//generateVisibility(type.Visibiliry)
+		if type is CGClassTypeDefinition {
+			Append("class ")
+		} else if type is CGStructTypeDefinition {
+			Append("struct ")
+		}
+		generateIdentifier(type.Name)
+		
+		// todo: ancestors
+		
+		AppendLine("{")
+		incIndent();
+		
+		generateTypeMembers(type)
+		
+		decIndent();
+		AppendLine("}")
+		AppendLine()
 	}
 	
-	/* Type References */
+	//
+	// Type Members
+	//
 	
+	override func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
+
+		//generateVisibility(type.Visibiliry)
+		Append("func ")
+		generateIdentifier(type.Name)
+		Append("(")
+		// params
+		Append(")")
+		
+		// ...
+	}
+	
+	//
+	// Type References
+	//
+
 	func swiftSuffixForNullability(nullability: CGTypeNullabilityKind, defaultNullability: CGTypeNullabilityKind) -> String {
 		switch nullability {
 			case .Unknown:
@@ -87,6 +126,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				return swiftSuffixForNullability(defaultNullability, defaultNullability:CGTypeNullabilityKind.Unknown)
 		}
 	}
+	
+	func swiftSuffixForNullabilityForCollectionType(type: CGTypeReference) -> String {
+		return swiftSuffixForNullability(type.Nullability, defaultNullability: Dialect == CGSwiftCodeGeneratorDialect.Silver ? CGTypeNullabilityKind.NotNullable : CGTypeNullabilityKind.NullableUnwrapped)
+	}
+
 	
 	override func generateNamedTypeReference(type: CGNamedTypeReference) {
 		generateIdentifier(type.Name)
@@ -111,14 +155,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("]")
 		}
 		//ToDo: bounds & dimensions
+		Append(swiftSuffixForNullabilityForCollectionType(type))
 	}
 	
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
-			Append("[")
-			generateTypeReference(type.KeyType)
-			Append(":")
-			generateTypeReference(type.ValueType)
-			Append("]")
+		Append("[")
+		generateTypeReference(type.KeyType)
+		Append(":")
+		generateTypeReference(type.ValueType)
+		Append("]")
+		Append(swiftSuffixForNullabilityForCollectionType(type))
 	}
 	
 }

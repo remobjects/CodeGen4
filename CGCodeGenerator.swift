@@ -225,6 +225,28 @@ public class CGCodeGenerator {
 		assert(false, "generateStructType not implemented")
 	}
 	
+	internal func generateTypeMembers(type: CGTypeDefinition) {
+		for m in type.Members {
+			generateTypeMember(m, type: type);
+		}
+	}
+	
+	internal func generateTypeMember(member: CGTypeMemberDefinition, type: CGTypeDefinition) {
+		if let member = member as? CGMethodDefinition {
+			generateMethodDefinition(member, type:type)
+		} //...
+		
+		else {
+			assert(false, "unsupported type reference found: \(typeOf(type).ToString)")
+		}
+	}
+				
+	internal func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMethodDefinition not implemented")
+	}
+
+
 	//
 	// Type References
 	//

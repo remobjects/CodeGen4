@@ -12,6 +12,7 @@ public enum TypeVisibilityKind {
 public class CGTypeDefinition: CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
+	public var Members = List<CGTypeMemberDefinition>()
 	
 	init(_ name: String) {
 		Name = name;
@@ -70,7 +71,7 @@ public enum MemberVirtualityKind {
 	case Reintroduce
 }
 
-public class CGMemberDefinition: CGEntity {
+public class CGTypeMemberDefinition: CGEntity {
 	public var Name: String
 	public var Visbility: MemberVisibilityKind = .Private
 	public var Static = false
@@ -83,13 +84,13 @@ public class CGMemberDefinition: CGEntity {
 	}
 }
 
-public class CGMethodDefinition: CGMemberDefinition {
+public class CGMethodDefinition: CGTypeMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
 }
 
-public class CGOperatorDefinition: CGMemberDefinition {
+public class CGOperatorDefinition: CGTypeMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 }
@@ -97,15 +98,15 @@ public class CGOperatorDefinition: CGMemberDefinition {
 public class CGConstructorDefinition: CGMethodDefinition {
 }
 
-public class CGFieldDefinition: CGMemberDefinition {
+public class CGFieldDefinition: CGTypeMemberDefinition {
 	public var `Type`: CGTypeReference?
 	public var Initializer: CGExpression?
 }
 
-public class CGPropertyDefinition: CGMemberDefinition {
+public class CGPropertyDefinition: CGTypeMemberDefinition {
 }
 
-public class CGEventDefinition: CGMemberDefinition {
+public class CGEventDefinition: CGTypeMemberDefinition {
 }
 
 /* Parameters */
@@ -119,13 +120,14 @@ public enum ParameterModifierKind {
 	case Reintroduce
 }
 
-public class CGParameterDefinition: CGMemberDefinition {
-	public var Modifier: ParameterModifierKind = .In
+public class CGParameterDefinition: CGEntity {
+	public var Name: String
 	public var `Type`: CGTypeReference
+	public var Modifier: ParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	
 	init (_ name: String, _ type: CGTypeReference) {
-		super.init(name)
+		Name = name
 		`Type` = type
 	}
 }

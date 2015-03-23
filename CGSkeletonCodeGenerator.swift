@@ -33,7 +33,9 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
-	/* Types */
+	//
+	// Types
+	//
 	
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 		
@@ -59,7 +61,17 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 		
 	}
 	
-	/* Type References */
+	//
+	// Type Members
+	//
+	
+	override func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
+
+	}
+	
+	//
+	// Type References
+	//
 
 	override func generateNamedTypeReference(type: CGNamedTypeReference) {
 
