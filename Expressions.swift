@@ -83,12 +83,20 @@ public class CGInheritedxpression: CGExpression {
 	}
 }
 
-/*
-public class CGIfThenElseExpression: CGExpression { //* Oxygene only */
-	//incomplete
+public class CGIfThenElseExpression: CGExpression { // aka Ternary operator
+	public var Condition: CGExpression
+	public var IfExpression: CGExpression
+	public var ElseExpression: CGExpression?
+	
+	init(_ condition: CGExpression, _ ifExpression: CGExpression, _ elseExpression: CGExpression?) {
+		Condition = condition
+		IfExpression= ifExpression
+		ElseExpression = elseExpression
+	}	
 }
 
-public class CGCaseExpression: CGExpression { //* Oxygene only */
+/*
+public class CGSwitchExpression: CGExpression { //* Oxygene only */
 	//incomplete
 }
 
@@ -193,13 +201,19 @@ public class CGStringLiteralExpression: CGLiteralExpression {
 	
 	init() {
 	}
-	init(_ string: String) {
-		Value = string
+	init(_ value: String) {
+		Value = value
 	}	
 }
 
 public class CGCharacterLiteralExpression: CGLiteralExpression {
 	var Value: Char = "\0"
+
+	init() {
+	}
+	init(_ value: Char) {
+		Value = value
+	}	
 }
 
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
@@ -207,19 +221,26 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 
 	init() {
 	}
-	init(_ int: Int64) {
-		Value = int
+	init(_ value: Int64) {
+		Value = value
 	}
 
 	override var stringRepresentation: String {
-		return Value.ToString() // todo: force dot?
+		return Value.ToString() 
 	}
 }
 
 public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Double = 0
+	
+	init() {
+	}
+	init(_ value: Double) {
+		Value = value
+	}
+
 	override var stringRepresentation: String {
-		return Value.ToString() // todo: force dot?
+		return Value.ToString() // todo: force dot into float literal?
 	}
 }
 
@@ -246,9 +267,27 @@ public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 }
 
 public class CGArrayLiteralExpression: CGExpression {
+	public var Elements: List<CGExpression> 
 	public var ArrayKind: CGArrayKind = .Dynamic
-	//incomplete	
+	
+	init() {
+		Elements = List<CGExpression>()
+	}
+	init(_ elements: List<CGExpression>) {
+		Elements = elements
+	}
 }
 
-public class CGDictionaryLiteralExpression: CGExpression { /* Swift only */
+public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, currently */
+	public var Keys: List<CGExpression> 
+	public var Values: List<CGExpression> 
+	
+	init() {
+		Keys = List<CGExpression>()
+		Values = List<CGExpression>()
+	}
+	init(_ keys: List<CGExpression>, _ values: List<CGExpression>) {
+		Keys = keys
+		Values = values
+	}
 }

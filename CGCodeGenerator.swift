@@ -293,16 +293,16 @@ public class CGCodeGenerator {
 	
 	internal func Append(line: String? = nil) -> StringBuilder {
 		if let line = line {			
-			//currentCode.Append(line)
+			currentCode.Append(line)
 		}
 		return currentCode
 	}
 	
 	internal func AppendLine(line: String? = nil) -> StringBuilder {
 		if let line = line {			
-			//currentCode.AppendLine(line)
+			currentCode.AppendLine(line)
 		} else {
-			//currentCode.AppendLine()
+			currentCode.AppendLine()
 		}
 		return currentCode
 	}
@@ -311,11 +311,11 @@ public class CGCodeGenerator {
 		if !codeCompletionMode {
 			if useTabs {
 				for var i: Int32 = 0; i < indent; i++ {
-					//currentCode.Append("\t")
+					currentCode.Append("\t")
 				}
 			} else {
 				for var i: Int32 = 0; i < indent*tabSize; i++ {
-					//currentCode.Append(" ")
+					currentCode.Append(" ")
 				}
 			}
 		}

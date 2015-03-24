@@ -116,8 +116,7 @@ public enum ParameterModifierKind {
 	case Out
 	case Var
 	case Const
-	case Array
-	case Reintroduce
+	case Params
 }
 
 public class CGParameterDefinition: CGEntity {

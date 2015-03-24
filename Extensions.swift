@@ -11,21 +11,34 @@
 	public func AsLiteralExpression() -> CGStringLiteralExpression {
 		return CGStringLiteralExpression(self)
 	}
+}
 
+public extension Char {
+	public func AsLiteralExpression() -> CGCharacterLiteralExpression {
+		return CGCharacterLiteralExpression(self)
+	}
 }
 
 public extension Integer {
-	
 	public func AsLiteralExpression() -> CGIntegerLiteralExpression {
 		return CGIntegerLiteralExpression(self)
 	}
+}
 
+public extension Single {
+	public func AsLiteralExpression() -> CGFloatLiteralExpression {
+		return CGFloatLiteralExpression(self)
+	}
+}
+
+public extension Double {
+	public func AsLiteralExpression() -> CGFloatLiteralExpression {
+		return CGFloatLiteralExpression(self)
+	}
 }
 
 public extension Boolean {
-	
 	public func AsLiteralExpression() -> CGBooleanLiteralExpression {
 		return CGBooleanLiteralExpression(self)
 	}
-
 }
