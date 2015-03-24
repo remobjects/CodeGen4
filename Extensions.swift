@@ -48,3 +48,9 @@ public extension Boolean {
 		return CGBooleanLiteralExpression(self)
 	}
 }
+
+public extension CGExpression {
+	public func AsReturnStatement() -> CGReturnStatement {
+		return CGReturnStatement(self)
+	}
+}
