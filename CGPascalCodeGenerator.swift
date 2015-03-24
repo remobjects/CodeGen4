@@ -33,8 +33,8 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine("implementation")
 		AppendLine()
 		pascalGenerateImports(currentUnit.ImplementationImports)
-		pascalGenerateTypeImplementations
-		pascalGenerateGlobalImplementations
+		pascalGenerateTypeImplementations()
+		pascalGenerateGlobalImplementations()
 		generateFooter()		
 	}
 	

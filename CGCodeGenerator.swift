@@ -152,7 +152,7 @@ public class CGCodeGenerator {
 		} //else if ...
 		
 		else {
-			assert(false, "unsupported statement found: \(typeOf(statement).ToString)")
+			assert(false, "unsupported statement found: \(typeOf(statement).ToString())")
 		}
 	}
 	
@@ -163,7 +163,7 @@ public class CGCodeGenerator {
 		}
 
 		else {
-			assert(false, "unsupported expression found: \(typeOf(expression).ToString)")
+			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
 		}
 	}
 
@@ -191,7 +191,7 @@ public class CGCodeGenerator {
 		}
 		
 		else {
-			assert(false, "unsupported type found: \(typeOf(type).ToString)")
+			assert(false, "unsupported type found: \(typeOf(type).ToString())")
 		}
 	}
 	
@@ -237,7 +237,7 @@ public class CGCodeGenerator {
 		} //...
 		
 		else {
-			assert(false, "unsupported type member found: \(typeOf(type).ToString)")
+			assert(false, "unsupported type member found: \(typeOf(type).ToString())")
 		}
 	}
 				
@@ -264,7 +264,7 @@ public class CGCodeGenerator {
 		}
 		
 		else {
-			assert(false, "unsupported type reference found: \(typeOf(type).ToString)")
+			assert(false, "unsupported type reference found: \(typeOf(type).ToString())")
 		}
 	}
 	

@@ -68,7 +68,7 @@ public class CGForToLoopStatement: CGNestingStatement {
 	public var Directon: CGLoopDirectionKind = .Forward
 
 	init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: Int64, _ endValue: Int64, _ statement: CGStatement) {
-		init(statement)
+		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
 		StartValue = startValue
@@ -82,7 +82,7 @@ public class CGForEachLoopStatement: CGNestingStatement {
 	public var Collection: CGExpression
 	
 	init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ collection: CGExpression, _ statement: CGStatement) {
-		init(statement)
+		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
 		Collection = collection
