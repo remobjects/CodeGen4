@@ -2,6 +2,8 @@
 import Sugar.Collections
 #if ECHOES
 import System.Linq
+#elseif COOPER
+import com.remobjects.elements.linq
 #endif
 
 /* Statements */

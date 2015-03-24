@@ -7,6 +7,8 @@
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <AllowLegacyCreate>False</AllowLegacyCreate>
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
+        <CrossPlatform>True</CrossPlatform>
+        <SuppressWarnings>JW0</SuppressWarnings>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>false</Optimize>
@@ -46,8 +48,8 @@
         <Reference Include="com.remobjects.elements.rtl.jar">
             <Private>True</Private>
         </Reference>
-        <Reference Include="com.sugar">
-            <HintPath>com.sugar.jar</HintPath>
+        <Reference Include="sugar">
+            <HintPath>\sugar.jar</HintPath>
             <Private>True</Private>
         </Reference>
     </ItemGroup>

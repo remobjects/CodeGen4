@@ -2,6 +2,8 @@
 import Sugar.Collections
 #if ECHOES
 import System.Linq
+#elseif COOPER
+import com.remobjects.elements.linq
 #endif
 
 /* Expressions */
@@ -204,8 +206,8 @@ public class CGLiteralExpression: CGExpression {
 }
 
 public class CGLanguageAgnosticLiteralExpression: CGExpression {
-	var stringRepresentation: String {
-		assert(false, "stringRepresentation not implemented")
+	internal var StringRepresentation: String {
+		assert(false, "StringRepresentation not implemented")
 		return "###";
 	}
 }
@@ -239,7 +241,7 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 		Value = value
 	}
 
-	override var stringRepresentation: String {
+	override var StringRepresentation: String {
 		return Value.ToString() 
 	}
 }
@@ -253,7 +255,7 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 		Value = value
 	}
 
-	override var stringRepresentation: String {
+	override var StringRepresentation: String {
 		return Value.ToString() // todo: force dot into float literal?
 	}
 }
@@ -271,7 +273,7 @@ public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	}
 
 
-	override var stringRepresentation: String {
+	override var StringRepresentation: String {
 		if Value {
 			return "true"
 		} else {

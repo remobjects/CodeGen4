@@ -5,7 +5,6 @@ import Sugar.Collections
 // Abstract base implementation for all Pascal-style languages (Oxygene, Delphi)
 //
 
-
 public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override public init() {
@@ -29,7 +28,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine()
 		pascalGenerateImports(currentUnit.Imports)
 		generateGlobals()
-		generateTypes()
+		generateTypeDefinitions()
 		AppendLine("implementation")
 		AppendLine()
 		pascalGenerateImports(currentUnit.ImplementationImports)

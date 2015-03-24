@@ -33,8 +33,9 @@ public class CGCodeGenerator {
 		generateHeader()
 		generateDirectives()
 		generateImports()
+		generateForwards()
 		generateGlobals()
-		generateTypes()
+		generateTypeDefinitions()
 		generateFooter()		
 	}
 	
@@ -54,6 +55,10 @@ public class CGCodeGenerator {
 		// descendant can override, if needed
 	}
 	
+	internal func generateForwards() {
+		// descendant can override, if needed
+	}
+	
 	internal func generateDirectives() {
 		for d in currentUnit.Directives {
 			generateDirective(d);
@@ -66,9 +71,9 @@ public class CGCodeGenerator {
 		}
 	}
 
-	internal func generateTypes() {
+	internal func generateTypeDefinitions() {
 		for t in currentUnit.Types {
-			generateType(t);
+			generateTypeDefinition(t);
 		}
 	}
 
@@ -175,14 +180,14 @@ public class CGCodeGenerator {
 
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren;t happy with the default
-		return expression.stringRepresentation
+		return expression.StringRepresentation
 	}
 
 	//
 	// Type Definitions
 	//
 
-	internal func generateType(type: CGTypeDefinition) {
+	internal func generateTypeDefinition(type: CGTypeDefinition) {
 		// descendant should not override
 		if let type = type as? CGTypeAliasDefinition {
 			generateAliasType(type)
@@ -194,6 +199,8 @@ public class CGCodeGenerator {
 			generateClassType(type)
 		} else if let type = type as? CGStructTypeDefinition {
 			generateStructType(type)
+		} else if let type = type as? CGInterfaceTypeDefinition {
+			generateInterfaceType(type)
 		}
 		
 		else {
@@ -222,13 +229,24 @@ public class CGCodeGenerator {
 	}
 	
 	internal func generateClassType(type: CGClassTypeDefinition) {
-		// descendant must override
-		assert(false, "generateClassType not implemented")
+		// descendant should not override
+		generateClassTypeStart(type)
+		generateTypeMembers(type)
+		generateClassTypeEnd(type)
 	}
 	
 	internal func generateStructType(type: CGStructTypeDefinition) {
 		// descendant must override
-		assert(false, "generateStructType not implemented")
+		generateStructTypeStart(type)
+		generateTypeMembers(type)
+		generateStructTypeEnd(type)
+	}
+	
+	internal func generateInterfaceType(type: CGInterfaceTypeDefinition) {
+		// descendant must override
+		generateInterfaceTypeStart(type)
+		generateTypeMembers(type)
+		generateInterfaceTypeEnd(type)
 	}
 	
 	internal func generateTypeMembers(type: CGTypeDefinition) {
@@ -236,6 +254,36 @@ public class CGCodeGenerator {
 			generateTypeMember(m, type: type);
 		}
 	}
+	
+	internal func generateClassTypeStart(type: CGClassTypeDefinition) {
+		// descendant must override
+		assert(false, "generateClassTypeStart not implemented")
+	}
+	
+	internal func generateClassTypeEnd(type: CGClassTypeDefinition) {
+		// descendant must override
+		assert(false, "generateClassTypeEnd not implemented")
+	}
+	
+	internal func generateStructTypeStart(type: CGStructTypeDefinition) {
+		// descendant must override
+		assert(false, "generateStructTypeStart not implemented")
+	}
+	
+	internal func generateStructTypeEnd(type: CGStructTypeDefinition) {
+		// descendant must override
+		assert(false, "generateStructTypeEnd not implemented")
+	}	
+	
+	internal func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+		// descendant must override
+		assert(false, "generateInterfaceTypeStart not implemented")
+	}
+	
+	internal func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+		// descendant must override
+		assert(false, "generateInterfaceTypeEnd not implemented")
+	}	
 	
 	internal func generateTypeMember(member: CGTypeMemberDefinition, type: CGTypeDefinition) {
 		if let member = member as? CGMethodDefinition {

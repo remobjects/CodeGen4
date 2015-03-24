@@ -3,9 +3,9 @@ import Sugar.Collections
 
 /* Types */
 
-public enum TypeVisibilityKind {
+public enum CGTypeVisibilityKind {
 	case Private
-	case Assmebly
+	case Assembly
 	case Public
 }
 
@@ -13,6 +13,8 @@ public class CGTypeDefinition: CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGTypeMemberDefinition>()
+	public var Visibility: CGTypeVisibilityKind = .Assembly
+	public var Static = false
 	
 	public init(_ name: String) {
 		Name = name;
@@ -37,9 +39,7 @@ public class CGEnumTypeDefinition : CGTypeDefinition {
 	public var Values = Dictionary<String, CGExpression>()
 }
 
-public class CGClassOrStructTypeDefinition : CGTypeDefinition {
-	public var Static = false
-	public var Visbility: TypeVisibilityKind = .Private
+public class CGClassOrStructTypeDefinition : CGTypeDefinition { // Abstract base Class
 }
 
 public class CGClassTypeDefinition : CGClassOrStructTypeDefinition {
@@ -48,9 +48,12 @@ public class CGClassTypeDefinition : CGClassOrStructTypeDefinition {
 public class CGStructTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
+public class CGInterfaceTypeDefinition : CGClassOrStructTypeDefinition {
+}
+
 /* Type members */
 
-public enum MemberVisibilityKind {
+public enum CGMemberVisibilityKind {
 	case Private
 	case Unit
 	case UnitOrProtected
@@ -58,11 +61,11 @@ public enum MemberVisibilityKind {
 	case Assmebly
 	case AssmeblyOrProtected
 	case AssmeblyAndProtected
-	case Protcteed
+	case Protected
 	case Public
 }
 
-public enum MemberVirtualityKind {
+public enum CGMemberVirtualityKind {
 	case None
 	case Virtual
 	case Abstract
@@ -73,14 +76,26 @@ public enum MemberVirtualityKind {
 
 public class CGTypeMemberDefinition: CGEntity {
 	public var Name: String
-	public var Visbility: MemberVisibilityKind = .Private
+	public var Visibility: CGMemberVisibilityKind = .Private
+	public var Virtuality: CGMemberVirtualityKind = .None
 	public var Static = false
-	public var Virtuality: MemberVirtualityKind = .None
 	public var Locked = false /* Oxygene only */
 	public var LockedOn: CGExpression? /* Oxygene only */
 	
 	public init(_ name: String) {
 		Name = name;
+	}
+}
+
+public class CGEnumValueDefinition: CGTypeMemberDefinition {
+	public var Value: CGExpression?
+	
+	init(_ name: String) {
+		super.init(name)
+	}
+	public init(_ name: String, _ value: CGExpression) {
+		init(name)
+		Value = value;
 	}
 }
 

@@ -11,5 +11,23 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		}
 	}
 	
+	//
+	// Types
+	//
+	
+	override func generateClassTypeStart(type: CGClassTypeDefinition) {
+		Append("@implementation ")
+		generateIdentifier(type.Name)
+		//todo: private fields
+		incIndent()
+		//todo: member
+	}
+	
+	//
+	// Type Members
+	//
+	
+	override func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
 
+	}
 }

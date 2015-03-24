@@ -26,7 +26,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	}*/
 	
 	override func generateImport(imp: CGImport) {
-		
+
 	}
 
 	override func generateInlineComment(comment: String) {
@@ -38,7 +38,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateAliasType(type: CGTypeAliasDefinition) {
-		
+
 	}
 	
 	override func generateBlockType(type: CGBlockTypeDefinition) {
@@ -49,17 +49,29 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 		
 	}
 	
-	override func generateClassType(type: CGClassTypeDefinition) {
-		generateClassOrStructType(type)
+	override func generateClassTypeStart(type: CGClassTypeDefinition) {
+
 	}
 	
-	override func generateStructType(type: CGStructTypeDefinition) {
-		generateClassOrStructType(type)
+	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
+
 	}
 	
-	func generateClassOrStructType(type: CGClassOrStructTypeDefinition) {
-		
+	override func generateStructTypeStart(type: CGStructTypeDefinition) {
+
 	}
+	
+	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
+
+	}	
+	
+	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+
+	}
+	
+	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+
+	}	
 	
 	//
 	// Type Members
@@ -79,30 +91,30 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredfinedTypeReference) {
 		switch (type.Kind) {
-			case .Int8: Append("SByte");
-			case .UInt8: Append("Byte");
-			case .Int16: Append("Int16");
-			case .UInt16: Append("UInt16");
-			case .Int32: Append("Int32");
-			case .UInt32: Append("UInt32");
-			case .Int64: Append("Int64");
-			case .UInt64: Append("UInt16");
-			case .IntPtr: Append("IntPtr");
-			case .UIntPtr: Append("UIntPtr");
-			case .Single: Append("Float");
-			case .Double: Append("Double")
-			case .Boolean: Append("Boolean")
-			case .String: Append("String")
-			case .AnsiChar: Append("AnsiChar")
-			case .UTF16Char: Append("Char")
-			case .UTF32Char: Append("UInt32")
-			case .Dynamic: Append("dynamic")
-			case .InstanceType: Append("instancetype")
-			case .Void: Append("Void")
-			case .Object: Append("Object")
+			case .Int8: Append("");
+			case .UInt8: Append("");
+			case .Int16: Append("");
+			case .UInt16: Append("");
+			case .Int32: Append("");
+			case .UInt32: Append("");
+			case .Int64: Append("");
+			case .UInt64: Append("");
+			case .IntPtr: Append("");
+			case .UIntPtr: Append("");
+			case .Single: Append("");
+			case .Double: Append("")
+			case .Boolean: Append("")
+			case .String: Append("")
+			case .AnsiChar: Append("")
+			case .UTF16Char: Append("")
+			case .UTF32Char: Append("")
+			case .Dynamic: Append("")
+			case .InstanceType: Append("")
+			case .Void: Append("")
+			case .Object: Append("")
 		}		
 	}
-	
+
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
 
 	}
@@ -114,6 +126,4 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
 
 	}
-
-	
 }

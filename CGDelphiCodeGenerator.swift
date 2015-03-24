@@ -3,6 +3,10 @@ import Sugar.Collections
 
 public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
+	override func generateForwards() {
+		// todo: generate forwards, where needed
+	}
+	
 	override func generateFooter() {
 		if let initialization = currentUnit.Initialization {
 			AppendLine("initialization")
