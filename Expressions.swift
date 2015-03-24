@@ -12,10 +12,10 @@ public class CGExpression: CGStatement {
 public class CGRawExpression : CGExpression { // not language-agnostic. obviosuly.
 	public var Lines: List<String>
 
-	init(_ lines: List<String>) {
+	public init(_ lines: List<String>) {
 		Lines = lines
 	}
-	init(_ lines: String) {
+	public init(_ lines: String) {
 		Lines = lines.Replace("\r", "").Split("\n").ToList()
 	}
 }
@@ -23,7 +23,7 @@ public class CGRawExpression : CGExpression { // not language-agnostic. obviosul
 public class CGAssignedExpression: CGExpression {
 	var Value: CGExpression
 	
-	init(_ value: CGExpression) {
+	public init(_ value: CGExpression) {
 		Value = value
 	}
 }
@@ -31,7 +31,7 @@ public class CGAssignedExpression: CGExpression {
 public class CGSizeOfExpression: CGExpression {
 	public var Expression: CGExpression
 
-	init(_ expression: CGExpression) {
+	public init(_ expression: CGExpression) {
 		Expression = expression
 	}
 }
@@ -39,7 +39,7 @@ public class CGSizeOfExpression: CGExpression {
 public class CGTypeOfExpression: CGExpression {
 	public var Expression: CGExpression
 
-	init(_ expression: CGExpression) {
+	public init(_ expression: CGExpression) {
 		Expression = expression
 	}
 }
@@ -47,7 +47,7 @@ public class CGTypeOfExpression: CGExpression {
 public class CGDefaultExpression: CGExpression {
 	public var `Type`: CGTypeReference
 
-	init(_ type: CGTypeReference) {
+	public init(_ type: CGTypeReference) {
 		`Type` = type
 	}
 }
@@ -55,7 +55,7 @@ public class CGDefaultExpression: CGExpression {
 public class CGSelectorExpression: CGExpression { /* Cocoa only */
 	var SelectorName: String
 	
-	init(_ selectorNameame: String) {
+	public init(_ selectorNameame: String) {
 		SelectorName = selectorNameame;
 	}
 }
@@ -66,7 +66,7 @@ public class CGTypeCastExpression: CGExpression {
 	public var ThrowsException = false
 	public var GuaranteedSafe = false // in Silver, this uses "as"
 
-	init(_ expression: CGExpression, _ targetType: CGTypeReference) {
+	public init(_ expression: CGExpression, _ targetType: CGTypeReference) {
 		Expression = expression
 		TargetType = targetType
 	}
@@ -84,7 +84,7 @@ public class CGAnonymousMethodExpression: CGExpression {
 public class CGAnonymousClassOrStructExpression: CGExpression {
 	public var TypeDefinition: CGClassOrStructTypeDefinition
 	
-	init(_ typeDefinition: CGClassOrStructTypeDefinition) {
+	public init(_ typeDefinition: CGClassOrStructTypeDefinition) {
 		TypeDefinition = typeDefinition
 	}
 }
@@ -92,7 +92,7 @@ public class CGAnonymousClassOrStructExpression: CGExpression {
 public class CGInheritedxpression: CGExpression {
 	public var Expression: CGExpression
 
-	init(_ expression: CGExpression) {
+	public init(_ expression: CGExpression) {
 		Expression = expression
 	}
 }
@@ -102,7 +102,7 @@ public class CGIfThenElseExpression: CGExpression { // aka Ternary operator
 	public var IfExpression: CGExpression
 	public var ElseExpression: CGExpression?
 	
-	init(_ condition: CGExpression, _ ifExpression: CGExpression, _ elseExpression: CGExpression?) {
+	public init(_ condition: CGExpression, _ ifExpression: CGExpression, _ elseExpression: CGExpression?) {
 		Condition = condition
 		IfExpression= ifExpression
 		ElseExpression = elseExpression
@@ -129,12 +129,12 @@ public class CGBinaryOperatorExpression: CGExpression {
 	var Operator: CGOperatorKind? // for standard operators
 	var OperatorString: String? // for custom operators
 	
-	init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGOperatorKind) {
+	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGOperatorKind) {
 		LefthandValue = lefthandValue
 		RighthandValue = righthandValue
 		Operator = `operator`;
 	}
-	init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ operatorString: String) {
+	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ operatorString: String) {
 		LefthandValue = lefthandValue
 		RighthandValue = righthandValue
 		OperatorString = operatorString;
@@ -186,7 +186,7 @@ public enum CGOperatorKind {
 public class CGNamedIdenfifierExpression: CGExpression { 
 	var Name: String
 	
-	init(_ name: String) {
+	public init(_ name: String) {
 		Name = name;
 	}
 }
@@ -213,9 +213,9 @@ public class CGLanguageAgnosticLiteralExpression: CGExpression {
 public class CGStringLiteralExpression: CGLiteralExpression {
 	var Value: String = ""
 	
-	init() {
+	public init() {
 	}
-	init(_ value: String) {
+	public init(_ value: String) {
 		Value = value
 	}	
 }
@@ -223,9 +223,9 @@ public class CGStringLiteralExpression: CGLiteralExpression {
 public class CGCharacterLiteralExpression: CGLiteralExpression {
 	var Value: Char = "\0"
 
-	init() {
+	public init() {
 	}
-	init(_ value: Char) {
+	public init(_ value: Char) {
 		Value = value
 	}	
 }
@@ -233,9 +233,9 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Int64 = 0
 
-	init() {
+	public init() {
 	}
-	init(_ value: Int64) {
+	public init(_ value: Int64) {
 		Value = value
 	}
 
@@ -247,9 +247,9 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var Value: Double = 0
 	
-	init() {
+	public init() {
 	}
-	init(_ value: Double) {
+	public init(_ value: Double) {
 		Value = value
 	}
 
@@ -264,9 +264,9 @@ public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	var True: CGBooleanLiteralExpression { return CGBooleanLiteralExpression(true) }
 	var False: CGBooleanLiteralExpression { return CGBooleanLiteralExpression(false) }
 	
-	init() {
+	public init() {
 	}
-	init(_ bool: Boolean) {
+	public init(_ bool: Boolean) {
 		Value = bool
 	}
 
@@ -284,10 +284,10 @@ public class CGArrayLiteralExpression: CGExpression {
 	public var Elements: List<CGExpression> 
 	public var ArrayKind: CGArrayKind = .Dynamic
 	
-	init() {
+	public init() {
 		Elements = List<CGExpression>()
 	}
-	init(_ elements: List<CGExpression>) {
+	public init(_ elements: List<CGExpression>) {
 		Elements = elements
 	}
 }
@@ -296,11 +296,11 @@ public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, curren
 	public var Keys: List<CGExpression> 
 	public var Values: List<CGExpression> 
 	
-	init() {
+	public init() {
 		Keys = List<CGExpression>()
 		Values = List<CGExpression>()
 	}
-	init(_ keys: List<CGExpression>, _ values: List<CGExpression>) {
+	public init(_ keys: List<CGExpression>, _ values: List<CGExpression>) {
 		Keys = keys
 		Values = values
 	}
@@ -314,11 +314,11 @@ public class CGConstructorCallExpression {
 	public var Parameters: List<CGMethodCallParameter>
 	public var PropertyInitializers = List<CGMethodCallParameter>() // for Oxygene extnded .ctor calls
 
-	init(_ type: CGTypeReference) {
+	public init(_ type: CGTypeReference) {
 		`Type` = type
 		Parameters = List<CGMethodCallParameter>()
 	}
-	init(_ type: CGTypeReference, _ parameters: List<CGMethodCallParameter>?) {
+	public init(_ type: CGTypeReference, _ parameters: List<CGMethodCallParameter>?) {
 		`Type` = type
 		if let parameters = parameters {
 			Parameters = parameters
@@ -333,7 +333,7 @@ public class CGMemberAccessExpression {
 	public var Name: String
 	public var NilSafe: Boolean = false // true to use colon or elvis operator
 
-	init(_ callSite: CGExpression?, _ name: String) {
+	public init(_ callSite: CGExpression?, _ name: String) {
 		CallSite = callSite
 		Name = name
 	}
@@ -345,11 +345,11 @@ public class CGFieldAccessExpression: CGMemberAccessExpression {
 public class CGMethodCallExpression : CGMemberAccessExpression{
 	public var Parameters: List<CGMethodCallParameter>
 
-	init(_ callSite: CGExpression?, _ name: String) {
+	public init(_ callSite: CGExpression?, _ name: String) {
 		super.init(callSite, name)
 		Parameters = List<CGMethodCallParameter>()
 	}
-	init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
+	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
 		super.init(callSite, name)
 		if let parameters = parameters {
 			Parameters = parameters
@@ -362,7 +362,7 @@ public class CGMethodCallExpression : CGMemberAccessExpression{
 public class CGPropertyAccessExpression: CGMemberAccessExpression {
 	public var Parameters: List<CGMethodCallParameter>
 
-	init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
+	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
 		super.init(callSite, name)
 		if let parameters = parameters {
 			Parameters = parameters
@@ -377,11 +377,11 @@ public class CGMethodCallParameter: CGEntity {
 	public var Value: CGExpression
 	public var Modifier: ParameterModifierKind = .In
 	
-	init(_ value: CGExpression) {
+	public init(_ value: CGExpression) {
 		Value = value
 	}
-	init(_ name: String?, _ value: CGExpression) {
-		//init(value) // 71582: Silver: delegating to a second .ctor doesn't properly detect that a field will be initialized
+	public init(_ name: String?, _ value: CGExpression) {
+		//public init(value) // 71582: Silver: delegating to a second .ctor doesn't properly detect that a field will be initialized
 		Value = value
 		Name = name
 	}

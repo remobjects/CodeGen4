@@ -14,7 +14,7 @@ public class CGCodeGenerator {
 	
 	internal var codeCompletionMode = false
 
-	override init() {
+	override public init() {
 	}
 
 	public func GenerateCode(unit: CGCodeUnit) -> String {

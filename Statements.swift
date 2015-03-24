@@ -12,10 +12,10 @@ public class CGStatement: CGEntity {
 public class CGBaseMultilineStatement : CGStatement { // Abstract base for anhy block statement
 	public var Lines: List<String>
 
-	init(_ lines: List<String>) {
+	public init(_ lines: List<String>) {
 		Lines = lines
 	}
-	init(_ lines: String) {
+	public init(_ lines: String) {
 		Lines = lines.Replace("\r", "").Split("\n").ToList()
 	}
 }
@@ -29,10 +29,10 @@ public class CGCommentStatement : CGBaseMultilineStatement {
 public class CGBlockStatement : CGStatement { // Abstract base for anhy block statement
 	public var Statements: List<CGStatement>
 
-	init() {
+	public init() {
 		Statements = List<CGStatement>()
 	}
-	init(_ statements: List<CGStatement>) {
+	public init(_ statements: List<CGStatement>) {
 		Statements = statements
 	}
 }
@@ -40,7 +40,7 @@ public class CGBlockStatement : CGStatement { // Abstract base for anhy block st
 public class CGNestingStatement : CGStatement { // Abstract base for any statement that contains a single other statement
 	public var NestedStatement: CGStatement?
 
-	init(_ nestedStatement: CGStatement) {
+	public init(_ nestedStatement: CGStatement) {
 		NestedStatement = nestedStatement
 	}
 }
@@ -53,7 +53,7 @@ public class CGIfElseStatement: CGStatement {
 	public var IfStatement: CGStatement
 	public var ElseStatement: CGStatement?
 	
-	init(_ condition: CGExpression, _ ifStatement: CGStatement, _ elseStatement: CGStatement?) {
+	public init(_ condition: CGExpression, _ ifStatement: CGStatement, _ elseStatement: CGStatement?) {
 		Condition = condition
 		IfStatement = ifStatement
 		ElseStatement = elseStatement
@@ -72,7 +72,7 @@ public class CGForToLoopStatement: CGNestingStatement {
 	public var EndValue: Int64
 	public var Directon: CGLoopDirectionKind = .Forward
 
-	init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: Int64, _ endValue: Int64, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: Int64, _ endValue: Int64, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
@@ -86,7 +86,7 @@ public class CGForEachLoopStatement: CGNestingStatement {
 	public var LoopVariableType: CGTypeReference //not all languages require this but some do, so we'll require it
 	public var Collection: CGExpression
 	
-	init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ collection: CGExpression, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ collection: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
@@ -97,7 +97,7 @@ public class CGForEachLoopStatement: CGNestingStatement {
 public class CGWhileDoStatement: CGNestingStatement {
 	public var Condition: CGExpression
 
-	init(_ condition: CGExpression, _ statement: CGStatement) {
+	public init(_ condition: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
 		Condition = condition
 	}
@@ -106,7 +106,7 @@ public class CGWhileDoStatement: CGNestingStatement {
 public class CGDoWhileStatement: CGBlockStatement { // also "repeat/until"
 	public var Condition: CGExpression
 
-	init(_ condition: CGExpression, _ statements: List<CGStatement>) {
+	public init(_ condition: CGExpression, _ statements: List<CGStatement>) {
 		super.init(statements)
 		Condition = condition
 	}
@@ -118,7 +118,7 @@ public class CGSwitchStatement: CGStatement {
 	public var Expression: CGExpression
 	public var Cases: List<CGSwitchCase>
 
-	init(_ expression: CGExpression, _ cases: List<CGSwitchCase>) {
+	public init(_ expression: CGExpression, _ cases: List<CGSwitchCase>) {
 		Expression = expression
 		if let cases = cases {
 			Cases = cases
@@ -135,7 +135,7 @@ public class CGSwitchCase : CGEntity {
 public class CGLockingStatement: CGNestingStatement {
 	var Expression: CGExpression
 	
-	init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
+	public init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
 		super.init(nestedStatement)
 		Expression = expression
 	}
@@ -144,7 +144,7 @@ public class CGLockingStatement: CGNestingStatement {
 public class CGUsingStatement: CGNestingStatement {
 	var Expression: CGExpression
 	
-	init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
+	public init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
 		super.init(nestedStatement)
 		Expression = expression
 	}
@@ -162,7 +162,7 @@ public class CGCatchBlockStatement: CGBlockStatement {
 	public var `Type`: CGTypeReference
 	public var Filter: CGExpression?
 
-	init(_ name: String, _ type: CGTypeReference) {
+	public init(_ name: String, _ type: CGTypeReference) {
 		Name = name
 		`Type` = type
 	}
@@ -171,11 +171,11 @@ public class CGCatchBlockStatement: CGBlockStatement {
 /* Simple Statements */
 
 public class CGReturnStatement: CGStatement {
-	var Value: CGExpression?
+	public var Value: CGExpression?
 	
-	init() {
+	public init() {
 	}
-	init(_ value: CGExpression?) {
+	public init(_ value: CGExpression?) {
 		Value = value
 	}
 }
@@ -183,9 +183,9 @@ public class CGReturnStatement: CGStatement {
 public class CGThrowStatement: CGStatement {
 	var Exception: CGExpression?
 	
-	init() {
+	public init() {
 	}
-	init(_ exception: CGExpression?) {
+	public init(_ exception: CGExpression?) {
 		Exception = exception
 	}
 }
@@ -204,7 +204,7 @@ public class CGVariableDeclarationStatement: CGStatement {
 	public var Initializer: CGExpression?
 	public var Constant = false
 
-	init(_ name: String, _ type: CGTypeReference?, initializer: CGExpression?) {
+	public init(_ name: String, _ type: CGTypeReference?, initializer: CGExpression?) {
 		Name = name
 		`Type` = type
 		Initializer = initializer
@@ -215,7 +215,7 @@ public class CGAssignmentStatement: CGStatement {
 	public var Target: CGExpression
 	public var Value: CGExpression
 	
-	init(_ target: CGExpression, _ value: CGExpression) {
+	public init(_ target: CGExpression, _ value: CGExpression) {
 		Target = target
 		Value = value
 	}

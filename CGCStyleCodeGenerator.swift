@@ -7,7 +7,7 @@ import Sugar.Collections
 
 public class CGCStyleCodeGenerator : CGCodeGenerator {
 
-	override init() {
+	override public init() {
 		useTabs = true
 		tabSize = 4
 	}

@@ -8,7 +8,7 @@ import Sugar.Collections
 
 public class CGPascalCodeGenerator : CGCodeGenerator {
 
-	override init() {
+	override public init() {
 		useTabs = false
 		tabSize = 2
 		keywordsAreCaseSensitive = false

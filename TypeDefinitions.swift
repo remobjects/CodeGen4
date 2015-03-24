@@ -14,7 +14,7 @@ public class CGTypeDefinition: CGEntity {
 	public var Name: String
 	public var Members = List<CGTypeMemberDefinition>()
 	
-	init(_ name: String) {
+	public init(_ name: String) {
 		Name = name;
 	}
 }
@@ -22,7 +22,7 @@ public class CGTypeDefinition: CGEntity {
 public class CGTypeAliasDefinition : CGTypeDefinition {
 	public var ActualType: CGTypeReference
 	
-	init(_ name: String, _ actualType: CGTypeReference) {
+	public init(_ name: String, _ actualType: CGTypeReference) {
 		super.init(name)
 		ActualType = actualType
 	}
@@ -79,7 +79,7 @@ public class CGTypeMemberDefinition: CGEntity {
 	public var Locked = false /* Oxygene only */
 	public var LockedOn: CGExpression? /* Oxygene only */
 	
-	init(_ name: String) {
+	public init(_ name: String) {
 		Name = name;
 	}
 }
@@ -125,7 +125,7 @@ public class CGParameterDefinition: CGEntity {
 	public var Modifier: ParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	
-	init(_ name: String, _ type: CGTypeReference) {
+	public init(_ name: String, _ type: CGTypeReference) {
 		Name = name
 		`Type` = type
 	}
@@ -135,7 +135,7 @@ public class CGGenericParameterDefinition: CGEntity {
 	public var Constraints = List<CGGenericConstraintDefinition>()
 	var Name: String
 	
-	init(_ name: String) {
+	public init(_ name: String) {
 		Name = name;
 	}
 }	

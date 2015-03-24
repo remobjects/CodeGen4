@@ -18,12 +18,12 @@ public class CGCodeUnit {
 	public var Initialization: CGBlockStatement? /* Delphi only */
 	public var Finalization: CGBlockStatement? /* Delphi only */
 
-	init() {
+	public init() {
 	}
-	init(_ nameSpace: String) {
+	public init(_ nameSpace: String) {
 		Namespace = CGNamespaceReference(nameSpace)
 	}
-	init(_ namespace: CGNamespaceReference) {
+	public init(_ namespace: CGNamespaceReference) {
 		Namespace = namespace
 	}
 }
@@ -41,13 +41,13 @@ public class CGImport {
 		return nil;
 	}
 
-	init(_ namespace: String) {
+	public init(_ namespace: String) {
 		Namespace = CGNamespaceReference(namespace)
 	}
-	init(_ namespace: CGNamespaceReference) {
+	public init(_ namespace: CGNamespaceReference) {
 		Namespace = namespace
 	}
-	init(_ staticClass: CGNamedTypeReference) {
+	public init(_ staticClass: CGNamedTypeReference) {
 		StaticClass = staticClass
 	}
 }
@@ -56,7 +56,7 @@ public class CGNamespaceReference {
 	public var Name: String
 	public var IsStaticClass = false /* C# only */
 
-	init(_ name: String) {
+	public init(_ name: String) {
 		Name = name
 	}
 }
@@ -73,7 +73,7 @@ public class CGGlobalDefinition {
 public class CGGlobalFunctionDefinition : CGGlobalDefinition {
 	public var Function: CGMethodDefinition?
 
-	init(_ function: CGMethodDefinition) {
+	public init(_ function: CGMethodDefinition) {
 		Function = function;
 	}
 }
@@ -81,7 +81,7 @@ public class CGGlobalFunctionDefinition : CGGlobalDefinition {
 public class CGGlobalVariableDefinition : CGGlobalDefinition {
 	public var Variable: CGFieldDefinition?
 	
-	init(_ variable: CGFieldDefinition) {
+	public init(_ variable: CGFieldDefinition) {
 		Variable = variable;
 	}
 }

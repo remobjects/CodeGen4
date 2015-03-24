@@ -18,7 +18,7 @@ public class CGTypeReference : CGEntity {
 public class CGTypeReferenceExpression {
 	public var `Type`: CGTypeReference
 
-	init(_ type: CGTypeReference) {
+	public init(_ type: CGTypeReference) {
 		`Type` = type
 	}
 }
@@ -27,7 +27,7 @@ public class CGNamedTypeReference : CGTypeReference {
 	public var Name: String
 	public var DefaultNullability: CGTypeNullabilityKind = .Unknown
 
-	init(_ name: String) {
+	public init(_ name: String) {
 		Name = name
 	}
 }
@@ -35,7 +35,7 @@ public class CGNamedTypeReference : CGTypeReference {
 public class CGPredfinedTypeReference : CGTypeReference {
 	public var Kind: CGPredfinedTypeKind
 	
-	init(_ kind: CGPredfinedTypeKind) {
+	public init(_ kind: CGPredfinedTypeKind) {
 		Kind = kind
 	}
 
@@ -91,7 +91,7 @@ public enum CGPredfinedTypeKind {
 public class CGInlineBlockTypeReference : CGTypeReference {
 	public var Block: CGBlockTypeDefinition
 
-	init(_ block: CGBlockTypeDefinition) {
+	public init(_ block: CGBlockTypeDefinition) {
 		Block = block
 	}
 }
@@ -109,7 +109,7 @@ public class CGArrayTypeReference : CGTypeReference {
 	public var Bounds = List<CGArrayTypeReferenceBounds>()
 	public var ArrayKind: CGArrayKind = .Dynamic
 
-	init(_ type: CGTypeReference, _ bounds: List<CGArrayTypeReferenceBounds>? = default) {
+	public init(_ type: CGTypeReference, _ bounds: List<CGArrayTypeReferenceBounds>? = default) {
 		`Type` = type;
 		if let bounds = bounds {
 			Bounds = bounds
@@ -124,9 +124,9 @@ public class CGArrayTypeReferenceBounds {
 	public var Start: Int32 = 0
 	public var End: Int32?
 	
-	init() {
+	public init() {
 	}
-	init(_ start: Int32, end: Int32) {
+	public init(_ start: Int32, end: Int32) {
 		Start = start
 		End = end
 	}
@@ -138,7 +138,7 @@ public class CGDictionaryTypeReference : CGTypeReference {
 	public var KeyType: CGTypeReference
 	public var ValueType: CGTypeReference
 
-	init(_ keyType: CGTypeReference, _ valueType: CGTypeReference) {
+	public init(_ keyType: CGTypeReference, _ valueType: CGTypeReference) {
 		KeyType = keyType
 		ValueType = valueType
 	}
