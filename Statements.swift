@@ -173,6 +173,8 @@ public class CGCatchBlockStatement: CGBlockStatement {
 public class CGReturnStatement: CGStatement {
 	var Value: CGExpression?
 	
+	init() {
+	}
 	init(_ value: CGExpression?) {
 		Value = value
 	}
@@ -181,6 +183,8 @@ public class CGReturnStatement: CGStatement {
 public class CGThrowStatement: CGStatement {
 	var Exception: CGExpression?
 	
+	init() {
+	}
 	init(_ exception: CGExpression?) {
 		Exception = exception
 	}
