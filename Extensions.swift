@@ -1,4 +1,6 @@
-﻿public extension String {
+﻿import Sugar
+
+public extension String {
 	
 	public func AsTypeReference() -> CGTypeReference {
 		return CGNamedTypeReference(self)

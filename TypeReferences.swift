@@ -32,6 +32,62 @@ public class CGNamedTypeReference : CGTypeReference {
 	}
 }
 
+public class CGPredfinedTypeReference : CGTypeReference {
+	public var Kind: CGPredfinedTypeKind
+	
+	init(_ kind: CGPredfinedTypeKind) {
+		Kind = kind
+	}
+
+	public static lazy var Int8 = CGPredfinedTypeReference(.Int8)
+	public static lazy var UInt8 = CGPredfinedTypeReference(.UInt8)
+	public static lazy var Int16 = CGPredfinedTypeReference(.Int16)
+	public static lazy var UInt16 = CGPredfinedTypeReference(.UInt16)
+	public static lazy var Int32 = CGPredfinedTypeReference(.Int32)
+	public static lazy var UInt32 = CGPredfinedTypeReference(.UInt32)
+	public static lazy var Int64 = CGPredfinedTypeReference(.Int64)
+	public static lazy var UInt64 = CGPredfinedTypeReference(.UInt64)
+	public static lazy var IntPtr = CGPredfinedTypeReference(.IntPtr)
+	public static lazy var UIntPtr = CGPredfinedTypeReference(.UIntPtr)
+	public static lazy var Single = CGPredfinedTypeReference(.Single)
+	public static lazy var Double = CGPredfinedTypeReference(.Double)
+	//public static lazy var Decimal = CGPredfinedTypeReference(.Decimal)
+	public static lazy var Boolean = CGPredfinedTypeReference(.Boolean)
+	public static lazy var String = CGPredfinedTypeReference(.String)
+	public static lazy var AnsiChar = CGPredfinedTypeReference(.AnsiChar)
+	public static lazy var UTF16Char = CGPredfinedTypeReference(.UTF16Char)
+	public static lazy var UTF32Char = CGPredfinedTypeReference(.UTF32Char)
+	public static lazy var Dynamic = CGPredfinedTypeReference(.Dynamic)
+	public static lazy var InstanceType = CGPredfinedTypeReference(.InstanceType)
+	public static lazy var Void = CGPredfinedTypeReference(.Void)
+	public static lazy var Object = CGPredfinedTypeReference(.Object)
+}
+
+public enum CGPredfinedTypeKind {
+	case Int8
+	case UInt8
+	case Int16
+	case UInt16
+	case Int32
+	case UInt32
+	case Int64
+	case UInt64
+	case IntPtr
+	case UIntPtr
+	case Single
+	case Double
+	//case Decimal
+	case Boolean
+	case String
+	case AnsiChar
+	case UTF16Char
+	case UTF32Char
+	case Dynamic // aka "id", "Any"
+	case InstanceType // aka "Self"
+	case Void
+	case Object
+}
+
 public class CGInlineBlockTypeReference : CGTypeReference {
 	public var Block: CGBlockTypeDefinition
 

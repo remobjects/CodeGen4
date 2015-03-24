@@ -261,6 +261,8 @@ public class CGCodeGenerator {
 		// descendant should not override
 		if let type = type as? CGNamedTypeReference {
 			generateNamedTypeReference(type)
+		} else if let type = type as? CGPredfinedTypeReference {
+			generatePredefinedTypeReference(type)
 		} else if let type = type as? CGInlineBlockTypeReference {
 			generateInlineBlockTypeReference(type)
 		} else if let type = type as? CGArrayTypeReference {
@@ -276,6 +278,33 @@ public class CGCodeGenerator {
 	
 	internal func generateNamedTypeReference(type: CGNamedTypeReference) {
 		generateIdentifier(type.Name)
+	}
+	
+	internal func generatePredefinedTypeReference(type: CGPredfinedTypeReference) {
+		// most language swill want to override this
+		switch (type.Kind) {
+			case .Int8: Append("SByte");
+			case .UInt8: Append("Byte");
+			case .Int16: Append("Int16");
+			case .UInt16: Append("UInt16");
+			case .Int32: Append("Int32");
+			case .UInt32: Append("UInt32");
+			case .Int64: Append("Int64");
+			case .UInt64: Append("UInt16");
+			case .IntPtr: Append("IntPtr");
+			case .UIntPtr: Append("UIntPtr");
+			case .Single: Append("Float");
+			case .Double: Append("Double")
+			case .Boolean: Append("Boolean")
+			case .String: Append("String")
+			case .AnsiChar: Append("AnsiChar")
+			case .UTF16Char: Append("Char")
+			case .UTF32Char: Append("UInt32")
+			case .Dynamic: Append("dynamic")
+			case .InstanceType: Append("instancetype")
+			case .Void: Append("Void")
+			case .Object: Append("Object")
+		}		
 	}
 	
 	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {

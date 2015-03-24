@@ -137,6 +137,32 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
 	}
 	
+	override func generatePredefinedTypeReference(type: CGPredfinedTypeReference) {
+		switch (type.Kind) {
+			case .Int8: Append("Int8");
+			case .UInt8: Append("UInt8");
+			case .Int16: Append("Int16");
+			case .UInt16: Append("UInt16");
+			case .Int32: Append("Int32");
+			case .UInt32: Append("UInt32");
+			case .Int64: Append("Int64");
+			case .UInt64: Append("UInt16");
+			case .IntPtr: Append("Int");
+			case .UIntPtr: Append("UInt");
+			case .Single: Append("Float");
+			case .Double: Append("Double")
+			case .Boolean: Append("Bool")
+			case .String: Append("String")
+			case .AnsiChar: Append("AnsiChar")
+			case .UTF16Char: Append("Char")
+			case .UTF32Char: Append("UInt32")
+			case .Dynamic: Append("dynamic")
+			case .InstanceType: Append("Any")
+			case .Void: Append("()")
+			case .Object: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("Object") } else { Append("NSObject") }
+		}		
+	}
+		
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
 		swiftGenerateInlineBlockType(type.Block)
 	}
