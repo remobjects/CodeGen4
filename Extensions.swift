@@ -12,8 +12,8 @@
 		return CGStringLiteralExpression(self)
 	}
 
-	public func AsRawExpression() -> CGSRawExpression {
-		return CGSRawExpression(self)
+	public func AsRawExpression() -> CGRawExpression {
+		return CGRawExpression(self)
 	}
 }
 
