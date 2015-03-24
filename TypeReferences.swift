@@ -27,7 +27,7 @@ public class CGNamedTypeReference : CGTypeReference {
 	public var Name: String
 	public var DefaultNullability: CGTypeNullabilityKind = .Unknown
 
-	init (_ name: String) {
+	init(_ name: String) {
 		Name = name
 	}
 }

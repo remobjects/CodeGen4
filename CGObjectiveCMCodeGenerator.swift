@@ -6,7 +6,9 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 
 	override func generateHeader() {
 		
-		Append("#import \"\(Path.ChangeExtension(currentFileName, ".h"))\"")
+		if let fileName = currentUnit.FileName {
+			Append("#import \"\(Path.ChangeExtension(fileName, ".h"))\"")
+		}
 	}
 	
 

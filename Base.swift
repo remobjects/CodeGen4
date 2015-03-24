@@ -6,6 +6,9 @@ public class CGEntity {
 
 public class CGCodeUnit {
 	
+	public var FileName: String?
+	public var Namespace: CGNamespaceReference?
+	public var HeaderComment: CGCommentStatement?
 	public var Directives = List<String>() /* will not be language agnostic */
 	public var Imports = List<CGImport>()
 	public var Types = List<CGTypeDefinition>()
@@ -14,10 +17,19 @@ public class CGCodeUnit {
 	public var ImplementationImports = List<CGImport>() /* Delphi only */
 	public var Initialization: CGBlockStatement? /* Delphi only */
 	public var Finalization: CGBlockStatement? /* Delphi only */
+
+	init() {
+	}
+	init(_ nameSpace: String) {
+		Namespace = CGNamespaceReference(nameSpace)
+	}
+	init(_ namespace: CGNamespaceReference) {
+		Namespace = namespace
+	}
 }
 
 public class CGImport {
-	public var Namespace: CGNamespaceReferene?
+	public var Namespace: CGNamespaceReference?
 	public var StaticClass: CGNamedTypeReference?
 	
 	public var Name: String? {
@@ -29,22 +41,22 @@ public class CGImport {
 		return nil;
 	}
 
-	init (_ name: String) {
-		Namespace = CGNamespaceReferene(name)
+	init(_ namespace: String) {
+		Namespace = CGNamespaceReference(namespace)
 	}
-	init (_ nameSpace: CGNamespaceReferene) {
-		Namespace = nameSpace
+	init(_ namespace: CGNamespaceReference) {
+		Namespace = namespace
 	}
-	init (_ staticClass: CGNamedTypeReference) {
+	init(_ staticClass: CGNamedTypeReference) {
 		StaticClass = staticClass
 	}
 }
 
-public class CGNamespaceReferene {
+public class CGNamespaceReference {
 	public var Name: String
 	public var IsStaticClass = false /* C# only */
 
-	init (_ name: String) {
+	init(_ name: String) {
 		Name = name
 	}
 }

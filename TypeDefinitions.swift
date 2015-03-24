@@ -125,14 +125,14 @@ public class CGParameterDefinition: CGEntity {
 	public var Modifier: ParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	
-	init (_ name: String, _ type: CGTypeReference) {
+	init(_ name: String, _ type: CGTypeReference) {
 		Name = name
 		`Type` = type
 	}
 }
 
 public class CGGenericParameterDefinition: CGEntity {
-	public var Constraints = List<CGGenericConstraintDefintion>()
+	public var Constraints = List<CGGenericConstraintDefinition>()
 	var Name: String
 	
 	init(_ name: String) {
@@ -140,6 +140,6 @@ public class CGGenericParameterDefinition: CGEntity {
 	}
 }	
 
-public class CGGenericConstraintDefintion: CGEntity {
+public class CGGenericConstraintDefinition: CGEntity {
 }
 

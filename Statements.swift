@@ -9,7 +9,7 @@ import System.Linq
 public class CGStatement: CGEntity {
 }
 
-public class CGRawStatement : CGStatement { // not language-agnostic. obviosuly.
+public class CGBaseMultilineStatement : CGStatement { // Abstract base for anhy block statement
 	public var Lines: List<String>
 
 	init(_ lines: List<String>) {
@@ -18,6 +18,12 @@ public class CGRawStatement : CGStatement { // not language-agnostic. obviosuly.
 	init(_ lines: String) {
 		Lines = lines.Replace("\r", "").Split("\n").ToList()
 	}
+}
+
+public class CGRawStatement : CGBaseMultilineStatement { // not language-agnostic. obviosuly.
+}
+
+public class CGCommentStatement : CGBaseMultilineStatement {
 }
 
 public class CGBlockStatement : CGStatement { // Abstract base for anhy block statement

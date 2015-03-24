@@ -5,7 +5,6 @@ public class CGCodeGenerator {
 	
 	internal var currentUnit: CGCodeUnit!
 	internal var currentCode: StringBuilder!
-	internal var currentFileName: String?
 	internal var indent: Int32 = 0
 	internal var tabSize = 2
 	internal var useTabs = false
@@ -18,16 +17,19 @@ public class CGCodeGenerator {
 	override init() {
 	}
 
-	public func GenerateUnit(unit: CGCodeUnit, targetFilename: String?) -> String {
+	public func GenerateCode(unit: CGCodeUnit) -> String {
 		
 		currentUnit = unit;
 		currentCode = StringBuilder()
-		currentFileName = targetFilename;
 		generateAll() 
 		return currentCode.ToString()
 	}
 	
 	internal func generateAll() {
+		if let comment = currentUnit.HeaderComment {
+			generateStatement(comment);
+			AppendLine()
+		}
 		generateHeader()
 		generateDirectives()
 		generateImports()
@@ -140,7 +142,11 @@ public class CGCodeGenerator {
 	
 	internal func generateStatement(statement: CGStatement) {
 		// descendant should not override
-		if let rawStatement = statement as? CGRawStatement {
+		if let commentStatement = statement as? CGCommentStatement {
+			for line in commentStatement.Lines {
+				generateSingleLineComment(line)
+			}
+		} else if let rawStatement = statement as? CGRawStatement {
 			for line in rawStatement.Lines {
 				AppendIndent()
 				AppendLine(line)
