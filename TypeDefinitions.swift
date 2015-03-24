@@ -9,7 +9,7 @@ public enum CGTypeVisibilityKind {
 	case Public
 }
 
-public class CGTypeDefinition: CGEntity {
+public class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGTypeMemberDefinition>()
@@ -19,6 +19,15 @@ public class CGTypeDefinition: CGEntity {
 	public init(_ name: String) {
 		Name = name;
 	}
+}
+
+public class CGGlobalTypeDefinition : CGTypeDefinition {
+	private init() {
+		super.init("<Globals>")
+		Static = true
+	}
+	
+	public static lazy var GlobalType = CGGlobalTypeDefinition()
 }
 
 public class CGTypeAliasDefinition : CGTypeDefinition {
@@ -103,6 +112,16 @@ public class CGMethodDefinition: CGTypeMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
+	public var Statements: List<CGStatement>
+
+	init(_ name: String) {
+		super.init(name)
+		Statements = List<CGStatement>()
+	}
+	public init(_ name: String, _ statements: List<CGStatement>) {
+		init(name)
+		Statements = statements;
+	}
 }
 
 public class CGOperatorDefinition: CGTypeMemberDefinition {
@@ -119,9 +138,12 @@ public class CGFieldDefinition: CGTypeMemberDefinition {
 }
 
 public class CGPropertyDefinition: CGTypeMemberDefinition {
+	public var Lazy = false
+	//incomplete
 }
 
 public class CGEventDefinition: CGTypeMemberDefinition {
+	//incomplete
 }
 
 /* Parameters */

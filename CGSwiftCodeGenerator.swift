@@ -189,7 +189,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		
 		AppendLine(" {")
 		incIndent()
-		//generateStatments(method.Statements)
+		generateStatements(method.Statements)
 		decIndent()
 		AppendLine("}")
 		AppendLine()

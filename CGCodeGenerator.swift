@@ -17,7 +17,7 @@ public class CGCodeGenerator {
 	override public init() {
 	}
 
-	public func GenerateCode(unit: CGCodeUnit) -> String {
+	public final func GenerateCode(unit: CGCodeUnit) -> String {
 		
 		currentUnit = unit;
 		currentCode = StringBuilder()
@@ -26,10 +26,6 @@ public class CGCodeGenerator {
 	}
 	
 	internal func generateAll() {
-		if let comment = currentUnit.HeaderComment {
-			generateStatement(comment);
-			AppendLine()
-		}
 		generateHeader()
 		generateDirectives()
 		generateImports()
@@ -39,10 +35,10 @@ public class CGCodeGenerator {
 		generateFooter()		
 	}
 	
-	internal func incIndent(step: Int32 = 1) {
+	internal final func incIndent(step: Int32 = 1) {
 		indent += step
 	}
-	internal func decIndent(step: Int32 = 1) {
+	internal final func decIndent(step: Int32 = 1) {
 		indent -= step
 		if indent < 0 {
 			indent = 0
@@ -52,6 +48,14 @@ public class CGCodeGenerator {
 	/* These following functions *can* be overriden by descendants, if needed */
 	
 	internal func generateHeader() {
+		// descendant can override, if needed
+		if let comment = currentUnit.HeaderComment {
+			generateStatement(comment);
+			AppendLine()
+		}
+	}
+	
+	internal func generateFooter() {
 		// descendant can override, if needed
 	}
 	
@@ -72,6 +76,7 @@ public class CGCodeGenerator {
 	}
 
 	internal func generateTypeDefinitions() {
+		// descendant should not usually override
 		for t in currentUnit.Types {
 			generateTypeDefinition(t);
 		}
@@ -83,18 +88,10 @@ public class CGCodeGenerator {
 		}
 	}
 
-	internal func generateFooter() {
-		// descendant can override, if needed
-	}
-	
-	internal func generateDirective(directive: String) {
+	internal final func generateDirective(directive: String) {
 		AppendLine(directive)
 	}
 
-	internal func generateGlobal(global: CGGlobalDefinition) {
-		// ToDo
-	}
-	
 	internal func generateSingleLineComment(comment: String) {
 		// descendant may override, but this will work for all current languages we support.
 		AppendLine("// "+comment)
@@ -109,11 +106,11 @@ public class CGCodeGenerator {
 	// Indentifiers
 	//
 
-	internal func generateIdentifier(name: String) {
+	internal final func generateIdentifier(name: String) {
 		generateIdentifier(name, escaped: true)
 	}
 	
-	internal func generateIdentifier(name: String, escaped: Boolean) {
+	internal final func generateIdentifier(name: String, escaped: Boolean) {
 		if escaped {
 			if keywordsAreCaseSensitive {
 				name = name.ToLower()
@@ -145,7 +142,7 @@ public class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateStatement(statement: CGStatement) {
+	internal final func generateStatement(statement: CGStatement) {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
 			for line in commentStatement.Lines {
@@ -156,23 +153,23 @@ public class CGCodeGenerator {
 				AppendIndent()
 				AppendLine(line)
 			}
-		} else if let expression = statement as? CGExpression {
+		// { else... }
+		} else if let expression = statement as? CGExpression { // should be last
 			AppendIndent()
 			generateExpression(expression)
 			AppendLine()
-		} //else if ...
+		} 
 		
 		else {
 			assert(false, "unsupported statement found: \(typeOf(statement).ToString())")
 		}
 	}
 	
-	internal func generateExpression(expression: CGExpression) {
+	internal final func generateExpression(expression: CGExpression) {
 		// descendant should not override
 		if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
 			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 		}
-
 		else {
 			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
 		}
@@ -182,13 +179,29 @@ public class CGCodeGenerator {
 		// descendant may override if they aren;t happy with the default
 		return expression.StringRepresentation
 	}
+	
+	//
+	// Globals
+	//
+
+	internal func generateGlobal(global: CGGlobalDefinition) {
+		if let global = global as? CGGlobalFunctionDefinition {
+			generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
+		} else if let global = global as? CGGlobalVariableDefinition {
+			generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
+		} 
+		
+		else {
+			assert(false, "unsupported global found: \(typeOf(global).ToString())")
+		}	
+	}
+	
 
 	//
 	// Type Definitions
 	//
 
-	internal func generateTypeDefinition(type: CGTypeDefinition) {
-		// descendant should not override
+	internal final func generateTypeDefinition(type: CGTypeDefinition) {
 		if let type = type as? CGTypeAliasDefinition {
 			generateAliasType(type)
 		} else if let type = type as? CGBlockTypeDefinition {
@@ -229,27 +242,27 @@ public class CGCodeGenerator {
 	}
 	
 	internal func generateClassType(type: CGClassTypeDefinition) {
-		// descendant should not override
+		// descendant should not usually override
 		generateClassTypeStart(type)
 		generateTypeMembers(type)
 		generateClassTypeEnd(type)
 	}
 	
 	internal func generateStructType(type: CGStructTypeDefinition) {
-		// descendant must override
+		// descendant should not usually override
 		generateStructTypeStart(type)
 		generateTypeMembers(type)
 		generateStructTypeEnd(type)
 	}
 	
 	internal func generateInterfaceType(type: CGInterfaceTypeDefinition) {
-		// descendant must override
+		// descendant should not usually override
 		generateInterfaceTypeStart(type)
 		generateTypeMembers(type)
 		generateInterfaceTypeEnd(type)
 	}
 	
-	internal func generateTypeMembers(type: CGTypeDefinition) {
+	internal final func generateTypeMembers(type: CGTypeDefinition) {
 		for m in type.Members {
 			generateTypeMember(m, type: type);
 		}
@@ -285,7 +298,7 @@ public class CGCodeGenerator {
 		assert(false, "generateInterfaceTypeEnd not implemented")
 	}	
 	
-	internal func generateTypeMember(member: CGTypeMemberDefinition, type: CGTypeDefinition) {
+	internal final func generateTypeMember(member: CGTypeMemberDefinition, type: CGTypeDefinition) {
 		if let member = member as? CGMethodDefinition {
 			generateMethodDefinition(member, type:type)
 		} //...
@@ -305,7 +318,7 @@ public class CGCodeGenerator {
 	// Type References
 	//
 	
-	internal func generateTypeReference(type: CGTypeReference) {
+	internal final func generateTypeReference(type: CGTypeReference) {
 		// descendant should not override
 		if let type = type as? CGNamedTypeReference {
 			generateNamedTypeReference(type)
@@ -367,21 +380,20 @@ public class CGCodeGenerator {
 		assert(false, "generateDictionaryTypeReference not implemented")
 	}
 	
-	
 	//
 	//
 	// StringBuilder Access
 	//
 	//
 	
-	internal func Append(line: String? = nil) -> StringBuilder {
+	internal final func Append(line: String? = nil) -> StringBuilder {
 		if let line = line {			
 			currentCode.Append(line)
 		}
 		return currentCode
 	}
 	
-	internal func AppendLine(line: String? = nil) -> StringBuilder {
+	internal final func AppendLine(line: String? = nil) -> StringBuilder {
 		if let line = line {			
 			currentCode.AppendLine(line)
 		} else {
@@ -390,7 +402,7 @@ public class CGCodeGenerator {
 		return currentCode
 	}
 	
-	internal func AppendIndent() -> StringBuilder {
+	internal final func AppendIndent() -> StringBuilder {
 		if !codeCompletionMode {
 			if useTabs {
 				for var i: Int32 = 0; i < indent; i++ {

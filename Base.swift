@@ -71,7 +71,7 @@ public class CGGlobalDefinition {
 }
 
 public class CGGlobalFunctionDefinition : CGGlobalDefinition {
-	public var Function: CGMethodDefinition?
+	public var Function: CGMethodDefinition
 
 	public init(_ function: CGMethodDefinition) {
 		Function = function;
@@ -79,7 +79,7 @@ public class CGGlobalFunctionDefinition : CGGlobalDefinition {
 }
 
 public class CGGlobalVariableDefinition : CGGlobalDefinition {
-	public var Variable: CGFieldDefinition?
+	public var Variable: CGFieldDefinition
 	
 	public init(_ variable: CGFieldDefinition) {
 		Variable = variable;
