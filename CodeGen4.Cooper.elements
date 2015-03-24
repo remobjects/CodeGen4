@@ -1,25 +1,18 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
     <PropertyGroup>
         <ProductVersion>3.5</ProductVersion>
-        <RootNamespace>RemObjects.CodeGen4</RootNamespace>
-        <ProjectGuid>2C3408F4-2270-4310-9A38-6A5296129576</ProjectGuid>
-        <OutputType>library</OutputType>
-        <AssemblyName>CodeGen4</AssemblyName>
-        <AllowGlobals>False</AllowGlobals>
-        <AllowLegacyWith>False</AllowLegacyWith>
-        <AllowLegacyOutParams>False</AllowLegacyOutParams>
-        <AllowLegacyCreate>False</AllowLegacyCreate>
-        <AllowUnsafeCode>False</AllowUnsafeCode>
+        <ProjectGuid>258FD135-ABBB-46D5-8B7E-00266CD01152</ProjectGuid>
+        <OutputType>Library</OutputType>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+        <AllowLegacyCreate>False</AllowLegacyCreate>
+        <AllowLegacyOutParams>False</AllowLegacyOutParams>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>false</Optimize>
         <OutputPath>.\bin\Debug</OutputPath>
         <DefineConstants>DEBUG;TRACE;</DefineConstants>
-        <GeneratePDB>True</GeneratePDB>
-        <GenerateMDB>True</GenerateMDB>
+        <GenerateDebugInfo>True</GenerateDebugInfo>
         <EnableAsserts>True</EnableAsserts>
         <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
         <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -29,14 +22,13 @@
         <RuntimeVersion>v25</RuntimeVersion>
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <Optimize>true</Optimize>
         <OutputPath>.\bin\Release</OutputPath>
-        <GeneratePDB>False</GeneratePDB>
-        <GenerateMDB>False</GenerateMDB>
+        <GenerateDebugInfo>False</GenerateDebugInfo>
         <EnableAsserts>False</EnableAsserts>
         <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
         <CaptureConsoleOutput>False</CaptureConsoleOutput>
@@ -46,34 +38,20 @@
         <RuntimeVersion>v25</RuntimeVersion>
         <XmlDoc>False</XmlDoc>
         <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
         <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="mscorlib"/>
-        <Reference Include="System"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="System.Core">
-            <RequiredTargetFramework>3.5</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="System.Xml.Linq">
-            <RequiredTargetFramework>3.5</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="System.Data.DataSetExtensions">
-            <RequiredTargetFramework>3.5</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="RemObjects.Elements.Dynamic">
+        <Reference Include="rt.jar"/>
+        <Reference Include="com.remobjects.elements.rtl.jar">
             <Private>True</Private>
         </Reference>
-        <Reference Include="Sugar">
-            <HintPath>\Sugar.dll</HintPath>
+        <Reference Include="com.sugar">
+            <HintPath>com.sugar.jar</HintPath>
             <Private>True</Private>
         </Reference>
     </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Properties\AssemblyInfo.swift"/>
-    </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Echoes.targets"/>
+    <ItemGroup/>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Cooper.targets"/>
     <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
 </Project>

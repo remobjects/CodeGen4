@@ -1,9 +1,23 @@
 ﻿import Sugar
 import Sugar.Collections
+#if ECHOES
+import System.Linq
+#endif
 
 /* Expressions */
 
 public class CGExpression: CGStatement {
+}
+
+public class CGRawExpression : CGExpression { // not language-agnostic. obviosuly.
+	public var Lines: List<String>
+
+	init(_ lines: List<String>) {
+		Lines = lines
+	}
+	init(_ lines: String) {
+		Lines = lines.Replace("\r", "").Split("\n").ToList()
+	}
 }
 
 public class CGAssignedExpression: CGExpression {
@@ -291,3 +305,86 @@ public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, curren
 		Values = values
 	}
 }
+
+/* Calls */
+
+public class CGConstructorCallExpression {
+	public var `Type`: CGTypeReference
+	public var Name: String? // an optionally be provided for languages that support named .ctors
+	public var Parameters: List<CGMethodCallParameter>
+	public var PropertyInitializers = List<CGMethodCallParameter>() // for Oxygene extnded .ctor calls
+
+	init(_ type: CGTypeReference) {
+		`Type` = type
+		Parameters = List<CGMethodCallParameter>()
+	}
+	init(_ type: CGTypeReference, _ parameters: List<CGMethodCallParameter>?) {
+		`Type` = type
+		if let parameters = parameters {
+			Parameters = parameters
+		} else {
+			Parameters = List<CGMethodCallParameter>()
+		}
+	}
+}
+
+public class CGMemberAccessExpression {
+	public var CallSite: CGExpression? // can be nil to call a local or global function/variable. Should be set to CGSelfExpression for local methods.
+	public var Name: String
+	public var NilSafe: Boolean = false // true to use colon or elvis operator
+
+	init(_ callSite: CGExpression?, _ name: String) {
+		CallSite = callSite
+		Name = name
+	}
+}
+
+public class CGFieldAccessExpression: CGMemberAccessExpression {
+}
+
+public class CGMethodCallExpression : CGMemberAccessExpression{
+	public var Parameters: List<CGMethodCallParameter>
+
+	init(_ callSite: CGExpression?, _ name: String) {
+		super.init(callSite, name)
+		Parameters = List<CGMethodCallParameter>()
+	}
+	init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
+		super.init(callSite, name)
+		if let parameters = parameters {
+			Parameters = parameters
+		} else {
+			Parameters = List<CGMethodCallParameter>()
+		}   
+	}
+}
+
+public class CGPropertyAccessExpression: CGMemberAccessExpression {
+	public var Parameters: List<CGMethodCallParameter>
+
+	init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
+		super.init(callSite, name)
+		if let parameters = parameters {
+			Parameters = parameters
+		} else {
+			Parameters = List<CGMethodCallParameter>()
+		}   
+	}
+}
+
+public class CGMethodCallParameter: CGEntity {
+	public var Name: String? // optional, for named parameters or prooperty initialziers
+	public var Value: CGExpression
+	public var Modifier: ParameterModifierKind = .In
+	
+	init(_ value: CGExpression) {
+		Value = value
+	}
+	init(_ name: String?, _ value: CGExpression) {
+		//init(value) // 71582: Silver: delegating to a second .ctor doesn't properly detect that a field will be initialized
+		Value = value
+		Name = name
+	}
+}
+
+

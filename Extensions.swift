@@ -11,6 +11,10 @@
 	public func AsLiteralExpression() -> CGStringLiteralExpression {
 		return CGStringLiteralExpression(self)
 	}
+
+	public func AsRawExpression() -> CGSRawExpression {
+		return CGSRawExpression(self)
+	}
 }
 
 public extension Char {

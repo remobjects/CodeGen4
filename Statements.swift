@@ -9,13 +9,12 @@ import System.Linq
 public class CGStatement: CGEntity {
 }
 
-public class CGRawStatement : CGStatement { // not language-agnistic. obviosuly.
+public class CGRawStatement : CGStatement { // not language-agnostic. obviosuly.
 	public var Lines: List<String>
 
 	init(_ lines: List<String>) {
 		Lines = lines
 	}
-
 	init(_ lines: String) {
 		Lines = lines.Replace("\r", "").Split("\n").ToList()
 	}
@@ -211,66 +210,3 @@ public class CGAssignmentStatement: CGStatement {
 		Value = value
 	}
 }
-
-/* Calls */
-
-public class CGConstructorCallStatement: CGStatement {
-	public var `Type`: CGTypeReference
-	public var Name: String? // an optionally be provided for languages that support named .ctors
-	public var Parameters: List<CGMethodCallParameter>
-	public var PropertyInitializers = List<CGMethodCallParameter>() // for Oxygene extnded .ctor calls
-
-	init(_ type: CGTypeReference, _ parameters: List<CGMethodCallParameter>?) {
-		`Type` = type
-		if let parameters = parameters {
-			Parameters = parameters
-		} else {
-			Parameters = List<CGMethodCallParameter>()
-		}
-	}
-}
-
-public class CGMethodCallStatement: CGStatement {
-	public var CallSite: CGExpression? // can be nil to call a function. SHould be set to CGSelfExpression for local methods.
-	public var Name: String
-	public var Parameters: List<CGMethodCallParameter>
-
-	init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
-		CallSite = callSite
-		Name = name
-		if let parameters = parameters {
-			Parameters = parameters
-		} else {
-			Parameters = List<CGMethodCallParameter>()
-		}   
-	}
-}
-
-public class CGMethodCallParameter: CGEntity {
-	public var Name: String? // optional, for named parameters or prooperty initialziers
-	public var Value: CGExpression
-	public var Modifier: ParameterModifierKind = .In
-	
-	init(_ value: CGExpression) {
-		Value = value
-	}
-	init(_ name: String?, _ value: CGExpression) {
-		//init(value) // 71582: Silver: delegating to a second .ctor doesn't properly detect that a field will be initialized
-		Value = value
-		Name = name
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
