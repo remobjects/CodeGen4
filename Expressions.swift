@@ -183,7 +183,7 @@ public enum CGOperatorKind {
 
 /* Literal Expressions */
 
-public class CGNamedIdenfifierExpression: CGExpression { 
+public class CGNamedIdentifierExpression: CGExpression { 
 	var Name: String
 	
 	public init(_ name: String) {

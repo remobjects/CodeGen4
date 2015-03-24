@@ -10,6 +10,10 @@ public extension String {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
 	
+	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
+		return CGNamedIdentifierExpression(self)
+	}
+	
 	public func AsLiteralExpression() -> CGStringLiteralExpression {
 		return CGStringLiteralExpression(self)
 	}
