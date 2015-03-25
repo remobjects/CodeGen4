@@ -132,7 +132,7 @@ public class CGCodeGenerator {
 	}
 	
 	//
-	// Statemenrts & Expressions
+	// Statements
 	//
 
 	internal final func generateStatements(statements: List<CGStatement>) {
@@ -185,6 +185,8 @@ public class CGCodeGenerator {
 			generateDoWhileLoopStatement(statement)
 		} else if let statement = statement as? CGInfiniteLoopStatement {
 			generateInfiniteLoopStatement(statement)
+		} else if let statement = statement as? CGSwitchStatement {
+			generateSwitchStatement(statement)
 		} else if let statement = statement as? CGLockingStatement {
 			generateLockingStatement(statement)
 		} else if let statement = statement as? CGUsingStatement {
@@ -251,6 +253,11 @@ public class CGCodeGenerator {
 	internal func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
 		// descendant may override, but this will work for all languages.
 		generateWhileDoLoopStatement(CGWhileDoLoopStatement(CGBooleanLiteralExpression(true), statement.NestedStatement))
+	}
+
+	internal func generateSwitchStatement(statement: CGSwitchStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateSwitchStatement not implemented")
 	}
 
 	internal func generateLockingStatement(statement: CGLockingStatement) {

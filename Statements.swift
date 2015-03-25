@@ -70,11 +70,11 @@ public enum CGLoopDirectionKind {
 public class CGForToLoopStatement: CGNestingStatement {
 	public var LoopVariableName: String
 	public var LoopVariableType: CGTypeReference? // nil means it won't be declared, just used
-	public var StartValue: Int64
-	public var EndValue: Int64
+	public var StartValue: CGIntegerLiteralExpression
+	public var EndValue: CGIntegerLiteralExpression
 	public var Directon: CGLoopDirectionKind = .Forward
 
-	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: Int64, _ endValue: Int64, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: CGIntegerLiteralExpression, _ endValue: CGIntegerLiteralExpression, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
@@ -209,7 +209,7 @@ public class CGVariableDeclarationStatement: CGStatement {
 	public init(_ name: String, _ type: CGTypeReference?, value: CGExpression?) {
 		Name = name
 		`Type` = type
-		Value = value
+		Value = valu
 	}
 }
 

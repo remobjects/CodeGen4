@@ -33,7 +33,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateIfElseStatement(statement: CGIfElseStatement) {
 		Append("if ")
 		generateExpression(statement.Condition)
-		AppendLine("{")
+		AppendLine(" {")
 		incIndent()
 		generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
 		decIndent()
@@ -47,31 +47,83 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			AppendLine()
 		}
-		
 	}
 
 	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+		Append("for var ")
+		generateIdentifier(statement.LoopVariableName)
+		if let type = statement.LoopVariableType {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		Append(" = ")
+		generateExpression(statement.StartValue)
+		AppendLine("; ")
+		
+		generateIdentifier(statement.LoopVariableName)
+		if statement.Directon == CGLoopDirectionKind.Forward {
+			Append(" <= ")
+		} else {
+			Append(" >= ")
+		}
+		generateExpression(statement.EndValue)
+		Append("; ")
 
+		generateIdentifier(statement.LoopVariableName)
+		if statement.Directon == CGLoopDirectionKind.Forward {
+			Append("++ ")
+		} else {
+			Append("-- ")
+		}
+
+		AppendLine("{")
+		incIndent()
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
-
+		Append("for ")
+		generateIdentifier(statement.LoopVariableName)
+		Append(" in ")
+		generateExpression(statement.Collection)
+		AppendLine(" {")
+		incIndent()
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
-
+		Append("while ")
+		generateExpression(statement.Condition)
+		AppendLine(" {")
+		incIndent()
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		decIndent()
+		Append("}")
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+		Append("do {")
+		incIndent()
+		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
+		decIndent()
+		Append("} while ")
+		generateExpression(statement.Condition)
+	}
 
+	override func generateSwitchStatement(statement: CGSwitchStatement) {
+		//todo
 	}
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
-
+		assert(false, "generateLockingStatement is not supported in Swift")
 	}
 
 	override func generateUsingStatement(statement: CGUsingStatement) {
-
+		assert(false, "generateUsingStatement is not supported in Swift")
 	}
 
 	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
@@ -110,6 +162,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				}
 			}
 			//todo
+		} else {
+			assert(false, "generateTryFinallyCatchStatement is not supported in Swift, except in Silver")
 		}
 	}
 
@@ -132,6 +186,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			} else {
 				AppendLine("__throw")
 			}
+		} else {
+			assert(false, "generateThrowStatement is not supported in Swift, except in Silver")
 		}
 	}
 

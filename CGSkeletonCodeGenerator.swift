@@ -64,6 +64,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
 	}*/
 
+	override func generateSwitchStatement(statement: CGSwitchStatement) {
+
+	}
+
 	override func generateLockingStatement(statement: CGLockingStatement) {
 	}
 
