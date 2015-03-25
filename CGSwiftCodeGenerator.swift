@@ -215,6 +215,112 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}*/	
 	
 	//
+	// Expressions
+	//
+
+	/*override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+	}*/
+
+	/*override func generateAssignedExpression(expression: CGAssignedExpression) {
+	}*/
+
+	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+		Append("sizeOf(")
+		generateExpression(expression.Expression)
+		Append(")")
+	}
+
+	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
+		Append("sizeOf(")
+		generateExpression(expression.Expression)
+		Append(")")
+	}
+
+	override func generateDefaultExpression(expression: CGDefaultExpression) {
+		Append("default(")
+		generateTypeReference(expression.`Type`)
+		Append(")")
+	}
+
+	override func generateSelectorExpression(expression: CGSelectorExpression) {
+		Append("\"(")
+		Append(expression.Name)
+		Append("\"")
+	}
+
+	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
+
+	}
+
+	override func generateInheritedExpression(expression: CGInheritedExpression) {
+		Append("super")
+	}
+
+	override func generateSelfExpression(expression: CGSelfExpression) {
+		Append("self")
+	}
+
+	override func generateNilExpression(expression: CGNilExpression) {
+		Append("nil")
+	}
+
+	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+		Append("newValue")
+	}
+
+	override func generateAwaitExpression(expression: CGAwaitExpression) {
+
+	}
+
+	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+
+	}
+
+	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+
+	}
+
+	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+
+	}
+
+	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+
+	}
+
+	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+
+	}
+
+	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+
+	}
+
+	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
+
+	}
+
+	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
+
+	}
+
+	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+
+	}
+
+	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+
+	}
+
+	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+
+	}
+
+	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+
+	}
+	
+	//
 	// Type Definitions
 	//
 	

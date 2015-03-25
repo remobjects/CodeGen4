@@ -55,10 +55,10 @@ public class CGDefaultExpression: CGExpression {
 }
 
 public class CGSelectorExpression: CGExpression { /* Cocoa only */
-	var SelectorName: String
+	var Name: String
 	
-	public init(_ selectorNameame: String) {
-		SelectorName = selectorNameame;
+	public init(_ name: String) {
+		Name = name;
 	}
 }
 
@@ -91,7 +91,7 @@ public class CGAnonymousClassOrStructExpression: CGExpression {
 	}
 }
 
-public class CGInheritedxpression: CGExpression {
+public class CGInheritedExpression: CGExpression {
 	public var Expression: CGExpression
 
 	public init(_ expression: CGExpression) {
@@ -125,13 +125,34 @@ public class CGForEachLoopExpression: CGExpression { //* Oxygene only */
 }
 */
 
+public class CGUnaryOperatorExpression: CGExpression {
+	var Value: CGExpression
+	var Operator: CGUnaryOperatorKind? // for standard operators
+	var OperatorString: String? // for custom operators
+
+	public init(_ value: CGExpression, _ `operator`: CGUnaryOperatorKind) {
+		Value = value
+		Operator = `operator`;
+	}
+	public init(_ value: CGExpression, _ operatorString: String) {
+		Value = value
+		OperatorString = operatorString;
+	}
+}
+
+public enum CGUnaryOperatorKind {
+	case Plus
+	case Minus
+	case Not
+}
+
 public class CGBinaryOperatorExpression: CGExpression {
 	var LefthandValue: CGExpression
 	var RighthandValue: CGExpression
-	var Operator: CGOperatorKind? // for standard operators
+	var Operator: CGBinaryOperatorKind? // for standard operators
 	var OperatorString: String? // for custom operators
 	
-	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGOperatorKind) {
+	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGBinaryOperatorKind) {
 		LefthandValue = lefthandValue
 		RighthandValue = righthandValue
 		Operator = `operator`;
@@ -143,7 +164,7 @@ public class CGBinaryOperatorExpression: CGExpression {
 	}
 }
 
-public enum CGOperatorKind {
+public enum CGBinaryOperatorKind {
 	case Addition
 	case Subtraction
 	case Multiplication
@@ -194,12 +215,15 @@ public class CGNamedIdentifierExpression: CGExpression {
 }
 
 public class CGSelfExpression: CGExpression { // "self" or "this"
+	public static lazy let SelfExpression = CGSelfExpression()
 }
 
 public class CGNilExpression: CGExpression { // "nil" or "null"
+	public static lazy let NilExpression = CGNilExpression()
 }
 
 public class CGPropertyValueExpression: CGExpression { /* "value" or "newValue" in C#/Swift */
+	public static lazy let PropertyValueExpression = CGPropertyValueExpression()
 }
 
 public class CGLiteralExpression: CGExpression {
@@ -330,7 +354,7 @@ public class CGConstructorCallExpression {
 	}
 }
 
-public class CGMemberAccessExpression {
+public class CGMemberAccessExpression : CGExpression {
 	public var CallSite: CGExpression? // can be nil to call a local or global function/variable. Should be set to CGSelfExpression for local methods.
 	public var Name: String
 	public var NilSafe: Boolean = false // true to use colon or elvis operator
@@ -341,7 +365,7 @@ public class CGMemberAccessExpression {
 	}
 }
 
-public class CGFieldAccessExpression: CGMemberAccessExpression {
+public class CGFieldAccessExpression : CGMemberAccessExpression {
 }
 
 public class CGMethodCallExpression : CGMemberAccessExpression{
