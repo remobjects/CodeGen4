@@ -108,6 +108,105 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	}	
 	
 	//
+	// Expressions
+	//
+	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+
+	}
+
+	override func generateAssignedExpression(expression: CGAssignedExpression) {
+
+	}
+
+	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+
+	}
+
+	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
+
+	}
+
+	override func generateDefaultExpression(expression: CGDefaultExpression) {
+
+	}
+
+	override func generateSelectorExpression(expression: CGSelectorExpression) {
+
+	}
+
+	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
+
+	}
+
+	override func generateInheritedExpression(expression: CGInheritedExpression) {
+
+	}
+
+	override func generateSelfExpression(expression: CGSelfExpression) {
+
+	}
+
+	override func generateNilExpression(expression: CGNilExpression) {
+
+	}
+
+	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+
+	}
+
+	override func generateAwaitExpression(expression: CGAwaitExpression) {
+
+	}
+
+	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+
+	}
+
+	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+
+	}
+
+	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+
+	}
+
+	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+
+	}
+
+	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+
+	}
+
+	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+
+	}
+
+	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
+
+	}
+
+	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
+
+	}
+
+	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+
+	}
+
+	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+
+	}
+
+	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+
+	}
+
+	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+
+	}
+	
+	//
 	// Type Definitions
 	//
 	

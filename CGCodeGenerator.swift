@@ -326,13 +326,184 @@ public class CGCodeGenerator {
 	
 	internal final func generateExpression(expression: CGExpression) {
 		// descendant should not override
-		if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
+		if let expression = expression as? CGRawExpression {
+		} else if let expression = expression as? CGNamedIdentifierExpression {
+			generateNamedIdentifierExpression(expression)
+		} else if let expression = expression as? CGAssignedExpression {
+			generateAssignedExpression(expression)
+		} else if let expression = expression as? CGSizeOfExpression {
+			generateSizeOfExpression(expression)
+		} else if let expression = expression as? CGTypeOfExpression {
+			generateTypeOfExpression(expression)
+		} else if let expression = expression as? CGDefaultExpression {
+			generateDefaultExpression(expression)
+		} else if let expression = expression as? CGSelectorExpression {
+			generateSelectorExpression(expression)
+		} else if let expression = expression as? CGTypeCastExpression {
+			generateTypeCastExpression(expression)
+		} else if let expression = expression as? CGInheritedExpression {
+			generateInheritedExpression(expression)
+		} else if let expression = expression as? CGSelfExpression {
+			generateSelfExpression(expression)
+		} else if let expression = expression as? CGNilExpression {
+			generateNilExpression(expression)
+		} else if let expression = expression as? CGPropertyValueExpression {
+			generatePropertyValueExpression(expression)
+		} else if let expression = expression as? CGAwaitExpression {
+			generateAwaitExpression(expression)
+		} else if let expression = expression as? CGAnonymousMethodExpression {
+			generateAnonymousMethodExpression(expression)
+		} else if let expression = expression as? CGAnonymousClassOrStructExpression {
+			generateAnonymousClassOrStructExpression(expression)
+		} else if let expression = expression as? CGUnaryOperatorExpression {
+			generateUnaryOperatorExpression(expression)
+		} else if let expression = expression as? CGBinaryOperatorExpression {
+			generateBinaryOperatorExpression(expression)
+		} else if let expression = expression as? CGIfThenElseExpression {
+			generateIfThenElseExpressionExpression(expression)
+		} else if let expression = expression as? CGFieldAccessExpression {
+			generateFieldAccessExpression(expression)
+		} else if let expression = expression as? CGMethodCallExpression {
+			generateMethodCallExpression(expression)
+		} else if let expression = expression as? CGPropertyAccessExpression {
+			generatePropertyAccessExpression(expression)
+		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
 			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+		} else if let expression = expression as? CGStringLiteralExpression {
+			generateStringLiteralExpression(expression)
+		} else if let expression = expression as? CGCharacterLiteralExpression {
+			generateCharacterLiteralExpression(expression)
+		} else if let expression = expression as? CGArrayLiteralExpression {
+			generateArrayLiteralExpression(expression)
+		} else if let expression = expression as? CGDictionaryLiteralExpression {
+			generateDictionaryExpression(expression)
 		}
+		
 		else {
 			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
 		}
 	}
+	
+	internal func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+		// descendant may override, but this will work for all languages.
+		generateIdentifier(expression.Name)
+	}
+
+	internal func generateAssignedExpression(expression: CGAssignedExpression) {
+		// descendant may override, but this will work for all languages.
+		generateExpression(CGBinaryOperatorExpression(expression.Value, CGNilExpression.NilExpression, .Equals))
+	}
+
+	internal func generateSizeOfExpression(expression: CGSizeOfExpression) {
+		// descendant must override
+		assert(false, "generateSizeOfExpression not implemented")
+	}
+
+	internal func generateTypeOfExpression(expression: CGTypeOfExpression) {
+		// descendant must override
+		assert(false, "generateTypeOfExpression not implemented")
+	}
+
+	internal func generateDefaultExpression(expression: CGDefaultExpression) {
+		// descendant must override
+		assert(false, "generateDefaultExpression not implemented")
+	}
+
+	internal func generateSelectorExpression(expression: CGSelectorExpression) {
+		// descendant must override
+		assert(false, "generateSelectorExpression not implemented")
+	}
+
+	internal func generateTypeCastExpression(expression: CGTypeCastExpression) {
+		// descendant must override
+		assert(false, "generateTypeCastExpression not implemented")
+	}
+
+	internal func generateInheritedExpression(expression: CGInheritedExpression) {
+		// descendant must override
+		assert(false, "generateInheritedExpression not implemented")
+	}
+
+	internal func generateSelfExpression(expression: CGSelfExpression) {
+		// descendant must override
+		assert(false, "generateSelfExpression not implemented")
+	}
+
+	internal func generateNilExpression(expression: CGNilExpression) {
+		// descendant must override
+		assert(false, "generateNilExpression not implemented")
+	}
+
+	internal func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+		// descendant must override
+		assert(false, "generatePropertyValueExpression not implemented")
+	}
+
+	internal func generateAwaitExpression(expression: CGAwaitExpression) {
+		// descendant must override
+		assert(false, "generateAwaitExpression not implemented")
+	}
+
+	internal func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+		// descendant must override
+		assert(false, "generateAnonymousMethodExpression not implemented")
+	}
+
+	internal func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+		// descendant must override
+		assert(false, "generateAnonymousClassOrStructExpression not implemented")
+	}
+
+	internal func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+		// descendant must override
+		assert(false, "generateUnaryOperatorExpression not implemented")
+	}
+
+	internal func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+		// descendant must override
+		assert(false, "generateBinaryOperatorExpression not implemented")
+	}
+
+	internal func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+		// descendant must override
+		assert(false, "generateIfThenElseExpressionExpression not implemented")
+	}
+
+	internal func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+		// descendant must override
+		assert(false, "generateFieldAccessExpression not implemented")
+	}
+
+	internal func generateMethodCallExpression(expression: CGMethodCallExpression) {
+		// descendant must override
+		assert(false, "generateMethodCallExpression not implemented")
+	}
+
+	internal func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
+		// descendant must override
+		assert(false, "generatePropertyAccessExpression not implemented")
+	}
+
+	internal func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+		// descendant must override
+		assert(false, "generateStringLiteralExpression not implemented")
+	}
+
+	internal func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+		// descendant must override
+		assert(false, "generateCharacterLiteralExpression not implemented")
+	}
+
+	internal func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+		// descendant must override
+		assert(false, "generateArrayLiteralExpression not implemented")
+	}
+
+	internal func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+		// descendant must override
+		assert(false, "generateDictionaryExpression not implemented")
+	}
+	
 
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren;t happy with the default
