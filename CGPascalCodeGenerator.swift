@@ -78,18 +78,25 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
-
+		Append("begin")
+		incIndent()
+		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
+		decIndent()
+		Append("end;")
 	}
 
 	override func generateIfElseStatement(statement: CGIfElseStatement) {
 		Append("if ")
 		generateExpression(statement.Condition)
-		Append(" then")
-		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.IfStatement)
+		Append(" then begin")
+		generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
+		Append("end")
 		if let elseStatement = statement.ElseStatement {
-			AppendLine("else ")
+			AppendLine(" else begin")
 			generateStatementIndentedOrTrailingIfItsABeginEndBlock(elseStatement)
+			Append("end")
 		}
+		AppendLine(";")		
 	}
 
 	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
@@ -107,8 +114,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" downto ")
 		}
 		generateExpression(statement.EndValue)
-		Append(" do ")
-		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		Append(" do begin")
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		AppendLine("end;")		
 	}
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
@@ -118,8 +126,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
 		Append("while ")
 		generateExpression(statement.Condition)
-		AppendLine(" do")
-		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		AppendLine(" do begin")
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		AppendLine("end;")		
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
