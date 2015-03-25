@@ -170,6 +170,18 @@ public class CGCodeGenerator {
 		}
 	}
 
+	internal func generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement: CGStatement) {
+		if let block = statement as? CGBeginEndBlockStatement {
+			Append(" ")
+			generateStatements(block.Statements);
+		} else {
+			AppendLine()
+			incIndent()
+			generateStatement(statement);
+			decIndent()
+		}
+	}
+
 	internal final func generateStatement(statement: CGStatement) {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {

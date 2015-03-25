@@ -23,6 +23,14 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		//todo: member
 	}
 	
+	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+		Append("@protocol ")
+		generateIdentifier(type.Name)
+		//todo: private fields
+		incIndent()
+		//todo: member
+	}
+	
 	//
 	// Type Members
 	//

@@ -15,47 +15,11 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	/*override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 	}*/
 
-	override func generateIfElseStatement(statement: CGIfElseStatement) {
-		Append("if (")
-		generateExpression(statement.Condition)
-		AppendLine(" )")
-		generateStatementIndentedUnlessItsABeginEndBlock(statement.IfStatement)
-		if let elseStatement = statement.ElseStatement {
-			AppendLine("else")
-			generateStatementIndentedUnlessItsABeginEndBlock(elseStatement)
-		}
-	}
+	/*override func generateIfElseStatement(statement: CGIfElseStatement) {
+	}*/
 
-	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
-		Append("for (")
-		if let type = statement.LoopVariableType {
-			generateTypeReference(type)
-			Append(" ")
-		}
-		generateIdentifier(statement.LoopVariableName)
-		Append(" = ")
-		generateExpression(statement.StartValue)
-		AppendLine("; ")
-		
-		generateIdentifier(statement.LoopVariableName)
-		if statement.Directon == CGLoopDirectionKind.Forward {
-			Append(" <= ")
-		} else {
-			Append(" >= ")
-		}
-		generateExpression(statement.EndValue)
-		Append("; ")
-
-		generateIdentifier(statement.LoopVariableName)
-		if statement.Directon == CGLoopDirectionKind.Forward {
-			Append("++ ")
-		} else {
-			Append("-- ")
-		}
-		AppendLine(")")
-
-		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
-	}
+	/*override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	}*/
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
 		Append("for (")
@@ -66,24 +30,11 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 	}
 
-	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
-		Append("while (")
-		generateExpression(statement.Condition)
-		AppendLine(")")
-		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
-	}
+	/*override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+	}*/
 
-	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
-		AppendLine("do")
-		AppendLine("{")
-		incIndent()
-		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
-		decIndent()
-		AppendLine("}")
-		Append("while (")
-		generateExpression(statement.Condition)
-		AppendLine(")")
-	}
+	/*override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+	}*/
 
 	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
 	}*/
@@ -106,7 +57,12 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
-
+		AppendLine("@autoreleasepool")
+		AppendLine("{")
+		incIndent()
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
@@ -116,7 +72,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(statement.Statements)
 		decIndent()
 		AppendLine("}")
-		if let finallyStatements = statement.FinallyStatements /*where finallyStatements.Count > 0*/ {
+		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
 			AppendLine("finally")
 			AppendLine("{")
 			incIndent()
@@ -124,7 +80,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			decIndent()
 			AppendLine("}")
 		}
-		if let catchBlocks = statement.CatchBlocks /*where catchBlocks.Count > 0*/ {
+		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
 			for b in catchBlocks {
 				if let type = b.`Type` {
 					Append("catch (")
@@ -220,7 +176,8 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
-
+		decIndent()
+		AppendLine("@end")
 	}	
 	
 	//

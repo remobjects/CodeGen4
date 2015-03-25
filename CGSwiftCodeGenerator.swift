@@ -140,14 +140,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateStatements(statement.Statements)
 			decIndent()
 			AppendLine("}")
-			if let finallyStatements = statement.FinallyStatements /*where finallyStatements.Count > 0*/ {
+			if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
 				AppendLine("__finally { ")
 				incIndent()
 				generateStatements(finallyStatements)
 				decIndent()
 				AppendLine("}")
 			}
-			if let catchBlocks = statement.CatchBlocks /*where catchBlocks.Count > 0*/ {
+			if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
 				for b in catchBlocks {
 					if let type = b.`Type` {
 						Append("__catch ")
@@ -396,7 +396,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("{ ")
 		incIndent()
 		incIndent()
-		for m in type.members {
+		for m in type.Members {
 			if let m = m as? CGEnumValueDefinition {
 				Append("case ")
 				generateIdentifier(m.Name)

@@ -1,10 +1,5 @@
 ﻿import Sugar
 import Sugar.Collections
-#if ECHOES
-import System.Linq
-#elseif COOPER
-import com.remobjects.elements.linq
-#endif
 
 /* Statements */
 
@@ -209,7 +204,7 @@ public class CGVariableDeclarationStatement: CGStatement {
 	public init(_ name: String, _ type: CGTypeReference?, value: CGExpression?) {
 		Name = name
 		`Type` = type
-		Value = valu
+		Value = value
 	}
 }
 

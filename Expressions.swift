@@ -1,10 +1,5 @@
 ﻿import Sugar
 import Sugar.Collections
-#if ECHOES
-import System.Linq
-#elseif COOPER
-import com.remobjects.elements.linq
-#endif
 
 /* Expressions */
 
@@ -137,6 +132,10 @@ public class CGUnaryOperatorExpression: CGExpression {
 	public init(_ value: CGExpression, _ operatorString: String) {
 		Value = value
 		OperatorString = operatorString;
+	}
+	
+	public static func NotExpression(value: CGExpression) -> CGUnaryOperatorExpression {
+		return CGUnaryOperatorExpression(value, CGUnaryOperatorKind.Not)
 	}
 }
 
