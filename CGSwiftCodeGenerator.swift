@@ -18,17 +18,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("import \(imp.Name)")
 	}
 
+	override func cStyleGenerateStatementTerminator() {
+		AppendLine() // no ; in Swift
+	}
+
 	//
 	// Statements
 	//
 	
-	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
-		AppendLine("{")
-		incIndent()
-		generateStatements(statement.Statements)
-		decIndent()
-		AppendLine("}")
-	}
+	// in C-styleCG Base class
+	/*override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+	}*/
 
 	override func generateIfElseStatement(statement: CGIfElseStatement) {
 		Append("if ")
@@ -114,6 +114,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateExpression(statement.Condition)
 	}
 
+	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+	}*/
+
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
 		//todo
 	}
@@ -167,15 +170,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateReturnStatement(statement: CGReturnStatement) {
-		if let value = statement.Value {
-			Append("return ")
-			generateExpression(value)
-			AppendLine()
-		} else {
-			AppendLine("return")
-		}
-	}
+	/*override func generateReturnStatement(statement: CGReturnStatement) {
+	}*/
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
@@ -191,13 +187,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateBreakStatement(statement: CGBreakStatement) {
-		AppendLine("break")
-	}
+	/*override func generateBreakStatement(statement: CGBreakStatement) {
+	}*/
 
-	override func generateContinueStatement(statement: CGContinueStatement) {
-		AppendLine("continue")
-	}
+	/*override func generateContinueStatement(statement: CGContinueStatement) {
+	}*/
 
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
 		if statement.Constant {
@@ -217,12 +211,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		//todo: smartly handle non-nulables w/o a valiue?
 	}
 
-	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
-		generateExpression(statement.Target)
-		Append(" = ")
-		generateExpression(statement.Value)
-		AppendLine()
-	}	
+	/*override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+	}*/	
 	
 	//
 	// Type Definitions

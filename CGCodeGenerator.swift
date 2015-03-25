@@ -159,6 +159,16 @@ public class CGCodeGenerator {
 			generateStatement(statement);
 		}
 	}
+	
+	internal func generateStatementIndentedUnlessItsABeginEndBlock(statement: CGStatement) {
+		if let block = statement as? CGBeginEndBlockStatement {
+			generateStatements(block.Statements);
+		} else {
+			incIndent()
+			generateStatement(statement);
+			decIndent()
+		}
+	}
 
 	internal final func generateStatement(statement: CGStatement) {
 		// descendant should not override
