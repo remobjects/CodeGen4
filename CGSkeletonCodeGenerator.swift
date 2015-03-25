@@ -34,7 +34,77 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	}
 	
 	//
-	// Types
+	// Statements
+	//
+	
+	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+
+	}
+
+	override func generateIfElseStatement(statement: CGIfElseStatement) {
+
+	}
+
+	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+
+	}
+
+	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
+
+	}
+
+	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+
+	}
+
+	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+
+	}
+
+	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+	}*/
+
+	override func generateLockingStatement(statement: CGLockingStatement) {
+	}
+
+	override func generateUsingStatement(statement: CGUsingStatement) {
+
+	}
+
+	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+
+	}
+
+	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+
+	}
+
+	override func generateReturnStatement(statement: CGReturnStatement) {
+
+	}
+
+	override func generateThrowStatement(statement: CGThrowStatement) {
+
+	}
+
+	override func generateBreakStatement(statement: CGBreakStatement) {
+
+	}
+
+	override func generateContinueStatement(statement: CGContinueStatement) {
+
+	}
+
+	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+
+	}
+
+	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+
+	}	
+	
+	//
+	// Type Definitionss
 	//
 	
 	override func generateAliasType(type: CGTypeAliasDefinition) {

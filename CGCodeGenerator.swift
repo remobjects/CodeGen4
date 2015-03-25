@@ -135,13 +135,31 @@ public class CGCodeGenerator {
 	// Statemenrts & Expressions
 	//
 
-	internal func generateStatements(statements: List<CGStatement>) {
+	internal final func generateStatements(statements: List<CGStatement>) {
 		// descendant should not override
 		for g in statements {
 			generateStatement(g);
 		}
 	}
 	
+	internal final func generateStatementsSkippingOuterBeginEndBlock(statements: List<CGStatement>) {
+		//if statements.Count == 1, let block = statements[0] as? CGBeginEndBlockStatement {
+		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
+			//generateStatements(block.Statements);
+			generateStatements((statements[0] as! CGBeginEndBlockStatement).Statements);
+		} else {
+			generateStatements(statements);
+		}
+	}
+	
+	internal final func generateStatementSkippingOuterBeginEndBlock(statement: CGStatement) {
+		if let block = statement as? CGBeginEndBlockStatement {
+			generateStatements(block.Statements);
+		} else {
+			generateStatement(statement);
+		}
+	}
+
 	internal final func generateStatement(statement: CGStatement) {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
@@ -153,8 +171,43 @@ public class CGCodeGenerator {
 				AppendIndent()
 				AppendLine(line)
 			}
-		// { else... }
-		} else if let expression = statement as? CGExpression { // should be last
+		} else if let statement = statement as? CGBeginEndBlockStatement {
+			generateBeginEndStatement(statement)
+		} else if let statement = statement as? CGIfElseStatement {
+			generateIfElseStatement(statement)
+		} else if let statement = statement as? CGForToLoopStatement {
+			generateForToLoopStatement(statement)
+		} else if let statement = statement as? CGForEachLoopStatement {
+			generateForEachLoopStatement(statement)
+		} else if let statement = statement as? CGWhileDoLoopStatement {
+			generateWhileDoLoopStatement(statement)
+		} else if let statement = statement as? CGDoWhileLoopStatement {
+			generateDoWhileLoopStatement(statement)
+		} else if let statement = statement as? CGInfiniteLoopStatement {
+			generateInfiniteLoopStatement(statement)
+		} else if let statement = statement as? CGLockingStatement {
+			generateLockingStatement(statement)
+		} else if let statement = statement as? CGUsingStatement {
+			generateUsingStatement(statement)
+		} else if let statement = statement as? CGAutoReleasePoolStatement {
+			generateAutoReleasePoolStatement(statement)
+		} else if let statement = statement as? CGTryFinallyCatchStatement {
+			generateTryFinallyCatchStatement(statement)
+		} else if let statement = statement as? CGReturnStatement {
+			generateReturnStatement(statement)
+		} else if let statement = statement as? CGThrowStatement {
+			generateThrowStatement(statement)
+		} else if let statement = statement as? CGBreakStatement {
+			generateBreakStatement(statement)
+		} else if let statement = statement as? CGContinueStatement {
+			generateContinueStatement(statement)
+		} else if let statement = statement as? CGVariableDeclarationStatement {
+			generateVariableDeclarationStatement(statement)
+		} else if let statement = statement as? CGAssignmentStatement {
+			generateAssignmentStatement(statement)
+		} else if let statement = statement as? CGEmptyStatement {
+				AppendLine()
+		} else if let expression = statement as? CGExpression { // should be last but one
 			AppendIndent()
 			generateExpression(expression)
 			AppendLine()
@@ -164,6 +217,95 @@ public class CGCodeGenerator {
 			assert(false, "unsupported statement found: \(typeOf(statement).ToString())")
 		}
 	}
+	
+	internal func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateBeginEndStatement not implemented")
+	}
+
+	internal func generateIfElseStatement(statement: CGIfElseStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateIfElseStatement not implemented")
+	}
+
+	internal func generateForToLoopStatement(statement: CGForToLoopStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateForToLoopStatement not implemented")
+	}
+
+	internal func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateForEachLoopStatement not implemented")
+	}
+
+	internal func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generagenerateWhileDoLoopStatementteImport not implemented")
+	}
+
+	internal func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateDoWhileLoopStatement not implemented")
+	}
+
+	internal func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+		// descendant may override, but this will work for all languages.
+		generateWhileDoLoopStatement(CGWhileDoLoopStatement(CGBooleanLiteralExpression(true), statement.NestedStatement))
+	}
+
+	internal func generateLockingStatement(statement: CGLockingStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateLockingStatement not implemented")
+	}
+
+	internal func generateUsingStatement(statement: CGUsingStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateUsingStatement not implemented")
+	}
+
+	internal func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateAutoReleasePoolStatement not implemented")
+	}
+
+	internal func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateTryFinallyCatchStatement not implemented")
+	}
+
+	internal func generateReturnStatement(statement: CGReturnStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateReturnStatement not implemented")
+	}
+
+	internal func generateThrowStatement(statement: CGThrowStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateThrowStatement not implemented")
+	}
+
+	internal func generateBreakStatement(statement: CGBreakStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateBreakStatement not implemented")
+	}
+
+	internal func generateContinueStatement(statement: CGContinueStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateContinueStatement not implemented")
+	}
+
+	internal func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateVariableDeclarationStatement not implemented")
+	}
+
+	internal func generateAssignmentStatement(statement: CGAssignmentStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateAssignmentStatement not implemented")
+	}
+
+	//
+	// Expressions
+	//
 	
 	internal final func generateExpression(expression: CGExpression) {
 		// descendant should not override

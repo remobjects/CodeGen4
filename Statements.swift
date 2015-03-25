@@ -40,14 +40,14 @@ public class CGBlockStatement : CGStatement { // Abstract base for anhy block st
 }
 
 public class CGNestingStatement : CGStatement { // Abstract base for any statement that contains a single other statement
-	public var NestedStatement: CGStatement?
+	public var NestedStatement: CGStatement
 
 	public init(_ nestedStatement: CGStatement) {
 		NestedStatement = nestedStatement
 	}
 }
 
-public class CGBeginEndStatement : CGBlockStatement { //"begin/end" or "{/}"
+public class CGBeginEndBlockStatement : CGBlockStatement { //"begin/end" or "{/}"
 }
 
 public class CGIfElseStatement: CGStatement {
@@ -96,7 +96,7 @@ public class CGForEachLoopStatement: CGNestingStatement {
 	}
 }
 
-public class CGWhileDoStatement: CGNestingStatement {
+public class CGWhileDoLoopStatement: CGNestingStatement {
 	public var Condition: CGExpression
 
 	public init(_ condition: CGExpression, _ statement: CGStatement) {
@@ -105,7 +105,7 @@ public class CGWhileDoStatement: CGNestingStatement {
 	}
 }
 
-public class CGDoWhileStatement: CGBlockStatement { // also "repeat/until"
+public class CGDoWhileLoopStatement: CGBlockStatement { // also "repeat/until"
 	public var Condition: CGExpression
 
 	public init(_ condition: CGExpression, _ statements: List<CGStatement>) {
@@ -154,9 +154,9 @@ public class CGUsingStatement: CGNestingStatement {
 
 public class CGAutoReleasePoolStatement: CGNestingStatement {}
 
-public class CGTryFinalyCatchStatement: CGBlockStatement {
+public class CGTryFinallyCatchStatement: CGBlockStatement {
 	public var FinallyStatements = List<CGStatement>()
-	public var CatchBlockStatements = List<CGCatchBlockStatement>()	
+	public var CatchBlocks = List<CGCatchBlockStatement>()	
 }
 
 public class CGCatchBlockStatement: CGBlockStatement {
@@ -203,13 +203,13 @@ public class CGEmptyStatement: CGStatement {}
 public class CGVariableDeclarationStatement: CGStatement {
 	public var Name: String
 	public var `Type`: CGTypeReference?
-	public var Initializer: CGExpression?
+	public var Value: CGExpression?
 	public var Constant = false
 
-	public init(_ name: String, _ type: CGTypeReference?, initializer: CGExpression?) {
+	public init(_ name: String, _ type: CGTypeReference?, value: CGExpression?) {
 		Name = name
 		`Type` = type
-		Initializer = initializer
+		Value = value
 	}
 }
 

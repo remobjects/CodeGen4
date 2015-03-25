@@ -27,7 +27,7 @@ public class CGGlobalTypeDefinition : CGTypeDefinition {
 		Static = true
 	}
 	
-	public static lazy var GlobalType = CGGlobalTypeDefinition()
+	public static lazy let GlobalType = CGGlobalTypeDefinition()
 }
 
 public class CGTypeAliasDefinition : CGTypeDefinition {

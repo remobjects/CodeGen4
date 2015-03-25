@@ -19,7 +19,157 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	//
-	// Types
+	// Statements
+	//
+	
+	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+		AppendLine("{")
+		incIndent()
+		generateStatements(statement.Statements)
+		decIndent()
+		AppendLine("}")
+	}
+
+	override func generateIfElseStatement(statement: CGIfElseStatement) {
+		Append("if ")
+		generateExpression(statement.Condition)
+		AppendLine("{")
+		incIndent()
+		generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
+		decIndent()
+		Append("}")
+		if let elseStatement = statement.ElseStatement {
+			AppendLine(" else {")
+			incIndent()
+			generateStatementSkippingOuterBeginEndBlock(elseStatement)
+			decIndent()
+			Append("}")
+		} else {
+			AppendLine()
+		}
+		
+	}
+
+	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+
+	}
+
+	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
+
+	}
+
+	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+
+	}
+
+	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+
+	}
+
+	override func generateLockingStatement(statement: CGLockingStatement) {
+
+	}
+
+	override func generateUsingStatement(statement: CGUsingStatement) {
+
+	}
+
+	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+
+	}
+
+	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			AppendLine("__try { ")
+			incIndent()
+			generateStatements(statement.Statements)
+			decIndent()
+			AppendLine("}")
+			if let finallyStatements = statement.FinallyStatements /*where finallyStatements.Count > 0*/ {
+				AppendLine("__finally { ")
+				incIndent()
+				generateStatements(finallyStatements)
+				decIndent()
+				AppendLine("}")
+			}
+			if let catchBlocks = statement.CatchBlocks /*where catchBlocks.Count > 0*/ {
+				for b in catchBlocks {
+					if let type = b.`Type` {
+						Append("__catch ")
+						generateIdentifier(b.Name)
+						Append(": ")
+						generateTypeReference(type)
+						AppendLine(" {")
+					} else {
+						AppendLine("__catch { ")
+					}
+					incIndent()
+					generateStatements(b.Statements)
+					decIndent()
+					AppendLine("}")
+				}
+			}
+			//todo
+		}
+	}
+
+	override func generateReturnStatement(statement: CGReturnStatement) {
+		if let value = statement.Value {
+			Append("return ")
+			generateExpression(value)
+			AppendLine()
+		} else {
+			AppendLine("return")
+		}
+	}
+
+	override func generateThrowStatement(statement: CGThrowStatement) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			if let value = statement.Exception {
+				Append("__throw ")
+				generateExpression(value)
+				AppendLine()
+			} else {
+				AppendLine("__throw")
+			}
+		}
+	}
+
+	override func generateBreakStatement(statement: CGBreakStatement) {
+		AppendLine("break")
+	}
+
+	override func generateContinueStatement(statement: CGContinueStatement) {
+		AppendLine("continue")
+	}
+
+	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+		if statement.Constant {
+			Append("let ")
+		} else {
+			Append("var ")
+		}
+		generateIdentifier(statement.Name)
+		if let type = statement.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		if let value = statement.Value {
+			Append(" = ")
+			generateExpression(value)
+		}
+		//todo: smartly handle non-nulables w/o a valiue?
+	}
+
+	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+		generateExpression(statement.Target)
+		Append(" = ")
+		generateExpression(statement.Value)
+		AppendLine()
+	}	
+	
+	//
+	// Type Definitions
 	//
 	
 	func swiftGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
