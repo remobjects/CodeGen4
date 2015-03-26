@@ -358,6 +358,7 @@ public class CGMemberAccessExpression : CGExpression {
 	public var CallSite: CGExpression? // can be nil to call a local or global function/variable. Should be set to CGSelfExpression for local methods.
 	public var Name: String
 	public var NilSafe: Boolean = false // true to use colon or elvis operator
+	public var UnwrapNullable: Boolean = false // Swift only
 
 	public init(_ callSite: CGExpression?, _ name: String) {
 		CallSite = callSite
@@ -370,6 +371,7 @@ public class CGFieldAccessExpression : CGMemberAccessExpression {
 
 public class CGMethodCallExpression : CGMemberAccessExpression{
 	public var Parameters: List<CGMethodCallParameter>
+	public var CallOptionally: Boolean = false // Swift only
 
 	public init(_ callSite: CGExpression?, _ name: String) {
 		super.init(callSite, name)

@@ -51,16 +51,16 @@ public class CGEnumTypeDefinition : CGTypeDefinition {
 public class CGClassOrStructTypeDefinition : CGTypeDefinition { // Abstract base Class
 	public var Ancestors: List<CGTypeReference>
 	
-	init(_ name: String) {
+	public init(_ name: String) {
 		super.init(name)
 		Ancestors = List<CGTypeReference>()
 	}
-	init(_ name: String, _ ancestor: CGTypeReference) {
+	public init(_ name: String, _ ancestor: CGTypeReference) {
 		super.init(name)
 		Ancestors = List<CGTypeReference>()
 		Ancestors.Add(ancestor)
 	}
-	init(_ name: String, _ ancestors: List<CGTypeReference>) {
+	public init(_ name: String, _ ancestors: List<CGTypeReference>) {
 		super.init(name)
 		Ancestors = ancestors
 	}
@@ -103,6 +103,7 @@ public class CGTypeMemberDefinition: CGEntity {
 	public var Visibility: CGMemberVisibilityKind = .Private
 	public var Virtuality: CGMemberVirtualityKind = .None
 	public var Static = false
+	public var Overloaded = false
 	public var Locked = false /* Oxygene only */
 	public var LockedOn: CGExpression? /* Oxygene only */
 	
