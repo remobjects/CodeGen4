@@ -11,7 +11,7 @@ public enum CGTypeNullabilityKind {
 	case NullableNotUnwrapped
 }
 
-public class CGTypeReference : CGEntity {
+public __abstract class CGTypeReference : CGEntity {
 	public var Nullability: CGTypeNullabilityKind = .Default
 }
 

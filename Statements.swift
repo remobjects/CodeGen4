@@ -4,10 +4,10 @@ import Sugar.Linq
 
 /* Statements */
 
-public class CGStatement: CGEntity {
+public __abstract class CGStatement: CGEntity {
 }
 
-public class CGBaseMultilineStatement : CGStatement { // Abstract base for anhy block statement
+public __abstract class CGBaseMultilineStatement : CGStatement {
 	public var Lines: List<String>
 
 	public init(_ lines: List<String>) {
@@ -24,7 +24,7 @@ public class CGRawStatement : CGBaseMultilineStatement { // not language-agnosti
 public class CGCommentStatement : CGBaseMultilineStatement {
 }
 
-public class CGBlockStatement : CGStatement { // Abstract base for anhy block statement
+public __abstract class CGBlockStatement : CGStatement {
 	public var Statements: List<CGStatement>
 
 	public init() {
@@ -35,7 +35,7 @@ public class CGBlockStatement : CGStatement { // Abstract base for anhy block st
 	}
 }
 
-public class CGNestingStatement : CGStatement { // Abstract base for any statement that contains a single other statement
+public __abstract class CGNestingStatement : CGStatement {
 	public var NestedStatement: CGStatement
 
 	public init(_ nestedStatement: CGStatement) {

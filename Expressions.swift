@@ -4,7 +4,7 @@ import Sugar.Linq
 
 /* Expressions */
 
-public class CGExpression: CGStatement {
+public __abstract class CGExpression: CGStatement {
 }
 
 public class CGRawExpression : CGExpression { // not language-agnostic. obviosuly.
@@ -354,7 +354,7 @@ public class CGConstructorCallExpression {
 	}
 }
 
-public class CGMemberAccessExpression : CGExpression {
+public __abstract class CGMemberAccessExpression : CGExpression {
 	public var CallSite: CGExpression? // can be nil to call a local or global function/variable. Should be set to CGSelfExpression for local methods.
 	public var Name: String
 	public var NilSafe: Boolean = false // true to use colon or elvis operator

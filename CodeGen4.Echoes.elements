@@ -67,7 +67,6 @@
             <Private>True</Private>
         </Reference>
         <Reference Include="Sugar">
-            <HintPath>\Sugar.dll</HintPath>
             <Private>True</Private>
         </Reference>
     </ItemGroup>

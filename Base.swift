@@ -1,7 +1,7 @@
 ﻿import Sugar
 import Sugar.Collections
 
-public class CGEntity {
+public __abstract class CGEntity {
 }
 
 public class CGCodeUnit {
@@ -61,13 +61,7 @@ public class CGNamespaceReference {
 	}
 }
 
-/*public enum CGGlobalDefinition {
-
-	case Function(CGMethodDefinition)
-	case Variable(CGFieldDefinition)
-}*/
-
-public class CGGlobalDefinition {
+public __abstract class CGGlobalDefinition {
 }
 
 public class CGGlobalFunctionDefinition : CGGlobalDefinition {

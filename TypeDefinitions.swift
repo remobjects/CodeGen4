@@ -9,7 +9,7 @@ public enum CGTypeVisibilityKind {
 	case Public
 }
 
-public class CGTypeDefinition : CGEntity {
+public __abstract class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGTypeMemberDefinition>()
@@ -48,7 +48,7 @@ public class CGEnumTypeDefinition : CGTypeDefinition {
 	public var Values = Dictionary<String, CGExpression>()
 }
 
-public class CGClassOrStructTypeDefinition : CGTypeDefinition { // Abstract base Class
+public __abstract class CGClassOrStructTypeDefinition : CGTypeDefinition {
 	public var Ancestors: List<CGTypeReference>
 	public var Partial = false
 	
@@ -102,7 +102,7 @@ public enum CGMemberVirtualityKind {
 	case Reintroduce
 }
 
-public class CGTypeMemberDefinition: CGEntity {
+public __abstract class CGTypeMemberDefinition: CGEntity {
 	public var Name: String
 	public var Visibility: CGMemberVisibilityKind = .Private
 	public var Virtuality: CGMemberVirtualityKind = .None
@@ -152,15 +152,20 @@ public class CGOperatorDefinition: CGTypeMemberDefinition {
 public class CGConstructorDefinition: CGMethodDefinition {
 }
 
-public class CGFieldDefinition: CGTypeMemberDefinition {
+public __abstract class CGFieldOrPropertyDefinition: CGTypeMemberDefinition {
 	public var `Type`: CGTypeReference?
 	public var Initializer: CGExpression?
+}
+
+public class CGFieldDefinition: CGFieldOrPropertyDefinition {
 	public var Constant = false
 }
 
-public class CGPropertyDefinition: CGTypeMemberDefinition {
+public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var Lazy = false
-	//incomplete
+	public var Parameters: List<CGParameterDefinition>?
+	public var GetStatements: List<CGStatement>?
+	public var SetStatements: List<CGStatement>?
 }
 
 public class CGEventDefinition: CGTypeMemberDefinition {
