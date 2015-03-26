@@ -135,6 +135,7 @@ public class CGConstructorDefinition: CGMethodDefinition {
 public class CGFieldDefinition: CGTypeMemberDefinition {
 	public var `Type`: CGTypeReference?
 	public var Initializer: CGExpression?
+	public var Constant = false
 }
 
 public class CGPropertyDefinition: CGTypeMemberDefinition {

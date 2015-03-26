@@ -33,9 +33,9 @@ public class CGNamedTypeReference : CGTypeReference {
 }
 
 public class CGPredfinedTypeReference : CGTypeReference {
-	public var Kind: CGPredfinedTypeKind
+	public var Kind: CGPredefinedTypeKind
 	
-	public init(_ kind: CGPredfinedTypeKind) {
+	public init(_ kind: CGPredefinedTypeKind) {
 		Kind = kind
 	}
 
@@ -63,7 +63,7 @@ public class CGPredfinedTypeReference : CGTypeReference {
 	public static lazy var Object = CGPredfinedTypeReference(.Object)
 }
 
-public enum CGPredfinedTypeKind {
+public enum CGPredefinedTypeKind {
 	case Int8
 	case UInt8
 	case Int16
