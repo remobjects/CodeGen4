@@ -49,6 +49,21 @@ public class CGEnumTypeDefinition : CGTypeDefinition {
 }
 
 public class CGClassOrStructTypeDefinition : CGTypeDefinition { // Abstract base Class
+	public var Ancestors: List<CGTypeReference>
+	
+	init(_ name: String) {
+		super.init(name)
+		Ancestors = List<CGTypeReference>()
+	}
+	init(_ name: String, _ ancestor: CGTypeReference) {
+		super.init(name)
+		Ancestors = List<CGTypeReference>()
+		Ancestors.Add(ancestor)
+	}
+	init(_ name: String, _ ancestors: List<CGTypeReference>) {
+		super.init(name)
+		Ancestors = ancestors
+	}
 }
 
 public class CGClassTypeDefinition : CGClassOrStructTypeDefinition {
