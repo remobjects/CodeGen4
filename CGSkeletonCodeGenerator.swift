@@ -304,6 +304,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+
+	}
+	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 
 	}

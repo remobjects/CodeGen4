@@ -661,6 +661,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(">")
 	}
 	
+	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+		Append("(")
+		for var m: Int32 = 0; m < type.Members.Count; m++ {
+			if m > 0 {
+				Append(", ")
+			}
+			generateTypeReference(type.Members[m])
+		}
+		Append(")")
+	}
+	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 		
 		switch (type.ArrayKind){

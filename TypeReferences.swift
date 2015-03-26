@@ -104,6 +104,17 @@ public class CGPointerTypeReference : CGTypeReference {
 	}
 }
 
+public class CGTupleTypeReference : CGTypeReference {
+	public var Members: List<CGTypeReference>
+	
+	public init(_ members: List<CGTypeReference>) {
+		Members = members
+	}
+	public /*convenience*/ init(_ members: CGTypeReference...) {
+		init(members.ToList())
+	}
+}
+
 /* Arrays */
 
 public enum CGArrayKind {

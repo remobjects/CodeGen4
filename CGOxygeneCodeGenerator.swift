@@ -59,4 +59,19 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append(")")
 	}
 
+
+	//
+	// Type References
+	//
+	
+	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+		Append("tuple of (")
+		for var m: Int32 = 0; m < type.Members.Count; m++ {
+			if m > 0 {
+				Append(", ")
+			}
+			generateTypeReference(type.Members[m])
+		}
+		Append(")")
+	}
 }
