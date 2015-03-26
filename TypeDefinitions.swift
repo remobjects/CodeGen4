@@ -122,7 +122,7 @@ public class CGEnumValueDefinition: CGTypeMemberDefinition {
 	init(_ name: String) {
 		super.init(name)
 	}
-	public init(_ name: String, _ value: CGExpression) {
+	public convenience init(_ name: String, _ value: CGExpression) {
 		init(name)
 		Value = value;
 	}
@@ -138,7 +138,7 @@ public class CGMethodDefinition: CGTypeMemberDefinition {
 		super.init(name)
 		Statements = List<CGStatement>()
 	}
-	public init(_ name: String, _ statements: List<CGStatement>) {
+	public convenience init(_ name: String, _ statements: List<CGStatement>) {
 		init(name)
 		Statements = statements;
 	}

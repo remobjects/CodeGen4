@@ -338,7 +338,7 @@ public class CGTupleLiteralExpression : CGExpression {
 	public init(_ members: List<CGExpression>) {
 		Members = members
 	}
-	public /*convenience*/ init(_ members: CGExpression...) {
+	public convenience init(_ members: CGExpression...) {
 		init(members.ToList())
 	}
 }

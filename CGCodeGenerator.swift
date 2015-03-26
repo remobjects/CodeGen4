@@ -714,7 +714,6 @@ public class CGCodeGenerator {
 		assert(false, "generateMethodDefinition not implemented")
 	}
 
-
 	//
 	// Type References
 	//
