@@ -44,4 +44,19 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			default: super.generateBinaryOperator(`operator`)
 		}
 	}
+
+	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+		Append("(if")
+		generateExpression(expression.Condition)
+		Append(" then (")
+		generateExpression(expression.IfExpression)
+		Append(")")
+		if let elseExpression = expression.ElseExpression {
+			Append(" else (")
+			generateExpression(elseExpression)
+			Append(")")
+		}
+		Append(")")
+	}
+
 }

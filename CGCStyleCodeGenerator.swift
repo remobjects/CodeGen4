@@ -161,4 +161,16 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+		Append("(")
+		generateExpression(expression.Condition)
+		Append(" ? ")
+		generateExpression(expression.IfExpression)
+		if let elseExpression = expression.ElseExpression {
+			Append(" : ")
+			generateExpression(elseExpression)
+		}
+		Append(")")
+	}
+
 }

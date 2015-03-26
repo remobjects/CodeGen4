@@ -467,13 +467,28 @@ public class CGCodeGenerator {
 	}
 
 	internal func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-		// descendant must override
-		assert(false, "generateUnaryOperatorExpression not implemented")
+		Append("(")
+		if let operatorString = expression.OperatorString {
+			Append(operatorString)
+		} else if let `operator` = expression.Operator {
+			generateUnaryOperator(`operator`)
+		}
+		generateExpression(expression.Value)
+		Append(")")
 	}
 
 	internal func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
-		// descendant must override
-		assert(false, "generateBinaryOperatorExpression not implemented")
+		Append("(")
+		generateExpression(expression.LefthandValue)
+		Append(" ")
+		if let operatorString = expression.OperatorString {
+			Append(operatorString)
+		} else if let `operator` = expression.Operator {
+			generateBinaryOperator(`operator`)
+		}
+		Append(" ")
+		generateExpression(expression.RighthandValue)
+		Append(")")
 	}
 
 	internal func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {

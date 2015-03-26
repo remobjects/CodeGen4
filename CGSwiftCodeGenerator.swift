@@ -303,28 +303,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
-	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-		Append("(")
-		if let operatorString = expression.OperatorString {
-			Append(operatorString)
-		} else if let `operator` = expression.Operator {
-			generateUnaryOperator(`operator`)
-		}
-		generateExpression(expression.Value)
-		Append(")")
-	}
+	/*override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+		// handled in base
+	}*/
 
-	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
-		Append("(")
-		generateExpression(expression.LefthandValue)
-		if let operatorString = expression.OperatorString {
-			Append(operatorString)
-		} else if let `operator` = expression.Operator {
-			generateBinaryOperator(`operator`)
-		}
-		generateExpression(expression.RighthandValue)
-		Append(")")
-	}
+	/*override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+		// handled in base
+	}*/
 
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
@@ -334,19 +319,69 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
-
+		// handled in base
+	}
+	
+	internal func swiftGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
+		if let callSite = expression.CallSite {
+			generateExpression(callSite)
+			if expression.NilSafe {
+				Append("?")
+			} else if expression.UnwrapNullable {
+				Append("!")
+			}
+			Append(".")
+		}
 	}
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-
+		swiftGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
 	}
 
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-
+		swiftGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
+		if expression.CallOptionally {
+			Append("?")
+		}
+		Append("(")
+		for var p = 0; p < expression.Parameters.Count; p++ {
+			let param = expression.Parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(": ")
+			}
+			switch param.Modifier {
+				case .Out: fallthrough
+				case .Var: 
+					Append("&(")
+					generateExpression(param.Value)
+					Append(")")
+				default: 
+					generateExpression(param.Value)
+			}
+		}
+		Append(")")
 	}
 
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-
+		swiftGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
+		if expression.Parameters.Count > 0 {
+			Append("[")
+			for var p = 0; p < expression.Parameters.Count; p++ {
+				let param = expression.Parameters[p]
+				if p > 0 {
+					Append(", ")
+				}
+				generateExpression(param.Value)
+			}
+			Append("]")
+		}
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
