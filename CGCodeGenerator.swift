@@ -577,6 +577,8 @@ public class CGCodeGenerator {
 			generateStructType(type)
 		} else if let type = type as? CGInterfaceTypeDefinition {
 			generateInterfaceType(type)
+		} else if let type = type as? CGExtensionTypeDefinition {
+			generateExtensionType(type)
 		}
 		
 		else {
@@ -625,6 +627,13 @@ public class CGCodeGenerator {
 		generateInterfaceTypeEnd(type)
 	}
 	
+	internal func generateExtensionType(type: CGExtensionTypeDefinition) {
+		// descendant should not usually override
+		generateExtensionTypeStart(type)
+		generateTypeMembers(type)
+		generateExtensionTypeEnd(type)
+	}
+	
 	internal final func generateTypeMembers(type: CGTypeDefinition) {
 		for m in type.Members {
 			generateTypeMember(m, type: type);
@@ -659,6 +668,16 @@ public class CGCodeGenerator {
 	internal func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
 		// descendant must override
 		assert(false, "generateInterfaceTypeEnd not implemented")
+	}	
+	
+	internal func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+		// descendant must override
+		assert(false, "generateExtensionTypeStart not implemented")
+	}
+	
+	internal func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+		// descendant must override
+		assert(false, "generateExtensionTypeEnd not implemented")
 	}	
 	
 	internal final func generateTypeMember(member: CGTypeMemberDefinition, type: CGTypeDefinition) {

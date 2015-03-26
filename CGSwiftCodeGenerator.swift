@@ -545,6 +545,21 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 	}	
 	
+	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+		Append("extension ")
+		generateIdentifier(type.Name)
+		Append(" ")
+		AppendLine("{ ")
+		incIndent()
+	}
+	
+	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+		decIndent()
+		AppendLine("}")
+		AppendLine()
+	}	
+
 	//
 	// Type Members
 	//

@@ -50,6 +50,7 @@ public class CGEnumTypeDefinition : CGTypeDefinition {
 
 public class CGClassOrStructTypeDefinition : CGTypeDefinition { // Abstract base Class
 	public var Ancestors: List<CGTypeReference>
+	public var Partial = false
 	
 	public init(_ name: String) {
 		super.init(name)
@@ -73,6 +74,9 @@ public class CGStructTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
 public class CGInterfaceTypeDefinition : CGClassOrStructTypeDefinition {
+}
+
+public class CGExtensionTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
 /* Type members */

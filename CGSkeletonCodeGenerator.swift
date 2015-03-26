@@ -246,6 +246,14 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}	
 	
+	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+
+	}
+	
+	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+
+	}	
+	
 	//
 	// Type Members
 	//
