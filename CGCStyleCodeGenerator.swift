@@ -117,4 +117,48 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.Value)
 		AppendLine()
 	}	
+	
+	//
+	// Expressions
+	//
+	
+	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+		switch (`operator`) {
+			case .Plus: Append("+")
+			case .Minus: Append("-")
+			case .Not: Append("!")
+		}
+	}
+	
+	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+		switch (`operator`) {
+			case .Addition: Append("+")
+			case .Subtraction: Append("-")
+			case .Multiplication: Append("*")
+			case .Division: Append("/")
+			case .LegacyPascalDivision: Append("/") // not really supported in C-Style
+			case .Modulus: Append("%")
+			case .Equals: Append("==")
+			case .NotEquals: Append("!=")
+			case .LessThan: Append("<")
+			case .LessThanOrEquals: Append("<=")
+			case .GreaterThan: Append(">")
+			case .GreatThanOrEqual: Append(">=")
+			case .LogicalAnd: Append("&&")
+			case .LogicalOr: Append("||")
+			case .LogicalXor: Append("^^")
+			case .Shl: Append("<<")
+			case .Shr: Append(">>")
+			case .BitwiseAnd: Append("&")
+			case .BitwiseOr: Append("|")
+			case .BitwiseXor: Append("^")
+			//case .Implies: 
+			case .Is: Append("is")
+			//case .IsNot:
+			//case .In:
+			//case .NotIn:
+			default: Append("/* NOT SUPPORTED */") /* Oxygene only */
+		}
+	}
+
 }

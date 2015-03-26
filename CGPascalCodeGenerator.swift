@@ -265,6 +265,45 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+		switch (`operator`) {
+			case .Plus: Append("+")
+			case .Minus: Append("-")
+			case .Not: Append("not ")
+		}
+	}
+	
+	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+		switch (`operator`) {
+			case .Addition: Append("+")
+			case .Subtraction: Append("-")
+			case .Multiplication: Append("*")
+			case .Division: Append("/")
+			case .LegacyPascalDivision: Append("div")
+			case .Modulus: Append("mod")
+			case .Equals: Append("=")
+			case .NotEquals: Append("<>")
+			case .LessThan: Append("<")
+			case .LessThanOrEquals: Append("<=")
+			case .GreaterThan: Append(">")
+			case .GreatThanOrEqual: Append(">=")
+			case .LogicalAnd: Append("and")
+			case .LogicalOr: Append("or")
+			case .LogicalXor: Append("xor")
+			case .Shl: Append("shl")
+			case .Shr: Append("shr")
+			case .BitwiseAnd: Append("and")
+			case .BitwiseOr: Append("or")
+			case .BitwiseXor: Append("xor")
+			//case .Implies: 
+			case .Is: Append("is")
+			//case .IsNot:
+			case .In: Append("in")
+			//case .NotIn:
+			default: Append("/* NOT SUPPORTED */")
+		}
+	}
+
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
 
 	}

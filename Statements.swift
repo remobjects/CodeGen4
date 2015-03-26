@@ -1,5 +1,6 @@
 ﻿import Sugar
 import Sugar.Collections
+import Sugar.Linq
 
 /* Statements */
 

@@ -115,6 +115,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+		// handled in base
 	}*/
 
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
@@ -130,7 +131,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
-
+		AppendLine("autoreleasepool { ")
+		incIndent()
+		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
@@ -171,6 +176,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*override func generateReturnStatement(statement: CGReturnStatement) {
+		// handled in base
 	}*/
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
@@ -188,9 +194,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*override func generateBreakStatement(statement: CGBreakStatement) {
+		// handled in base
 	}*/
 
 	/*override func generateContinueStatement(statement: CGContinueStatement) {
+		// handled in base
 	}*/
 
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
@@ -212,6 +220,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+		// handled in base
 	}*/	
 	
 	//
@@ -219,9 +228,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	/*override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+		// handled in base
 	}*/
 
 	/*override func generateAssignedExpression(expression: CGAssignedExpression) {
+		// handled in base
 	}*/
 
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
@@ -249,7 +260,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
-
+		Append("(")
+		generateExpression(expression.Expression)
+		Append("as")
+		if !expression.GuaranteedSafe {
+			if expression.ThrowsException {
+				Append("!")
+			} else{
+				Append("?")
+			}
+		}
+		Append(" ")
+		generateTypeReference(expression.TargetType)
+		Append(")")
 	}
 
 	override func generateInheritedExpression(expression: CGInheritedExpression) {
@@ -281,11 +304,33 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-
+		Append("(")
+		if let operatorString = expression.OperatorString {
+			Append(operatorString)
+		} else if let `operator` = expression.Operator {
+			generateUnaryOperator(`operator`)
+		}
+		generateExpression(expression.Value)
+		Append(")")
 	}
 
 	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+		Append("(")
+		generateExpression(expression.LefthandValue)
+		if let operatorString = expression.OperatorString {
+			Append(operatorString)
+		} else if let `operator` = expression.Operator {
+			generateBinaryOperator(`operator`)
+		}
+		generateExpression(expression.RighthandValue)
+		Append(")")
+	}
 
+	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+		switch (`operator`) {
+			case .Is: Append("is")
+			default: super.generateBinaryOperator(`operator`)
+		}
 	}
 
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {

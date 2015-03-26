@@ -1,5 +1,6 @@
 ﻿import Sugar
 import Sugar.Collections
+import Sugar.Linq
 
 /* Expressions */
 
@@ -58,8 +59,8 @@ public class CGSelectorExpression: CGExpression { /* Cocoa only */
 }
 
 public class CGTypeCastExpression: CGExpression {
-	public var Expression: CGExpression?
-	public var TargetType: CGTypeReference?
+	public var Expression: CGExpression
+	public var TargetType: CGTypeReference
 	public var ThrowsException = false
 	public var GuaranteedSafe = false // in Silver, this uses "as"
 

@@ -28,4 +28,20 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			AppendLine("exit;")
 		}
 	}
+	
+	//
+	// Expressions
+	//
+
+	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+		switch (`operator`) {
+			case .NotEquals: Append("≠")
+			case .LessThanOrEquals: Append("≤")
+			case .GreatThanOrEqual: Append("≥")
+			case .Implies: Append("implies")
+			case .IsNot: Append("is not")
+			case .NotIn: Append("not in")
+			default: super.generateBinaryOperator(`operator`)
+		}
+	}
 }

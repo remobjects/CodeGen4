@@ -476,6 +476,12 @@ public class CGCodeGenerator {
 		assert(false, "generateBinaryOperatorExpression not implemented")
 	}
 
+	internal func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+	}
+	
+	internal func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+	}
+
 	internal func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
 		// descendant must override
 		assert(false, "generateIfThenElseExpressionExpression not implemented")
