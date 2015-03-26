@@ -422,6 +422,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+		Append("^")
+		generateTypeReference(type.`Type`)
+	}
+	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 
 	}

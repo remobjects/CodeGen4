@@ -300,6 +300,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+
+	}
+	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 
 	}

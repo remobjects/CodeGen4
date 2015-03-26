@@ -708,6 +708,8 @@ public class CGCodeGenerator {
 			generatePredefinedTypeReference(type)
 		} else if let type = type as? CGInlineBlockTypeReference {
 			generateInlineBlockTypeReference(type)
+		} else if let type = type as? CGPointerTypeReference {
+			generatePointerTypeReference(type)
 		} else if let type = type as? CGArrayTypeReference {
 			generateArrayTypeReference(type)
 		} else if let type = type as? CGDictionaryTypeReference {
@@ -752,6 +754,10 @@ public class CGCodeGenerator {
 	
 	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
 		assert(false, "generateInlineBlockTypeReference not implemented")
+	}
+	
+	internal func generatePointerTypeReference(type: CGPointerTypeReference) {
+		assert(false, "generatPointerTypeReference not implemented")
 	}
 	
 	internal func generateArrayTypeReference(type: CGArrayTypeReference) {

@@ -655,6 +655,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateInlineBlockType(type.Block)
 	}
 	
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+		Append("UnsafePointer<")
+		generateTypeReference(type.`Type`)
+		Append(">")
+	}
+	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 		
 		switch (type.ArrayKind){
