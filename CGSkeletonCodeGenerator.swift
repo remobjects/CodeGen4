@@ -206,6 +206,9 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	/*override func generateTupleExpression(expression: CGTupleLiteralExpression) {
+	}*/
+	
 	//
 	// Type Definitions
 	//

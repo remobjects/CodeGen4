@@ -389,6 +389,8 @@ public class CGCodeGenerator {
 			generateArrayLiteralExpression(expression)
 		} else if let expression = expression as? CGDictionaryLiteralExpression {
 			generateDictionaryExpression(expression)
+		} else if let expression = expression as? CGTupleLiteralExpression {
+			generateTupleExpression(expression)
 		}
 		
 		else {
@@ -467,6 +469,7 @@ public class CGCodeGenerator {
 	}
 
 	internal func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+		// descendant may override, but this will work for most languages.
 		Append("(")
 		if let operatorString = expression.OperatorString {
 			Append(operatorString)
@@ -478,6 +481,7 @@ public class CGCodeGenerator {
 	}
 
 	internal func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+		// descendant may override, but this will work for most languages.
 		Append("(")
 		generateExpression(expression.LefthandValue)
 		Append(" ")
@@ -492,9 +496,13 @@ public class CGCodeGenerator {
 	}
 
 	internal func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+		// descendant must override
+		assert(false, "generateUnaryOperator not implemented")
 	}
 	
 	internal func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+		// descendant must override
+		assert(false, "generateBinaryOperator not implemented")
 	}
 
 	internal func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
@@ -537,7 +545,18 @@ public class CGCodeGenerator {
 		assert(false, "generateDictionaryExpression not implemented")
 	}
 	
-
+	internal func generateTupleExpression(expression: CGTupleLiteralExpression) {
+		// descendant may override, but this will work for most languages.
+		Append("(")
+		for var m: Int32 = 0; m < expression.Members.Count; m++ {
+			if m > 0 {
+				Append(", ")
+			}
+			generateExpression(expression.Members[m])
+		}
+		Append(")")
+	}
+	
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren;t happy with the default
 		return expression.StringRepresentation

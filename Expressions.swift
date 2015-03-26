@@ -332,6 +332,17 @@ public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, curren
 	}
 }
 
+public class CGTupleLiteralExpression : CGExpression {
+	public var Members: List<CGExpression>
+	
+	public init(_ members: List<CGExpression>) {
+		Members = members
+	}
+	public /*convenience*/ init(_ members: CGExpression...) {
+		init(members.ToList())
+	}
+}
+
 /* Calls */
 
 public class CGConstructorCallExpression {
