@@ -32,35 +32,35 @@ public class CGNamedTypeReference : CGTypeReference {
 	}
 }
 
-public class CGPredfinedTypeReference : CGTypeReference {
+public class CGPredefinedTypeReference : CGTypeReference {
 	public var Kind: CGPredefinedTypeKind
 	
 	public init(_ kind: CGPredefinedTypeKind) {
 		Kind = kind
 	}
 
-	public static lazy var Int8 = CGPredfinedTypeReference(.Int8)
-	public static lazy var UInt8 = CGPredfinedTypeReference(.UInt8)
-	public static lazy var Int16 = CGPredfinedTypeReference(.Int16)
-	public static lazy var UInt16 = CGPredfinedTypeReference(.UInt16)
-	public static lazy var Int32 = CGPredfinedTypeReference(.Int32)
-	public static lazy var UInt32 = CGPredfinedTypeReference(.UInt32)
-	public static lazy var Int64 = CGPredfinedTypeReference(.Int64)
-	public static lazy var UInt64 = CGPredfinedTypeReference(.UInt64)
-	public static lazy var IntPtr = CGPredfinedTypeReference(.IntPtr)
-	public static lazy var UIntPtr = CGPredfinedTypeReference(.UIntPtr)
-	public static lazy var Single = CGPredfinedTypeReference(.Single)
-	public static lazy var Double = CGPredfinedTypeReference(.Double)
-	//public static lazy var Decimal = CGPredfinedTypeReference(.Decimal)
-	public static lazy var Boolean = CGPredfinedTypeReference(.Boolean)
-	public static lazy var String = CGPredfinedTypeReference(.String)
-	public static lazy var AnsiChar = CGPredfinedTypeReference(.AnsiChar)
-	public static lazy var UTF16Char = CGPredfinedTypeReference(.UTF16Char)
-	public static lazy var UTF32Char = CGPredfinedTypeReference(.UTF32Char)
-	public static lazy var Dynamic = CGPredfinedTypeReference(.Dynamic)
-	public static lazy var InstanceType = CGPredfinedTypeReference(.InstanceType)
-	public static lazy var Void = CGPredfinedTypeReference(.Void)
-	public static lazy var Object = CGPredfinedTypeReference(.Object)
+	public static lazy var Int8 = CGPredefinedTypeReference(.Int8)
+	public static lazy var UInt8 = CGPredefinedTypeReference(.UInt8)
+	public static lazy var Int16 = CGPredefinedTypeReference(.Int16)
+	public static lazy var UInt16 = CGPredefinedTypeReference(.UInt16)
+	public static lazy var Int32 = CGPredefinedTypeReference(.Int32)
+	public static lazy var UInt32 = CGPredefinedTypeReference(.UInt32)
+	public static lazy var Int64 = CGPredefinedTypeReference(.Int64)
+	public static lazy var UInt64 = CGPredefinedTypeReference(.UInt64)
+	public static lazy var IntPtr = CGPredefinedTypeReference(.IntPtr)
+	public static lazy var UIntPtr = CGPredefinedTypeReference(.UIntPtr)
+	public static lazy var Single = CGPredefinedTypeReference(.Single)
+	public static lazy var Double = CGPredefinedTypeReference(.Double)
+	//public static lazy var Decimal = CGPredefinedTypeReference(.Decimal)
+	public static lazy var Boolean = CGPredefinedTypeReference(.Boolean)
+	public static lazy var String = CGPredefinedTypeReference(.String)
+	public static lazy var AnsiChar = CGPredefinedTypeReference(.AnsiChar)
+	public static lazy var UTF16Char = CGPredefinedTypeReference(.UTF16Char)
+	public static lazy var UTF32Char = CGPredefinedTypeReference(.UTF32Char)
+	public static lazy var Dynamic = CGPredefinedTypeReference(.Dynamic)
+	public static lazy var InstanceType = CGPredefinedTypeReference(.InstanceType)
+	public static lazy var Void = CGPredefinedTypeReference(.Void)
+	public static lazy var Object = CGPredefinedTypeReference(.Object)
 }
 
 public enum CGPredefinedTypeKind {
@@ -93,6 +93,14 @@ public class CGInlineBlockTypeReference : CGTypeReference {
 
 	public init(_ block: CGBlockTypeDefinition) {
 		Block = block
+	}
+}
+
+public class CGPointerTypeReference : CGTypeReference {
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type;
 	}
 }
 

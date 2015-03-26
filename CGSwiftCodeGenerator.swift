@@ -625,7 +625,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
 	}
 	
-	override func generatePredefinedTypeReference(type: CGPredfinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
 		switch (type.Kind) {
 			case .Int8: Append("Int8");
 			case .UInt8: Append("UInt8");

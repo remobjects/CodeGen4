@@ -196,7 +196,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	
-	override func generatePredefinedTypeReference(type: CGPredfinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
 		switch (type.Kind) {
 			case .Int8: Append("");
 			case .UInt8: Append("");

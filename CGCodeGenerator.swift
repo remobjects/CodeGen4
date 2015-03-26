@@ -704,7 +704,7 @@ public class CGCodeGenerator {
 		// descendant should not override
 		if let type = type as? CGNamedTypeReference {
 			generateNamedTypeReference(type)
-		} else if let type = type as? CGPredfinedTypeReference {
+		} else if let type = type as? CGPredefinedTypeReference {
 			generatePredefinedTypeReference(type)
 		} else if let type = type as? CGInlineBlockTypeReference {
 			generateInlineBlockTypeReference(type)
@@ -723,7 +723,7 @@ public class CGCodeGenerator {
 		generateIdentifier(type.Name)
 	}
 	
-	internal func generatePredefinedTypeReference(type: CGPredfinedTypeReference) {
+	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
 		// most language swill want to override this
 		switch (type.Kind) {
 			case .Int8: Append("SByte");
