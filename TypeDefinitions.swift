@@ -119,7 +119,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 public class CGEnumValueDefinition: CGMemberDefinition {
 	public var Value: CGExpression?
 	
-	init(_ name: String) {
+	public init(_ name: String) {
 		super.init(name)
 	}
 	public convenience init(_ name: String, _ value: CGExpression) {
@@ -139,7 +139,7 @@ public class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 
-	init(_ name: String) {
+	public init(_ name: String) {
 		super.init(name)
 		Statements = List<CGStatement>()
 	}
