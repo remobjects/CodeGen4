@@ -128,9 +128,12 @@ public class CGEnumValueDefinition: CGMemberDefinition {
 	}
 }
 
-public class CGMethodDefinition: CGMemberDefinition {
+//
+// Methods & Co
+//
+
+public class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
-	public var ReturnType: CGTypeReference?
 	public var Inline = false
 	public var Statements: List<CGStatement>
 
@@ -144,15 +147,23 @@ public class CGMethodDefinition: CGMemberDefinition {
 	}
 }
 
-public class CGOperatorDefinition: CGMemberDefinition {
-	public var Parameters = List<CGParameterDefinition>()
+public class CGMethodDefinition: CGMethodLikeMemberDefinition {
 	public var ReturnType: CGTypeReference?
 }
 
-public class CGConstructorDefinition: CGMethodDefinition {
+public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
+	public let ReturnType = CGPredefinedTypeReference.InstanceType
 }
 
-public __abstract class CGTypedMemberDefinition: CGMemberDefinition {
+public class CGCustomOperatorDefinition: CGMethodLikeMemberDefinition {
+	public var ReturnType: CGTypeReference?
+}
+
+//
+// Fields & Co
+//
+
+public __abstract class CGFieldLikedMemberDefinition: CGMemberDefinition {
 	public var `Type`: CGTypeReference?
 
 	public init(_ name: String, _ type: CGTypeReference) {
@@ -161,7 +172,7 @@ public __abstract class CGTypedMemberDefinition: CGMemberDefinition {
 	}
 }
 
-public __abstract class CGFieldOrPropertyDefinition: CGTypedMemberDefinition {
+public __abstract class CGFieldOrPropertyDefinition: CGFieldLikeMemberDefinition {
 	public var Initializer: CGExpression?
 }
 
@@ -171,6 +182,7 @@ public class CGFieldDefinition: CGFieldOrPropertyDefinition {
 
 public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var Lazy = false
+	public var Default = false
 	public var Parameters: List<CGParameterDefinition>?
 	public var GetStatements: List<CGStatement>?
 	public var SetStatements: List<CGStatement>?
@@ -195,7 +207,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	}   
 }
 
-public class CGEventDefinition: CGTypedMemberDefinition {
+public class CGEventDefinition: CGFieldLikeMemberDefinition {
 	public var AddStatements: List<CGStatement>?
 	public var RemoveStatements: List<CGStatement>?
 	public var RaiseStatements: List<CGStatement>?
@@ -211,7 +223,9 @@ public class CGEventDefinition: CGTypedMemberDefinition {
 	}
 }
 
-/* Parameters */
+//
+// Parameters
+//
 
 public enum ParameterModifierKind {
 	case In

@@ -110,6 +110,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	//
 	// Expressions
 	//
+
 	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
 
 	}
@@ -205,9 +206,12 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
 
 	}
-	
-	/*override func generateTupleExpression(expression: CGTupleLiteralExpression) {
-	}*/
+
+	/*
+	override func generateTupleExpression(expression: CGTupleLiteralExpression) {
+		// default handled in base
+	}
+	*/
 	
 	//
 	// Type Definitions
@@ -256,7 +260,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
 
 	}	
-	
+
 	//
 	// Type Members
 	//
@@ -265,6 +269,26 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	override func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+
+	}
+
 	//
 	// Type References
 	//

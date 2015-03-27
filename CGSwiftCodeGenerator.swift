@@ -193,9 +193,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	/*override func generateBreakStatement(statement: CGBreakStatement) {
+	/*
+	override func generateBreakStatement(statement: CGBreakStatement) {
 		// handled in base
-	}*/
+	}
+	*/
 
 	/*override func generateContinueStatement(statement: CGContinueStatement) {
 		// handled in base
@@ -219,21 +221,27 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		//todo: smartly handle non-nulables w/o a valiue?
 	}
 
-	/*override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+	/*
+	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
 		// handled in base
-	}*/	
-	
+	}	
+	*/
+
 	//
 	// Expressions
 	//
 
-	/*override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+	/*
+	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
 		// handled in base
-	}*/
+	}
+	*/
 
-	/*override func generateAssignedExpression(expression: CGAssignedExpression) {
+	/*
+	override func generateAssignedExpression(expression: CGAssignedExpression) {
 		// handled in base
-	}*/
+	}
+	*/
 
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
 		Append("sizeOf(")
@@ -383,21 +391,43 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append("]")
 		}
 	}
+	
+	internal func swiftEscapeCharactersInStringLiteral(string: String) -> String {
+		return string.Replace("\"", "\\\"")
+		//todo: this is incomplete, we need to escape any invalid chars
+	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
-
+		Append("\"\(swiftEscapeCharactersInStringLiteral(expression.Value))\"")
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-
+		Append("\"\(swiftEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
 	}
 
-	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
-
+	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+		Append("[")
+		for var e = 0; e < array.Elements.Count; e++ {
+			if e > 0 {
+				Append(", ")
+			}
+			generateExpression(array.Elements[e])
+		}
+		Append("]")
 	}
 
-	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
-
+	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
+		Append("[")
+		for var e = 0; e < dictionary.Keys.Count; e++ {
+			if e > 0 {
+				Append(", ")
+			}
+			generateExpression(dictionary.Keys[e])
+			Append(": ")
+			generateExpression(dictionary.Values[e])
+		}
+		Append("]")
 	}
 	
 	//
@@ -592,6 +622,111 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 	}
 	
+	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+		swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
+		Append("init(")
+		// params
+		Append(")")
+		AppendLine(" {")
+		incIndent()
+		generateStatements(ctor.Statements)
+		decIndent()
+		AppendLine("}")
+		AppendLine()
+	}
+
+	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility)
+		if field.Constant {
+			Append("let ")
+		} else {
+			Append("var ")
+		}
+		generateIdentifier(field.Name)
+		if let type = field.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		if let value = field.Initializer {
+			Append(" = ")
+			generateExpression(value)
+		}
+	}
+
+	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		if property.Lazy {
+			Append("lazy ")
+		}
+		if property.SetStatements == nil && property.SetExpression == nil {
+			Append("let ")
+		} else {
+			Append("var ")
+		}
+		generateIdentifier(property.Name)
+		if let type = property.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		AppendLine(" {")
+		incIndent()
+		
+		if let getStatements = property.GetStatements {
+			AppendLine("get {")
+			incIndent()
+			generateStatementsSkippingOuterBeginEndBlock(getStatements)
+			decIndent()
+			AppendLine("}")
+		} else if let getExpresssion = property.GetExpression {
+			AppendLine("get {")
+			incIndent()
+			generateStatement(CGReturnStatement(getExpresssion))
+			decIndent()
+			AppendLine("}")
+		}
+		
+		if let setStatements = property.SetStatements {
+			AppendLine("set {")
+			incIndent()
+			generateStatementsSkippingOuterBeginEndBlock(setStatements)
+			decIndent()
+			AppendLine("}")
+		} else if let setExpression = property.SetExpression {
+			AppendLine("set {")
+			incIndent()
+			generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValueExpression))
+			decIndent()
+			AppendLine("}")
+		}
+		
+		decIndent()
+		AppendLine("}")
+		
+		/*f let value = property.Initializer {
+			Append(" = ")
+			generateExpression(value)
+		}*/
+	}
+
+	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			swiftGenerateMemberTypeVisibilityPrefix(event.Visibility)
+			Append("__event")
+			generateIdentifier(event.Name)
+			if let type = event.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			}
+			// Todo: Add/Rmeove/raise statements?
+		} else {
+			assert(false, "generateEventDefinition is not supported in Swift, except in Silver")
+		}
+	}
+
+	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+		//todo
+	}
+
 	//
 	// Type References
 	//

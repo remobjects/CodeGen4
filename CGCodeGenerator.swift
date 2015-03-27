@@ -708,6 +708,14 @@ public class CGCodeGenerator {
 			generateConstructorDefinition(member, type:type)
 		} else if let member = member as? CGMethodDefinition {
 			generateMethodDefinition(member, type:type)
+		} else if let member = member as? CGFieldDefinition {
+			generateFieldDefinition(member, type:type)
+		} else if let member = member as? CGPropertyDefinition {
+			generatePropertyDefinition(member, type:type)
+		} else if let member = member as? CGEventDefinition {
+			generateEventDefinition(member, type:type)
+		} else if let member = member as? CGCustomOperatorDefinition {
+			generateCustomOperatorDefinition(member, type:type)
 		} //...
 		
 		else {
@@ -721,6 +729,26 @@ public class CGCodeGenerator {
 	}
 
 	internal func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMethodDefinition not implemented")
+	}
+
+	internal func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMethodDefinition not implemented")
+	}
+
+	internal func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMethodDefinition not implemented")
+	}
+
+	internal func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMethodDefinition not implemented")
+	}
+
+	internal func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateMethodDefinition not implemented")
 	}
