@@ -37,12 +37,49 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateFooter()		
 	}
 	
-	internal func pascalGenerateTypeImplementations() {
-	}
-
-	internal func pascalGenerateGlobalImplementations() {
+	final func pascalGenerateTypeImplementations() {
+		for t in currentUnit.Types {
+			pascalGenerateTypeImplementation(t);
+		}
 	}
 	
+	final func pascalGenerateGlobalImplementations() {
+	}
+
+	//
+	// Type Definitions
+	//
+
+	final func pascalGenerateTypeImplementation(type: CGTypeDefinition) {
+		if let type = type as? CGClassTypeDefinition {
+			pascalGenerateTypeMemberImplementations(type)
+		} else if let type = type as? CGStructTypeDefinition {
+			pascalGenerateTypeMemberImplementations(type)
+		} else if let type = type as? CGExtensionTypeDefinition {
+			pascalGenerateTypeMemberImplementations(type)
+		}
+	}
+
+	final func pascalGenerateTypeMemberImplementations(type: CGTypeDefinition) {
+		for m in type.Members {
+			pascalGenerateTypeMemberImplementation(m, type: type);
+		}
+	}
+	
+	final func pascalGenerateTypeMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
+		if let member = member as? CGConstructorDefinition {
+			pascalGenerateConstructorImplementation(member, type:type)
+		} else if let member = member as? CGMethodDefinition {
+			pascalGenerateMethodImplementation(member, type:type)
+		} else if let member = member as? CGPropertyDefinition {
+			pascalGeneratePropertyImplementation(member, type:type)
+		} else if let member = member as? CGEventDefinition {
+			pascalGenerateEventImplementation(member, type:type)
+		} else if let member = member as? CGCustomOperatorDefinition {
+			pascalGenerateCustomOperatorImplementation(member, type:type)
+		} 
+	}
+
 	//
 	//
 	//
@@ -451,7 +488,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: false)
 	}
 
-	func pascalGenerateCustomOperatorImplementation(customOperator: CGConstructorDefinition, type: CGTypeDefinition) {
+	func pascalGenerateCustomOperatorImplementation(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: true)
 		pascalGenerateMethodBody(customOperator, type: type);
 	}
@@ -488,7 +525,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine(";")
 	}
 
-	func pascalGeneratePropertyImplementation(member: CGPropertyDefinition, type: CGTypeDefinition) {
+	func pascalGeneratePropertyImplementation(property: CGPropertyDefinition, type: CGTypeDefinition) {
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
@@ -503,6 +540,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			generateTypeReference(type)
 		}
 
+	}
+
+	func pascalGenerateEventImplementation(event: CGEventDefinition, type: CGTypeDefinition) {
 	}
 
 	//
