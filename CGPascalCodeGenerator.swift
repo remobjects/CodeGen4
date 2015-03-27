@@ -347,12 +347,34 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+	internal func pascalGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
+		if let callSite = expression.CallSite {
+			generateExpression(callSite)
+			Append(".")
+		}
+	}
 
+	func pascalGenerateCallParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			generateExpression(param.Value)
+		}
+	}
+
+	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+		pascalGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
 	}
 
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-
+		pascalGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
+		Append("(")
+		pascalGenerateCallParameters(expression.Parameters)
+		Append(")")
 	}
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
@@ -364,17 +386,18 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("Create")
 		}
 		Append("(")
-		for var p: Int32 = 0; p < expression.Parameters.Count; p++ {
-			if p > 0 {
-				Append(", ")
-			}
-			generateExpression(expression.Parameters[p].Value)
-		}
+		pascalGenerateCallParameters(expression.Parameters)
 		Append(")")
 	}
 
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-
+		pascalGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
+		if expression.Parameters.Count > 0 {
+			Append("[")
+			pascalGenerateCallParameters(expression.Parameters)
+			Append("]")
+		}
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {

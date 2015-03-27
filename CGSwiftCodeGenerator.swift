@@ -340,15 +340,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			// Todo: Add/Rmeove/raise statements?
+		} else {
+			assert(false, "generateEventDefinition is not supported in Swift, except in Silver")
+		}
 	}
 
 	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
-
+		// todo
 	}
 
 	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
-
+		// todo
 	}
 
 	/*
