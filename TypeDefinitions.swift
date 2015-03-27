@@ -12,7 +12,7 @@ public enum CGTypeVisibilityKind {
 public __abstract class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
-	public var Members = List<CGTypeMemberDefinition>()
+	public var Members = List<CGMemberDefinition>()
 	public var Visibility: CGTypeVisibilityKind = .Assembly
 	public var Static = false
 	
@@ -102,7 +102,7 @@ public enum CGMemberVirtualityKind {
 	case Reintroduce
 }
 
-public __abstract class CGTypeMemberDefinition: CGEntity {
+public __abstract class CGMemberDefinition: CGEntity {
 	public var Name: String
 	public var Visibility: CGMemberVisibilityKind = .Private
 	public var Virtuality: CGMemberVirtualityKind = .None
@@ -116,7 +116,7 @@ public __abstract class CGTypeMemberDefinition: CGEntity {
 	}
 }
 
-public class CGEnumValueDefinition: CGTypeMemberDefinition {
+public class CGEnumValueDefinition: CGMemberDefinition {
 	public var Value: CGExpression?
 	
 	init(_ name: String) {
@@ -128,7 +128,7 @@ public class CGEnumValueDefinition: CGTypeMemberDefinition {
 	}
 }
 
-public class CGMethodDefinition: CGTypeMemberDefinition {
+public class CGMethodDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
@@ -144,7 +144,7 @@ public class CGMethodDefinition: CGTypeMemberDefinition {
 	}
 }
 
-public class CGOperatorDefinition: CGTypeMemberDefinition {
+public class CGOperatorDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 }
@@ -152,8 +152,16 @@ public class CGOperatorDefinition: CGTypeMemberDefinition {
 public class CGConstructorDefinition: CGMethodDefinition {
 }
 
-public __abstract class CGFieldOrPropertyDefinition: CGTypeMemberDefinition {
+public __abstract class CGTypedMemberDefinition: CGMemberDefinition {
 	public var `Type`: CGTypeReference?
+
+	public init(_ name: String, _ type: CGTypeReference) {
+		super.init(name)
+		`Type` = type
+	}
+}
+
+public __abstract class CGFieldOrPropertyDefinition: CGTypedMemberDefinition {
 	public var Initializer: CGExpression?
 }
 
@@ -166,10 +174,41 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var Parameters: List<CGParameterDefinition>?
 	public var GetStatements: List<CGStatement>?
 	public var SetStatements: List<CGStatement>?
+	public var GetExpression: CGExpression?
+	public var SetExpression: CGExpression?
+	
+	public init(_ name: String, _ type: CGTypeReference) {
+		super.init(name, type)
+	}
+	public convenience init(_ name: String, _ type: CGTypeReference, _ getStatements: List<CGStatement>, _ setStatements: List<CGStatement>? = nil) {
+		init(name, type)
+		GetStatements = getStatements
+		SetStatements = setStatements
+	}
+	public convenience init(_ name: String, _ type: CGTypeReference, _ getStatements: CGStatement[], _ setStatements: CGStatement[]? = nil) {
+		init(name, type, getStatements.ToList(), setStatements?.ToList())
+	}
+	public convenience init(_ name: String, _ type: CGTypeReference, _ getExpression: CGExpression, _ setExpression: CGExpression? = nil) {
+		init(name, type)
+		GetExpression = getExpression
+		SetExpression = setExpression
+	}   
 }
 
-public class CGEventDefinition: CGTypeMemberDefinition {
-	//incomplete
+public class CGEventDefinition: CGTypedMemberDefinition {
+	public var AddStatements: List<CGStatement>?
+	public var RemoveStatements: List<CGStatement>?
+	public var RaiseStatements: List<CGStatement>?
+
+	public init(_ name: String, _ type: CGTypeReference) {
+		super.init(name, type)
+	}
+	public convenience init(_ name: String, _ type: CGTypeReference, _ addStatements: List<CGStatement>, _ removeStatements: List<CGStatement>, _ raiseStatements: List<CGStatement>? = nil) {
+		init(name, type)
+		AddStatements = addStatements
+		RemoveStatements = removeStatements
+		RaiseStatements = raiseStatements
+	}
 }
 
 /* Parameters */

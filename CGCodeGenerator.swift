@@ -699,8 +699,14 @@ public class CGCodeGenerator {
 		assert(false, "generateExtensionTypeEnd not implemented")
 	}	
 	
-	internal final func generateTypeMember(member: CGTypeMemberDefinition, type: CGTypeDefinition) {
-		if let member = member as? CGMethodDefinition {
+	//
+	// Type members
+	//
+	
+	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
+		if let member = member as? CGConstructorDefinition {
+			generateConstructorDefinition(member, type:type)
+		} else if let member = member as? CGMethodDefinition {
 			generateMethodDefinition(member, type:type)
 		} //...
 		
@@ -709,6 +715,11 @@ public class CGCodeGenerator {
 		}
 	}
 				
+	internal func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateConstructorDefinition not implemented")
+	}
+
 	internal func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateMethodDefinition not implemented")
