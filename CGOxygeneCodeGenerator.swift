@@ -59,7 +59,14 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append(")")
 	}
 
-
+	//
+	// Type Members
+	//
+	
+	override func pascalKeywordForMethod(method: CGMethodDefinition) -> String {
+		return "method"	
+	}
+	
 	//
 	// Type References
 	//

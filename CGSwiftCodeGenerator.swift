@@ -613,6 +613,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		
 		AppendLine(" {")
 		incIndent()
+		generateStatements(method.LocalVariables)
 		generateStatements(method.Statements)
 		decIndent()
 		AppendLine("}")
@@ -626,6 +627,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 		AppendLine(" {")
 		incIndent()
+		generateStatements(ctor.LocalVariables)
 		generateStatements(ctor.Statements)
 		decIndent()
 		AppendLine("}")
@@ -660,6 +662,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			Append("var ")
 		}
+		//todo subscripts
+		
 		generateIdentifier(property.Name)
 		if let type = property.`Type` {
 			Append(": ")

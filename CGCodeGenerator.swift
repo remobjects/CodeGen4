@@ -142,6 +142,15 @@ public class CGCodeGenerator {
 		}
 	}
 	
+	internal final func generateStatements(statements: List<CGVariableDeclarationStatement>?) {
+		// descendant should not override
+		if let statements = statements {
+			for g in statements {
+				generateStatement(g);
+			}
+		}
+	}
+	
 	internal final func generateStatementsSkippingOuterBeginEndBlock(statements: List<CGStatement>) {
 		//if statements.Count == 1, let block = statements[0] as? CGBeginEndBlockStatement {
 		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {

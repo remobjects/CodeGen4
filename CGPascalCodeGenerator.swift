@@ -382,27 +382,126 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
-
+	internal func pascalKeywordForMethod(method: CGMethodDefinition) -> String {
+		if method.ReturnType == nil {
+			return "procedure"
+		}
+		return "function"	
 	}
 	
-	override func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
-
+	internal func pascalGenerateMethodHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
+		if method.Static {
+			Append("class ")
+		}
+		Append(methodKeyword)
+		Append(" ")
+		if implementation {
+			Append(type.Name)
+			Append(".")
+		}
+		Append(method.Name)
+		// todo parrameters
+		if let returnType = method.ReturnType {
+			Append(": ")
+			generateTypeReference(returnType)
+		}
+		AppendLine(";");
 	}
 
-	override func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
+	internal func pascalGenerateMethodBody(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition) {
+		if let localVariables = method.LocalVariables where localVariables.Count > 0 {
+			Append("var")
+			incIndent()
+			for v in localVariables {
+				if let type = v.`Type` {
+					Append(v.Name)
+					Append(": ")
+					generateTypeReference(type)
+					AppendLine(";")
+				}
+			}
+			decIndent()
+		}
+		AppendLine("begin")
+		incIndent()
+		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		decIndent()
+		AppendLine("end;")
+	}	   
 
+	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(method, type: type, methodKeyword:pascalKeywordForMethod(method), implementation: false)		
+	}
+	
+	func pascalGenerateMethodImplementation(method: CGMethodDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(method, type: type, methodKeyword: pascalKeywordForMethod(method), implementation: true)
+		pascalGenerateMethodBody(method, type: type);
 	}
 
-	override func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
-
+	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(ctor, type: type, methodKeyword: "constructor", implementation: false)
 	}
 
-	override func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
-
+	func pascalGenerateConstructorImplementation(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
+		pascalGenerateMethodBody(ctor, type: type);
 	}
 
-	override func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: false)
+	}
+
+	func pascalGenerateCustomOperatorImplementation(customOperator: CGConstructorDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: true)
+		pascalGenerateMethodBody(customOperator, type: type);
+	}
+
+	override func generateFieldDefinition(variable: CGFieldDefinition, type: CGTypeDefinition) {
+		if variable.Static {
+			Append("class ")
+		}
+		Append("var ")
+		Append(variable.Name)
+		if let type = variable.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		if let initializer = variable.Initializer {
+			Append(" = ")
+			generateExpression(initializer)
+		}
+		AppendLine(";")
+	}
+
+	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		if property.Static {
+			Append("class ")
+		}
+		Append("property ")
+		Append(property.Name)
+		// todo parameters
+		if let type = property.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		// todo read/write
+		AppendLine(";")
+	}
+
+	func pascalGeneratePropertyImplementation(member: CGPropertyDefinition, type: CGTypeDefinition) {
+	}
+
+	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+		if event.Static {
+			Append("class ")
+		}
+		Append("event ")
+		Append(event.Name)
+		// todo parameters
+		if let type = event.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
 
 	}
 

@@ -134,9 +134,10 @@ public class CGEnumValueDefinition: CGMemberDefinition {
 
 public class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
+	public var ReturnType: CGTypeReference?
 	public var Inline = false
 	public var Statements: List<CGStatement>
-	public var LocalVariables: List<CGVariableDeclarationStatement> // Legacy Delphi only.
+	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 
 	init(_ name: String) {
 		super.init(name)
@@ -146,18 +147,18 @@ public class CGMethodLikeMemberDefinition: CGMemberDefinition {
 		init(name)
 		Statements = statements;
 	}
+	public convenience init(_ name: String, _ statements: CGStatement...) {
+		init(name, statements.ToList())
+	}
 }
 
 public class CGMethodDefinition: CGMethodLikeMemberDefinition {
-	public var ReturnType: CGTypeReference?
 }
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
-	public let ReturnType = CGPredefinedTypeReference.InstanceType
 }
 
 public class CGCustomOperatorDefinition: CGMethodLikeMemberDefinition {
-	public var ReturnType: CGTypeReference?
 }
 
 //
