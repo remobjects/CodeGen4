@@ -114,20 +114,28 @@ public class CGInfiniteLoopStatement: CGNestingStatement {}
 
 public class CGSwitchStatement: CGStatement {
 	public var Expression: CGExpression
-	public var Cases: List<CGSwitchCase>
+	public var Cases: List<CGSwitchStatementCase>
+	public var DefaultCase: CGSwitchStatementCase?
 
-	public init(_ expression: CGExpression, _ cases: List<CGSwitchCase>) {
+	public init(_ expression: CGExpression, _ cases: List<CGSwitchStatementCase>, _ defaultCase: CGSwitchStatementCase? = nil) {
 		Expression = expression
+		DefaultCase = defaultCase
 		if let cases = cases {
 			Cases = cases
 		} else {
-			Cases =List<CGSwitchCase>()
+			Cases = List<CGSwitchStatementCase>()
 		}
 	}
 }
 
-public class CGSwitchCase : CGEntity {
-	//incomplete
+public class CGSwitchStatementCase : CGEntity {
+	public var CaseExpression: CGExpression
+	public var Statements: List<CGStatement>
+
+	public init(_ caseExpression: CGExpression, _ statements: List<CGStatement>) {
+		CaseExpression = caseExpression
+		Statements = statements
+	}
 }
 
 public class CGLockingStatement: CGNestingStatement {

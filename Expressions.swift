@@ -112,6 +112,16 @@ public class CGSwitchExpression: CGExpression { //* Oxygene only */
 	//incomplete
 }
 
+public class CGSwitchExpressionCase : CGEntity {
+	public var CaseExpression: CGExpression
+	public var ResultExpression: CGExpression
+
+	public init(_ caseExpression: CGExpression, _ resultExpression: CGExpression) {
+		CaseExpression = caseExpression
+		ResultExpression = resultExpression
+	}
+}
+
 public class CGForToLoopExpression: CGExpression { //* Oxygene only */
 	//incomplete
 }

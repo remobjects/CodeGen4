@@ -7,6 +7,9 @@ import Sugar.Collections
 //
 // All concrete implementations should use the same sort order for methods as this class.
 //
+// All methods named "generate*" should be overrides. For language-specific generators, add a prefix
+// to the method name to indicate the language — see Swift of Pascal codegen implementations for reference. 
+//
 
 public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
