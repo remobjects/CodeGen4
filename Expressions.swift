@@ -358,19 +358,19 @@ public class CGTupleLiteralExpression : CGExpression {
 public class CGNewInstanceExpression : CGExpression {
 	public var `Type`: CGTypeReference
 	public var ConstructorName: String? // an optionally be provided for languages that support named .ctors
-	public var Parameters: List<CGMethodCallParameter>
-	public var PropertyInitializers = List<CGMethodCallParameter>() // for Oxygene extnded .ctor calls
+	public var Parameters: List<CGCallParameter>
+	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extnded .ctor calls
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
-		Parameters = List<CGMethodCallParameter>()
+		Parameters = List<CGCallParameter>()
 	}
-	public init(_ type: CGTypeReference, _ parameters: List<CGMethodCallParameter>?) {
+	public init(_ type: CGTypeReference, _ parameters: List<CGCallParameter>?) {
 		`Type` = type
 		if let parameters = parameters {
 			Parameters = parameters
 		} else {
-			Parameters = List<CGMethodCallParameter>()
+			Parameters = List<CGCallParameter>()
 		}
 	}
 }
@@ -391,37 +391,37 @@ public class CGFieldAccessExpression : CGMemberAccessExpression {
 }
 
 public class CGMethodCallExpression : CGMemberAccessExpression{
-	public var Parameters: List<CGMethodCallParameter>
+	public var Parameters: List<CGCallParameter>
 	public var CallOptionally: Boolean = false // Swift only
 
 	public init(_ callSite: CGExpression?, _ name: String) {
 		super.init(callSite, name)
-		Parameters = List<CGMethodCallParameter>()
+		Parameters = List<CGCallParameter>()
 	}
-	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
+	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGCallParameter>?) {
 		super.init(callSite, name)
 		if let parameters = parameters {
 			Parameters = parameters
 		} else {
-			Parameters = List<CGMethodCallParameter>()
+			Parameters = List<CGCallParameter>()
 		}   
 	}
 }
 
 public class CGPropertyAccessExpression: CGMemberAccessExpression {
-	public var Parameters: List<CGMethodCallParameter>
+	public var Parameters: List<CGCallParameter>
 
-	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGMethodCallParameter>?) {
+	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGCallParameter>?) {
 		super.init(callSite, name)
 		if let parameters = parameters {
 			Parameters = parameters
 		} else {
-			Parameters = List<CGMethodCallParameter>()
+			Parameters = List<CGCallParameter>()
 		}   
 	}
 }
 
-public class CGMethodCallParameter: CGEntity {
+public class CGCallParameter: CGEntity {
 	public var Name: String? // optional, for named parameters or prooperty initialziers
 	public var Value: CGExpression
 	public var Modifier: ParameterModifierKind = .In

@@ -740,6 +740,10 @@ public class CGCodeGenerator {
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
 		if let member = member as? CGConstructorDefinition {
 			generateConstructorDefinition(member, type:type)
+		} else if let member = member as? CGDestructorDefinition {
+			generateDestructorDefinition(member, type:type)
+		} else if let member = member as? CGFinalizerDefinition {
+			generateFinalizerDefinition(member, type:type)
 		} else if let member = member as? CGMethodDefinition {
 			generateMethodDefinition(member, type:type)
 		} else if let member = member as? CGFieldDefinition {
@@ -760,6 +764,16 @@ public class CGCodeGenerator {
 	internal func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateConstructorDefinition not implemented")
+	}
+
+	internal func generateDestructorDefinition(member: CGDestructorDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateDestructorDefinition not implemented")
+	}
+
+	internal func generateFinalizerDefinition(member: CGFinalizerDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateFinalizerDefinition not implemented")
 	}
 
 	internal func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {

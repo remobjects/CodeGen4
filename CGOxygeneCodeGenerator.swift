@@ -59,6 +59,24 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append(")")
 	}
 
+	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+		Append("new ")
+		generateTypeReference(expression.`Type`)
+		Append("(")
+		for var p: Int32 = 0; p < expression.Parameters.Count; p++ {
+			if p > 0 {
+				Append(", ")
+			}
+			switch expression.Parameters[p].Modifier {
+				case .Out: Append("out ")
+				case .Var: Append("var ")
+				default: 
+			}
+			generateExpression(expression.Parameters[p].Value)
+		}
+		Append(")")
+	}
+
 	//
 	// Type Members
 	//

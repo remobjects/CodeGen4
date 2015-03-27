@@ -113,7 +113,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 
 	}
-	
+
 	//
 	// Expressions
 	//
@@ -284,27 +284,35 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
+	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
 
 	}
 	
-	override func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
+	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 
 	}
 

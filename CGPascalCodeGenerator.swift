@@ -355,6 +355,24 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+		generateTypeReference(expression.`Type`)
+		Append(".")
+		if let name = expression.ConstructorName {
+			generateIdentifier(name)
+		} else {
+			Append("Create")
+		}
+		Append("(")
+		for var p: Int32 = 0; p < expression.Parameters.Count; p++ {
+			if p > 0 {
+				Append(", ")
+			}
+			generateExpression(expression.Parameters[p].Value)
+		}
+		Append(")")
+	}
+
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
 
 	}
@@ -482,6 +500,14 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateConstructorImplementation(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
 		pascalGenerateMethodBody(ctor, type: type);
+	}
+
+	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+
 	}
 
 	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {

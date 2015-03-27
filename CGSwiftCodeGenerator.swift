@@ -238,6 +238,38 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}	
 	*/
 
+	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+		if let callSite = statement.CallSite {
+			generateExpression(callSite)
+			Append(".")
+		}
+		Append("init(")
+		swiftGenerateCallParameters(statement.Parameters)
+		Append(")")
+	}
+	
+	func swiftGenerateCallParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(": ")
+			}
+			switch param.Modifier {
+				case .Out: fallthrough
+				case .Var: 
+					Append("&(")
+					generateExpression(param.Value)
+					Append(")")
+				default: 
+					generateExpression(param.Value)
+			}
+		}
+	}
+
 	//
 	// Expressions
 	//
@@ -319,13 +351,23 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
-	/*override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+	/*
+	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
 		// handled in base
-	}*/
+	}
+	*/
 
-	/*override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+	/*
+	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
 		// handled in base
-	}*/
+	}
+	*/
+
+	/*
+	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+		// handled in base
+	}
+	*/
 
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
@@ -362,25 +404,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append("?")
 		}
 		Append("(")
-		for var p = 0; p < expression.Parameters.Count; p++ {
-			let param = expression.Parameters[p]
-			if p > 0 {
-				Append(", ")
-			}
-			if let name = param.Name {
-				generateIdentifier(name)
-				Append(": ")
-			}
-			switch param.Modifier {
-				case .Out: fallthrough
-				case .Var: 
-					Append("&(")
-					generateExpression(param.Value)
-					Append(")")
-				default: 
-					generateExpression(param.Value)
-			}
-		}
+		swiftGenerateCallParameters(expression.Parameters)
+		Append(")")
+	}
+
+	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+		generateTypeReference(expression.`Type`)
+		Append("(")
+		swiftGenerateCallParameters(expression.Parameters)
 		Append(")")
 	}
 
@@ -389,13 +420,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(expression.Name)
 		if expression.Parameters.Count > 0 {
 			Append("[")
-			for var p = 0; p < expression.Parameters.Count; p++ {
-				let param = expression.Parameters[p]
-				if p > 0 {
-					Append(", ")
-				}
-				generateExpression(param.Value)
-			}
+			swiftGenerateCallParameters(expression.Parameters)
 			Append("]")
 		}
 	}
@@ -643,6 +668,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		decIndent()
 		AppendLine("}")
 		AppendLine()
+	}
+
+	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		//todo
+	}
+
+	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+		//todo
 	}
 
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
