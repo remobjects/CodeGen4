@@ -119,7 +119,18 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}*/
 
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
-		//todo
+		Append("switch ")
+		generateExpression(statement.Expression)
+		AppendLine(" {")
+		incIndent()
+		for c in statement.Cases {
+			Append("case ")
+			generateExpression(c.CaseExpression)
+			AppendLine(":")
+			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
+		}
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateLockingStatement(statement: CGLockingStatement) {

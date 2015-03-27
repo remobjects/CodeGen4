@@ -178,6 +178,17 @@ public class CGCodeGenerator {
 			decIndent()
 		}
 	}
+	
+	internal func generateStatementsIndentedUnlessItsASingleBeginEndBlock(statements: List<CGStatement>) {
+		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
+			generateStatements((statements[0] as! CGBeginEndBlockStatement).Statements);
+		} else {
+			incIndent()
+			generateStatements(statements);
+			decIndent()
+		}
+	}
+	
 
 	internal func generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
