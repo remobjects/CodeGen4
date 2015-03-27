@@ -202,8 +202,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	// Expressions
 	//
 	
-	/*override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
-	}*/
+	/*
+	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+	}
+	*/
 
 	override func generateAssignedExpression(expression: CGAssignedExpression) {
 
@@ -384,6 +386,26 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	override func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+
+	}
+
 	//
 	// Type References
 	//
@@ -427,6 +449,12 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateTypeReference(type.`Type`)
 	}
 	
+	/*
+	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+		//not supported in base Pascal
+	}
+	*/
+
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 
 	}

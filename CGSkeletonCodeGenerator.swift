@@ -175,6 +175,14 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+
+	}
+	
+	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+
+	}
+
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
 
 	}

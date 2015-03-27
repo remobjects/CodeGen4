@@ -163,7 +163,7 @@ public class CGCustomOperatorDefinition: CGMethodLikeMemberDefinition {
 // Fields & Co
 //
 
-public __abstract class CGFieldLikedMemberDefinition: CGMemberDefinition {
+public __abstract class CGFieldLikeMemberDefinition: CGMemberDefinition {
 	public var `Type`: CGTypeReference?
 
 	public init(_ name: String, _ type: CGTypeReference) {

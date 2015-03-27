@@ -100,8 +100,11 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	/*override func generateReturnStatement(statement: CGReturnStatement) {
-	}*/
+	/*
+	override func generateReturnStatement(statement: CGReturnStatement) {
+		// handled in base
+	}
+	*/
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
 		if let value = statement.Exception {
@@ -114,11 +117,17 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		cStyleGenerateStatementTerminator()
 	}
 
-	/*override func generateBreakStatement(statement: CGBreakStatement) {
-	}*/
+	/*
+	override func generateBreakStatement(statement: CGBreakStatement) {
+		// handled in base
+	}
+	*/
 
-	/*override func generateContinueStatement(statement: CGContinueStatement) {
-	}*/
+	/*
+	override func generateContinueStatement(statement: CGContinueStatement) {
+		// handled in base
+	}
+	*/
 
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
 		if let type = statement.`Type` {
@@ -135,9 +144,120 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		cStyleGenerateStatementTerminator()
 	}
 
-	/*override func generateAssignmentStatement(statement: CGAssignmentStatement) {
-	}*/	
+	/*
+	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+		// handled in base
+	}
+	*/	
 	
+	//
+	// Expressions
+	//
+
+	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+
+	}
+
+	override func generateAssignedExpression(expression: CGAssignedExpression) {
+
+	}
+
+	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+
+	}
+
+	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
+
+	}
+
+	override func generateDefaultExpression(expression: CGDefaultExpression) {
+
+	}
+
+	override func generateSelectorExpression(expression: CGSelectorExpression) {
+
+	}
+
+	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
+
+	}
+
+	override func generateInheritedExpression(expression: CGInheritedExpression) {
+
+	}
+
+	override func generateSelfExpression(expression: CGSelfExpression) {
+
+	}
+
+	override func generateNilExpression(expression: CGNilExpression) {
+
+	}
+
+	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+
+	}
+
+	override func generateAwaitExpression(expression: CGAwaitExpression) {
+
+	}
+
+	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+
+	}
+
+	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+
+	}
+
+	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+
+	}
+
+	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+
+	}
+
+	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+
+	}
+	
+	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+
+	}
+
+	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+
+	}
+
+	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+
+	}
+
+	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
+
+	}
+
+	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
+
+	}
+
+	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+
+	}
+
+	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+
+	}
+
+	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+
+	}
+
+	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+
+	}
+
 	//
 	// Type Definitions
 	//
@@ -180,6 +300,15 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("@end")
 	}	
 	
+	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+
+	}
+	
+	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+		decIndent()
+		AppendLine("@end")
+	}	
+
 	//
 	// Type Members
 	//
