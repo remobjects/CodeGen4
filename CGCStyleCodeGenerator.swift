@@ -12,10 +12,6 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		tabSize = 4
 	}
 
-	internal func cStyleGenerateStatementTerminator() {
-		AppendLine(";")
-	}
-
 	override func generateInlineComment(comment: String) {
 		comment = comment.Replace("*/", "* /")
 		Append("/* \(comment) */")
@@ -94,28 +90,28 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		if let value = statement.Value {
 			Append("return ")
 			generateExpression(value)
-			cStyleGenerateStatementTerminator()
+			generateStatementTerminator()
 		} else {
 			Append("return")
-			cStyleGenerateStatementTerminator()
+			generateStatementTerminator()
 		}
 	}
 
 	override func generateBreakStatement(statement: CGBreakStatement) {
 		Append("break")
-		cStyleGenerateStatementTerminator()
+		generateStatementTerminator()
 	}
 
 	override func generateContinueStatement(statement: CGContinueStatement) {
 		Append("continue;")
-		cStyleGenerateStatementTerminator()
+		generateStatementTerminator()
 	}
 
 	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
 		generateExpression(statement.Target)
 		Append(" = ")
 		generateExpression(statement.Value)
-		AppendLine()
+		generateStatementTerminator()
 	}	
 	
 	//

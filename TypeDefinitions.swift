@@ -87,9 +87,9 @@ public enum CGMemberVisibilityKind {
 	case Unit
 	case UnitOrProtected
 	case UnitAndProtected
-	case Assmebly
-	case AssmeblyOrProtected
-	case AssmeblyAndProtected
+	case Assembly
+	case AssemblyOrProtected
+	case AssemblyAndProtected
 	case Protected
 	case Public
 }

@@ -28,7 +28,12 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine()
 		pascalGenerateImports(currentUnit.Imports)
 		generateGlobals()
-		generateTypeDefinitions()
+		if currentUnit.Types.Count > 0 {
+			AppendLine("type")
+			incIndent()
+			generateTypeDefinitions()
+			decIndent()
+		}
 		AppendLine("implementation")
 		AppendLine()
 		pascalGenerateImports(currentUnit.ImplementationImports)
@@ -44,6 +49,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	final func pascalGenerateGlobalImplementations() {
+		for t in currentUnit.Globals {
+			pascalGenerateGlobalImplementation();
+		}
 	}
 
 	//
@@ -78,6 +86,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		} else if let member = member as? CGCustomOperatorDefinition {
 			pascalGenerateCustomOperatorImplementation(member, type:type)
 		} 
+	}
+	
+	final func pascalGenerateGlobalImplementation() {
 	}
 
 	//
@@ -181,24 +192,68 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
-	}*/
+	/*
+	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+		// handled in base, Oxygene will override
+	}
+	*/
 
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
 
 	}
 
-	/*override func generateLockingStatement(statement: CGLockingStatement) {
-	}*/
+	override func generateLockingStatement(statement: CGLockingStatement) {
+		assert(false, "generateLockingStatement is not supported in base Pascal, only Oxygene")
+	}
 
-	/*override func generateUsingStatement(statement: CGUsingStatement) {
-	}*/
+	override func generateUsingStatement(statement: CGUsingStatement) {
+		assert(false, "generateUsingStatement is not supported in base Pascal, only Oxygene")
+	}
 
-	/*override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
-	}*/
+	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+		assert(false, "generateAutoReleasePoolStatement is not supported in base Pascal, only Oxygene")
+	}
 
 	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
-
+		//todo: override for Oxygene to get rid of the double try, once tested
+		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+			AppendLine("try")
+			incIndent()
+		}
+		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+			AppendLine("try")
+			incIndent()
+		}
+		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+			decIndent()
+			AppendLine("finally")
+			incIndent()
+			generateStatements(finallyStatements)
+			decIndent()
+			AppendLine("end;")
+		}
+		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+			decIndent()
+			Append("except")
+			incIndent()
+			for b in catchBlocks {
+				if let type = b.`Type` {
+					Append("on ")
+					generateIdentifier(b.Name)
+					Append(": ")
+					generateTypeReference(type)
+					AppendLine(" do begin")
+					incIndent()
+					generateStatements(b.Statements)
+					decIndent()
+					AppendLine("end;")
+				} else {
+					assert(catchBlocks.Count == 1, "Can only have a single Catch block, if there is no type filter")
+					generateStatements(b.Statements)
+				}
+			}
+			decIndent()
+		}
 	}
 
 	override func generateReturnStatement(statement: CGReturnStatement) {
@@ -228,11 +283,14 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
-
+		assert(false, "generateVariableDeclarationStatement is not supported in base Pascal, only Oxygene")
 	}
 
 	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
-
+		generateExpression(statement.Target)
+		Append(" := ")
+		generateExpression(statement.Value)
+		generateStatementTerminator()
 	}	
 	
 	//
@@ -245,64 +303,88 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateAssignedExpression(expression: CGAssignedExpression) {
-
+		Append("assigned(")
+		generateExpression(expression.Value)
+		Append(")")
 	}
 
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
-
+		Append("sizeOf(")
+		generateExpression(expression.Expression)
+		Append(")")
 	}
 
 	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
-
+		Append("typeOf(")
+		generateExpression(expression.Expression)
+		Append(")")
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
-
+		// todo:check if pase Pascal has thos, or only Oxygene
+		Append("default(")
+		generateTypeReference(expression.`Type`)
+		Append(")")
 	}
 
 	override func generateSelectorExpression(expression: CGSelectorExpression) {
-
+		assert(false, "generateSelectorExpression is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
-
+	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+		if cast.ThrowsException {
+			Append("(")
+			generateExpression(cast.Expression)
+			Append(" as ")
+			generateTypeReference(cast.TargetType)
+			Append(")")
+		} else {
+			generateTypeReference(cast.TargetType)
+			Append("(")
+			generateExpression(cast.Expression)
+			Append(")")
+		}
 	}
 
 	override func generateInheritedExpression(expression: CGInheritedExpression) {
-
+		Append("inherited")
 	}
 
 	override func generateSelfExpression(expression: CGSelfExpression) {
-
+		Append("self")
 	}
 
 	override func generateNilExpression(expression: CGNilExpression) {
-
+		Append("nil")
 	}
 
 	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
-
+		Append("___value___") 
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-
+		assert(false, "generateAwaitExpression is not supported in base Pascal, only Oxygene")
 	}
 
 	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
-
+		//todo
 	}
 
 	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
-
+		assert(false, "generateAnonymousClassOrStructExpression is not supported in base Pascal, only Oxygene")
 	}
 
+	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-
+		// handle din base
 	}
+	*/
 
+	/*
 	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
-
+		// handle din base
 	}
+	*/
 
 	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
@@ -344,13 +426,17 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
-
+		assert(false, "generateIfThenElseExpressionExpression is not supported in base Pascal, only Oxygene")
 	}
 
 	internal func pascalGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
-			Append(".")
+			if callSite is CGInheritedExpression {
+				Append(" ")
+			} else {
+				Append(".")
+			}
 		}
 	}
 
@@ -401,31 +487,64 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
-
+		let escapedString = expression.Value.Replace("'", "''")
+		//todo: this is incomplete, we need to escape any invalid chars
+		Append("'\(escapedString)'")
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-
+		Append("#\(expression.Value as Int32)")
 	}
 
 	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
-
+		// todo
 	}
 
 	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
-
+		assert(false, "generateDictionaryExpression is not supported in Pascal")
 	}
 	
 	//
 	// Type Definitions
 	//
 	
-	override func generateAliasType(type: CGTypeAliasDefinition) {
+	func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
+		switch visibility {
+			case .Private: Append("private ")
+			case .Assembly: fallthrough
+			case .Public: Append("public ")
+		}
+	}
+	
+	func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+		switch visibility {
+			case .Private: Append("strict private ")
+			case .Unit: Append("private ")
+			case .UnitAndProtected: fallthrough
+			case .AssemblyAndProtected: fallthrough
+			case .Protected: Append("protected ")
+			case .UnitOrProtected: fallthrough
+			case .AssemblyOrProtected: fallthrough
+			case .Assembly: fallthrough
+			case .Public: Append("public ")
+		}
+	}
+	
+	func swiftGenerateStaticPrefix(isStatic: Boolean) {
+		if isStatic {
+			Append("static ")
+		}
+	}
 
+	override func generateAliasType(type: CGTypeAliasDefinition) {
+		generateIdentifier(type.Name)
+		Append(" = ")
+		generateTypeReference(type.ActualType)
+		AppendLine(";")
 	}
 	
 	override func generateBlockType(type: CGBlockTypeDefinition) {
-		
+		assert(false, "generateIfThenElseExpressionExpression is not supported in base Pascal, only Oxygene")
 	}
 	
 	override func generateEnumType(type: CGEnumTypeDefinition) {
@@ -433,27 +552,48 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
-
+		generateIdentifier(type.Name)
+		//ToDo: generic constraints
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		AppendLine("class")
+		//ToDo: ancestors
+		incIndent()
 	}
 	
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
-
+		decIndent()
+		AppendLine("end;")
 	}
 	
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
-
+		generateIdentifier(type.Name)
+		//ToDo: generic constraints
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		AppendLine("record")
+		//ToDo: ancestors
+		incIndent()
 	}
 	
 	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
-
+		decIndent()
+		AppendLine("end;")
 	}	
 	
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
-
+		generateIdentifier(type.Name)
+		//ToDo: generic constraints
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		AppendLine("interface")
+		//ToDo: ancestors
+		incIndent()
 	}
 	
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
-
+		decIndent()
+		AppendLine("end;")
 	}	
 	
 	//

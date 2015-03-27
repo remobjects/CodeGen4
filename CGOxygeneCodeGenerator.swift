@@ -9,14 +9,22 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	//
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
+		Append("locking ")
+		generateExpression(statement.Expression)
+		Append(" do")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateUsingStatement(statement: CGUsingStatement) {
-
+		Append("using ")
+		generateExpression(statement.Expression)
+		Append(" do")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
-
+		Append("using autoreleasepool do")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateReturnStatement(statement: CGReturnStatement) {
@@ -29,9 +37,35 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
+	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+		Append("var ")
+		generateIdentifier(statement.Name)
+		if let type = statement.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		if let value = statement.Value {
+			Append(" = ")
+			generateExpression(value)
+		}
+		AppendLine(";")
+	}
+
 	//
 	// Expressions
 	//
+
+	override func generateSelectorExpression(expression: CGSelectorExpression) {
+		Append("selector(\(expression.Name))")
+	}
+
+	override func generateAwaitExpression(expression: CGAwaitExpression) {
+		//todo
+	}
+
+	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+		//todo
+	}
 
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
@@ -80,6 +114,36 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
 		Append(")")
+	}
+	
+	//
+	// Type Definitions
+	//
+
+	override func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
+		switch visibility {
+			case .Private: Append("private ")
+			case .Assembly: Append("assembly ")
+			case .Public: Append("public ")
+		}
+	}
+	
+	override func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+		switch visibility {
+			case .Private: Append("private ")
+			case .Unit: Append("unit ")
+			case .UnitOrProtected: Append("unit or protected ")
+			case .UnitAndProtected: Append("unit and protected ")
+			case .Assembly: Append("assembly ")
+			case .AssemblyAndProtected: Append("assembly and protected ")
+			case .AssemblyOrProtected: Append("assembly or protected ")
+			case .Protected: Append("protected ")
+			case .Public: Append("public ")
+		}
+	}
+	
+	override func generateBlockType(type: CGBlockTypeDefinition) {
+		//todo
 	}
 
 	//

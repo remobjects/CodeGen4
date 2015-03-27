@@ -18,7 +18,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("import \(imp.Name)")
 	}
 
-	override func cStyleGenerateStatementTerminator() {
+	override func generateStatementTerminator() {
 		AppendLine() // no ; in Swift
 	}
 
@@ -229,7 +229,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		//todo: smartly handle non-nulables w/o a valiue?
+		AppendLine()
+		//todo: smartly handle non-nulables w/o a value?
 	}
 
 	/*
@@ -329,7 +330,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
 		Append("(")
 		generateExpression(cast.Expression)
-		Append("as")
+		Append(" as")
 		if !cast.GuaranteedSafe {
 			if cast.ThrowsException {
 				Append("!")
@@ -504,9 +505,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Unit: fallthrough
 			case .UnitOrProtected: fallthrough
 			case .UnitAndProtected: fallthrough
-			case .Assmebly: fallthrough
-			case .AssmeblyAndProtected: Append("internal ")
-			case .AssmeblyOrProtected: fallthrough
+			case .Assembly: fallthrough
+			case .AssemblyAndProtected: Append("internal ")
+			case .AssemblyOrProtected: fallthrough
 			case .Protected: fallthrough
 			case .Public: Append("public ")
 		}

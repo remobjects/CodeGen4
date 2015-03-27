@@ -114,7 +114,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			AppendLine("throw")
 		}
-		cStyleGenerateStatementTerminator()
+		AppendLine(";")
 	}
 
 	/*
@@ -141,7 +141,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		cStyleGenerateStatementTerminator()
+		AppendLine(";")
 	}
 
 	/*

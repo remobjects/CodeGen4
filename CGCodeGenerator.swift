@@ -255,7 +255,7 @@ public class CGCodeGenerator {
 				AppendLine()
 		} else if let expression = statement as? CGExpression { // should be last but one
 			AppendIndent()
-			generateExpression(expression)
+			generateExpressionStatement(expression)
 			AppendLine()
 		} 
 		
@@ -357,6 +357,15 @@ public class CGCodeGenerator {
 	internal func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateConstructorCallStatement not implemented")
+	}
+
+	internal func generateStatementTerminator() {
+		AppendLine(";")
+	}
+
+	internal func generateExpressionStatement(expression: CGExpression) {
+		generateExpression(expression)
+		generateStatementTerminator();
 	}
 
 	//
