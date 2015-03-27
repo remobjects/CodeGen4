@@ -136,6 +136,7 @@ public class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var Inline = false
 	public var Statements: List<CGStatement>
+	public var LocalVariables: List<CGVariableDeclarationStatement> // Legacy Delphi only.
 
 	init(_ name: String) {
 		super.init(name)
