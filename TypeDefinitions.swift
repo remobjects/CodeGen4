@@ -132,7 +132,7 @@ public class CGEnumValueDefinition: CGMemberDefinition {
 // Methods & Co
 //
 
-public class CGMethodLikeMemberDefinition: CGMemberDefinition {
+public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
@@ -143,12 +143,13 @@ public class CGMethodLikeMemberDefinition: CGMemberDefinition {
 		super.init(name)
 		Statements = List<CGStatement>()
 	}
-	public convenience init(_ name: String, _ statements: List<CGStatement>) {
-		init(name)
+	public init(_ name: String, _ statements: List<CGStatement>) {
+		super.init(name)
 		Statements = statements;
 	}
-	public convenience init(_ name: String, _ statements: CGStatement...) {
-		init(name, statements.ToList())
+	public init(_ name: String, _ statements: CGStatement...) {
+		super.init(name)
+		Statements = statements.ToList()
 	}
 }
 
@@ -156,6 +157,30 @@ public class CGMethodDefinition: CGMethodLikeMemberDefinition {
 }
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
+	public init() {
+		super.init(".ctor")
+	}
+	public init(_ name: String, _ statements: List<CGStatement>) {
+		super.init(".ctor", statements)
+	}
+	public init(_ name: String, _ statements: CGStatement...) {
+		super.init(".ctor", statements.ToList())
+	}
+}
+
+public class CGDestructorDefinition: CGMethodLikeMemberDefinition {
+}
+
+public class CGFinalizerDefinition: CGMethodLikeMemberDefinition {
+	public init() {
+		super.init("Finalizer")
+	}
+	public init(_ name: String, _ statements: List<CGStatement>) {
+		super.init("Finalizer", statements)
+	}
+	public init(_ name: String, _ statements: CGStatement...) {
+		super.init("Finalizer", statements.ToList())
+	}
 }
 
 public class CGCustomOperatorDefinition: CGMethodLikeMemberDefinition {

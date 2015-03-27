@@ -202,6 +202,22 @@ public class CGContinueStatement: CGStatement {}
 
 public class CGEmptyStatement: CGStatement {}
 
+public class CGConstructorCallStatement : CGStatement {
+	public var CallSite: CGExpression = CGSelfExpression.SelfExpression //Should be set to CGSelfExpression or CHInheritedExpression
+	public var ConstructorName: String? // an optionally be provided for languages that support named .ctors
+	public var Parameters: List<CGMethodCallParameter>
+	public var PropertyInitializers = List<CGMethodCallParameter>() // for Oxygene extnded .ctor calls
+
+	public init(_ callSite: CGExpression, _ parameters: List<CGMethodCallParameter>?) {
+		CallSite = callSite
+		if let parameters = parameters {
+			Parameters = parameters
+		} else {
+			Parameters = List<CGMethodCallParameter>()
+		}
+	}
+}
+
 /* Operator statements */
 
 public class CGVariableDeclarationStatement: CGStatement {

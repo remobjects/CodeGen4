@@ -249,6 +249,8 @@ public class CGCodeGenerator {
 			generateVariableDeclarationStatement(statement)
 		} else if let statement = statement as? CGAssignmentStatement {
 			generateAssignmentStatement(statement)
+		} else if let statement = statement as? CGConstructorCallStatement {
+			generateConstructorCallStatement(statement)
 		} else if let statement = statement as? CGEmptyStatement {
 				AppendLine()
 		} else if let expression = statement as? CGExpression { // should be last but one
@@ -352,6 +354,11 @@ public class CGCodeGenerator {
 		assert(false, "generateAssignmentStatement not implemented")
 	}
 
+	internal func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateConstructorCallStatement not implemented")
+	}
+
 	//
 	// Expressions
 	//
@@ -397,6 +404,8 @@ public class CGCodeGenerator {
 			generateFieldAccessExpression(expression)
 		} else if let expression = expression as? CGMethodCallExpression {
 			generateMethodCallExpression(expression)
+		} else if let expression = expression as? CGNewInstanceExpression {
+			generateNewInstanceExpression(expression)
 		} else if let expression = expression as? CGPropertyAccessExpression {
 			generatePropertyAccessExpression(expression)
 		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
@@ -538,6 +547,11 @@ public class CGCodeGenerator {
 	internal func generateMethodCallExpression(expression: CGMethodCallExpression) {
 		// descendant must override
 		assert(false, "generateMethodCallExpression not implemented")
+	}
+
+	internal func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+		// descendant must override
+		assert(false, "generateNewInstanceExpression not implemented")
 	}
 
 	internal func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {

@@ -355,9 +355,9 @@ public class CGTupleLiteralExpression : CGExpression {
 
 /* Calls */
 
-public class CGConstructorCallExpression : CGExpression {
+public class CGNewInstanceExpression : CGExpression {
 	public var `Type`: CGTypeReference
-	public var Name: String? // an optionally be provided for languages that support named .ctors
+	public var ConstructorName: String? // an optionally be provided for languages that support named .ctors
 	public var Parameters: List<CGMethodCallParameter>
 	public var PropertyInitializers = List<CGMethodCallParameter>() // for Oxygene extnded .ctor calls
 

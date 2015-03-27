@@ -110,6 +110,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}	
 	
+	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+
+	}
+	
 	//
 	// Expressions
 	//
@@ -195,6 +199,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
+
+	}
+
+	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 
 	}
 
