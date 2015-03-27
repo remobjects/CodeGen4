@@ -154,20 +154,28 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	// Expressions
 	//
 
+	/*
 	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
-
+		// handled in base
 	}
+	*/
 
+	/*
 	override func generateAssignedExpression(expression: CGAssignedExpression) {
-
+		// handled in base
 	}
+	*/
 
+	/*
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
-
+		// handled in base
 	}
+	*/
 
 	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
-
+		Append("[")
+		generateExpression(expression.Expression)
+		Append("Class]")
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
@@ -175,31 +183,35 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateSelectorExpression(expression: CGSelectorExpression) {
-
+		Append("@selector(\(expression.Name))")
 	}
 
-	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
-
+	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+		Append("((")
+		generateTypeReference(cast.TargetType)
+		Append(")")
+		generateExpression(cast.Expression)
+		Append(")")
 	}
 
 	override func generateInheritedExpression(expression: CGInheritedExpression) {
-
+		Append("super")
 	}
 
 	override func generateSelfExpression(expression: CGSelfExpression) {
-
+		Append("self")
 	}
 
 	override func generateNilExpression(expression: CGNilExpression) {
-
+		Append("nil")
 	}
 
 	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
-
+		Append("___value___") 
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-
+		assert(false, "generateAwaitExpression is not supported in Objective-C")
 	}
 
 	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
@@ -218,28 +230,69 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
+	/*
 	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
-
+		// handled in base
 	}
+	*/
 	
+	/*
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
-
+		// handled in base
 	}
+	*/
 
+	/*
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+		// handled in base
+	}
+	*/
 
+	internal func objcGenerateCallSiteForExpression(expression: CGMemberAccessExpression, forceSelf: Boolean = false) {
+		if let callSite = expression.CallSite {
+			generateExpression(callSite)
+		} else if forceSelf {
+			generateExpression(CGSelfExpression.SelfExpression)
+		}
 	}
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-
+		
 	}
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-
+	override func generateMethodCallExpression(method: CGMethodCallExpression) {
+		Append("[")
+		objcGenerateCallSiteForExpression(method, forceSelf: true)
+		Append(" ")
+		Append(method.Name)
+		for var p = 0; p < method.Parameters.Count; p++ {
+			let param = method.Parameters[p]
+			if p > 0 {
+				Append(" ")
+				if let name = param.Name {
+					generateIdentifier(name)
+				}
+			}
+			Append(": ")
+			switch param.Modifier {
+				case .Out: fallthrough
+				case .Var: 
+					Append("&(")
+					generateExpression(param.Value)
+					Append(")")
+				default: 
+					generateExpression(param.Value)
+			}
+		}
+		Append("]")
 	}
 
-	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-
+	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
+		objcGenerateCallSiteForExpression(property, forceSelf: true)
+		Append(".")
+		Append(property.Name)
+		
+		assert(property.Parameters.Count == 0, "Index properties are not supported in Objective-C")
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
@@ -250,12 +303,29 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
-	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
-
+	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+		Append("@[")
+		for var e = 0; e < array.Elements.Count; e++ {
+			if e > 0 {
+				Append(", ")
+			}
+			generateExpression(array.Elements[e])
+		}
+		Append("]")
 	}
 
-	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
-
+	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
+		Append("@{")
+		for var e = 0; e < dictionary.Keys.Count; e++ {
+			if e > 0 {
+				Append(", ")
+			}
+			generateExpression(dictionary.Keys[e])
+			Append(": ")
+			generateExpression(dictionary.Values[e])
+		}
+		Append("}")
 	}
 
 	//

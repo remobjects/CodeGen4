@@ -122,6 +122,12 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 	// Expressions
 	//
 	
+	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+		Append("sizeof(")
+		generateExpression(expression.Expression)
+		Append(")")
+	}
+	
 	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
 			case .Plus: Append("+")

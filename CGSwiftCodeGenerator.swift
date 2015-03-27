@@ -243,16 +243,15 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
-		Append("sizeOf(")
-		generateExpression(expression.Expression)
-		Append(")")
+		// handled in base
 	}
+	*/
 
 	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
-		Append("sizeOf(")
 		generateExpression(expression.Expression)
-		Append(")")
+		Append(".Type")
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
@@ -262,24 +261,22 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateSelectorExpression(expression: CGSelectorExpression) {
-		Append("\"(")
-		Append(expression.Name)
-		Append("\"")
+		Append("\"\(expression.Name)\"")
 	}
 
-	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
+	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
 		Append("(")
-		generateExpression(expression.Expression)
+		generateExpression(cast.Expression)
 		Append("as")
-		if !expression.GuaranteedSafe {
-			if expression.ThrowsException {
+		if !cast.GuaranteedSafe {
+			if cast.ThrowsException {
 				Append("!")
 			} else{
 				Append("?")
 			}
 		}
 		Append(" ")
-		generateTypeReference(expression.TargetType)
+		generateTypeReference(cast.TargetType)
 		Append(")")
 	}
 
