@@ -270,6 +270,25 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			} 
+			if let externalName = param.ExternalName {
+				generateIdentifier(externalName)
+				Append(" ")
+			} else {
+				Append("_ ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(": ")
+			}
+		}
+	}
+
 	//
 	// Expressions
 	//
@@ -639,7 +658,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(type.Name)
 		// todo: generics
 		Append("(")
-		// params
+		swiftGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
 		if let returnType = method.ReturnType {
@@ -663,7 +682,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
 		Append("init(")
-		// params
+		swiftGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
 		AppendLine(" {")
 		incIndent()
@@ -705,56 +724,79 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if property.Lazy {
 			Append("lazy ")
 		}
-		if property.SetStatements == nil && property.SetExpression == nil {
-			Append("let ")
+		if let params = property.Parameters where params.Count > 0 {
+			
+			Append("subscript ")
+			generateIdentifier(property.Name)
+			Append("(")
+			swiftGenerateDefinitionParameters(params)
+			Append(")")
+			if let type = property.`Type` {
+				Append(" -> ")
+				generateTypeReference(type)
+			} else {
+				assert(false, "Swift Subscripts must have a well-defined type.")
+			}
+			assert(property.Initializer == nil, "Swift Subscripts cannot have an initializer.")
+			
 		} else {
-			Append("var ")
+			
+			if property.SetStatements == nil && property.SetExpression == nil {
+				Append("let ")
+			} else {
+				Append("var ")
+			}
+			generateIdentifier(property.Name)
+			if let type = property.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			}
 		}
-		//todo subscripts
-		
-		generateIdentifier(property.Name)
-		if let type = property.`Type` {
-			Append(": ")
-			generateTypeReference(type)
-		}
-		AppendLine(" {")
-		incIndent()
-		
-		if let getStatements = property.GetStatements {
-			AppendLine("get {")
+
+		if let value = property.Initializer {
+			
+			if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.GetExpression != nil {
+				Append(" = ")
+				generateExpression(value)
+			} else {
+				assert(false, "Swift Properties cannot have both accessor statements and an initializer")
+			}
+		} else {
+			
+			AppendLine(" {")
 			incIndent()
-			generateStatementsSkippingOuterBeginEndBlock(getStatements)
+			
+			if let getStatements = property.GetStatements {
+				AppendLine("get {")
+				incIndent()
+				generateStatementsSkippingOuterBeginEndBlock(getStatements)
+				decIndent()
+				AppendLine("}")
+			} else if let getExpresssion = property.GetExpression {
+				AppendLine("get {")
+				incIndent()
+				generateStatement(CGReturnStatement(getExpresssion))
+				decIndent()
+				AppendLine("}")
+			}
+			
+			if let setStatements = property.SetStatements {
+				AppendLine("set {")
+				incIndent()
+				generateStatementsSkippingOuterBeginEndBlock(setStatements)
+				decIndent()
+				AppendLine("}")
+			} else if let setExpression = property.SetExpression {
+				AppendLine("set {")
+				incIndent()
+				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValueExpression))
+				decIndent()
+				AppendLine("}")
+			}
+			
 			decIndent()
 			AppendLine("}")
-		} else if let getExpresssion = property.GetExpression {
-			AppendLine("get {")
-			incIndent()
-			generateStatement(CGReturnStatement(getExpresssion))
-			decIndent()
-			AppendLine("}")
 		}
-		
-		if let setStatements = property.SetStatements {
-			AppendLine("set {")
-			incIndent()
-			generateStatementsSkippingOuterBeginEndBlock(setStatements)
-			decIndent()
-			AppendLine("}")
-		} else if let setExpression = property.SetExpression {
-			AppendLine("set {")
-			incIndent()
-			generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValueExpression))
-			decIndent()
-			AppendLine("}")
-		}
-		
-		decIndent()
-		AppendLine("}")
-		
-		/*f let value = property.Initializer {
-			Append(" = ")
-			generateExpression(value)
-		}*/
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
