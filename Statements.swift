@@ -46,12 +46,12 @@ public __abstract class CGNestingStatement : CGStatement {
 public class CGBeginEndBlockStatement : CGBlockStatement { //"begin/end" or "{/}"
 }
 
-public class CGIfElseStatement: CGStatement {
+public class CGIfThenElseStatement: CGStatement {
 	public var Condition: CGExpression
 	public var IfStatement: CGStatement
 	public var ElseStatement: CGStatement?
 	
-	public init(_ condition: CGExpression, _ ifStatement: CGStatement, _ elseStatement: CGStatement?) {
+	public init(_ condition: CGExpression, _ ifStatement: CGStatement, _ elseStatement: CGStatement? = nil) {
 		Condition = condition
 		IfStatement = ifStatement
 		ElseStatement = elseStatement

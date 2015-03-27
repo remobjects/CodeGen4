@@ -44,7 +44,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateIfElseStatement(statement: CGIfElseStatement) {
+	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 
 	}
 

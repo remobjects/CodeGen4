@@ -15,7 +15,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	/*override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 	}*/
 
-	/*override func generateIfElseStatement(statement: CGIfElseStatement) {
+	/*override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 	}*/
 
 	/*override func generateForToLoopStatement(statement: CGForToLoopStatement) {

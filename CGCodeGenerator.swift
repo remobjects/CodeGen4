@@ -215,7 +215,7 @@ public class CGCodeGenerator {
 			}
 		} else if let statement = statement as? CGBeginEndBlockStatement {
 			generateBeginEndStatement(statement)
-		} else if let statement = statement as? CGIfElseStatement {
+		} else if let statement = statement as? CGIfThenElseStatement {
 			generateIfElseStatement(statement)
 		} else if let statement = statement as? CGForToLoopStatement {
 			generateForToLoopStatement(statement)
@@ -267,7 +267,7 @@ public class CGCodeGenerator {
 		assert(false, "generateBeginEndStatement not implemented")
 	}
 
-	internal func generateIfElseStatement(statement: CGIfElseStatement) {
+	internal func generateIfElseStatement(statement: CGIfThenElseStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateIfElseStatement not implemented")
 	}

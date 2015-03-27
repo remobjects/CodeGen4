@@ -122,7 +122,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("end;")
 	}
 
-	override func generateIfElseStatement(statement: CGIfElseStatement) {
+	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 		Append("if ")
 		generateExpression(statement.Condition)
 		Append(" then begin")
@@ -556,7 +556,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
 		switch (type.Kind) {
 			case .Int8: Append("");
-			case .UInt8: Append("");
+			case .UInt8: Append("Byte");
 			case .Int16: Append("");
 			case .UInt16: Append("");
 			case .Int32: Append("");

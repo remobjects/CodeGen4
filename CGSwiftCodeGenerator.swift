@@ -30,7 +30,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	/*override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 	}*/
 
-	override func generateIfElseStatement(statement: CGIfElseStatement) {
+	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 		Append("if ")
 		generateExpression(statement.Condition)
 		AppendLine(" {")
