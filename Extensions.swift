@@ -57,6 +57,9 @@ public extension CGExpression {
 	public func AsReturnStatement() -> CGReturnStatement {
 		return CGReturnStatement(self)
 	}
+	public func AsCallParameter() -> CGCallParameter {
+		return CGCallParameter(self)
+	}
 }
 
 public extension CGTypeReference {

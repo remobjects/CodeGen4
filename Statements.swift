@@ -115,9 +115,9 @@ public class CGInfiniteLoopStatement: CGNestingStatement {}
 public class CGSwitchStatement: CGStatement {
 	public var Expression: CGExpression
 	public var Cases: List<CGSwitchStatementCase>
-	public var DefaultCase: CGSwitchStatementCase?
+	public var DefaultCase: List<CGStatement>?
 
-	public init(_ expression: CGExpression, _ cases: List<CGSwitchStatementCase>, _ defaultCase: CGSwitchStatementCase? = nil) {
+	public init(_ expression: CGExpression, _ cases: List<CGSwitchStatementCase>, _ defaultCase: List<CGStatement>? = nil) {
 		Expression = expression
 		DefaultCase = defaultCase
 		if let cases = cases {
