@@ -509,6 +509,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .AssemblyAndProtected: Append("internal ")
 			case .AssemblyOrProtected: fallthrough
 			case .Protected: fallthrough
+			case .Published: fallthrough
 			case .Public: Append("public ")
 		}
 	}

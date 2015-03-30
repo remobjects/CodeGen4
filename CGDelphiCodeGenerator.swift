@@ -22,4 +22,12 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 		super.generateFooter()
 	}
+
+	override func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+		switch visibility {
+			case .Published: Append("published")
+			default: super.pascalGenerateMemberTypeVisibilityPrefix(visibility)
+		}
+	}
+	
 }

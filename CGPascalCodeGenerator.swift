@@ -518,15 +518,16 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
 		switch visibility {
-			case .Private: Append("strict private ")
-			case .Unit: Append("private ")
+			case .Private: Append("strict private")
+			case .Unit: Append("private")
 			case .UnitAndProtected: fallthrough
 			case .AssemblyAndProtected: fallthrough
-			case .Protected: Append("protected ")
+			case .Protected: Append("protected")
 			case .UnitOrProtected: fallthrough
 			case .AssemblyOrProtected: fallthrough
 			case .Assembly: fallthrough
-			case .Public: Append("public ")
+			case .Published: fallthrough
+			case .Public: Append("public")
 		}
 	}
 	

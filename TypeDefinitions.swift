@@ -92,6 +92,7 @@ public enum CGMemberVisibilityKind {
 	case AssemblyAndProtected
 	case Protected
 	case Public
+	case Published /* Delphi only */
 }
 
 public enum CGMemberVirtualityKind {
@@ -287,4 +288,3 @@ public class CGGenericParameterDefinition: CGEntity {
 
 public class CGGenericConstraintDefinition: CGEntity {
 }
-

@@ -130,15 +130,16 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	
 	override func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
 		switch visibility {
-			case .Private: Append("private ")
-			case .Unit: Append("unit ")
-			case .UnitOrProtected: Append("unit or protected ")
-			case .UnitAndProtected: Append("unit and protected ")
-			case .Assembly: Append("assembly ")
-			case .AssemblyAndProtected: Append("assembly and protected ")
-			case .AssemblyOrProtected: Append("assembly or protected ")
-			case .Protected: Append("protected ")
-			case .Public: Append("public ")
+			case .Private: Append("private")
+			case .Unit: Append("unit")
+			case .UnitOrProtected: Append("unit or protected")
+			case .UnitAndProtected: Append("unit and protected")
+			case .Assembly: Append("assembly")
+			case .AssemblyAndProtected: Append("assembly and protected")
+			case .AssemblyOrProtected: Append("assembly or protected")
+			case .Protected: Append("protected")
+			case .Published: fallthrough
+			case .Public: Append("public")
 		}
 	}
 	
