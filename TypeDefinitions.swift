@@ -47,6 +47,7 @@ public class CGBlockTypeDefinition : CGTypeDefinition {
 
 public class CGEnumTypeDefinition : CGTypeDefinition {
 	public var Values = Dictionary<String, CGExpression>()
+	public var BaseType: CGTypeReference?
 }
 
 public __abstract class CGClassOrStructTypeDefinition : CGTypeDefinition {
@@ -251,17 +252,19 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		return nil
 	}
 	
+	public static let MAGIC_VALUE_PARAMETER_NAME = "___value___"
+	
 	func SetterMethodDefinition() -> CGMethodDefinition? {
 		if let setStatements = SetStatements, type = `Type` {
 			let method = CGMethodDefinition("set__"+Name, setStatements)
 			method.Parameters.AddRange(Parameters)
-			method.Parameters.Add(CGParameterDefinition("___value", type))
+			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
 			return method
 		} else if let setExpression = SetExpression, type = `Type` {
 			let method = CGMethodDefinition("set__"+Name)
 			method.Parameters.AddRange(Parameters)
-			method.Parameters.Add(CGParameterDefinition("___value", type))
-			method.Statements.Add(CGAssignmentStatement(setExpression, CGLocalVariableAccessExpression("___value")))
+			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
+			method.Statements.Add(CGAssignmentStatement(setExpression, CGLocalVariableAccessExpression(MAGIC_VALUE_PARAMETER_NAME)))
 			return method
 		}
 		return nil

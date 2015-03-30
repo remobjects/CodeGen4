@@ -126,21 +126,21 @@ public enum CGArrayKind {
 
 public class CGArrayTypeReference : CGTypeReference {
 	public var `Type`: CGTypeReference
-	public var Bounds = List<CGArrayTypeReferenceBounds>()
+	public var Bounds = List<CGArrayBounds>()
 	public var ArrayKind: CGArrayKind = .Dynamic
 
-	public init(_ type: CGTypeReference, _ bounds: List<CGArrayTypeReferenceBounds>? = default) {
+	public init(_ type: CGTypeReference, _ bounds: List<CGArrayBounds>? = default) {
 		`Type` = type;
 		if let bounds = bounds {
 			Bounds = bounds
 		} else {
-			Bounds = List<CGArrayTypeReferenceBounds>()
+			Bounds = List<CGArrayBounds>()
 		}
 		
 	}
 }
 
-public class CGArrayTypeReferenceBounds {
+public class CGArrayBounds : CGEntity {
 	public var Start: Int32 = 0
 	public var End: Int32?
 	

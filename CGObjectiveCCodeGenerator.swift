@@ -207,7 +207,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
-		Append("___value___") 
+		Append(CGPropertyDefinition.MAGIC_VALUE_PARAMETER_NAME) 
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {

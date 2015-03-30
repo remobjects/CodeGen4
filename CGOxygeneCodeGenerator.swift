@@ -8,6 +8,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	// Statements
 	//
 
+	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+		Append("loop")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+	}
+
 	override func generateLockingStatement(statement: CGLockingStatement) {
 		Append("locking ")
 		generateExpression(statement.Expression)
@@ -155,6 +160,23 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		return "method"	
 	}
 	
+	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		assert(false, "generateDestructorDefinition is not supported in Oxygene")
+	}
+
+	override func pascalGenerateDestructorImplementation(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		assert(false, "pascalGenerateDestructorImplementation is not supported in Oxygene")
+	}
+
+	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(finalizer, type: type, methodKeyword: "destructor", implementation: false)
+	}
+
+	override func pascalGenerateFinalizerImplementation(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(finalizer, type: type, methodKeyword: "destructor", implementation: true)
+		pascalGenerateMethodBody(finalizer, type: type);
+	}
+
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
 		if event.Static {
 			Append("class ")

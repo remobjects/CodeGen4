@@ -129,6 +129,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine(":")
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
 		}
+		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+			AppendLine("default:")
+			generateStatementsIndentedUnlessItsASingleBeginEndBlock(defaultStatements)
+		}
 		decIndent()
 		AppendLine("}")
 	}
@@ -569,11 +573,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("enum ")
 		generateIdentifier(type.Name)
-		Append(" ")
 		//ToDo: generic constraints
-		//ToDo: ancestors
+		if let baseType = type.BaseType {
+			Append(" : ")
+			generateTypeReference(baseType)
+		}
+		Append(" ")
 		AppendLine("{ ")
-		incIndent()
 		incIndent()
 		for m in type.Members {
 			if let m = m as? CGEnumValueDefinition {

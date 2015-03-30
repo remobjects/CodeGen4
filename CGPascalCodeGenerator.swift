@@ -77,6 +77,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	final func pascalGenerateTypeMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
 		if let member = member as? CGConstructorDefinition {
 			pascalGenerateConstructorImplementation(member, type:type)
+		} else if let member = member as? CGDestructorDefinition {
+			pascalGenerateDestructorImplementation(member, type:type)
+		} else if let member = member as? CGFinalizerDefinition {
+			pascalGenerateFinalizerImplementation(member, type:type)
 		} else if let member = member as? CGMethodDefinition {
 			pascalGenerateMethodImplementation(member, type:type)
 		} else if let member = member as? CGPropertyDefinition {
@@ -150,7 +154,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
 		Append("for ")
 		generateIdentifier(statement.LoopVariableName)
-		if let type = statement.LoopVariableType { //ToDo: classic Pascalcant do this?
+		if let type = statement.LoopVariableType { //ToDo: classic Pascal cant do this?
 			Append(": ")
 			generateTypeReference(type)
 		}
@@ -162,21 +166,24 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" downto ")
 		}
 		generateExpression(statement.EndValue)
-		Append(" do begin")
-		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
-		AppendLine("end;")		
+		Append(" do")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
-		//todo
+		Append("for each ")
+		generateIdentifier(statement.LoopVariableName)
+		Append(" in ")
+		generateIdentifier(statement.Collection)
+		Append(" do")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
 		Append("while ")
 		generateExpression(statement.Condition)
-		AppendLine(" do begin")
-		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
-		AppendLine("end;")		
+		AppendLine(" do")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
@@ -199,7 +206,30 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
-
+		Append("case ")
+		generateExpression(statement.Expression)
+		AppendLine(" of")
+		incIndent()
+		for c in statement.Cases {
+			generateExpression(c.CaseExpression)
+			Append(": begin")
+			incIndent()
+			incIndent()
+			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
+			decIndent()
+			Append("end;")
+			decIndent()
+		}
+		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+			Append("default begin")
+			incIndent()
+			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
+			decIndent()
+			Append("end;")
+			decIndent()
+		}
+		decIndent()
+		AppendLine("end")	
 	}
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
@@ -299,6 +329,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	/*
 	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+		// handled in base
 	}
 	*/
 
@@ -321,7 +352,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
-		// todo:check if pase Pascal has thos, or only Oxygene
+		// todo: check if pase Pascal has thosw, or only Oxygene
 		Append("default(")
 		generateTypeReference(expression.`Type`)
 		Append(")")
@@ -359,7 +390,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
-		Append("___value___") 
+		Append(CGPropertyDefinition.MAGIC_VALUE_PARAMETER_NAME) 
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
@@ -376,13 +407,13 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 
 	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-		// handle din base
+		// handled in base
 	}
 	*/
 
 	/*
 	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
-		// handle din base
+		// handled in base
 	}
 	*/
 
@@ -457,10 +488,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 				Append(", ")
 			}
 			switch param.Modifier {
-				case .Out: Append("out") //todo: Oxygene ony?
-				case .Var: Append("var")
-				case .Const: Append("const")
-				case .Params: Append("params") //todo: Oxygene ony?
+				case .Var: Append("var ")
+				case .Const: Append("const ")
+				case .Out: Append("out ") //todo: Oxygene ony?
+				case .Params: Append("params ") //todo: Oxygene ony?
 				default: 
 			}
 			generateIdentifier(param.Name)
@@ -568,7 +599,29 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	override func generateEnumType(type: CGEnumTypeDefinition) {
-		
+		generateIdentifier(type.Name)
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		Append("enum (")
+		for var m: Int32 = 0; m < type.Members.Count; m++ {
+			if let member = type.Members[m] as? CGEnumValueDefinition {
+				if m > 0 {
+					Append(", ")
+				}
+				generateIdentifier(member.Name)
+				if let value = member.Value {
+					Append(" = ")
+					generateExpression(value)
+				}
+				AppendLine()
+			}
+		}
+		Append(")")
+		if let baseType = type.BaseType {
+			Append(" of ")
+			generateTypeReference(baseType)
+		}
+		AppendLine(";")
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
@@ -725,11 +778,20 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(dtor, type: type, methodKeyword: "destructor", implementation: false)
+	}
 
+	func pascalGenerateDestructorImplementation(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		pascalGenerateMethodHeader(dtor, type: type, methodKeyword: "destructor", implementation: true)
+		pascalGenerateMethodBody(dtor, type: type);
 	}
 
 	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+		assert(false, "generateFinalizerDefinition is not supported in base Pascal, only Oxygene")
+	}
 
+	func pascalGenerateFinalizerImplementation(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+		assert(false, "generateFinalizerImplementation is not supported in base Pascal, only Oxygene")
 	}
 
 	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
@@ -827,8 +889,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type References
 	//
 
+	/*
 	override func generateNamedTypeReference(type: CGNamedTypeReference) {
+		// handled in base
 	}
+	*/
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
 		switch (type.Kind) {
@@ -865,17 +930,29 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateTypeReference(type.`Type`)
 	}
 	
-	/*
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
-		//not supported in base Pascal
+		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}
-	*/
 
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
-
+	override func generateArrayTypeReference(array: CGArrayTypeReference) {
+		Append("array")
+		if let bounds = array.Bounds where bounds.Count > 0 {
+			Append("[")
+			for var b: Int32 = 0; b < array.Bounds.Count; b++ {
+				let bound = array.Bounds[b]
+				if b > 0 {
+					Append(", ")
+				}
+				Append(bound.Start.ToString())
+				Append("..")
+				if let end = bound.End {
+					Append(end.ToString())
+				}
+			}
+		}
 	}
 	
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
-
+		assert(false, "generateDictionaryTypeReference is not supported in Pascal")
 	}
 }
