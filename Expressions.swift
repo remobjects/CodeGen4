@@ -375,6 +375,16 @@ public class CGNewInstanceExpression : CGExpression {
 	}
 }
 
+public class CGLocalVariableAccessExpression : CGExpression {
+	public var Name: String
+	public var NilSafe: Boolean = false // true to use colon or elvis operator
+	public var UnwrapNullable: Boolean = false // Swift only
+
+	public init(_ name: String) {
+		Name = name
+	}
+}
+
 public __abstract class CGMemberAccessExpression : CGExpression {
 	public var CallSite: CGExpression? // can be nil to call a local or global function/variable. Should be set to CGSelfExpression for local methods.
 	public var Name: String

@@ -450,6 +450,25 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	func pascalGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			switch param.Modifier {
+				case .Out: Append("out") //todo: Oxygene ony?
+				case .Var: Append("var")
+				case .Const: Append("const")
+				case .Params: Append("params") //todo: Oxygene ony?
+				default: 
+			}
+			generateIdentifier(param.Name)
+			Append(": ")
+			generateTypeReference(param.`Type`)
+		}
+	}
+
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
 		pascalGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
@@ -516,7 +535,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+	func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("strict private")
 			case .Unit: Append("private")
@@ -601,6 +620,41 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Members
 	//
 	
+	final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind) {
+		var first = true
+		for m in type.Members {
+			if visibility == CGMemberVisibilityKind.Private {
+				if let m = m as? CGPropertyDefinition {
+					pascalGeneratePropertyAccessorDefinition(m, type: type)
+				} else if let m = m as? CGEventDefinition {
+					pascalGenerateEventAccessorDefinition(m, type: type)
+				}
+			}
+			if m.Visibility == visibility {
+				if first {
+					decIndent()
+					pascalGenerateMemberTypeVisibilityKeyword(visibility)
+					AppendLine()
+					incIndent()
+				}
+				generateTypeMember(m, type: type);
+			}
+		}
+	}
+	
+	override func generateTypeMembers(type: CGTypeDefinition) {
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
+		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
+	}
+	
 	internal func pascalKeywordForMethod(method: CGMethodDefinition) -> String {
 		if method.ReturnType == nil {
 			return "procedure"
@@ -619,7 +673,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(".")
 		}
 		Append(method.Name)
-		// todo parrameters
+		if let parameters = method.Parameters where parameters.Count > 0 {
+			Append("[")
+			pascalGenerateDefinitonParameters(parameters)
+			Append("]")
+		}
 		if let returnType = method.ReturnType {
 			Append(": ")
 			generateTypeReference(returnType)
@@ -706,33 +764,63 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append("property ")
 		Append(property.Name)
-		// todo parameters
+		if let parameters = property.Parameters where parameters.Count > 0 {
+			Append("[")
+			pascalGenerateDefinitonParameters(parameters)
+			Append("]")
+		}
 		if let type = property.`Type` {
 			Append(": ")
 			generateTypeReference(type)
 		}
-		// todo read/write
+		
+		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition {
+			Append(" read ")
+			generateIdentifier(getterMethod.Name)
+		} else if let getExpression = property.GetExpression {
+			Append(" read ")
+			generateExpression(getExpression)
+		}
+		
+		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition {
+			Append(" write ")
+			generateIdentifier(setterMethod.Name)
+		} else if let setExpression = property.SetExpression {
+			Append(" write ")
+			generateExpression(setExpression)
+		}
+		
 		AppendLine(";")
 	}
-
+	
+	func pascalGeneratePropertyAccessorDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition {
+			generateMethodDefinition(getterMethod, type: type)
+		}
+		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition {
+			generateMethodDefinition(setterMethod!, type: type)
+		}
+	}
+	
 	func pascalGeneratePropertyImplementation(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		if let getStatements = property.GetStatements {
+			pascalGenerateMethodImplementation(property.GetterMethodDefinition!, type: type)
+		}
+		if let setStatements = property.SetStatements {
+			pascalGenerateMethodImplementation(property.GetterMethodDefinition!, type: type)
+		}
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
-		if event.Static {
-			Append("class ")
-		}
-		Append("event ")
-		Append(event.Name)
-		// todo parameters
-		if let type = event.`Type` {
-			Append(": ")
-			generateTypeReference(type)
-		}
-
+		assert(false, "generateEventDefinition is not supported in base Pascal, only Oxygene")
 	}
 
+	func pascalGenerateEventAccessorDefinition(property: CGEventDefinition, type: CGTypeDefinition) {
+		assert(false, "pascalGenerateEventAccessorDefinition is not supported in base Pascal, only Oxygene")
+	}
+	
 	func pascalGenerateEventImplementation(event: CGEventDefinition, type: CGTypeDefinition) {
+		assert(false, "pascalGenerateEventImplementation is not supported in base Pascal, only Oxygene")
 	}
 
 	//
@@ -740,7 +828,6 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateNamedTypeReference(type: CGNamedTypeReference) {
-
 	}
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {

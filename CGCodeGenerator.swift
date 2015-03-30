@@ -409,6 +409,8 @@ public class CGCodeGenerator {
 			generateBinaryOperatorExpression(expression)
 		} else if let expression = expression as? CGIfThenElseExpression {
 			generateIfThenElseExpressionExpression(expression)
+		} else if let expression = expression as? CGLocalVariableAccessExpression {
+			generateLocalVariableAccessExpression(expression)
 		} else if let expression = expression as? CGFieldAccessExpression {
 			generateFieldAccessExpression(expression)
 		} else if let expression = expression as? CGMethodCallExpression {
@@ -546,6 +548,11 @@ public class CGCodeGenerator {
 	internal func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
 		// descendant must override
 		assert(false, "generateIfThenElseExpressionExpression not implemented")
+	}
+
+	internal func generateLocalVariableAccessExpression(expression: CGLocalVariableAccessExpression) {
+		// descendant may override, but this will work for all languages.
+		generateIdentifier(expression.Name)
 	}
 
 	internal func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
@@ -696,7 +703,7 @@ public class CGCodeGenerator {
 		generateExtensionTypeEnd(type)
 	}
 	
-	internal final func generateTypeMembers(type: CGTypeDefinition) {
+	internal func generateTypeMembers(type: CGTypeDefinition) {
 		for m in type.Members {
 			generateTypeMember(m, type: type);
 		}

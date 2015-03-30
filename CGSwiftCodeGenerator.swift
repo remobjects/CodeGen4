@@ -283,6 +283,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			} else {
 				Append("_ ")
 			}
+			switch param.Modifier {
+				case .Out: 
+					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+						Append("__out")
+					} else {
+						fallthrough
+					}
+				case .Var: 
+					Append("inout")
+				default: 
+			}
 			if let name = param.Name {
 				generateIdentifier(name)
 				Append(": ")

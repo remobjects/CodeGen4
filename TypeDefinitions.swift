@@ -233,24 +233,84 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		init(name, type)
 		GetExpression = getExpression
 		SetExpression = setExpression
-	}   
+	} 
+	
+	func GetterMethodDefinition() -> CGMethodDefinition? {
+		if let getStatements = GetStatements, type = `Type` {
+			let method = CGMethodDefinition("get__"+Name, getStatements)
+			method.ReturnType = type
+			method.Parameters = Parameters
+			return method
+		} else if let getExpression = GetExpression, type = `Type` {
+			let method = CGMethodDefinition("get__"+Name)
+			method.ReturnType = type
+			method.Parameters = Parameters
+			method.Statements.Add(getExpression.AsReturnStatement)
+			return method
+		}
+		return nil
+	}
+	
+	func SetterMethodDefinition() -> CGMethodDefinition? {
+		if let setStatements = SetStatements, type = `Type` {
+			let method = CGMethodDefinition("set__"+Name, setStatements)
+			method.Parameters.AddRange(Parameters)
+			method.Parameters.Add(CGParameterDefinition("___value", type))
+			return method
+		} else if let setExpression = SetExpression, type = `Type` {
+			let method = CGMethodDefinition("set__"+Name)
+			method.Parameters.AddRange(Parameters)
+			method.Parameters.Add(CGParameterDefinition("___value", type))
+			method.Statements.Add(CGAssignmentStatement(setExpression, CGLocalVariableAccessExpression("___value")))
+			return method
+		}
+		return nil
+	}
 }
 
 public class CGEventDefinition: CGFieldLikeMemberDefinition {
 	public var AddStatements: List<CGStatement>?
 	public var RemoveStatements: List<CGStatement>?
-	public var RaiseStatements: List<CGStatement>?
+	//public var RaiseStatements: List<CGStatement>?
 
 	public init(_ name: String, _ type: CGTypeReference) {
 		super.init(name, type)
 	}
-	public convenience init(_ name: String, _ type: CGTypeReference, _ addStatements: List<CGStatement>, _ removeStatements: List<CGStatement>, _ raiseStatements: List<CGStatement>? = nil) {
+	public convenience init(_ name: String, _ type: CGTypeReference, _ addStatements: List<CGStatement>, _ removeStatements: List<CGStatement>/*, _ raiseStatements: List<CGStatement>? = nil*/) {
 		init(name, type)
 		AddStatements = addStatements
 		RemoveStatements = removeStatements
-		RaiseStatements = raiseStatements
+		//RaiseStatements = raiseStatements
 	}
+
+	func AddMethodDefinition() -> CGMethodDefinition? {
+		if let addStatements = AddStatements, type = `Type` {
+			let method = CGMethodDefinition("add__"+Name, addStatements)
+			method.Parameters.Add(CGParameterDefinition("___value", type))
+			return method
+		}
+		return nil
+	}
+
+	func RemoveMethodDefinition() -> CGMethodDefinition? {
+		if let removeStatements = RemoveStatements, type = `Type` {
+			let method = CGMethodDefinition("remove__"+Name, removeStatements)
+			method.Parameters.Add(CGParameterDefinition("___value", type))
+			return method
+		}
+		return nil
+	}
+
+	/*func RaiseMethodDefinition() -> CGMethodDefinition? {
+		if let raiseStatements = RaiseStatements, type = `Type` {
+			let method = CGMethodDefinition("raise__"+Name, raisetatements)
+			//todo: ths woukd need the same parametersas the block, which we don't have
+			return method
+		}
+		return nil
+	}*/
 }
+
 
 //
 // Parameters

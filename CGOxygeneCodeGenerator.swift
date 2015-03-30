@@ -128,7 +128,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
-	override func pascalGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+	override func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("private")
 			case .Unit: Append("unit")
@@ -155,6 +155,43 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		return "method"	
 	}
 	
+	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+		if event.Static {
+			Append("class ")
+		}
+		Append("event ")
+		Append(event.Name)
+		// todo parameters
+		if let type = event.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+	}
+
+	override func pascalGenerateEventAccessorDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+		if let addStatements = event.AddStatements {
+			generateMethodDefinition(event.AddMethodDefinition!, type: type)
+		}
+		if let removeStatements = event.RemoveStatements {
+			generateMethodDefinition(event.RemoveMethodDefinition!, type: type)
+		}
+		/*if let raiseStatements = event.RaiseStatements {
+			generateMethodDefinition(event.RaiseMethodDefinition, type: ttpe)
+		}*/
+	}
+	
+	override func pascalGenerateEventImplementation(event: CGEventDefinition, type: CGTypeDefinition) {
+		if let addStatements = event.AddStatements {
+			pascalGenerateMethodImplementation(event.AddMethodDefinition!, type: type)
+		}
+		if let removeStatements = event.RemoveStatements {
+			pascalGenerateMethodImplementation(event.RemoveMethodDefinition!, type: type)
+		}
+		/*if let raiseStatements = event.RaiseStatements {
+			pascalGenerateMethodImplementation(event.RaiseMethodDefinition, type: ttpe)
+		}*/
+	}
+
 	//
 	// Type References
 	//
