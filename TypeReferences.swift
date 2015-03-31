@@ -23,6 +23,10 @@ public class CGNamedTypeReference : CGTypeReference {
 	public init(_ name: String) {
 		Name = name
 	}
+	public convenience init(_ name: String, defaultNullability: CGTypeNullabilityKind) {
+		init(name)
+		DefaultNullability = defaultNullability
+	}
 }
 
 public class CGPredefinedTypeReference : CGTypeReference {

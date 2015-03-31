@@ -170,6 +170,7 @@ public enum CGUnaryOperatorKind {
 	case Plus
 	case Minus
 	case Not
+	case AdddressOf
 }
 
 public class CGBinaryOperatorExpression: CGExpression {

@@ -135,6 +135,7 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .Plus: Append("+")
 			case .Minus: Append("-")
 			case .Not: Append("!")
+			case .AddressOf: Append("&")
 		}
 	}
 	

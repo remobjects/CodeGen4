@@ -428,6 +428,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			case .Plus: Append("+")
 			case .Minus: Append("-")
 			case .Not: Append("not ")
+			case .AddressOf: Append("@")
 		}
 	}
 	

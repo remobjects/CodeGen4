@@ -525,8 +525,9 @@ public class CGCodeGenerator {
 		} else if let `operator` = expression.Operator {
 			generateUnaryOperator(`operator`)
 		}
+		Append("(")
 		generateExpression(expression.Value)
-		Append(")")
+		Append("))")
 	}
 
 	internal func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
