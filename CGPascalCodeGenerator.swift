@@ -174,7 +174,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("for each ")
 		generateIdentifier(statement.LoopVariableName)
 		Append(" in ")
-		generateIdentifier(statement.Collection)
+		generateExpression(statement.Collection)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
@@ -872,10 +872,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	func pascalGeneratePropertyImplementation(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if let getStatements = property.GetStatements {
-			pascalGenerateMethodImplementation(property.GetterMethodDefinition!, type: type)
+			pascalGenerateMethodImplementation(property.GetterMethodDefinition()!, type: type)
 		}
 		if let setStatements = property.SetStatements {
-			pascalGenerateMethodImplementation(property.GetterMethodDefinition!, type: type)
+			pascalGenerateMethodImplementation(property.GetterMethodDefinition()!, type: type)
 		}
 	}
 

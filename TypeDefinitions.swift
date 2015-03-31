@@ -246,7 +246,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 			let method = CGMethodDefinition("get__"+Name)
 			method.ReturnType = type
 			method.Parameters = Parameters
-			method.Statements.Add(getExpression.AsReturnStatement)
+			method.Statements.Add(getExpression.AsReturnStatement())
 			return method
 		}
 		return nil
