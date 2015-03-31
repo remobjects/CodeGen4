@@ -413,6 +413,8 @@ public class CGCodeGenerator {
 			generateLocalVariableAccessExpression(expression)
 		} else if let expression = expression as? CGFieldAccessExpression {
 			generateFieldAccessExpression(expression)
+		} else if let expression = expression as? CGArrayElementAccessExpression {
+			generateArrayElementAccessExpression(expression)
 		} else if let expression = expression as? CGMethodCallExpression {
 			generateMethodCallExpression(expression)
 		} else if let expression = expression as? CGNewInstanceExpression {
@@ -558,6 +560,20 @@ public class CGCodeGenerator {
 	internal func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
 		// descendant must override
 		assert(false, "generateFieldAccessExpression not implemented")
+	}
+
+	internal func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+		// descendant may override, but this will work for most languages.
+		generateExpression(expression.Array)
+		Append("[")
+		for var p = 0; p < expression.Parameters.Count; p++ {
+			let param = expression.Parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			generateExpression(param)
+		}
+		Append("]")
 	}
 
 	internal func generateMethodCallExpression(expression: CGMethodCallExpression) {

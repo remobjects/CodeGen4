@@ -436,6 +436,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(expression.Name)
 	}
 
+	/*
+	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
 		swiftGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)

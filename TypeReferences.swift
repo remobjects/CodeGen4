@@ -16,7 +16,7 @@ public __abstract class CGTypeReference : CGEntity {
 	public var Nullability: CGTypeNullabilityKind = .Default
 }
 
-public class CGTypeReferenceExpression {
+public class CGTypeReferenceExpression : CGExpression{
 	public var `Type`: CGTypeReference
 
 	public init(_ type: CGTypeReference) {
@@ -103,6 +103,8 @@ public class CGPointerTypeReference : CGTypeReference {
 	public init(_ type: CGTypeReference) {
 		`Type` = type;
 	}
+	
+	public static lazy var VoidPointer = CGPointerTypeReference(CGPredefinedTypeReference.Void)
 }
 
 public class CGTupleTypeReference : CGTypeReference {

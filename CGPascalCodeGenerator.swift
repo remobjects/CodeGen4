@@ -505,6 +505,12 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(expression.Name)
 	}
 
+	/*
+	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
 		pascalGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
@@ -836,7 +842,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			generateTypeReference(type)
 		}
 		
-		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition {
+		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
 			Append(" read ")
 			generateIdentifier(getterMethod.Name)
 		} else if let getExpression = property.GetExpression {
@@ -844,7 +850,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			generateExpression(getExpression)
 		}
 		
-		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition {
+		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
 			Append(" write ")
 			generateIdentifier(setterMethod.Name)
 		} else if let setExpression = property.SetExpression {
@@ -856,10 +862,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	func pascalGeneratePropertyAccessorDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
-		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition {
+		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
 			generateMethodDefinition(getterMethod, type: type)
 		}
-		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition {
+		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
 			generateMethodDefinition(setterMethod!, type: type)
 		}
 	}

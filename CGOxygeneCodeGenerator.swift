@@ -192,10 +192,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func pascalGenerateEventAccessorDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
 		if let addStatements = event.AddStatements {
-			generateMethodDefinition(event.AddMethodDefinition!, type: type)
+			generateMethodDefinition(event.AddMethodDefinition()!, type: type)
 		}
 		if let removeStatements = event.RemoveStatements {
-			generateMethodDefinition(event.RemoveMethodDefinition!, type: type)
+			generateMethodDefinition(event.RemoveMethodDefinition()!, type: type)
 		}
 		/*if let raiseStatements = event.RaiseStatements {
 			generateMethodDefinition(event.RaiseMethodDefinition, type: ttpe)
@@ -204,10 +204,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	
 	override func pascalGenerateEventImplementation(event: CGEventDefinition, type: CGTypeDefinition) {
 		if let addStatements = event.AddStatements {
-			pascalGenerateMethodImplementation(event.AddMethodDefinition!, type: type)
+			pascalGenerateMethodImplementation(event.AddMethodDefinition()!, type: type)
 		}
 		if let removeStatements = event.RemoveStatements {
-			pascalGenerateMethodImplementation(event.RemoveMethodDefinition!, type: type)
+			pascalGenerateMethodImplementation(event.RemoveMethodDefinition()!, type: type)
 		}
 		/*if let raiseStatements = event.RaiseStatements {
 			pascalGenerateMethodImplementation(event.RaiseMethodDefinition, type: ttpe)

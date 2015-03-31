@@ -217,7 +217,7 @@ public enum CGBinaryOperatorKind {
 /* Literal Expressions */
 
 public class CGNamedIdentifierExpression: CGExpression { 
-	var Name: String
+	public var Name: String
 	
 	public init(_ name: String) {
 		Name = name;
@@ -247,7 +247,7 @@ public class CGLanguageAgnosticLiteralExpression: CGExpression {
 }
 
 public class CGStringLiteralExpression: CGLiteralExpression {
-	var Value: String = ""
+	public var Value: String = ""
 	
 	public init() {
 	}
@@ -257,7 +257,7 @@ public class CGStringLiteralExpression: CGLiteralExpression {
 }
 
 public class CGCharacterLiteralExpression: CGLiteralExpression {
-	var Value: Char = "\0"
+	public var Value: Char = "\0"
 
 	public init() {
 	}
@@ -267,7 +267,7 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 }
 
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	var Value: Int64 = 0
+	public var Value: Int64 = 0
 
 	public init() {
 	}
@@ -281,7 +281,7 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 }
 
 public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	var Value: Double = 0
+	public var Value: Double = 0
 	
 	public init() {
 	}
@@ -295,10 +295,10 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 }
 
 public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	var Value: Boolean = false
+	public let Value: Boolean = false
 	
-	var True: CGBooleanLiteralExpression { return CGBooleanLiteralExpression(true) }
-	var False: CGBooleanLiteralExpression { return CGBooleanLiteralExpression(false) }
+	public static lazy let True = CGBooleanLiteralExpression(true)
+	public static lazy let False = CGBooleanLiteralExpression(false)
 	
 	public init() {
 	}
@@ -446,4 +446,12 @@ public class CGCallParameter: CGEntity {
 	}
 }
 
+public class CGArrayElementAccessExpression: CGExpression {
+	public var Array: CGExpression
+	public var Parameters: List<CGExpression>
 
+	public init(_ array: CGExpression, _ parameters: List<CGExpression>) {
+		Array = array
+		Parameters = parameters
+	}
+}

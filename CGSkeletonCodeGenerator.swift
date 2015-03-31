@@ -198,6 +198,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+
+	}
+
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
 
 	}
