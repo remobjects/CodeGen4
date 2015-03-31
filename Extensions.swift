@@ -1,6 +1,29 @@
 ﻿import Sugar
 
-public extension String {
+public extension Sugar.String {
+	
+	public func AsTypeReference() -> CGTypeReference {
+		return CGNamedTypeReference(self)
+	}
+
+	public func AsTypeReferenceExpression() -> CGTypeReferenceExpression {
+		return CGTypeReferenceExpression(CGNamedTypeReference(self))
+	}
+	
+	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
+		return CGNamedIdentifierExpression(self)
+	}
+	
+	public func AsLiteralExpression() -> CGStringLiteralExpression {
+		return CGStringLiteralExpression(self)
+	}
+
+	public func AsRawExpression() -> CGRawExpression {
+		return CGRawExpression(self)
+	}
+}
+
+public extension RemObjects.Elements.System.String {
 	
 	public func AsTypeReference() -> CGTypeReference {
 		return CGNamedTypeReference(self)
