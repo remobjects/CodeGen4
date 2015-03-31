@@ -4,8 +4,6 @@ import Sugar.Collections
 public class CGCodeGenerator {
 	
 	internal var currentUnit: CGCodeUnit!
-	internal var currentCode: StringBuilder!
-	internal var indent: Int32 = 0
 	internal var tabSize = 2
 	internal var useTabs = false
 
@@ -79,12 +77,14 @@ public class CGCodeGenerator {
 		// descendant should not usually override
 		for t in currentUnit.Types {
 			generateTypeDefinition(t);
+			AppendLine()
 		}
 	}
 
 	internal func generateGlobals() {
 		for g in currentUnit.Globals {
 			generateGlobal(g);
+			AppendLine()
 		}
 	}
 
@@ -112,10 +112,11 @@ public class CGCodeGenerator {
 	
 	internal final func generateIdentifier(name: String, escaped: Boolean) {
 		if escaped {
-			if keywordsAreCaseSensitive {
-				name = name.ToLower()
+			var checkName = name
+			if !keywordsAreCaseSensitive {
+				checkName = checkName.ToLower()
 			}
-			if keywords?.Contains(name) {
+			if keywords?.Contains(checkName) {
 				Append(escapeIdentifier(name))
 			} else {
 				Append(name) 
@@ -210,7 +211,6 @@ public class CGCodeGenerator {
 			}
 		} else if let rawStatement = statement as? CGRawStatement {
 			for line in rawStatement.Lines {
-				AppendIndent()
 				AppendLine(line)
 			}
 		} else if let statement = statement as? CGBeginEndBlockStatement {
@@ -254,9 +254,7 @@ public class CGCodeGenerator {
 		} else if let statement = statement as? CGEmptyStatement {
 				AppendLine()
 		} else if let expression = statement as? CGExpression { // should be last but one
-			AppendIndent()
 			generateExpressionStatement(expression)
-			AppendLine()
 		} 
 		
 		else {
@@ -435,9 +433,12 @@ public class CGCodeGenerator {
 			generateDictionaryExpression(expression)
 		} else if let expression = expression as? CGTupleLiteralExpression {
 			generateTupleExpression(expression)
+		} else if let expression = expression as? CGTypeReferenceExpression {
+			generatTypeReferenceExpression(expression)
 		}
 		
 		else {
+			Append("[UNSUPPORTED: "+expression.ToString()+"]")
 			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
 		}
 	}
@@ -631,6 +632,11 @@ public class CGCodeGenerator {
 		Append(")")
 	}
 	
+	internal func generatTypeReferenceExpression(expression: CGTypeReferenceExpression) {
+		// descendant may override, but this will work for most languages.
+		generateTypeReference(expression.`Type`)
+	}
+	
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren;t happy with the default
 		return expression.StringRepresentation
@@ -730,6 +736,7 @@ public class CGCodeGenerator {
 	internal func generateTypeMembers(type: CGTypeDefinition) {
 		for m in type.Members {
 			generateTypeMember(m, type: type);
+			AppendLine()
 		}
 	}
 	
@@ -925,23 +932,29 @@ public class CGCodeGenerator {
 	//
 	//
 	
+	private var currentCode: StringBuilder!
+	private var indent: Int32 = 0
+	private var atStart = true
+	
 	internal final func Append(line: String? = nil) -> StringBuilder {
-		if let line = line {			
+		if let line = line where length(line) > 0 {			
+			if atStart {
+				AppendIndent()
+			}
 			currentCode.Append(line)
+			atStart = false
 		}
 		return currentCode
 	}
 	
 	internal final func AppendLine(line: String? = nil) -> StringBuilder {
-		if let line = line {			
-			currentCode.AppendLine(line)
-		} else {
-			currentCode.AppendLine()
-		}
+		Append(line)
+		currentCode.AppendLine()
+		atStart = true
 		return currentCode
 	}
 	
-	internal final func AppendIndent() -> StringBuilder {
+	private final func AppendIndent() -> StringBuilder {
 		if !codeCompletionMode {
 			if useTabs {
 				for var i: Int32 = 0; i < indent; i++ {

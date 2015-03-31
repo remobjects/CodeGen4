@@ -109,7 +109,6 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine("uses")
 		incIndent()
 		for var i: Int32 = 0; i < imports.Count; i++ {
-			AppendIndent()
 			Append(imports[i].Name)
 			if i < imports.Count-1 {
 				AppendLine(",")
@@ -140,12 +139,16 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 		Append("if ")
 		generateExpression(statement.Condition)
-		Append(" then begin")
+		AppendLine(" then begin")
+		incIndent()
 		generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
+		decIndent()
 		Append("end")
 		if let elseStatement = statement.ElseStatement {
 			AppendLine(" else begin")
-			generateStatementIndentedOrTrailingIfItsABeginEndBlock(elseStatement)
+			incIndent()
+			generateStatementSkippingOuterBeginEndBlock(elseStatement)
+			decIndent()
 			Append("end")
 		}
 		AppendLine(";")		
@@ -492,7 +495,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
-				Append(", ")
+				Append("; ")
 			}
 			switch param.Modifier {
 				case .Var: Append("var ")
@@ -626,7 +629,6 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 					Append(" = ")
 					generateExpression(value)
 				}
-				AppendLine()
 			}
 		}
 		Append(")")
@@ -700,6 +702,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 				if first {
 					decIndent()
 					pascalGenerateMemberTypeVisibilityKeyword(visibility)
+					first = false
 					AppendLine()
 					incIndent()
 				}
@@ -740,9 +743,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append(method.Name)
 		if let parameters = method.Parameters where parameters.Count > 0 {
-			Append("[")
+			Append("(")
 			pascalGenerateDefinitonParameters(parameters)
-			Append("]")
+			Append(")")
 		}
 		if let returnType = method.ReturnType {
 			Append(": ")
@@ -770,6 +773,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 		decIndent()
 		AppendLine("end;")
+		AppendLine()
 	}	   
 
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
@@ -820,15 +824,22 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		if variable.Static {
 			Append("class ")
 		}
-		Append("var ")
-		Append(variable.Name)
-		if let type = variable.`Type` {
-			Append(": ")
-			generateTypeReference(type)
-		}
-		if let initializer = variable.Initializer {
+		if variable.Constant, let initializer = variable.Initializer { 
+			Append("const ")
+			Append(variable.Name)
 			Append(" = ")
 			generateExpression(initializer)
+		} else {
+			Append("var ")
+			Append(variable.Name)
+			if let type = variable.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			}
+			if let initializer = variable.Initializer { // todo:Oxygene only?
+				Append(" := ")
+				generateExpression(initializer)
+			}
 		}
 		AppendLine(";")
 	}
@@ -913,8 +924,8 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			case .Int8: Append("");
 			case .UInt8: Append("Byte");
 			case .Int16: Append("");
-			case .UInt16: Append("");
-			case .Int32: Append("");
+			case .UInt16: Append("Word");
+			case .Int32: Append("Integer");
 			case .UInt32: Append("");
 			case .Int64: Append("");
 			case .UInt64: Append("");
@@ -927,10 +938,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			case .AnsiChar: Append("")
 			case .UTF16Char: Append("")
 			case .UTF32Char: Append("")
-			case .Dynamic: Append("")
-			case .InstanceType: Append("")
-			case .Void: Append("")
-			case .Object: Append("")
+			case .Dynamic: Append("{DYNAMIC}")
+			case .InstanceType: Append("{INSTANCETYPE}")
+			case .Void: Append("{VOID}")
+			case .Object: Append("Object")
 		}		
 	}
 

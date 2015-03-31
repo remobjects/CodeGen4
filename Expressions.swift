@@ -266,6 +266,9 @@ public class CGLanguageAgnosticLiteralExpression: CGExpression {
 public class CGStringLiteralExpression: CGLiteralExpression {
 	public var Value: String = ""
 	
+	public static lazy let Empty: CGStringLiteralExpression = "".AsLiteralExpression()
+	public static lazy let Space: CGStringLiteralExpression = " ".AsLiteralExpression()
+
 	public init() {
 	}
 	public init(_ value: String) {
@@ -276,6 +279,9 @@ public class CGStringLiteralExpression: CGLiteralExpression {
 public class CGCharacterLiteralExpression: CGLiteralExpression {
 	public var Value: Char = "\0"
 
+	//public static lazy let Zero: CGCharacterLiteralExpression = "\0".AsLiteralExpression()
+	public static lazy let Zero = CGCharacterLiteralExpression("\0")
+
 	public init() {
 	}
 	public init(_ value: Char) {
@@ -285,6 +291,8 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public var Value: Int64 = 0
+
+	public static lazy let Zero: CGIntegerLiteralExpression = 0.AsLiteralExpression()
 
 	public init() {
 	}
@@ -299,6 +307,8 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 
 public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public var Value: Double = 0
+	
+	public static lazy let Zero: CGFloatLiteralExpression = 0.0.AsLiteralExpression()
 	
 	public init() {
 	}

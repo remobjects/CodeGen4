@@ -218,6 +218,32 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	// Type References
 	//
 	
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+		switch (type.Kind) {
+			case .Int8: Append("Int8");
+			case .UInt8: Append("UInt8");
+			case .Int16: Append("Int16");
+			case .UInt16: Append("UInt16");
+			case .Int32: Append("Integer");
+			case .UInt32: Append("UInt32");
+			case .Int64: Append("Int64");
+			case .UInt64: Append("UInt64");
+			case .IntPtr: Append("IntPrt");
+			case .UIntPtr: Append("UIntPtr");
+			case .Single: Append("Single");
+			case .Double: Append("Double")
+			case .Boolean: Append("Boolean")
+			case .String: Append("String")
+			case .AnsiChar: Append("AnsiChar")
+			case .UTF16Char: Append("Char")
+			case .UTF32Char: Append("UInt32") // tood?
+			case .Dynamic: Append("dynamic")
+			case .InstanceType: Append("instancetype")
+			case .Void: Append("{VOID}")
+			case .Object: Append("Object")
+		}		
+	}
+
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 		Append("tuple of (")
 		for var m: Int32 = 0; m < type.Members.Count; m++ {

@@ -15,7 +15,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateImport(imp: CGImport) {
-		Append("import \(imp.Name)")
+		AppendLine("import \(imp.Name)")
 	}
 
 	override func generateStatementTerminator() {
@@ -43,7 +43,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			incIndent()
 			generateStatementSkippingOuterBeginEndBlock(elseStatement)
 			decIndent()
-			Append("}")
+			AppendLine("}")
 		} else {
 			AppendLine()
 		}
@@ -298,10 +298,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 					Append("inout")
 				default: 
 			}
-			if let name = param.Name {
-				generateIdentifier(name)
-				Append(": ")
-			}
+			generateIdentifier(param.Name)
+			Append(": ")
+			generateTypeReference(param.`Type`)
 		}
 	}
 
@@ -622,7 +621,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}
 	
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
@@ -640,7 +638,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}		
 	
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
@@ -657,7 +654,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}	
 	
 	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
@@ -672,7 +668,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}	
 
 	//
@@ -684,7 +679,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateMemberTypeVisibilityPrefix(method.Visibility)
 		swiftGenerateStaticPrefix(method.Static && !type.Static)
 		Append("func ")
-		generateIdentifier(type.Name)
+		generateIdentifier(method.Name)
 		// todo: generics
 		Append("(")
 		swiftGenerateDefinitionParameters(method.Parameters)
@@ -705,7 +700,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(method.Statements)
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}
 	
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
@@ -719,7 +713,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(ctor.Statements)
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
@@ -746,6 +739,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
+		AppendLine()
 	}
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -782,15 +776,27 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 
-		if let value = property.Initializer {
-			
-			if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.GetExpression != nil {
+		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+		
+			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
 			} else {
+				/*if let type = property.`Type` {
+					if type.ActualNullability == CGTypeNullabilityKind.NotNullable || type.Nullability == CGTypeNullabilityKind.Default {
+						if let defaultValue = type.DefaultValue {
+							Append(" = ")
+							generateExpression(defaultValue)
+						}
+					}
+				}*/
+			}
+			
+		} else {
+			
+			if let value = property.Initializer {
 				assert(false, "Swift Properties cannot have both accessor statements and an initializer")
 			}
-		} else {
 			
 			AppendLine(" {")
 			incIndent()
@@ -824,8 +830,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			
 			decIndent()
-			AppendLine("}")
+			Append("}")
 		}
+		AppendLine()
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
