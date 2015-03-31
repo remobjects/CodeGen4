@@ -226,7 +226,7 @@ public class CGVariableDeclarationStatement: CGStatement {
 	public var Value: CGExpression?
 	public var Constant = false
 
-	public init(_ name: String, _ type: CGTypeReference?, value: CGExpression?) {
+	public init(_ name: String, _ type: CGTypeReference?, _ value: CGExpression? = nil) {
 		Name = name
 		`Type` = type
 		Value = value
