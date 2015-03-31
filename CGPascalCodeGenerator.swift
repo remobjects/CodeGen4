@@ -405,6 +405,12 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateAnonymousClassOrStructExpression is not supported in base Pascal, only Oxygene")
 	}
 
+	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+		Append("(")
+		generateExpression(expression.PointerExpression)
+		Append(")^")
+	}
+
 	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
 		// handled in base

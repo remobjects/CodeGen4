@@ -124,6 +124,12 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append(")")
 	}
 	
+	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+		Append("*(")
+		generateExpression(expression.PointerExpression)
+		Append(")")
+	}
+
 	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
 			case .Plus: Append("+")

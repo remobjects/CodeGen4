@@ -174,6 +174,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+
+	}
+
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
 
 	}

@@ -16,14 +16,6 @@ public __abstract class CGTypeReference : CGEntity {
 	public var Nullability: CGTypeNullabilityKind = .Default
 }
 
-public class CGTypeReferenceExpression : CGExpression{
-	public var `Type`: CGTypeReference
-
-	public init(_ type: CGTypeReference) {
-		`Type` = type
-	}
-}
-
 public class CGNamedTypeReference : CGTypeReference {
 	public var Name: String
 	public var DefaultNullability: CGTypeNullabilityKind = .Unknown

@@ -403,6 +403,8 @@ public class CGCodeGenerator {
 			generateAnonymousMethodExpression(expression)
 		} else if let expression = expression as? CGAnonymousClassOrStructExpression {
 			generateAnonymousClassOrStructExpression(expression)
+		} else if let expression = expression as? CGPointerDereferenceExpression {
+			generatePointerDereferenceExpression(expression)
 		} else if let expression = expression as? CGUnaryOperatorExpression {
 			generateUnaryOperatorExpression(expression)
 		} else if let expression = expression as? CGBinaryOperatorExpression {
@@ -508,6 +510,11 @@ public class CGCodeGenerator {
 	internal func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
 		// descendant must override
 		assert(false, "generateAnonymousClassOrStructExpression not implemented")
+	}
+
+	internal func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+		// descendant must override
+		assert(false, "generatePointerDereferenceExpression not implemented")
 	}
 
 	internal func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {

@@ -18,6 +18,14 @@ public class CGRawExpression : CGExpression { // not language-agnostic. obviosul
 	}
 }
 
+public class CGTypeReferenceExpression : CGExpression{
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type
+	}
+}
+
 public class CGAssignedExpression: CGExpression {
 	var Value: CGExpression
 	
@@ -131,6 +139,14 @@ public class CGForEachLoopExpression: CGExpression { //* Oxygene only */
 }
 */
 
+public class CGPointerDereferenceExpression: CGExpression {
+	public var PointerExpression: CGExpression
+
+	public init(_ pointerExpression: CGExpression) {
+		PointerExpression = pointerExpression
+	}   
+}
+
 public class CGUnaryOperatorExpression: CGExpression {
 	var Value: CGExpression
 	var Operator: CGUnaryOperatorKind? // for standard operators
@@ -138,11 +154,11 @@ public class CGUnaryOperatorExpression: CGExpression {
 
 	public init(_ value: CGExpression, _ `operator`: CGUnaryOperatorKind) {
 		Value = value
-		Operator = `operator`;
+		Operator = `operator`
 	}
 	public init(_ value: CGExpression, _ operatorString: String) {
 		Value = value
-		OperatorString = operatorString;
+		OperatorString = operatorString
 	}
 	
 	public static func NotExpression(value: CGExpression) -> CGUnaryOperatorExpression {

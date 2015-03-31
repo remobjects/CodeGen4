@@ -390,6 +390,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		// todo
 	}
 
+	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+		//todo
+	}
+
 	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
 		// handled in base
