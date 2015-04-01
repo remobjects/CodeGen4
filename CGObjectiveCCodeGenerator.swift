@@ -252,7 +252,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
 		} else if forceSelf {
-			generateExpression(CGSelfExpression.SelfExpression)
+			generateExpression(CGSelfExpression.`Self`)
 		}
 	}
 

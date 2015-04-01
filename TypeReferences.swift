@@ -16,6 +16,7 @@ public __abstract class CGTypeReference : CGEntity {
 	public var Nullability: CGTypeNullabilityKind = .Default
 	public var DefaultNullability: CGTypeNullabilityKind = .NotNullable
 	public var DefaultValue: CGExpression?
+	public var IsClassType = false
 	
 	public var ActualNullability: CGTypeNullabilityKind {
 		if Nullability == CGTypeNullabilityKind.Default || Nullability == CGTypeNullabilityKind.Unknown {
@@ -26,10 +27,11 @@ public __abstract class CGTypeReference : CGEntity {
 }
 
 public class CGNamedTypeReference : CGTypeReference {
-	public var Name: String
+	public let Name: String
 
 	public init(_ name: String) {
 		Name = name
+		IsClassType = true
 		DefaultNullability = .Unknown
 	}
 	public convenience init(_ name: String, defaultNullability: CGTypeNullabilityKind) {
@@ -44,6 +46,44 @@ public class CGPredefinedTypeReference : CGTypeReference {
 	//todo:these should become provate and force use of the static members
 	public init(_ kind: CGPredefinedTypeKind) {
 		Kind = kind
+		switch Kind {
+			case .Int8: fallthrough
+			case .UInt8: fallthrough
+			case .Int16: fallthrough
+			case .UInt16: fallthrough
+			case .Int32: fallthrough
+			case .UInt32: fallthrough
+			case .Int64: fallthrough
+			case .UInt64: fallthrough
+			case .IntPtr: fallthrough
+			case .UIntPtr:
+				DefaultValue = CGIntegerLiteralExpression.Zero
+				DefaultNullability = .NotNullable
+			case .Single: fallthrough
+			case .Double:
+				DefaultValue = CGFloatLiteralExpression.Zero
+				DefaultNullability = .NotNullable
+			//case .Decimal
+			case .Boolean:
+				DefaultValue = CGBooleanLiteralExpression.False
+				DefaultNullability = .NotNullable
+			case .String:
+				DefaultValue = CGStringLiteralExpression.Empty
+				DefaultNullability = .NullableUnwrapped
+				IsClassType = true
+			case .AnsiChar: fallthrough
+			case .UTF16Char: fallthrough
+			case .UTF32Char:
+				DefaultValue = CGCharacterLiteralExpression.Zero
+				DefaultNullability = .NotNullable
+			case .Dynamic: fallthrough
+			case .InstanceType: fallthrough
+			case .Void: fallthrough
+			case .Object: 
+				DefaultValue = CGNilExpression.Nil
+				DefaultNullability = .NullableUnwrapped
+				IsClassType = true
+		}
 	}
 	public convenience init(_ kind: CGPredefinedTypeKind, defaultNullability: CGTypeNullabilityKind) {
 		init(kind)
@@ -54,28 +94,28 @@ public class CGPredefinedTypeReference : CGTypeReference {
 		DefaultValue = defaultValue
 	}
 
-	public static lazy var Int8 = CGPredefinedTypeReference(.Int8, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var UInt8 = CGPredefinedTypeReference(.UInt8, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var Int16 = CGPredefinedTypeReference(.Int16, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var UInt16 = CGPredefinedTypeReference(.UInt16, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var Int32 = CGPredefinedTypeReference(.Int32, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var UInt32 = CGPredefinedTypeReference(.UInt32, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var Int64 = CGPredefinedTypeReference(.Int64, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var UInt64 = CGPredefinedTypeReference(.UInt64, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var IntPtr = CGPredefinedTypeReference(.IntPtr, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var UIntPtr = CGPredefinedTypeReference(.UIntPtr, defaultValue: CGIntegerLiteralExpression.Zero)
-	public static lazy var Single = CGPredefinedTypeReference(.Single, defaultValue: CGFloatLiteralExpression.Zero)
-	public static lazy var Double = CGPredefinedTypeReference(.Double, defaultValue: CGFloatLiteralExpression.Zero)
+	public static lazy var Int8 = CGPredefinedTypeReference(.Int8)
+	public static lazy var UInt8 = CGPredefinedTypeReference(.UInt8)
+	public static lazy var Int16 = CGPredefinedTypeReference(.Int16)
+	public static lazy var UInt16 = CGPredefinedTypeReference(.UInt16)
+	public static lazy var Int32 = CGPredefinedTypeReference(.Int32)
+	public static lazy var UInt32 = CGPredefinedTypeReference(.UInt32)
+	public static lazy var Int64 = CGPredefinedTypeReference(.Int64)
+	public static lazy var UInt64 = CGPredefinedTypeReference(.UInt64)
+	public static lazy var IntPtr = CGPredefinedTypeReference(.IntPtr)
+	public static lazy var UIntPtr = CGPredefinedTypeReference(.UIntPtr)
+	public static lazy var Single = CGPredefinedTypeReference(.Single)
+	public static lazy var Double = CGPredefinedTypeReference(.Double)
 	//public static lazy var Decimal = CGPredefinedTypeReference(.Decimal)
-	public static lazy var Boolean = CGPredefinedTypeReference(.Boolean, defaultValue: CGBooleanLiteralExpression.False)
+	public static lazy var Boolean = CGPredefinedTypeReference(.Boolean)
 	public static lazy var String = CGPredefinedTypeReference(.String)
 	public static lazy var AnsiChar = CGPredefinedTypeReference(.AnsiChar)
 	public static lazy var UTF16Char = CGPredefinedTypeReference(.UTF16Char)
 	public static lazy var UTF32Char = CGPredefinedTypeReference(.UTF32Char)
-	public static lazy var Dynamic = CGPredefinedTypeReference(.Dynamic, defaultNullability: .NullableUnwrapped)
-	public static lazy var InstanceType = CGPredefinedTypeReference(.InstanceType, defaultNullability: .NullableUnwrapped)
+	public static lazy var Dynamic = CGPredefinedTypeReference(.Dynamic)
+	public static lazy var InstanceType = CGPredefinedTypeReference(.InstanceType)
 	public static lazy var Void = CGPredefinedTypeReference(.Void)
-	public static lazy var Object = CGPredefinedTypeReference(.Object, defaultNullability: .NullableUnwrapped)
+	public static lazy var Object = CGPredefinedTypeReference(.Object)
 }
 
 public enum CGPredefinedTypeKind {

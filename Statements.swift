@@ -203,7 +203,7 @@ public class CGContinueStatement: CGStatement {}
 public class CGEmptyStatement: CGStatement {}
 
 public class CGConstructorCallStatement : CGStatement {
-	public var CallSite: CGExpression = CGSelfExpression.SelfExpression //Should be set to CGSelfExpression or CHInheritedExpression
+	public var CallSite: CGExpression = CGSelfExpression.`Self` //Should be set to CGSelfExpression or CGInheritedExpression
 	public var ConstructorName: String? // an optionally be provided for languages that support named .ctors
 	public var Parameters: List<CGCallParameter>
 	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extnded .ctor calls

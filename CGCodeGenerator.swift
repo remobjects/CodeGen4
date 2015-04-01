@@ -450,7 +450,7 @@ public class CGCodeGenerator {
 
 	internal func generateAssignedExpression(expression: CGAssignedExpression) {
 		// descendant may override, but this will work for all languages.
-		generateExpression(CGBinaryOperatorExpression(expression.Value, CGNilExpression.NilExpression, .Equals))
+		generateExpression(CGBinaryOperatorExpression(expression.Value, CGNilExpression.Nil, .Equals))
 	}
 
 	internal func generateSizeOfExpression(expression: CGSizeOfExpression) {

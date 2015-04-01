@@ -242,15 +242,15 @@ public class CGNamedIdentifierExpression: CGExpression {
 }
 
 public class CGSelfExpression: CGExpression { // "self" or "this"
-	public static lazy let SelfExpression = CGSelfExpression()
+	public static lazy let `Self` = CGSelfExpression()
 }
 
 public class CGNilExpression: CGExpression { // "nil" or "null"
-	public static lazy let NilExpression = CGNilExpression()
+	public static lazy let Nil = CGNilExpression()
 }
 
 public class CGPropertyValueExpression: CGExpression { /* "value" or "newValue" in C#/Swift */
-	public static lazy let PropertyValueExpression = CGPropertyValueExpression()
+	public static lazy let PropertyValue = CGPropertyValueExpression()
 }
 
 public class CGLiteralExpression: CGExpression {

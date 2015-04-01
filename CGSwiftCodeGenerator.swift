@@ -738,6 +738,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if let value = field.Initializer {
 			Append(" = ")
 			generateExpression(value)
+		} else {
+			swiftGenerateDefaultInitializerForType(field.`Type`)
 		}
 		AppendLine()
 	}
@@ -782,14 +784,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append(" = ")
 				generateExpression(value)
 			} else {
-				/*if let type = property.`Type` {
-					if type.ActualNullability == CGTypeNullabilityKind.NotNullable || type.Nullability == CGTypeNullabilityKind.Default {
-						if let defaultValue = type.DefaultValue {
-							Append(" = ")
-							generateExpression(defaultValue)
-						}
-					}
-				}*/
+				swiftGenerateDefaultInitializerForType(property.`Type`)
 			}
 			
 		} else {
@@ -824,7 +819,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			} else if let setExpression = property.SetExpression {
 				AppendLine("set {")
 				incIndent()
-				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValueExpression))
+				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
 				decIndent()
 				AppendLine("}")
 			}
@@ -880,7 +875,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	func swiftSuffixForNullabilityForCollectionType(type: CGTypeReference) -> String {
 		return swiftSuffixForNullability(type.Nullability, defaultNullability: Dialect == CGSwiftCodeGeneratorDialect.Silver ? CGTypeNullabilityKind.NotNullable : CGTypeNullabilityKind.NullableUnwrapped)
 	}
-
+	
+	func swiftGenerateDefaultInitializerForType(type: CGTypeReference?) {
+		if let type = type {
+			if type.ActualNullability == CGTypeNullabilityKind.NotNullable || (type.Nullability == CGTypeNullabilityKind.Default && !type.IsClassType) {
+				if let defaultValue = type.DefaultValue {
+					Append(" = ")
+					generateExpression(defaultValue)
+				}
+			}
+		}
+	}
 	
 	override func generateNamedTypeReference(type: CGNamedTypeReference) {
 		generateIdentifier(type.Name)
@@ -911,6 +916,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Void: Append("()")
 			case .Object: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("Object") } else { Append("NSObject") }
 		}		
+		Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
