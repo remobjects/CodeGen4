@@ -12,14 +12,20 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	//
 	
 	// in C-styleCG Base class
-	/*override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
-	}*/
+	/*
+	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+	}
+	*/
 
-	/*override func generateIfElseStatement(statement: CGIfThenElseStatement) {
-	}*/
+	/*
+	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+	}
+	*/
 
-	/*override func generateForToLoopStatement(statement: CGForToLoopStatement) {
-	}*/
+	/*
+	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	}
+	*/
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
 		Append("for (")
@@ -30,14 +36,20 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 	}
 
-	/*override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
-	}*/
+	/*
+	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+	}
+	*/
 
-	/*override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
-	}*/
+	/*
+	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+	}
+	*/
 
-	/*override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
-	}*/
+	/*
+	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+	}
+	*/
 
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
 		//todo
@@ -150,6 +162,10 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/	
 	
+	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+
+	}
+
 	//
 	// Expressions
 	//
@@ -222,6 +238,10 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
+	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+
+	}
+
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
 
 	}
@@ -257,7 +277,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-		
+
 	}
 
 	override func generateMethodCallExpression(method: CGMethodCallExpression) {
@@ -387,6 +407,34 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	
+	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+
+	}
+
+	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+
+	}
+
 	//
 	// Type References
 	//

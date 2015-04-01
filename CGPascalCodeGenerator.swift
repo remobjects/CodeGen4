@@ -105,19 +105,20 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func pascalGenerateImports(imports: List<CGImport>) {
-		
-		AppendLine("uses")
-		incIndent()
-		for var i: Int32 = 0; i < imports.Count; i++ {
-			Append(imports[i].Name)
-			if i < imports.Count-1 {
-				AppendLine(",")
-			} else {
-				AppendLine(";")
+		if imports.Count > 0 {
+			AppendLine("uses")
+			incIndent()
+			for var i: Int32 = 0; i < imports.Count; i++ {
+				Append(imports[i].Name)
+				if i < imports.Count-1 {
+					AppendLine(",")
+				} else {
+					AppendLine(";")
+				}
 			}
+			AppendLine()
+			decIndent()
 		}
-		AppendLine()
-		decIndent()
 	}
 	
 	override func generateFooter() {
@@ -215,20 +216,20 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		incIndent()
 		for c in statement.Cases {
 			generateExpression(c.CaseExpression)
-			Append(": begin")
+			AppendLine(": begin")
 			incIndent()
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
 			decIndent()
-			Append("end;")
+			AppendLine("end;")
 			decIndent()
 		}
 		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
-			Append("default begin")
+			AppendLine("else begin")
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
 			decIndent()
-			Append("end;")
+			AppendLine("end;")
 			decIndent()
 		}
 		decIndent()
@@ -509,6 +510,22 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			generateTypeReference(param.`Type`)
 		}
 	}
+	
+	func pascalGenerateAncestorList(ancestors: List<CGTypeReference>?) {
+		if let ancestors = ancestors where ancestors.Count > 0 {
+			Append("(")
+			for var a: Int32 = 0; a < ancestors.Count; a++ {
+				if let ancestor = ancestors[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(ancestor)
+				}
+			}
+			Append(")")
+		}
+	}
+	
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
 		pascalGenerateCallSiteForExpression(expression)
@@ -644,8 +661,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		//ToDo: generic constraints
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
-		AppendLine("class")
-		//ToDo: ancestors
+		Append("class")
+		pascalGenerateAncestorList(type.Ancestors)
+		AppendLine()
 		incIndent()
 	}
 	
@@ -659,8 +677,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		//ToDo: generic constraints
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
-		AppendLine("record")
-		//ToDo: ancestors
+		Append("record")
+		pascalGenerateAncestorList(type.Ancestors)
+		AppendLine()
 		incIndent()
 	}
 	
@@ -674,8 +693,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		//ToDo: generic constraints
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
-		AppendLine("interface")
-		//ToDo: ancestors
+		Append("interface")
+		pascalGenerateAncestorList(type.Ancestors)
+		AppendLine()
 		incIndent()
 	}
 	
@@ -688,7 +708,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Members
 	//
 	
-	final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind) {
+	final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
 		var first = true
 		for m in type.Members {
 			if visibility == CGMemberVisibilityKind.Private {
@@ -698,30 +718,38 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 					pascalGenerateEventAccessorDefinition(m, type: type)
 				}
 			}
-			if m.Visibility == visibility {
-				if first {
-					decIndent()
-					pascalGenerateMemberTypeVisibilityKeyword(visibility)
-					first = false
-					AppendLine()
-					incIndent()
+			if let visibility = visibility {
+				if m.Visibility == visibility{
+					if first {
+						decIndent()
+						pascalGenerateMemberTypeVisibilityKeyword(visibility)
+						first = false
+						AppendLine()
+						incIndent()
+					}
+					generateTypeMember(m, type: type);
 				}
+			} else {
 				generateTypeMember(m, type: type);
 			}
 		}
 	}
 	
 	override func generateTypeMembers(type: CGTypeDefinition) {
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
-		generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
+		if type is CGInterfaceTypeDefinition {
+			generateTypeMembers(type, forVisibility: nil)
+		} else {
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
+		}
 	}
 	
 	internal func pascalKeywordForMethod(method: CGMethodDefinition) -> String {
@@ -946,7 +974,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
-
+		assert(false, "generateInlineBlockTypeReference is not supported in base Pascal, only Oxygene")
 	}
 	
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {

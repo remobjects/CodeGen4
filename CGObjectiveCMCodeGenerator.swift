@@ -11,6 +11,10 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		}
 	}
 	
+	override func generateImport(imp: CGImport) {
+		// ignore imports,they are in the .h
+	}
+
 	//
 	// Types
 	//

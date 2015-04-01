@@ -9,6 +9,13 @@ public enum CGSwiftCodeGeneratorDialect {
 public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
+	
+	public init() {
+	}
+	public init(dialect: CGSwiftCodeGeneratorDialect) {
+		Dialect = dialect
+	}
+	
 
 	override func escapeIdentifier(name: String) -> String {
 		return "`\(name)`"

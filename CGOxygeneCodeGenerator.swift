@@ -1,9 +1,32 @@
 ﻿import Sugar
 import Sugar.Collections
+import Sugar.Linq
 
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
+	init() {
+		keywords = ["class"].ToList() as! List<String>
+	}
 
+	override func generateHeader() {
+		
+		super.generateHeader()
+		Append("namespace")
+		if let namespace = currentUnit.Namespace {
+			Append(" ")
+			generateIdentifier(namespace.Name)
+		}
+		AppendLine(";")
+		AppendLine()
+	}
+	
+	override func generateGlobals() {
+		if let globals = currentUnit.Globals where globals.Count > 0{
+			AppendLine("{$GLOBALS ON}")
+			AppendLine()
+		}
+		super.generateGlobals()
+	}
 	//
 	// Statements
 	//
@@ -50,7 +73,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			generateTypeReference(type)
 		}
 		if let value = statement.Value {
-			Append(" = ")
+			Append(" := ")
 			generateExpression(value)
 		}
 		AppendLine(";")
@@ -102,7 +125,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
-				Append(", ")
+				if let name = param.Name {
+					Append(") ")
+					generateIdentifier(name)
+					Append("(")
+				} else {
+					Append(", ")
+				}
 			}
 			switch parameters[p].Modifier {
 				case .Out: Append("out ")
@@ -148,8 +177,17 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
-	override func generateBlockType(type: CGBlockTypeDefinition) {
-		//todo
+	override func generateBlockType(block: CGBlockTypeDefinition) {
+		Append("block")
+		if let parameters = block.Parameters where parameters.Count > 0 {
+			Append("(")
+			pascalGenerateDefinitonParameters(parameters)
+			Append(")")
+		}
+		if let returnType = block.ReturnType {
+			Append(": ")
+			generateTypeReference(returnType)
+		}
 	}
 
 	//
@@ -242,6 +280,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Void: Append("{VOID}")
 			case .Object: Append("Object")
 		}		
+	}
+
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+		generateBlockType(type.Block)
 	}
 
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {

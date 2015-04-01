@@ -92,3 +92,15 @@ public extension CGTypeReference {
 		return CGTypeReferenceExpression(self)
 	}
 }
+
+public extension CGFieldDefinition {
+	public func AsGlobal() -> CGGlobalVariableDefinition {
+		return CGGlobalVariableDefinition(self)
+	}
+}
+
+public extension CGMethodDefinition {
+	public func AsGlobal() -> CGGlobalFunctionDefinition {
+		return CGGlobalFunctionDefinition(self)
+	}
+}
