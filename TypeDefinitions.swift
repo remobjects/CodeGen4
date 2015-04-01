@@ -213,7 +213,7 @@ public class CGFieldDefinition: CGFieldOrPropertyDefinition {
 public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var Lazy = false
 	public var Default = false
-	public var Parameters: List<CGParameterDefinition>?
+	public var Parameters = List<CGParameterDefinition>()
 	public var GetStatements: List<CGStatement>?
 	public var SetStatements: List<CGStatement>?
 	public var GetExpression: CGExpression?
