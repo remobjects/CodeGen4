@@ -1,5 +1,6 @@
 ﻿import Sugar
 
+#if !ECHOES
 public extension Sugar.String {
 	
 	public func AsTypeReference() -> CGTypeReference {
@@ -22,6 +23,7 @@ public extension Sugar.String {
 		return CGRawExpression(self)
 	}
 }
+#endif
 
 public extension RemObjects.Elements.System.String {
 	
