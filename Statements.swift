@@ -10,6 +10,9 @@ public __abstract class CGStatement: CGEntity {
 public __abstract class CGBaseMultilineStatement : CGStatement {
 	public var Lines: List<String>
 
+	public init() {
+		Lines = List<String>()
+	}
 	public init(_ lines: List<String>) {
 		Lines = lines
 	}

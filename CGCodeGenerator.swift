@@ -23,6 +23,18 @@ public class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 	
+	public static func CodeGeneratorForLanguage(language: String) -> CGCodeGenerator? {
+		switch language.ToLower() {
+			case "oxygene", "pas": return CGOxygeneCodeGenerator()
+			case "hydrogene", "csharp", "c#", "cs": return CGCSharpCodeGenerator()
+			case "silver", "swift": return CGSwiftCodeGenerator()
+			case "delphi": return CGDelphiCodeGenerator()
+			case "java": return CGJavaCodeGenerator()
+			case "javascript", "js": return CGJavaScriptCodeGenerator()
+			default: return nil
+		}
+	}
+	
 	internal func generateAll() {
 		generateHeader()
 		generateDirectives()
@@ -47,7 +59,7 @@ public class CGCodeGenerator {
 	
 	internal func generateHeader() {
 		// descendant can override, if needed
-		if let comment = currentUnit.HeaderComment {
+		if let comment = currentUnit.HeaderComment where comment.Lines.Count > 0 {
 			generateStatement(comment);
 			AppendLine()
 		}

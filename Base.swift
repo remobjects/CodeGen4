@@ -8,7 +8,7 @@ public class CGCodeUnit {
 	
 	public var FileName: String?
 	public var Namespace: CGNamespaceReference?
-	public var HeaderComment: CGCommentStatement?
+	public var HeaderComment = CGCommentStatement()
 	public var Directives = List<String>() /* will not be language agnostic */
 	public var Imports = List<CGImport>()
 	public var Types = List<CGTypeDefinition>()

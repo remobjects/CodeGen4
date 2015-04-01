@@ -67,6 +67,10 @@
         <Compile Include="$(MSBuildThisFileDirectory)Extensions.swift">
             <VirtualFolder>Code Generation</VirtualFolder>
         </Compile>
+        <None Include="$(MSBuildThisFileDirectory)LICENSE.md"/>
+        <Compile Include="$(MSBuildThisFileDirectory)CGJavaScriptCodeGenerator.swift">
+            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Code Definition">
