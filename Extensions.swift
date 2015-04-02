@@ -7,12 +7,16 @@ public extension Sugar.String {
 		return CGNamedTypeReference(self)
 	}
 
+	public func AsTypeReference(defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGNamedTypeReference(self, defaultNullability: defaultNullability)
+	}
+
 	public func AsTypeReferenceExpression() -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
 	
-	public func AsTypeReferenceExpression(nullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
-		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: nullability))
+	public func AsTypeReferenceExpression(defaultNullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
+		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: defaultNullability))
 	}
 	
 	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
@@ -35,12 +39,16 @@ public extension RemObjects.Elements.System.String {
 		return CGNamedTypeReference(self)
 	}
 
+	public func AsTypeReference(defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGNamedTypeReference(self, defaultNullability: defaultNullability)
+	}
+
 	public func AsTypeReferenceExpression() -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
 	
-	public func AsTypeReferenceExpression(nullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
-		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: nullability))
+	public func AsTypeReferenceExpression(defaultNullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
+		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: defaultNullability))
 	}
 	
 	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
@@ -92,6 +100,9 @@ public extension CGExpression {
 	}
 	public func AsCallParameter() -> CGCallParameter {
 		return CGCallParameter(self)
+	}
+	public func AsCallParameter(name: String) -> CGCallParameter {
+		return CGCallParameter(self, name)
 	}
 }
 

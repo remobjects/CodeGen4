@@ -180,7 +180,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 						Append("__catch ")
 						generateIdentifier(b.Name)
 						Append(": ")
-						generateTypeReference(type)
+						generateTypeReference(type, ignoreNullability: true)
 						AppendLine(" {")
 					} else {
 						AppendLine("__catch {")
@@ -289,7 +289,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
 		Append("default(")
-		generateTypeReference(expression.`Type`)
+		generateTypeReference(expression.`Type`, ignoreNullability: true)
 		Append(")")
 	}
 
@@ -309,7 +309,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		Append(" ")
-		generateTypeReference(cast.TargetType)
+		generateTypeReference(cast.TargetType, ignoreNullability: true)
 		Append(")")
 	}
 
@@ -468,7 +468,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 					if a > 0 {
 						Append(", ")
 					}
-					generateTypeReference(ancestor)
+					generateTypeReference(ancestor, ignoreNullability: true)
 				}
 			}
 		}
@@ -497,7 +497,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
-		generateTypeReference(expression.`Type`)
+		generateTypeReference(expression.`Type`, ignoreNullability: true)
 		Append("(")
 		swiftGenerateCallParameters(expression.Parameters)
 		Append(")")
@@ -563,7 +563,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateAttribute(attribute: CGAttribute) {
 		Append("@")
-		generateTypeReference(attribute.`Type`)
+		generateTypeReference(attribute.`Type`, ignoreNullability: true)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
 			Append("(")
 			swiftGenerateAttributeParameters(parameters)
@@ -666,7 +666,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		//ToDo: generic constraints
 		if let baseType = type.BaseType {
 			Append(" : ")
-			generateTypeReference(baseType)
+			generateTypeReference(baseType, ignoreNullability: true)
 		}
 		AppendLine(" { ")
 		incIndent()
@@ -981,12 +981,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	override func generateNamedTypeReference(type: CGNamedTypeReference) {
+	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean = false) {
 		generateIdentifier(type.Name)
-		Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
+		if !ignoreNullability {
+			Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
+		}
 	}
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int8: Append("Int8");
 			case .UInt8: Append("UInt8");
@@ -1010,7 +1012,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Void: Append("()")
 			case .Object: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("Object") } else { Append("NSObject") }
 		}		
-		Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
+		if !ignoreNullability {
+			Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
+		}
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {

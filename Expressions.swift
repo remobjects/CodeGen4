@@ -462,7 +462,7 @@ public class CGCallParameter: CGEntity {
 	public init(_ value: CGExpression) {
 		Value = value
 	}
-	public init(_ name: String?, _ value: CGExpression) {
+	public init(_ value: CGExpression, _ name: String) {
 		//public init(value) // 71582: Silver: delegating to a second .ctor doesn't properly detect that a field will be initialized
 		Value = value
 		Name = name

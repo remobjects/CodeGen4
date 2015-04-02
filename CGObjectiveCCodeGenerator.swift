@@ -412,6 +412,10 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 	
+	override func generateAttribute(attribute: CGAttribute) {
+		// no-op, we dont support attribtes in Objective-C
+	}
+	
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 
 	}
@@ -503,7 +507,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int8: Append("");
 			case .UInt8: Append("");

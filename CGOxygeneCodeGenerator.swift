@@ -297,7 +297,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	// Type References
 	//
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int8: Append("Int8");
 			case .UInt8: Append("UInt8");

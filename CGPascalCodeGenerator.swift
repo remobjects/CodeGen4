@@ -1015,7 +1015,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	*/
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int8: Append("");
 			case .UInt8: Append("Byte");

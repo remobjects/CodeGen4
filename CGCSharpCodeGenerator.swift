@@ -148,7 +148,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		decIndent()
 		AppendLine("}")
 		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
-			AppendLine("finally {")
+			AppendLine("finally")
 			AppendLine("{")
 			incIndent()
 			generateStatements(finallyStatements)
@@ -642,7 +642,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		cSharpGenerateSealedPrefix(type.Sealed)
-		Append("protocol ")
+		Append("interface ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
 		cSharpGenerateAncestorList(type.Ancestors)
@@ -696,12 +696,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		// todo: generics
 		Append("(")
 		cSharpGenerateDefinitionParameters(method.Parameters)
-		AppendLine(")")
+		Append(")")
 		
 		if type is CGInterfaceTypeDefinition {
+			AppendLine(";")
 			return
 		}
 		
+		AppendLine()
 		AppendLine("{")
 		incIndent()
 		generateStatements(method.LocalVariables)
@@ -874,7 +876,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int8: Append("Int8");
 			case .UInt8: Append("byte");
@@ -901,7 +903,18 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
-
+		Append("delegate ")
+		if let returnType = type.Block.ReturnType {
+			Append(" ")
+			generateTypeReference(returnType)
+		} else {
+			Append("void ")
+		}
+		Append("(")
+		if let parameters = type.Block.Parameters where parameters.Count > 0 {
+			cSharpGenerateDefinitionParameters(parameters)
+		}
+		Append(")")
 	}
 	
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {

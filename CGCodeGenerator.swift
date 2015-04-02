@@ -808,7 +808,7 @@ public class CGCodeGenerator {
 	
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
 
-		generateCommentStatement(member.comment)
+		generateCommentStatement(member.Comment)
 		generateAttributes(type.Attributes)
 
 		if let member = member as? CGConstructorDefinition {
@@ -877,13 +877,20 @@ public class CGCodeGenerator {
 	//
 	// Type References
 	//
-	
+
 	internal final func generateTypeReference(type: CGTypeReference) {
+		generateTypeReference(type, ignoreNullability: false)
+	}
+	
+	internal final func generateTypeReference(type: CGTypeReference, ignoreNullability: Boolean) {
+		
+		//Append("["+type+"|"+Int32(type.ActualNullability).description+"]")
+		
 		// descendant should not override
 		if let type = type as? CGNamedTypeReference {
-			generateNamedTypeReference(type)
+			generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPredefinedTypeReference {
-			generatePredefinedTypeReference(type)
+			generatePredefinedTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGInlineBlockTypeReference {
 			generateInlineBlockTypeReference(type)
 		} else if let type = type as? CGPointerTypeReference {
@@ -902,10 +909,14 @@ public class CGCodeGenerator {
 	}
 	
 	internal func generateNamedTypeReference(type: CGNamedTypeReference) {
+		generateNamedTypeReference(type, ignoreNullability:false)
+	}
+	
+	internal func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
 		generateIdentifier(type.Name)
 	}
 	
-	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference) {
+	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		// most language swill want to override this
 		switch (type.Kind) {
 			case .Int8: Append("SByte");
