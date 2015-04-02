@@ -16,6 +16,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Members = List<CGMemberDefinition>()
 	public var Visibility: CGTypeVisibilityKind = .Assembly
 	public var Static = false
+	public var Comment: CGCommentStatement?
 	
 	public init(_ name: String) {
 		Name = name;
@@ -113,6 +114,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var Overloaded = false
 	public var Locked = false /* Oxygene only */
 	public var LockedOn: CGExpression? /* Oxygene only */
+	public var Comment: CGCommentStatement?
 	
 	public init(_ name: String) {
 		Name = name;
