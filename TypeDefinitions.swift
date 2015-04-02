@@ -19,6 +19,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Sealed = false
 	public var Abstract = false
 	public var Comment: CGCommentStatement?
+	public var Attributes = List<CGAttribute>()
 	
 	public init(_ name: String) {
 		Name = name;
@@ -117,6 +118,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var Locked = false /* Oxygene only */
 	public var LockedOn: CGExpression? /* Oxygene only */
 	public var Comment: CGCommentStatement?
+	public var Attributes = List<CGAttribute>()
 	
 	public init(_ name: String) {
 		Name = name;
@@ -331,7 +333,7 @@ public enum ParameterModifierKind {
 	case Params
 }
 
-public class CGParameterDefinition: CGEntity {
+public class CGParameterDefinition : CGEntity {
 	public var Name: String
 	public var ExternalName: String? // Swift and Cocoa only
 	public var `Type`: CGTypeReference
@@ -344,7 +346,7 @@ public class CGParameterDefinition: CGEntity {
 	}
 }
 
-public class CGGenericParameterDefinition: CGEntity {
+public class CGGenericParameterDefinition : CGEntity {
 	public var Constraints = List<CGGenericConstraintDefinition>()
 	var Name: String
 	
@@ -353,5 +355,18 @@ public class CGGenericParameterDefinition: CGEntity {
 	}
 }	
 
-public class CGGenericConstraintDefinition: CGEntity {
+public class CGGenericConstraintDefinition : CGEntity {
+}
+
+public class CGAttribute: CGEntity {
+	public var `Type`: CGTypeReference
+	public var Parameters: List<CGCallParameter>?
+	
+	init(_ type: CGTypeReference) {
+		`Type` = type
+	}
+	init(_ type: CGTypeReference,_ parameters: List<CGCallParameter>) {
+		`Type` = type
+		Parameters = parameters
+	}
 }
