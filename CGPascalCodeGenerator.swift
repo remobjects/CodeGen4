@@ -598,6 +598,24 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
+	func pascalGenerateStaticPrefix(isStatic: Boolean) {
+		if isStatic {
+			Append("static ")
+		}
+	}
+	
+	func pascalGenerateAbstractPrefix(isAbstract: Boolean) {
+		if isAbstract {
+			Append("abstract ")
+		}
+	}
+
+	func pascalGenerateSealedPrefix(isSealed: Boolean) {
+		if isSealed {
+			Append("sealed ")
+		}
+	}
+	
 	func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("strict private")
@@ -660,6 +678,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		//ToDo: generic constraints
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateStaticPrefix(type.Static)
+		pascalGenerateAbstractPrefix(type.Abstract)
+		pascalGenerateSealedPrefix(type.Sealed)
 		Append("class")
 		pascalGenerateAncestorList(type.Ancestors)
 		AppendLine()
@@ -676,6 +697,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		//ToDo: generic constraints
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateStaticPrefix(type.Static)
+		pascalGenerateAbstractPrefix(type.Abstract)
+		pascalGenerateSealedPrefix(type.Sealed)
 		Append("record")
 		pascalGenerateAncestorList(type.Ancestors)
 		AppendLine()
@@ -692,6 +716,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		//ToDo: generic constraints
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateSealedPrefix(type.Sealed)
 		Append("interface")
 		pascalGenerateAncestorList(type.Ancestors)
 		AppendLine()

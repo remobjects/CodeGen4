@@ -513,6 +513,18 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
+	func cSharpGenerateAbstractPrefix(isAbstract: Boolean) {
+		if isAbstract {
+			Append("abstract ")
+		}
+	}
+
+	func cSharpGenerateSealedPrefix(isSealed: Boolean) {
+		if isSealed {
+			Append("final ")
+		}
+	}
+
 	func cSharpGenerateVirtualityPrefix(member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
@@ -568,6 +580,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		cSharpGenerateStaticPrefix(type.Static)
+		cSharpGenerateAbstractPrefix(type.Abstract)
+		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
@@ -585,6 +599,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		cSharpGenerateStaticPrefix(type.Static)
+		cSharpGenerateAbstractPrefix(type.Abstract)
+		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
@@ -601,6 +617,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
+		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("protocol ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints

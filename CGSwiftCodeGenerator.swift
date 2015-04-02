@@ -577,6 +577,18 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
+	func swiftGenerateAbstractPrefix(isAbstract: Boolean) {
+		if isAbstract && Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			Append("__abstract ")
+		}
+	}
+
+	func swiftGenerateSealedPrefix(isSealed: Boolean) {
+		if isSealed {
+			Append("final ")
+		}
+	}
+
 	func swiftGenerateVirtualityPrefix(member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
@@ -653,6 +665,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		swiftGenerateStaticPrefix(type.Static)
+		swiftGenerateAbstractPrefix(type.Abstract)
+		swiftGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
@@ -669,6 +683,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		swiftGenerateStaticPrefix(type.Static)
+		swiftGenerateAbstractPrefix(type.Abstract)
+		swiftGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
@@ -684,6 +700,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+		swiftGenerateSealedPrefix(type.Sealed)
 		Append("protocol ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
