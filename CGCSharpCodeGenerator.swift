@@ -579,7 +579,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(baseType)
 		}
 		AppendLine()
-		AppendLine("{ ")
+		AppendLine("{")
 		incIndent()
 		
 		for var m = 0; m < type.Members.Count; m++ {
@@ -611,7 +611,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		//ToDo: generic constraints
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
-		AppendLine("{ ")
+		AppendLine("{")
 		incIndent()
 	}
 	
@@ -630,7 +630,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		//ToDo: generic constraints
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
-		AppendLine("{ ")
+		AppendLine("{")
 		incIndent()
 	}
 	
@@ -647,7 +647,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		//ToDo: generic constraints
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
-		AppendLine("{ ")
+		AppendLine("{")
 		incIndent()
 	}
 	
@@ -664,7 +664,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(type.Name)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
-		AppendLine("{ ")
+		AppendLine("{")
 		incIndent()
 	}
 	
