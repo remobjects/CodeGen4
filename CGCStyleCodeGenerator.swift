@@ -182,4 +182,17 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append(")")
 	}
 
+	internal func cStyleEscapeCharactersInStringLiteral(string: String) -> String {
+		return string.Replace("\"", "\\\"")
+		//todo: this is incomplete, we need to escape any invalid chars
+	}
+
+	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value))\"")
+	}
+
+	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
+	}
+
 }

@@ -501,7 +501,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			switch param.Modifier {
 				case .Var: Append("var ")
 				case .Const: Append("const ")
-				case .Out: Append("out ") //todo: Oxygene ony?
+				case .Out: Append("out ")
 				case .Params: Append("params ") //todo: Oxygene ony?
 				default: 
 			}

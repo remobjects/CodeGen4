@@ -12,10 +12,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	public init() {
 	}
+	
 	public init(dialect: CGSwiftCodeGeneratorDialect) {
 		Dialect = dialect
-	}
-	
+	}	
 
 	override func escapeIdentifier(name: String) -> String {
 		return "`\(name)`"
@@ -162,13 +162,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-			AppendLine("__try { ")
+			AppendLine("__try {")
 			incIndent()
 			generateStatements(statement.Statements)
 			decIndent()
 			AppendLine("}")
 			if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
-				AppendLine("__finally { ")
+				AppendLine("__finally {")
 				incIndent()
 				generateStatements(finallyStatements)
 				decIndent()
@@ -183,7 +183,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 						generateTypeReference(type)
 						AppendLine(" {")
 					} else {
-						AppendLine("__catch { ")
+						AppendLine("__catch {")
 					}
 					incIndent()
 					generateStatements(b.Statements)
@@ -260,71 +260,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
-	func swiftGenerateCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
-			let param = parameters[p]
-			if p > 0 {
-				Append(", ")
-			}
-			if let name = param.Name {
-				generateIdentifier(name)
-				Append(": ")
-			}
-			switch param.Modifier {
-				case .Out: fallthrough
-				case .Var: 
-					Append("&(")
-					generateExpression(param.Value)
-					Append(")")
-				default: 
-					generateExpression(param.Value)
-			}
-		}
-	}
-
-	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
-		for var p = 0; p < parameters.Count; p++ {
-			let param = parameters[p]
-			if p > 0 {
-				Append(", ")
-			} 
-			switch param.Modifier {
-				case .Out: 
-					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-						Append("__out ")
-					} else {
-						fallthrough
-					}
-				case .Var: 
-					Append("inout ")
-				default: 
-			}
-			if let externalName = param.ExternalName {
-				generateIdentifier(externalName)
-				Append(" ")
-			} else {
-				Append("_ ")
-			}
-			generateIdentifier(param.Name)
-			Append(": ")
-			generateTypeReference(param.`Type`)
-		}
-	}
-
-	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
-		if let ancestors = ancestors where ancestors.Count > 0 {
-			Append(" : ")
-			for var a: Int32 = 0; a < ancestors.Count; a++ {
-				if let ancestor = ancestors[a] {
-					if a > 0 {
-						Append(", ")
-					}
-					generateTypeReference(ancestor)
-				}
-			}
-		}
-	}
-
 	//
 	// Expressions
 	//
@@ -396,7 +331,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-			// Todo: Add/Rmeove/raise statements?
+			// Todo: generateAwaitExpression
 		} else {
 			assert(false, "generateEventDefinition is not supported in Swift, except in Silver")
 		}
@@ -439,10 +374,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	/*
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
 		// handled in base
 	}
-	
+	*/
+
+	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+		//todo
+	}
+
 	internal func swiftGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
@@ -452,6 +393,71 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("!")
 			}
 			Append(".")
+		}
+	}
+
+	func swiftGenerateCallParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(": ")
+			}
+			switch param.Modifier {
+				case .Out: fallthrough
+				case .Var: 
+					Append("&(")
+					generateExpression(param.Value)
+					Append(")")
+				default: 
+					generateExpression(param.Value)
+			}
+		}
+	}
+
+	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			} 
+			switch param.Modifier {
+				case .Out: 
+					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+						Append("__out ")
+					} else {
+						fallthrough
+					}
+				case .Var: 
+					Append("inout ")
+				default: 
+			}
+			if let externalName = param.ExternalName {
+				generateIdentifier(externalName)
+				Append(" ")
+			} else {
+				Append("_ ")
+			}
+			generateIdentifier(param.Name)
+			Append(": ")
+			generateTypeReference(param.`Type`)
+		}
+	}
+
+	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
+		if let ancestors = ancestors where ancestors.Count > 0 {
+			Append(" : ")
+			for var a: Int32 = 0; a < ancestors.Count; a++ {
+				if let ancestor = ancestors[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(ancestor)
+				}
+			}
 		}
 	}
 
@@ -531,6 +537,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("]")
 	}
+
+	/*
+	override func generateTupleExpression(expression: CGTupleLiteralExpression) {
+		// default handled in base
+	}
+	*/
 	
 	//
 	// Type Definitions
@@ -620,8 +632,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(" : ")
 			generateTypeReference(baseType)
 		}
-		Append(" ")
-		AppendLine("{ ")
+		AppendLine(" { ")
 		incIndent()
 		for m in type.Members {
 			if let m = m as? CGEnumValueDefinition {

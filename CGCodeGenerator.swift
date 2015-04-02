@@ -71,6 +71,7 @@ public class CGCodeGenerator {
 		for i in currentUnit.Imports {
 			generateImport(i);
 		}
+		AppendLine()
 	}
 
 	internal func generateTypeDefinitions() {
@@ -172,7 +173,7 @@ public class CGCodeGenerator {
 	
 	internal func generateStatementIndentedUnlessItsABeginEndBlock(statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
-			generateStatements(block.Statements);
+			generateStatement(block);
 		} else {
 			incIndent()
 			generateStatement(statement);
@@ -182,7 +183,7 @@ public class CGCodeGenerator {
 	
 	internal func generateStatementsIndentedUnlessItsASingleBeginEndBlock(statements: List<CGStatement>) {
 		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
-			generateStatements((statements[0] as! CGBeginEndBlockStatement).Statements);
+			generateStatement(statements[0]);
 		} else {
 			incIndent()
 			generateStatements(statements);
@@ -190,11 +191,10 @@ public class CGCodeGenerator {
 		}
 	}
 	
-
 	internal func generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
 			Append(" ")
-			generateStatements(block.Statements);
+			generateStatement(block);
 		} else {
 			AppendLine()
 			incIndent()
@@ -438,7 +438,7 @@ public class CGCodeGenerator {
 		} else if let expression = expression as? CGTupleLiteralExpression {
 			generateTupleExpression(expression)
 		} else if let expression = expression as? CGTypeReferenceExpression {
-			generatTypeReferenceExpression(expression)
+			generateTypeReferenceExpression(expression)
 		}
 		
 		else {
@@ -636,7 +636,7 @@ public class CGCodeGenerator {
 		Append(")")
 	}
 	
-	internal func generatTypeReferenceExpression(expression: CGTypeReferenceExpression) {
+	internal func generateTypeReferenceExpression(expression: CGTypeReferenceExpression) {
 		// descendant may override, but this will work for most languages.
 		generateTypeReference(expression.`Type`)
 	}

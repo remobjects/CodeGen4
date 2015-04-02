@@ -4,7 +4,7 @@ import Sugar.Linq
 
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
-	init() {
+	public init() {
 		keywords = ["class"].ToList() as! List<String>
 	}
 
@@ -27,6 +27,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		super.generateGlobals()
 	}
+
 	//
 	// Statements
 	//
@@ -139,6 +140,31 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 				default: 
 			}
 			generateExpression(param.Value)
+		}
+	}
+
+	override func pascalGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				if let name = param.ExternalName {
+					Append(") ")
+					generateIdentifier(name)
+					Append("(")
+				} else {
+					Append("; ")
+				}
+			}
+			switch param.Modifier {
+				case .Var: Append("var ")
+				case .Const: Append("const ")
+				case .Out: Append("out ") //todo: Oxygene ony?
+				case .Params: Append("params ") //todo: Oxygene ony?
+				default: 
+			}
+			generateIdentifier(param.Name)
+			Append(": ")
+			generateTypeReference(param.`Type`)
 		}
 	}
 
