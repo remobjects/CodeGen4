@@ -32,7 +32,7 @@ public class CGNamedTypeReference : CGTypeReference {
 	public init(_ name: String) {
 		Name = name
 		IsClassType = true
-		DefaultNullability = .Unknown
+		DefaultNullability = .NullableUnwrapped
 	}
 	public convenience init(_ name: String, defaultNullability: CGTypeNullabilityKind) {
 		init(name)
