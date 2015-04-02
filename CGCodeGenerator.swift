@@ -23,18 +23,6 @@ public class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 	
-	public static func CodeGeneratorForLanguage(language: String) -> CGCodeGenerator? {
-		switch language.ToLower() {
-			case "oxygene", "pas": return CGOxygeneCodeGenerator()
-			case "hydrogene", "csharp", "c#", "cs": return CGCSharpCodeGenerator()
-			case "silver", "swift": return CGSwiftCodeGenerator()
-			case "delphi": return CGDelphiCodeGenerator()
-			case "java": return CGJavaCodeGenerator()
-			case "javascript", "js": return CGJavaScriptCodeGenerator()
-			default: return nil
-		}
-	}
-	
 	internal func generateAll() {
 		generateHeader()
 		generateDirectives()
@@ -218,9 +206,7 @@ public class CGCodeGenerator {
 	internal final func generateStatement(statement: CGStatement) {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
-			for line in commentStatement.Lines {
-				generateSingleLineComment(line)
-			}
+			generateCommentStatement(commentStatement)
 		} else if let rawStatement = statement as? CGRawStatement {
 			for line in rawStatement.Lines {
 				AppendLine(line)
@@ -274,6 +260,12 @@ public class CGCodeGenerator {
 		}
 	}
 	
+	internal func generateCommentStatement(commentStatement: CGCommentStatement) {
+		for line in commentStatement.Lines {
+			generateSingleLineComment(line)
+		}
+	}
+
 	internal func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateBeginEndStatement not implemented")
@@ -676,6 +668,11 @@ public class CGCodeGenerator {
 	//
 
 	internal final func generateTypeDefinition(type: CGTypeDefinition) {
+		
+		if let comment = type.Comment {
+			generateCommentStatement(comment)
+		}
+		
 		if let type = type as? CGTypeAliasDefinition {
 			generateAliasType(type)
 		} else if let type = type as? CGBlockTypeDefinition {
@@ -797,6 +794,11 @@ public class CGCodeGenerator {
 	//
 	
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
+
+		if let comment = member.Comment {
+			generateCommentStatement(comment)
+		}
+
 		if let member = member as? CGConstructorDefinition {
 			generateConstructorDefinition(member, type:type)
 		} else if let member = member as? CGDestructorDefinition {
@@ -842,22 +844,22 @@ public class CGCodeGenerator {
 
 	internal func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
 		// descendant must override
-		assert(false, "generateMethodDefinition not implemented")
+		assert(false, "generateFieldDefinition not implemented")
 	}
 
 	internal func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
 		// descendant must override
-		assert(false, "generateMethodDefinition not implemented")
+		assert(false, "generatePropertyDefinition not implemented")
 	}
 
 	internal func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
 		// descendant must override
-		assert(false, "generateMethodDefinition not implemented")
+		assert(false, "generateEventDefinition not implemented")
 	}
 
 	internal func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		// descendant must override
-		assert(false, "generateMethodDefinition not implemented")
+		assert(false, "generateCustomOperatorDefinition not implemented")
 	}
 
 	//
