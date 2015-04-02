@@ -20,12 +20,12 @@ CodeGen4 can be used *on* (i.e. linked into tools written for) the following pla
 
 ## Language Support
 
-* Oxygene _(in progress)_
-* C# (RemObjects C# and Visual C#))
+* Oxygene _(mostly done)_
+* C# (RemObjects C# and Visual C#)) _(mostly done)_
 * Swift (Silver and Apple's) _(mostly done)_
 * Objective-C _(in progress)_
 * Java
-* Delphi _(in progress)_
+* Delphi _(mostly done)_
 * C++ Builder
 * JavaScript
 
