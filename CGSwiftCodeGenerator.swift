@@ -288,22 +288,22 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			if p > 0 {
 				Append(", ")
 			} 
+			switch param.Modifier {
+				case .Out: 
+					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+						Append("__out ")
+					} else {
+						fallthrough
+					}
+				case .Var: 
+					Append("inout ")
+				default: 
+			}
 			if let externalName = param.ExternalName {
 				generateIdentifier(externalName)
 				Append(" ")
 			} else {
 				Append("_ ")
-			}
-			switch param.Modifier {
-				case .Out: 
-					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-						Append("__out")
-					} else {
-						fallthrough
-					}
-				case .Var: 
-					Append("inout")
-				default: 
 			}
 			generateIdentifier(param.Name)
 			Append(": ")
