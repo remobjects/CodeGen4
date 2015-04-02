@@ -14,16 +14,19 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	// in C-styleCG Base class
 	/*
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+		// handled in base
 	}
 	*/
 
 	/*
 	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+		// handled in base
 	}
 	*/
 
 	/*
 	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+		// handled in base
 	}
 	*/
 
@@ -38,16 +41,19 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	/*
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+		// handled in base
 	}
 	*/
 
 	/*
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+		// handled in base
 	}
 	*/
 
 	/*
 	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+		// handled in base
 	}
 	*/
 
@@ -56,7 +62,9 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
-		AppendLine("@synchnonized")
+		AppendLine("@synchnonized(")
+		generateExpression(statement.Expression)
+		Append(")")
 		AppendLine("{")
 		incIndent()
 		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
@@ -120,11 +128,11 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
 		if let value = statement.Exception {
-			Append("throw ")
+			Append("@throw ")
 			generateExpression(value)
 			AppendLine()
 		} else {
-			AppendLine("throw")
+			AppendLine("@throw")
 		}
 		AppendLine(";")
 	}
@@ -276,6 +284,52 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func objcGenerateCallParameters(parameters: List<CGCallParameter>) {
+	//not done 
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			generateExpression(param.Value)
+		}
+	}
+
+	func objcGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
+	//not done 
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			switch param.Modifier {
+				case .Var: Append("var ")
+				case .Const: Append("const ")
+				case .Out: Append("out ") //todo: Oxygene ony?
+				case .Params: Append("params ") //todo: Oxygene ony?
+				default: 
+			}
+			generateTypeReference(param.`Type`)
+			Append("  ")
+			generateIdentifier(param.Name)
+		}
+	}
+	
+	func objcGenerateAncestorList(ancestors: List<CGTypeReference>?) {
+	//not done 
+		if let ancestors = ancestors where ancestors.Count > 0 {
+			Append(" : ")
+			for var a: Int32 = 0; a < ancestors.Count; a++ {
+				if let ancestor = ancestors[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(ancestor)
+				}
+			}
+		}
+	}
+
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
 
 	}
@@ -348,6 +402,12 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append("}")
 	}
 
+	/*
+	override func generateTupleExpression(expression: CGTupleLiteralExpression) {
+		// default handled in base
+	}
+	*/
+	
 	//
 	// Type Definitions
 	//

@@ -418,6 +418,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func swiftGenerateAttributeParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(" = ")
+			}
+		}
+	}
+
 	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
@@ -547,6 +560,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Type Definitions
 	//
+	
+	override func generateAttribute(attribute: CGAttribute) {
+		Append("@")
+		generateTypeReference(attribute.`Type`)
+		if let parameters = attribute.Parameters where parameters.Count > 0 {
+			Append("(")
+			swiftGenerateAttributeParameters(parameters)
+			Append(")")
+		}   
+		AppendLine()	 
+	}
 	
 	func swiftGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {

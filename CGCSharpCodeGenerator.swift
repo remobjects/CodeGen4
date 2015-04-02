@@ -376,6 +376,19 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func cSharpGenerateAttributeParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(" = ")
+			}
+		}
+	}
+
 	func cSharpGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
@@ -483,6 +496,17 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Type Definitions
 	//
+	
+	override func generateAttribute(attribute: CGAttribute) {
+		Append("[")
+		generateTypeReference(attribute.`Type`)
+		if let parameters = attribute.Parameters where parameters.Count > 0 {
+			Append("(")
+			cSharpGenerateAttributeParameters(parameters)
+			Append(")")
+		}		
+		AppendLine("]")
+	}
 	
 	func cSharpGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {

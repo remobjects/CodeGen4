@@ -260,9 +260,11 @@ public class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateCommentStatement(commentStatement: CGCommentStatement) {
-		for line in commentStatement.Lines {
-			generateSingleLineComment(line)
+	internal func generateCommentStatement(commentStatement: CGCommentStatement?) {
+		if let commentStatement = commentStatement {
+			for line in commentStatement.Lines {
+				generateSingleLineComment(line)
+			}
 		}
 	}
 
@@ -661,17 +663,28 @@ public class CGCodeGenerator {
 			assert(false, "unsupported global found: \(typeOf(global).ToString())")
 		}	
 	}
-	
 
 	//
 	// Type Definitions
 	//
+	
+	func generateAttributes(attributes: List<CGAttribute>?) {
+		if let attributes = attributes where attributes.Count > 0 {
+			for a in attributes{
+				generateAttribute(a)
+			}
+		}
+	}
 
+	func generateAttribute(attribute: CGAttribute) {
+		// descendant must override
+		assert(false, "generateAttribute not implemented")
+	}
+	
 	internal final func generateTypeDefinition(type: CGTypeDefinition) {
 		
-		if let comment = type.Comment {
-			generateCommentStatement(comment)
-		}
+		generateCommentStatement(type.Comment)
+		generateAttributes(type.Attributes)
 		
 		if let type = type as? CGTypeAliasDefinition {
 			generateAliasType(type)
@@ -795,9 +808,8 @@ public class CGCodeGenerator {
 	
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
 
-		if let comment = member.Comment {
-			generateCommentStatement(comment)
-		}
+		generateCommentStatement(member.comment)
+		generateAttributes(type.Attributes)
 
 		if let member = member as? CGConstructorDefinition {
 			generateConstructorDefinition(member, type:type)

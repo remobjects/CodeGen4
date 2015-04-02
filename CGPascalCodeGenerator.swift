@@ -492,6 +492,19 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	func pascalGenerateAttributeParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(" := ")
+			}
+		}
+	}
+
 	func pascalGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
@@ -589,6 +602,17 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 	// Type Definitions
 	//
+	
+	override func generateAttribute(attribute: CGAttribute) {
+		Append("[")
+		generateTypeReference(attribute.`Type`)
+		if let parameters = attribute.Parameters where parameters.Count > 0 {
+			Append("(")
+			pascalGenerateAttributeParameters(parameters)
+			Append(")")
+		}		
+		AppendLine("]")
+	}
 	
 	func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {

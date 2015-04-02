@@ -244,6 +244,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 	
+	override func generateAttribute(attribute: CGAttribute) {
+
+	}
+	
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 
 	}
