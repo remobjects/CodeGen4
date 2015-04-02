@@ -96,11 +96,7 @@ public class CGAnonymousClassOrStructExpression: CGExpression {
 }
 
 public class CGInheritedExpression: CGExpression {
-	public var Expression: CGExpression
-
-	public init(_ expression: CGExpression) {
-		Expression = expression
-	}
+	public static lazy let Inherited = CGInheritedExpression()
 }
 
 public class CGIfThenElseExpression: CGExpression { // aka Ternary operator
