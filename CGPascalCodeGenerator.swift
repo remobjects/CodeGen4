@@ -758,6 +758,18 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		return "function"	
 	}
 	
+	func pascalGenerateVirtualityModifiders(member: CGMemberDefinition) {
+		switch member.Virtuality {
+			//case .None
+			case .Virtual: Append(" virtual;")
+			case .Abstract: Append(" virtual; abstract;")
+			case .Override: Append(" override; ")
+			//case .Final: /* Oxygene only*/
+			case .Reintroduce: Append(" reintroduce;")
+			default:
+		}
+	}
+	
 	internal func pascalGenerateMethodHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
 		if method.Static {
 			Append("class ")
@@ -778,7 +790,13 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(": ")
 			generateTypeReference(returnType)
 		}
-		AppendLine(";");
+		Append(";");
+		
+		if !implementation {
+			pascalGenerateVirtualityModifiders(method)
+		}
+		
+		AppendLine()
 	}
 
 	internal func pascalGenerateMethodBody(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition) {
@@ -903,7 +921,9 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			generateExpression(setExpression)
 		}
 		
-		AppendLine(";")
+		Append(";")
+		pascalGenerateVirtualityModifiders(property)
+		AppendLine()
 	}
 	
 	func pascalGeneratePropertyAccessorDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {

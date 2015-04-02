@@ -198,6 +198,18 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		return "method"	
 	}
 	
+	override func pascalGenerateVirtualityModifiders(member: CGMemberDefinition) {
+		switch member.Virtuality {
+			//case .None
+			case .Virtual: Append(" virtual;")
+			case .Abstract: Append(" abstract;")
+			case .Override: Append(" override; ")
+			case .Final: Append(" final;")
+			case .Reintroduce: Append(" reintroduce;")
+			default:
+		}
+	}
+	
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		assert(false, "generateDestructorDefinition is not supported in Oxygene")
 	}
@@ -221,11 +233,14 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		Append("event ")
 		Append(event.Name)
-		// todo parameters
 		if let type = event.`Type` {
 			Append(": ")
 			generateTypeReference(type)
 		}
+		Append(";")
+		//todo: add/remove/raise
+		pascalGenerateVirtualityModifiders(event)
+		AppendLine()
 	}
 
 	override func pascalGenerateEventAccessorDefinition(event: CGEventDefinition, type: CGTypeDefinition) {

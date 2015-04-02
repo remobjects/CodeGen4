@@ -738,7 +738,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
+		if type is CGInterfaceTypeDefinition {
+		} else {
+			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
+			swiftGenerateVirtualityPrefix(ctor)
+		}
 		Append("init(")
 		swiftGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
@@ -760,6 +764,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility)
+		swiftGenerateStaticPrefix(field.Static && !type.Static)
 		if field.Constant {
 			Append("let ")
 		} else {
@@ -781,6 +786,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		swiftGenerateStaticPrefix(property.Static && !type.Static)
 		if property.Lazy {
 			Append("lazy ")
 		}
@@ -868,6 +874,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			swiftGenerateMemberTypeVisibilityPrefix(event.Visibility)
+			swiftGenerateStaticPrefix(event.Static && !type.Static)
 			Append("__event")
 			generateIdentifier(event.Name)
 			if let type = event.`Type` {
