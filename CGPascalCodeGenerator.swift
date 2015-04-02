@@ -526,7 +526,6 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
 		pascalGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)

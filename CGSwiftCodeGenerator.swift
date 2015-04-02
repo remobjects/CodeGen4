@@ -311,6 +311,20 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
+		if let ancestors = ancestors where ancestors.Count > 0 {
+			Append(" : ")
+			for var a: Int32 = 0; a < ancestors.Count; a++ {
+				if let ancestor = ancestors[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(ancestor)
+				}
+			}
+		}
+	}
+
 	//
 	// Expressions
 	//
@@ -550,6 +564,18 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append("static ")
 		}
 	}
+	
+	func swiftGenerateVirtualityPrefix(member: CGMemberDefinition) {
+		switch member.Virtuality {
+			//case .None
+			//case .Virtual
+			case .Abstract: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("__abstract ") }
+			case .Override: Append("override ")
+			case .Final: Append("final ")
+			//case Reintroduce
+			default:
+		}
+	}
 
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
@@ -618,10 +644,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateStaticPrefix(type.Static)
 		Append("class ")
 		generateIdentifier(type.Name)
-		Append(" ")
 		//ToDo: generic constraints
-		//ToDo: ancestors
-		AppendLine("{ ")
+		swiftGenerateAncestorList(type.Ancestors)
+		AppendLine(" { ")
 		incIndent()
 	}
 	
@@ -635,10 +660,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateStaticPrefix(type.Static)
 		Append("struct ")
 		generateIdentifier(type.Name)
-		Append(" ")
 		//ToDo: generic constraints
-		//ToDo: ancestors
-		AppendLine("{ ")
+		swiftGenerateAncestorList(type.Ancestors)
+		AppendLine(" { ")
 		incIndent()
 	}
 	
@@ -651,10 +675,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("protocol ")
 		generateIdentifier(type.Name)
-		Append(" ")
-		//ToDo: ancestors
-		AppendLine("{ ")
 		//ToDo: generic constraints
+		swiftGenerateAncestorList(type.Ancestors)
+		AppendLine(" { ")
 		incIndent()
 	}
 	
@@ -683,8 +706,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
 
-		swiftGenerateMemberTypeVisibilityPrefix(method.Visibility)
-		swiftGenerateStaticPrefix(method.Static && !type.Static)
+		if type is CGInterfaceTypeDefinition {
+			swiftGenerateStaticPrefix(method.Static && !type.Static)
+		} else {
+			swiftGenerateMemberTypeVisibilityPrefix(method.Visibility)
+			swiftGenerateStaticPrefix(method.Static && !type.Static)
+			swiftGenerateVirtualityPrefix(method)
+		}
 		Append("func ")
 		generateIdentifier(method.Name)
 		// todo: generics
@@ -918,8 +946,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .AnsiChar: Append("AnsiChar")
 			case .UTF16Char: Append("Char")
 			case .UTF32Char: Append("Character")
-			case .Dynamic: Append("dynamic")
-			case .InstanceType: Append("Any")
+			case .Dynamic: Append("AnyObject")
+			case .InstanceType: Append("Self")
 			case .Void: Append("()")
 			case .Object: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("Object") } else { Append("NSObject") }
 		}		

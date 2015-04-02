@@ -11,6 +11,10 @@ public extension Sugar.String {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
 	
+	public func AsTypeReferenceExpression(nullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
+		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: nullability))
+	}
+	
 	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
 		return CGNamedIdentifierExpression(self)
 	}
@@ -33,6 +37,10 @@ public extension RemObjects.Elements.System.String {
 
 	public func AsTypeReferenceExpression() -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
+	}
+	
+	public func AsTypeReferenceExpression(nullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
+		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: nullability))
 	}
 	
 	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
