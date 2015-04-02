@@ -16,6 +16,8 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Members = List<CGMemberDefinition>()
 	public var Visibility: CGTypeVisibilityKind = .Assembly
 	public var Static = false
+	public var Sealed = false
+	public var Abstract = false
 	public var Comment: CGCommentStatement?
 	
 	public init(_ name: String) {
