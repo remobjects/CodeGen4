@@ -1,6 +1,6 @@
 ﻿import Sugar
 
-#if !ECHOES
+#if !FAKESUGAR
 public extension Sugar.String {
 	
 	public func AsTypeReference() -> CGTypeReference {
