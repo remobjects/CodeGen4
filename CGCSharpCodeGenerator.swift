@@ -113,9 +113,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
-
+		// handled in base
 	}
+	*/
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
 		Append("lock (")
@@ -227,7 +229,24 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	*/	
 	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
-
+		Append("// ")
+		generateInlineConstructorCallStatement(statement)
+		AppendLine();
+	}
+	
+	private func generateInlineConstructorCallStatement(statement: CGConstructorCallStatement) {
+		if let callSite = statement.CallSite where callSite is CGInheritedExpression {
+			generateExpression(callSite)
+		} else {
+			Append("this")
+		}
+		if let name = statement.ConstructorName {
+			Append(" ")
+			Append(name)
+		}
+		Append("(")
+		cSharpGenerateCallParameters(statement.Parameters)
+		Append(")")
 	}
 
 	//
@@ -716,12 +735,18 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if type is CGInterfaceTypeDefinition {
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
-			cSharpGenerateVirtualityPrefix(ctor)
 		}
 		generateIdentifier(type.Name)
 		Append("(")
 		cSharpGenerateDefinitionParameters(ctor.Parameters)
-		AppendLine(")")
+		Append(")")
+		for s in ctor.Statements {
+			if let ctorCall = s as? CGConstructorCallStatement {
+				Append(" : ") 
+				generateInlineConstructorCallStatement(ctorCall)
+			}
+		}
+		AppendLine()
 		AppendLine("{")
 		incIndent()
 		generateStatements(ctor.LocalVariables)

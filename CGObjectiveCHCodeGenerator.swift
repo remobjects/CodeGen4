@@ -4,11 +4,17 @@ import Sugar.Collections
 public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 
 	override func generateForwards() {
-		// todo: generate forward @class and @protocol decls
+		for t in currentUnit.Types {
+			if let type = t as? CGClassTypeDefinition {
+				Append("@class ")
+				generateIdentifier(type.Name)
+				AppendLine(";")
+			}
+		}
 	}
 	
 	override func generateImport(imp: CGImport) {
-		Append("#import <\(imp.Name)>")
+		AppendLine("#import <\(imp.Name)/\(imp.Name).h>")
 	}
 
 	//
@@ -24,16 +30,40 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	}
 	
 	override func generateEnumType(type: CGEnumTypeDefinition) {
-		
+		Append("typedef NS_ENUM(")
+		if let baseType = type.BaseType {
+			generateTypeReference(baseType, ignoreNullability: true)
+		} else {
+			Append("NSUInteger")
+		}
+		Append(", ")
+		generateIdentifier(type.Name)
+		AppendLine(")")
+		AppendLine("{")
+		incIndent()
+		for var m = 0; m < type.Members.Count; m++ {
+			if let member = type.Members[m] as? CGEnumValueDefinition {
+				if m > 0 {
+					AppendLine(",")
+				}
+				generateIdentifier(member.Name)
+				if let value = member.Value {
+					Append(" = ")
+					generateExpression(value)
+				}
+			}
+		}
+		AppendLine()
+		decIndent()
+		AppendLine("};")
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
-		Append("@inferface ")
+		Append("@interface ")
 		generateIdentifier(type.Name)
-		//todo: ancestor
-		//todo: public fields
-		incIndent()
-		//todo: member
+		objcGenerateAncestorList(type.Ancestors)
+		AppendLine()
+		AppendLine()
 	}
 	
 	/*override func generateClassTypeEnd(type: CGClassTypeDefinition) {
@@ -49,11 +79,40 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 
 	}	
 	
+	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+		Append("@protocol ")
+		generateIdentifier(type.Name)
+		objcGenerateAncestorList(type.Ancestors)
+	}
+	
+	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+		AppendLine("@end")
+	}	
+
 	//
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
-
+	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+		generateMethodDefinitionHeader(method, type: type)
+		AppendLine(";")
+	}
+	
+	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+		generateMethodDefinitionHeader(ctor, type: type)
+		AppendLine(";")
+	}
+	
+	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		Append("@property ")
+		
+		if let type = property.`Type` {
+			generateTypeReference(type)
+			Append(" ")
+		} else {
+			Append("id ")
+		}
+		generateIdentifier(property.Name)
+		AppendLine(";")
 	}
 }

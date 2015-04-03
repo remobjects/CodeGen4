@@ -38,6 +38,11 @@ public class CGNamedTypeReference : CGTypeReference {
 		init(name)
 		DefaultNullability = defaultNullability
 	}
+	public convenience init(_ name: String, isClassType: Boolean) {
+		init(name)
+		IsClassType = isClassType
+		DefaultNullability = isClassType ? CGTypeNullabilityKind.NullableUnwrapped : CGTypeNullabilityKind.NotNullable
+	}
 }
 
 public class CGPredefinedTypeReference : CGTypeReference {

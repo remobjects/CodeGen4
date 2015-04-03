@@ -170,10 +170,10 @@ public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 		super.init(".ctor")
 	}
 	public init(_ name: String, _ statements: List<CGStatement>) {
-		super.init(".ctor", statements)
+		super.init(name, statements)
 	}
 	public init(_ name: String, _ statements: CGStatement...) {
-		super.init(".ctor", statements.ToList())
+		super.init(name, statements.ToList())
 	}
 }
 

@@ -80,6 +80,25 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		AppendLine(";")
 	}
 
+	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+		if let callSite = statement.CallSite {
+			generateExpression(callSite)
+			if callSite is CGInheritedExpression {
+				Append(" ")
+			} else {
+				Append(".")
+			}
+		}
+		Append("constructor")
+		if let name = statement.ConstructorName {
+			Append(" ")
+			Append(name)
+		} 
+		Append("(")
+		pascalGenerateCallParameters(statement.Parameters)
+		AppendLine(");")
+	}
+
 	//
 	// Expressions
 	//

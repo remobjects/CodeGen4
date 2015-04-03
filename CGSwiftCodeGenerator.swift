@@ -197,9 +197,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	/*override func generateReturnStatement(statement: CGReturnStatement) {
+	/*
+	override func generateReturnStatement(statement: CGReturnStatement) {
 		// handled in base
-	}*/
+	}
+	*/
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
@@ -221,9 +223,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	/*override func generateContinueStatement(statement: CGContinueStatement) {
+	/*
+	override func generateContinueStatement(statement: CGContinueStatement) {
 		// handled in base
-	}*/
+	}
+	*/
 
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
 		if statement.Constant {
@@ -247,7 +251,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	/*
 	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
 		// handled in base
-	}	
+	}
 	*/
 
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {

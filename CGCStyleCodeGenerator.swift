@@ -86,6 +86,26 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine(")")
 	}
 
+	override func generateSwitchStatement(statement: CGSwitchStatement) {
+		Append("switch (")
+		generateExpression(statement.Expression)
+		AppendLine(")")
+		AppendLine("{")
+		incIndent()
+		for c in statement.Cases {
+			Append("case ")
+			generateExpression(c.CaseExpression)
+			AppendLine(":")
+			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
+		}
+		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+			AppendLine("default:")
+			generateStatementsIndentedUnlessItsASingleBeginEndBlock(defaultStatements)
+		}
+		decIndent()
+		AppendLine("}")
+	}
+
 	override func generateReturnStatement(statement: CGReturnStatement) {
 		if let value = statement.Value {
 			Append("return ")

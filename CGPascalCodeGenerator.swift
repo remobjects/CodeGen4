@@ -327,6 +327,25 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}	
 	
+	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+		if let callSite = statement.CallSite {
+			generateExpression(callSite)
+			if callSite is CGInheritedExpression {
+				Append(" ")
+			} else {
+				Append(".")
+			}
+		}
+		if let name = statement.ConstructorName {
+			Append(name)
+		} else {
+			Append("Create")
+		}
+		Append("(")
+		pascalGenerateCallParameters(statement.Parameters)
+		AppendLine(");")
+	}
+
 	//
 	// Expressions
 	//
