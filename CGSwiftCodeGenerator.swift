@@ -1,5 +1,6 @@
 ﻿import Sugar
 import Sugar.Collections
+import Sugar.Linq
 
 public enum CGSwiftCodeGeneratorDialect {
 	case Standard
@@ -8,10 +9,19 @@ public enum CGSwiftCodeGeneratorDialect {
 
 public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
-	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
-	
 	public init() {
+		super.init()
+		
+		// current as of Elements 8.1 and Swift 1.2
+		keywords = ["__abstract", "__await", "__catch", "__event", "__finally", "__inline", "__mapped", "__out", "__partial", "__throw", "__try", "__yield", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", 
+					"as", "associativity", "autoreleasepool", "break", "case", "class", "continue", "convenience", "default", "deinit", "didSet", "do", "dynamicType",
+					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "if", "import", "in", "infix", "init", "inout", "internal", "is",
+					"lazy", "left", "let", "mutating", "nil", "none", "nonmutating", "operator", "optional", "override", "postfix", "precedence", "prefix", "private", "protocol", "public",
+					"required", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "true", "Type", "typealias",
+					"unowned", "var", "weak", "where", "while", "willSet"].ToList() as! List<String>
 	}
+
+	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
 	
 	public init(dialect: CGSwiftCodeGeneratorDialect) {
 		Dialect = dialect

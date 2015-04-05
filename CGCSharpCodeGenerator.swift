@@ -1,5 +1,6 @@
 ﻿import Sugar
 import Sugar.Collections
+import Sugar.Linq
 
 public enum CGCSharpCodeGeneratorDialect {
 	case Standard
@@ -8,11 +9,24 @@ public enum CGCSharpCodeGeneratorDialect {
 
 public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
+	public init() {
+		super.init()
+		
+		// current as of Elements 8.1 and C# 6.0
+		keywords = ["__arglist", "__aspect", "__autoreleasepool", "__block", "__inline", "__makeref", "__mapped", 
+					"__reftype", "__refvalue", "__selector", "__strong", "__unretained", "__weak", 
+					"abstract", "add", "as", "ascending", "assembly", "async", "await", "base", "bool", "break", "by", "byte", 
+					"case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "descending", "do", "double", "dynamic", 
+					"else", "enum", "equals", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "from", "get", "goto", "group", 
+					"if", "implicit", "in", "int", "interface", "internal", "into", "is", "join", "let", "lock", "long", "module", "namespace", "new", "null", 
+					"object", "on", "operator", "orderby", "out", "override", "params", "partial", "private", "protected", "public", 
+					"readonly", "ref", "remove", "return", "sbyte", "sealed", "select", "set", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", 
+					"this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "value", 
+					"var", "virtual", "void", "volatile", "where", "while", "yield"].ToList() as! List<String>
+	}
+
 	public var Dialect: CGCSharpCodeGeneratorDialect = .Standard
 
-	public init() {
-	}
-	
 	public init(dialect: CGCSharpCodeGeneratorDialect) {
 		Dialect = dialect
 	}	

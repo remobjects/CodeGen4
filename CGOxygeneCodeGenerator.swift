@@ -5,7 +5,32 @@ import Sugar.Linq
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	public init() {
-		keywords = ["class"].ToList() as! List<String>
+		super.init()
+
+		// current as of Elements 8.1
+		keywords = ["abstract", "add", "and", "array", "as", "asc", "aspect", "assembly", "async", "autoreleasepool", "await", 
+					"begin", "block", "break", "by", 
+					"case", "class", "const", "constructor", "continue", 
+					"default", "delegate", "deprecated", "desc", "distinct", "div", "do", "downto", "dynamic", 
+					"each", "else", "empty", "end", "ensure", "enum", "equals", "event", "except", "exit", "extension", "external", 
+					"false", "finalizer", "finally", "flags", "for", "from", "function", 
+					"global", "group", 
+					"has", 
+					"if", "implementation", "implements", "implies", "in", "index", "inherited", "inline", "interface", "invariants", "is", "iterator", 
+					"join", 
+					"lazy", "locked", "locking", "loop", 
+					"mapped", "matching", "method", "mod", "module", "namespace", 
+					"nested", "new", "nil", "not", "notify", "nullable", 
+					"of", "old", "on", "operator", "optional", "or", "order", "out", "override", 
+					"parallel", "param", "params", "partial", "pinned", "private", "procedure", "property", "protected", "public", 
+					"queryable", "raise", "raises", "read", "readonly", "record", "reintroduce", "remove", "repeat", "require", "result", "reverse", "sealed", 
+					"select", "selector -", "self", "sequence", "set", "shl", "shr", "skip", "soft", "static", "step", "strong", 
+					"take", "then", "to", "true", "try", "type", 
+					"union", "unit", "unretained", "unsafe", "until", "uses", "using", 
+					"var", "virtual", 
+					"weak", "where", "while", "with", "write", 
+					"xor", 
+					"yield"].ToList() as! List<String>
 	}
 
 	override func generateHeader() {

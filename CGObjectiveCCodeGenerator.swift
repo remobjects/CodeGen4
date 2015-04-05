@@ -1,11 +1,19 @@
 ﻿import Sugar
 import Sugar.Collections
+import Sugar.Linq
 
 //
 // Abstract base implementation for Objective-C. Inherited by specific .m and .h Generators
 //
 
 public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
+
+	public init() {
+		keywords = ["__nonnull", "__null_unspecified", "__nullable", "__strong", "__unsafe_unretained", "__weak", 
+					"id", "in", "self", "super", "auto", "break", "case", "char", "const", "continue", "do", "double", "else", "enum", "extern", 
+					"float", "for", "goto", "if", "return", "int", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", 
+					"union", "unsigned", "void", "colatile", "while"].ToList() as! List<String>
+	}
 
 	//
 	// Statements
@@ -64,7 +72,7 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
-		AppendLine("@synchnonized(")
+		AppendLine("@synchronized(")
 		generateExpression(statement.Expression)
 		Append(")")
 		AppendLine("{")
