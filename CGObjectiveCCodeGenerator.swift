@@ -172,13 +172,6 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	private final func uppercaseFirstletter(name: String) -> String {
-		if length(name) >= 1 {
-			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
-		}
-		return name
-	}
-	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 		Append("[")
 		if let callSite = statement.CallSite {

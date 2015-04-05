@@ -260,6 +260,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(".")
 		}
 		Append("init(")
+		if let name = statement.ConstructorName {
+			generateIdentifier(removeWithSuffix(name))
+			Append(": ")
+		}
 		swiftGenerateCallParameters(statement.Parameters)
 		Append(")")
 	}
@@ -499,10 +503,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateCallParameters(expression.Parameters)
 		Append(")")
 	}
-
+	
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		generateTypeReference(expression.`Type`, ignoreNullability: true)
 		Append("(")
+		if let name = expression.ConstructorName {
+			generateIdentifier(removeWithSuffix(name))
+			Append(": ")
+		}
 		swiftGenerateCallParameters(expression.Parameters)
 		Append(")")
 	}
@@ -1068,4 +1076,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(swiftSuffixForNullabilityForCollectionType(type))
 	}
 	
+	//
+	// Helpers
+	//
+
+	private func removeWithSuffix(name: String) -> String {
+		if name.ToLower().StartsWith("with") {
+			name = name.Substring(4);
+		}
+		return lowercasecaseFirstletter(name)
+	}
 }

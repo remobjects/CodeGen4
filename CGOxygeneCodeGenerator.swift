@@ -190,6 +190,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateTypeReference(expression.`Type`)
+		if let name = expression.ConstructorName {
+			Append(" ")
+			generateIdentifier(name)
+		}
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
 		Append(")")

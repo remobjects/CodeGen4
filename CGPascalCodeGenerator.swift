@@ -846,7 +846,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(" ")
 		if implementation {
 			Append(type.Name)
-			Append(".")
+			if method is CGConstructorDefinition && self is CGOxygeneCodeGenerator { // unclean, but keepsme from having to override the whole thing
+				Append(" ")
+			} else {
+				Append(".")
+			}
 		}
 		Append(method.Name)
 		if let parameters = method.Parameters where parameters.Count > 0 {

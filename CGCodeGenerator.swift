@@ -964,6 +964,24 @@ public class CGCodeGenerator {
 	}
 	
 	//
+	// Helpers
+	//
+	
+	internal final func uppercaseFirstletter(name: String) -> String {
+		if length(name) >= 1 {
+			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
+		}
+		return name
+	}
+	
+	internal final func lowercasecaseFirstletter(name: String) -> String {
+		if length(name) >= 1 {
+			name = name.Substring(0, 1).ToLower()+name.Substring(1)
+		}
+		return name
+	}
+	
+	//
 	//
 	// StringBuilder Access
 	//
