@@ -838,21 +838,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	internal func pascalGenerateMethodHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
-		if method.Static {
-			Append("class ")
-		}
-		Append(methodKeyword)
-		Append(" ")
-		if implementation {
-			Append(type.Name)
-			if method is CGConstructorDefinition && self is CGOxygeneCodeGenerator { // unclean, but keepsme from having to override the whole thing
-				Append(" ")
-			} else {
-				Append(".")
-			}
-		}
-		Append(method.Name)
+	internal func pascalGenerateSecondHalfOfMethodHeader(method: CGMethodLikeMemberDefinition, implementation: Boolean) {
 		if let parameters = method.Parameters where parameters.Count > 0 {
 			Append("(")
 			pascalGenerateDefinitonParameters(parameters)
@@ -871,6 +857,40 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine()
 	}
 
+	internal func pascalGenerateMethodHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
+		if method.Static {
+			Append("class ")
+		}
+		
+		Append(methodKeyword)
+		Append(" ")
+		if implementation {
+			Append(type.Name)
+			Append(".")
+		}
+		Append(method.Name)
+		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
+	}
+
+	internal func pascalGenerateConstructorHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
+		if method.Static {
+			Append("class ")
+		}
+		
+		Append("constructor")
+		Append(" ")
+		if implementation {
+			Append(type.Name)
+			Append(".")
+		}
+		if let name = method.Name {
+			Append(method.Name)
+		} else {
+			Append("Create")
+		}
+		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
+	}
+	
 	internal func pascalGenerateMethodBody(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition) {
 		if let localVariables = method.LocalVariables where localVariables.Count > 0 {
 			Append("var")
@@ -903,11 +923,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		pascalGenerateMethodHeader(ctor, type: type, methodKeyword: "constructor", implementation: false)
+		pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: false)
 	}
 
 	func pascalGenerateConstructorImplementation(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		pascalGenerateMethodHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
+		pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
 		pascalGenerateMethodBody(ctor, type: type);
 	}
 
