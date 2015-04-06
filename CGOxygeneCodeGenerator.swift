@@ -258,7 +258,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			pascalGenerateDefinitonParameters(parameters)
 			Append(")")
 		}
-		if let returnType = block.ReturnType {
+		if let returnType = block.ReturnType where !returnType.IsVoid {
 			Append(": ")
 			generateTypeReference(returnType)
 		}

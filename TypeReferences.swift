@@ -24,6 +24,14 @@ public __abstract class CGTypeReference : CGEntity {
 		}
 		return Nullability
 	}
+	
+	public var IsVoid: Boolean { 
+		if let predef = self as? CGPredefinedTypeReference {
+			return predef.Kind == CGPredefinedTypeKind.Void
+		}
+		return false
+		//return (self as? CGPredefinedTypeReference)?.Kind == CGPredefinedTypeKind.Void // 71722: Silver: can't compare nullable enum to enum
+	}
 }
 
 public class CGNamedTypeReference : CGTypeReference {

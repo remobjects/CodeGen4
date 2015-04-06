@@ -820,10 +820,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	internal func pascalKeywordForMethod(method: CGMethodDefinition) -> String {
-		if method.ReturnType == nil {
-			return "procedure"
+		if let returnType = method.ReturnType where !returnType.IsVoid {
+			return "function"	
 		}
-		return "function"	
+		return "procedure"
 	}
 	
 	func pascalGenerateVirtualityModifiders(member: CGMemberDefinition) {
@@ -858,7 +858,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateDefinitonParameters(parameters)
 			Append(")")
 		}
-		if let returnType = method.ReturnType {
+		if let returnType = method.ReturnType where !returnType.IsVoid {
 			Append(": ")
 			generateTypeReference(returnType)
 		}
