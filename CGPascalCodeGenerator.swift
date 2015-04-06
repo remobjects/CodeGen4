@@ -852,6 +852,20 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		
 		if !implementation {
 			pascalGenerateVirtualityModifiders(method)
+			if method.External {
+				Append(" external;")
+			}
+			if method.Async {
+				Append(" async;")
+			}
+			if method.Locked {
+				Append(" locked")
+				if let lockedOn = method.LockedOn {
+					Append(" on ")
+					generateExpression(lockedOn)
+				}
+				Append(";")
+			}
 		}
 		
 		AppendLine()

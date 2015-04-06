@@ -145,6 +145,8 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
+	public var External = false 
+	public var Async = false /* Oxygene only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 
@@ -320,6 +322,9 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 	}*/
 }
 
+public class CGNestedTypeDefinition: CGMemberDefinition {
+	//Todo
+}
 
 //
 // Parameters

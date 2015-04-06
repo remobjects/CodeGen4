@@ -717,6 +717,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(method.Visibility)
 			cSharpGenerateStaticPrefix(method.Static && !type.Static)
+			if method.External {
+				Append("extern ")
+			}
 			cSharpGenerateVirtualityPrefix(method)
 		}
 		if let returnType = method.ReturnType {
