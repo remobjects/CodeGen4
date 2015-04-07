@@ -276,6 +276,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		swiftGenerateCallParameters(statement.Parameters)
 		Append(")")
+		AppendLine()
 	}
 	
 	//

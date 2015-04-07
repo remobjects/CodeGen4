@@ -146,7 +146,8 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		decIndent()
 		Append("end")
 		if let elseStatement = statement.ElseStatement {
-			AppendLine(" else begin")
+			AppendLine()
+			AppendLine("else begin")
 			incIndent()
 			generateStatementSkippingOuterBeginEndBlock(elseStatement)
 			decIndent()
@@ -879,10 +880,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(methodKeyword)
 		Append(" ")
 		if implementation {
-			Append(type.Name)
+			generateIdentifier(type.Name)
 			Append(".")
 		}
-		Append(method.Name)
+		generateIdentifier(method.Name)
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 
@@ -894,11 +895,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("constructor")
 		Append(" ")
 		if implementation {
-			Append(type.Name)
+			generateIdentifier(type.Name)
 			Append(".")
 		}
 		if let name = method.Name {
-			Append(method.Name)
+			generateIdentifier(method.Name)
 		} else {
 			Append("Create")
 		}
@@ -911,7 +912,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			incIndent()
 			for v in localVariables {
 				if let type = v.`Type` {
-					Append(v.Name)
+					generateIdentifier(v.Name)
 					Append(": ")
 					generateTypeReference(type)
 					AppendLine(";")
@@ -977,12 +978,12 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		if variable.Constant, let initializer = variable.Initializer { 
 			Append("const ")
-			Append(variable.Name)
+			generateIdentifier(variable.Name)
 			Append(" = ")
 			generateExpression(initializer)
 		} else {
 			Append("var ")
-			Append(variable.Name)
+			generateIdentifier(variable.Name)
 			if let type = variable.`Type` {
 				Append(": ")
 				generateTypeReference(type)
@@ -1000,7 +1001,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("class ")
 		}
 		Append("property ")
-		Append(property.Name)
+		generateIdentifier(property.Name)
 		if let parameters = property.Parameters where parameters.Count > 0 {
 			Append("[")
 			pascalGenerateDefinitonParameters(parameters)
