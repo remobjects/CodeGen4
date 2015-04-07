@@ -13,6 +13,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		keywordsAreCaseSensitive = false
 	}
 
+	override func doGenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
+		pascalGenerateTypeMemberImplementation(member, type: type)
+	}
+
 	override func escapeIdentifier(name: String) -> String {
 		return "&\(name)"
 	}

@@ -14,14 +14,58 @@ public class CGCodeGenerator {
 
 	override public init() {
 	}
+	
+	//
+	// Public APIS
+	//
 
-	public final func GenerateCode(unit: CGCodeUnit) -> String {
+	public final func GenerateUnit(unit: CGCodeUnit) -> String {
 		
 		currentUnit = unit;
 		currentCode = StringBuilder()
 		generateAll() 
 		return currentCode.ToString()
 	}
+
+	public final func GenerateType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
+		
+		currentUnit = unit;
+		currentCode = StringBuilder()
+		generateTypeDefinition(type) 
+		return currentCode.ToString()
+	}
+	
+	public final func GenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
+		
+		currentUnit = unit;
+		currentCode = StringBuilder()
+		if let type = type {
+			generateTypeMember(member, type: type)
+		} else {
+			generateTypeMember(member, type: CGGlobalTypeDefinition.GlobalType)
+		}
+		return currentCode.ToString()
+	}
+
+	public final func GenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String? {
+		
+		currentUnit = unit;
+		currentCode = StringBuilder()
+		if let type = type {
+			doGenerateMemberImplementation(member, type: type)
+		} else {
+			doGenerateMemberImplementation(member, type: CGGlobalTypeDefinition.GlobalType)
+		}
+		return currentCode.ToString()
+	}
+
+	public func doGenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
+		// no-op for most languages, except Pascal
+	}
+
+	//
+	// Private
+	//
 	
 	internal func generateAll() {
 		generateHeader()
