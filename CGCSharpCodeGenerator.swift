@@ -589,7 +589,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .Abstract: Append("abstract ")
 			case .Override: Append("override ")
 			case .Final: Append("final ")
-			//case Reintroduce
+			case .Reintroduce: Append("new ")
 			default:
 		}
 	}
