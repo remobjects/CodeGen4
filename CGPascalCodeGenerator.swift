@@ -612,7 +612,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-		Append("#\(expression.Value as Int32)")
+		Append("#\(expression.Value as! UInt32)")
 	}
 
 	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {

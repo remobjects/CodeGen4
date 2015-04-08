@@ -477,6 +477,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateTypeReference(expression.`Type`)
+		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = expression.ConstructorName {
+			Append(" ")
+			generateIdentifier(name)
+		}
 		Append("(")
 		cSharpGenerateCallParameters(expression.Parameters)
 		Append(")")

@@ -20,8 +20,8 @@ public class CGCodeUnit {
 
 	public init() {
 	}
-	public init(_ nameSpace: String) {
-		Namespace = CGNamespaceReference(nameSpace)
+	public init(_ namespace: String) {
+		Namespace = CGNamespaceReference(namespace)
 	}
 	public init(_ namespace: CGNamespaceReference) {
 		Namespace = namespace
