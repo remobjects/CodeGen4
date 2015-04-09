@@ -27,6 +27,15 @@ public class CGRawStatement : CGBaseMultilineStatement { // not language-agnosti
 public class CGCommentStatement : CGBaseMultilineStatement {
 }
 
+public class CGUnsupportedStatement : CGCommentStatement {
+	init() {
+		super.init("Unsupported statement.")
+	}
+	init(_ statement: String) {
+		super.init("Unsupported statement: \(statement)")
+	}
+}
+
 public __abstract class CGBlockStatement : CGStatement {
 	public var Statements: List<CGStatement>
 
