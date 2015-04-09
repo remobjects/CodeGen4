@@ -447,6 +447,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				generateIdentifier(name)
 				Append(" = ")
 			}
+			generateExpression(param.Value)
 		}
 	}
 
@@ -819,6 +820,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			swiftGenerateVirtualityPrefix(ctor)
 		}
 		Append("init(")
+		if length(ctor.Name) > 0 {
+			generateIdentifier(removeWithSuffix(ctor.Name))
+			Append(": ")
+		}
 		swiftGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
 		AppendLine(" {")

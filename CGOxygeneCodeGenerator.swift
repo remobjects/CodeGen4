@@ -284,8 +284,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
-	override func pascalGenerateConstructorHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
-		if method.Static {
+	override func pascalGenerateConstructorHeader(ctor: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
+		if ctor.Static {
 			Append("class ")
 		}
 		
@@ -294,11 +294,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			Append(" ")
 			Append(type.Name)
 		}
-		if let name = method.Name {
+		if length(ctor.Name) > 0 {
 			Append(" ")
-			Append(method.Name)
+			Append(ctor.Name)
 		}
-		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
+		pascalGenerateSecondHalfOfMethodHeader(ctor, implementation: implementation)
 	}
 	
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {

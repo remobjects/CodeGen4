@@ -853,7 +853,7 @@ public class CGCodeGenerator {
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
 
 		generateCommentStatement(member.Comment)
-		generateAttributes(type.Attributes)
+		generateAttributes(member.Attributes)
 
 		if let member = member as? CGConstructorDefinition {
 			generateConstructorDefinition(member, type:type)

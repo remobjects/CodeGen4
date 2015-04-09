@@ -419,6 +419,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				generateIdentifier(name)
 				Append(" = ")
 			}
+			generateExpression(param.Value)
 		}
 	}
 
@@ -738,7 +739,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
-		if type is CGInterfaceTypeDefinition {
+		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || !method.External {
 			AppendLine(";")
 			return
 		}

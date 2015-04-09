@@ -526,6 +526,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 				generateIdentifier(name)
 				Append(" := ")
 			}
+			generateExpression(param.Value)
 		}
 	}
 
@@ -863,6 +864,12 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			if method.Async {
 				Append(" async;")
 			}
+			if method.Partial {
+				Append(" partial;")
+			}
+			if method.Empty {
+				Append(" empty;")
+			}
 			if method.Locked {
 				Append(" locked")
 				if let lockedOn = method.LockedOn {
@@ -937,8 +944,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	func pascalGenerateMethodImplementation(method: CGMethodDefinition, type: CGTypeDefinition) {
-		pascalGenerateMethodHeader(method, type: type, methodKeyword: pascalKeywordForMethod(method), implementation: true)
-		pascalGenerateMethodBody(method, type: type);
+		if !method.Virtuality == CGMemberVirtualityKind.Abstract && !method.External && !method.Empty {
+			pascalGenerateMethodHeader(method, type: type, methodKeyword: pascalKeywordForMethod(method), implementation: true)
+			pascalGenerateMethodBody(method, type: type);
+		}
 	}
 
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
@@ -946,8 +955,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateConstructorImplementation(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
-		pascalGenerateMethodBody(ctor, type: type);
+		if !ctor.Virtuality == CGMemberVirtualityKind.Abstract && !ctor.External && !ctor.Empty {
+			pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
+			pascalGenerateMethodBody(ctor, type: type);
+		}
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
@@ -1132,6 +1143,8 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 			}
 		}
+		Append(" of ")
+		generateTypeReference(array.`Type`)
 	}
 	
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {

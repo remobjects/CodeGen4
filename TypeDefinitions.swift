@@ -146,6 +146,8 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
 	public var External = false 
+	public var Empty = false 
+	public var Partial = false /* Oxygene only */
 	public var Async = false /* Oxygene only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
@@ -169,7 +171,7 @@ public class CGMethodDefinition: CGMethodLikeMemberDefinition {
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 	public init() {
-		super.init(".ctor")
+		super.init("")
 	}
 	public init(_ name: String, _ statements: List<CGStatement>) {
 		super.init(name, statements)
