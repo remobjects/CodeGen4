@@ -944,7 +944,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	func pascalGenerateMethodImplementation(method: CGMethodDefinition, type: CGTypeDefinition) {
-		if !method.Virtuality == CGMemberVirtualityKind.Abstract && !method.External && !method.Empty {
+		if (!(method.Virtuality == CGMemberVirtualityKind.Abstract)) && (!(method.External)) && (!(method.Empty)) {
 			pascalGenerateMethodHeader(method, type: type, methodKeyword: pascalKeywordForMethod(method), implementation: true)
 			pascalGenerateMethodBody(method, type: type);
 		}
@@ -955,7 +955,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateConstructorImplementation(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		if !ctor.Virtuality == CGMemberVirtualityKind.Abstract && !ctor.External && !ctor.Empty {
+		if !(ctor.Virtuality == CGMemberVirtualityKind.Abstract) && (!(ctor.External)) && (!(ctor.Empty)) {
 			pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
 			pascalGenerateMethodBody(ctor, type: type);
 		}

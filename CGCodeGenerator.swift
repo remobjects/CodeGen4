@@ -59,6 +59,14 @@ public class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
+	public final func GenerateStatementOutput(statement: CGStatement, unit: CGCodeUnit? = nil) -> String? {
+		
+		currentUnit = unit;
+		currentCode = StringBuilder()
+		generateStatement(statement);
+		return currentCode.ToString()
+	}
+
 	public func doGenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
 		// no-op for most languages, except Pascal
 	}
