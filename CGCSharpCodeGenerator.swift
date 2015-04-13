@@ -38,6 +38,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateHeader() {
 		
 		super.generateHeader()
+		for i in currentUnit.Imports {
+			generateImport(i);
+		}
+		AppendLine()
 		Append("namespace")
 		if let namespace = currentUnit.Namespace {
 			Append(" ")
@@ -53,6 +57,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 	
+	override func generateImports() {
+		// no-op, we add imports as part of header
+	}
+
 	override func generateImport(imp: CGImport) {
 		if imp.StaticClass != nil {
 			AppendLine("using static "+imp.StaticClass!.Name+";")
@@ -739,7 +747,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
-		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || !method.External {
+		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External {
 			AppendLine(";")
 			return
 		}
@@ -758,7 +766,13 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
 		}
-		generateIdentifier(type.Name)
+
+		if length(ctor.Name) > 0 {
+			Append("this ")
+			generateIdentifier(ctor.Name)
+		} else {
+			generateIdentifier(type.Name)
+		}
 		Append("(")
 		cSharpGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
@@ -766,6 +780,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if let ctorCall = s as? CGConstructorCallStatement {
 				Append(" : ") 
 				generateInlineConstructorCallStatement(ctorCall)
+				break
 			}
 		}
 		AppendLine()
