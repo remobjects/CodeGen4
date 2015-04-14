@@ -47,7 +47,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 			generateIdentifier(namespace.Name)
 		}
-		AppendLine("")
+		AppendLine()
 		AppendLine("{")
 		incIndent()
 	}
@@ -110,6 +110,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
 		Append("foreach (")
+		if let type = statement.LoopVariableType {
+			generateTypeReference(type)
+			Append(" ")
+		}
 		generateIdentifier(statement.LoopVariableName)
 		Append(" in ")
 		generateExpression(statement.Collection)
@@ -160,7 +164,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine("using (__autoreleasepool)")
 			generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 		} else {
-			assert(false, "generateSelectorExpression is not supported in C#, except in Hydrogene")
+			assert(false, "generateAutoReleasePoolStatement is not supported in C#, except in Hydrogene")
 		}
 	}
 

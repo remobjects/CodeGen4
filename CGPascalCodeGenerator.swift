@@ -182,6 +182,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
 		Append("for each ")
 		generateIdentifier(statement.LoopVariableName)
+		if let type = statement.LoopVariableType {
+			Append(": ")
+			generateTypeReference(type)
+		}
 		Append(" in ")
 		generateExpression(statement.Collection)
 		Append(" do")
