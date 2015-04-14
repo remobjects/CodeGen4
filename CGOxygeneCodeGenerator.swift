@@ -221,6 +221,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
+		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 	

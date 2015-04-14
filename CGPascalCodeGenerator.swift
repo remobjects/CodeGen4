@@ -107,6 +107,16 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		comment = comment.Replace("}", "*)")
 		Append("{ \(comment) }")
 	}
+	
+	override func generateNotSupportedType(type: CGNotSupportedTypeDefinition?) {		
+		if let type = type {
+			Append("(*Not supported ")
+			for item in type.ActualType.Members {	
+				doGenerateMemberImplementation(item, type: type.ActualType)
+			}
+			Append("*)")
+		}		
+	}
 
 	internal func pascalGenerateImports(imports: List<CGImport>) {
 		if imports.Count > 0 {
@@ -134,11 +144,15 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
-		Append("begin")
-		incIndent()
-		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
-		decIndent()
-		Append("end;")
+		if (statement.GenerateBeginEnd) {
+			AppendLine("begin")
+			incIndent()
+		}		
+		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)		
+		if (statement.GenerateBeginEnd) {
+			decIndent()
+			Append("end;")
+		}
 	}
 
 	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
@@ -584,6 +598,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(expression.Name)
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
+		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 

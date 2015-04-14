@@ -513,6 +513,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("(")
 		swiftGenerateCallParameters(expression.Parameters)
+		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 	
