@@ -971,6 +971,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		//todo
 	}
 
+	override func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+		generateTypeDefinition(member.`Type`)
+	}
+
 	//
 	// Type References
 	//

@@ -143,6 +143,14 @@ public class CGPointerDereferenceExpression: CGExpression {
 	}   
 }
 
+public class CGParenthesesExpression: CGExpression {
+	var Value: CGExpression
+
+	public init(_ value: CGExpression) {
+		Value = value
+	}
+}
+
 public class CGUnaryOperatorExpression: CGExpression {
 	var Value: CGExpression
 	var Operator: CGUnaryOperatorKind? // for standard operators

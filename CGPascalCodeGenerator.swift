@@ -93,6 +93,8 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateEventImplementation(member, type:type)
 		} else if let member = member as? CGCustomOperatorDefinition {
 			pascalGenerateCustomOperatorImplementation(member, type:type)
+		} else if let member = member as? CGNestedTypeDefinition {
+			pascalGenerateNestedTypeImplementation(member, type:type)
 		} 
 	}
 	
@@ -277,7 +279,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
 			decIndent()
-			Append("except")
+			AppendLine("except")
 			incIndent()
 			for b in catchBlocks {
 				if let type = b.`Type` {
@@ -743,6 +745,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine("end;")
+		pascalGenerateNestedTypes(type)
 	}
 	
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
@@ -762,8 +765,18 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
 		decIndent()
 		AppendLine("end;")
+		pascalGenerateNestedTypes(type)
 	}	
 	
+	internal func pascalGenerateNestedTypes(type: CGTypeDefinition) {
+		for m in type.Members {
+			if let nestedType = m as? CGNestedTypeDefinition {
+				nestedType.`Type`.Name = type.Name+nestedType.Name // Todo: nasty hack.
+				generateTypeDefinition(nestedType.`Type`)
+			}
+		}
+	}	
+
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
@@ -989,6 +1002,15 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateCustomOperatorImplementation(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: true)
 		pascalGenerateMethodBody(customOperator, type: type);
+	}
+
+	func pascalGenerateNestedTypeImplementation(nestedType: CGNestedTypeDefinition, type: CGTypeDefinition) {
+		nestedType.`Type`.Name = type.Name+nestedType.Name // Todo: nasty hack.
+		pascalGenerateTypeImplementation(nestedType.`Type`)
+	}
+
+	override func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+		// no-op
 	}
 
 	override func generateFieldDefinition(variable: CGFieldDefinition, type: CGTypeDefinition) {

@@ -932,6 +932,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		//todo
 	}
 
+	override func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+		generateTypeDefinition(member.`Type`)
+	}
+
 	//
 	// Type References
 	//

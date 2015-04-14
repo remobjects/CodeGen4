@@ -461,6 +461,8 @@ public class CGCodeGenerator {
 			generateAnonymousClassOrStructExpression(expression)
 		} else if let expression = expression as? CGPointerDereferenceExpression {
 			generatePointerDereferenceExpression(expression)
+		} else if let expression = expression as? CGParenthesesExpression {
+			generateParenthesesExpression(expression)
 		} else if let expression = expression as? CGUnaryOperatorExpression {
 			generateUnaryOperatorExpression(expression)
 		} else if let expression = expression as? CGBinaryOperatorExpression {
@@ -576,22 +578,24 @@ public class CGCodeGenerator {
 		assert(false, "generatePointerDereferenceExpression not implemented")
 	}
 
+	internal func generateParenthesesExpression(expression: CGParenthesesExpression) {
+		Append("(")
+		generateExpression(expression.Value)
+		Append(")")
+	}
+	
 	internal func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
 		// descendant may override, but this will work for most languages.
-		Append("(")
 		if let operatorString = expression.OperatorString {
 			Append(operatorString)
 		} else if let `operator` = expression.Operator {
 			generateUnaryOperator(`operator`)
 		}
-		Append("(")
 		generateExpression(expression.Value)
-		Append("))")
 	}
 
 	internal func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
 		// descendant may override, but this will work for most languages.
-		Append("(")
 		generateExpression(expression.LefthandValue)
 		Append(" ")
 		if let operatorString = expression.OperatorString {
@@ -601,7 +605,6 @@ public class CGCodeGenerator {
 		}
 		Append(" ")
 		generateExpression(expression.RighthandValue)
-		Append(")")
 	}
 
 	internal func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
@@ -879,6 +882,8 @@ public class CGCodeGenerator {
 			generateEventDefinition(member, type:type)
 		} else if let member = member as? CGCustomOperatorDefinition {
 			generateCustomOperatorDefinition(member, type:type)
+		} else if let member = member as? CGNestedTypeDefinition {
+			generateNestedTypeDefinition(member, type:type)
 		} //...
 		
 		else {
@@ -924,6 +929,11 @@ public class CGCodeGenerator {
 	internal func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateCustomOperatorDefinition not implemented")
+	}
+
+	internal func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+		// descendant must override
+		assert(false, "generateNestedTypeDefinition not implemented")
 	}
 
 	//

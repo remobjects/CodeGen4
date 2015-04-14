@@ -327,7 +327,13 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 }
 
 public class CGNestedTypeDefinition: CGMemberDefinition {
-	//Todo
+	public var `Type`: CGTypeDefinition
+	//internal var OuterType: TypeDefinition?
+	
+	public init(_ type: CGTypeDefinition) {
+		super.init(type.Name)
+		`Type` = type
+	}
 }
 
 //

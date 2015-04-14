@@ -330,6 +330,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+
+	}
+
 	//
 	// Type References
 	//
