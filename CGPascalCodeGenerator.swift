@@ -597,8 +597,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
 		Append("(")
-		pascalGenerateCallParameters(expression.Parameters)
-		generateNotSupportedType(expression.NotSupportedValue)
+		pascalGenerateCallParameters(expression.Parameters)		
 		Append(")")
 	}
 
@@ -612,6 +611,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
+		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 

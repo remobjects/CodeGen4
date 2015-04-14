@@ -383,6 +383,7 @@ public class CGNewInstanceExpression : CGExpression {
 	public var ConstructorName: String? // an optionally be provided for languages that support named .ctors
 	public var Parameters: List<CGCallParameter>
 	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extnded .ctor calls
+	public var NotSupportedValue: CGNotSupportedTypeDefinition?
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type

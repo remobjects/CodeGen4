@@ -512,8 +512,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append("?")
 		}
 		Append("(")
-		swiftGenerateCallParameters(expression.Parameters)
-		generateNotSupportedType(expression.NotSupportedValue)
+		swiftGenerateCallParameters(expression.Parameters)		
 		Append(")")
 	}
 	
@@ -525,6 +524,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(": ")
 		}
 		swiftGenerateCallParameters(expression.Parameters)
+		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 
