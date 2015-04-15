@@ -221,7 +221,6 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
-		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 	
@@ -380,7 +379,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		if !ignoreNullability {
 			pascalGeneratePrefixForNullability(type)
 		}
-		generateIdentifier(type.Name)
+		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
 	}
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {

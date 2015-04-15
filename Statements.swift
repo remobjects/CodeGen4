@@ -56,7 +56,6 @@ public __abstract class CGNestingStatement : CGStatement {
 }
 
 public class CGBeginEndBlockStatement : CGBlockStatement { //"begin/end" or "{/}"
-	public var GenerateBeginEnd: Boolean = true
 }
 
 public class CGIfThenElseStatement: CGStatement {

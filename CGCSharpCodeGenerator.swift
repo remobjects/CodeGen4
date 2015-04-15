@@ -496,7 +496,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("(")
 		cSharpGenerateCallParameters(expression.Parameters)
-		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 

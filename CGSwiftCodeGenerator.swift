@@ -524,7 +524,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(": ")
 		}
 		swiftGenerateCallParameters(expression.Parameters)
-		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 
@@ -1015,7 +1014,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean = false) {
-		generateIdentifier(type.Name)
+		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
 		if !ignoreNullability {
 			Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))
 		}

@@ -26,15 +26,6 @@ public __abstract class CGTypeDefinition : CGEntity {
 	}
 }
 
-public class CGNotSupportedTypeDefinition : CGTypeDefinition {
-	public var ActualType: CGTypeDefinition
-	
-	public init(_ actualType: CGTypeDefinition) {
-		super.init("")
-		ActualType = actualType
-	}
-}
-
 public class CGGlobalTypeDefinition : CGTypeDefinition {
 	private init() {
 		super.init("<Globals>")

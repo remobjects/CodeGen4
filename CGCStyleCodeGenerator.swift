@@ -17,14 +17,6 @@ public class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("/* \(comment) */")
 	}
 	
-	override func generateNotSupportedType(type: CGNotSupportedTypeDefinition?) {		
-		if let type = type {
-			Append("/*Not supported ")
-			generateTypeDefinition(type.ActualType)
-			Append("*/")
-		}		
-	}
-	
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 		AppendLine("{")
 		incIndent()

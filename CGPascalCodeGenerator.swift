@@ -110,16 +110,6 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("{ \(comment) }")
 	}
 	
-	override func generateNotSupportedType(type: CGNotSupportedTypeDefinition?) {		
-		if let type = type {
-			Append("(*Not supported ")
-			for item in type.ActualType.Members {	
-				doGenerateMemberImplementation(item, type: type.ActualType)
-			}
-			Append("*)")
-		}		
-	}
-
 	internal func pascalGenerateImports(imports: List<CGImport>) {
 		if imports.Count > 0 {
 			AppendLine("uses")
@@ -613,7 +603,6 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
-		generateNotSupportedType(expression.NotSupportedValue)
 		Append(")")
 	}
 

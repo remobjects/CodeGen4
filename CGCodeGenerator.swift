@@ -755,17 +755,11 @@ public class CGCodeGenerator {
 			generateInterfaceType(type)
 		} else if let type = type as? CGExtensionTypeDefinition {
 			generateExtensionType(type)
-		} else if let type = type as? CGNotSupportedTypeDefinition {
-			generateNotSupportedType(type)
 		}
 		
 		else {
 			assert(false, "unsupported type found: \(typeOf(type).ToString())")
 		}
-	}
-	
-	internal func generateNotSupportedType(type: CGNotSupportedTypeDefinition?) {
-		assert(false, "generateNotSupportedType not implemented")
 	}
 	
 	internal func generateInlineComment(comment: String) {
