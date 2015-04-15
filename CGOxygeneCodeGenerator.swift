@@ -153,7 +153,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
-		Append("(if")
+		Append("(if ")
 		generateExpression(expression.Condition)
 		Append(" then (")
 		generateExpression(expression.IfExpression)
