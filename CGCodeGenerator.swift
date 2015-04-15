@@ -981,7 +981,19 @@ public class CGCodeGenerator {
 	}
 	
 	internal func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
+		// descendant may override, but this will work for most languages.
 		generateIdentifier(type.Name)
+		if let genericParameters = type.GenericParameters where genericParameters.Count > 0 {
+			Append("<")
+			for var p = 0; p < genericParameters.Count; p++ {
+				let param = genericParameters[p]
+				if p > 0 {
+					Append(",")
+				}
+				generateTypeReference(param)
+			}
+			Append(">")
+		}
 	}
 	
 	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {

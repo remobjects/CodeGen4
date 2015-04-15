@@ -36,6 +36,7 @@ public __abstract class CGTypeReference : CGEntity {
 
 public class CGNamedTypeReference : CGTypeReference {
 	public let Name: String
+	public var GenericParameters: List<CGTypeReference>?
 
 	public init(_ name: String) {
 		Name = name
