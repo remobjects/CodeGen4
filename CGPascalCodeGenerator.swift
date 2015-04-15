@@ -686,6 +686,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
+	func pascalGeneratePartialPrefix(isPartial: Boolean) {
+		if isPartial {
+			Append("partial ")
+		}
+	}
 	func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("strict private")
@@ -749,6 +754,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateStaticPrefix(type.Static)
+		pascalGeneratePartialPrefix(type.Partial)
 		pascalGenerateAbstractPrefix(type.Abstract)
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("class")
@@ -769,6 +775,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateStaticPrefix(type.Static)
+		pascalGeneratePartialPrefix(type.Partial)
 		pascalGenerateAbstractPrefix(type.Abstract)
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("record")

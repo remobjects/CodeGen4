@@ -363,7 +363,32 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	// Type References
 	//
 	
+	
+	func pascalGeneratePrefixForNullability(type: CGTypeReference) {
+		if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+			if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+				Append("nullable ")
+			}
+		} else if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+			if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+				Append("not nullable ")
+			}
+		}
+	}
+	
+	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean = false) {
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(type)
+		}
+		generateIdentifier(type.Name)
+	}
+	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
+		
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(type)
+		}
+		
 		switch (type.Kind) {
 			case .Int8: Append("Int8");
 			case .UInt8: Append("UInt8");
