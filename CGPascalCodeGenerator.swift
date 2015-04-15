@@ -136,15 +136,11 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
-		if (statement.GenerateBeginEnd) {
-			AppendLine("begin")
-			incIndent()
-		}		
+		AppendLine("begin")
+		incIndent()
 		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)		
-		if (statement.GenerateBeginEnd) {
-			decIndent()
-			Append("end;")
-		}
+		decIndent()
+		Append("end;")
 	}
 
 	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
@@ -273,6 +269,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 			AppendLine("try")
 			incIndent()
 		}
+		generateStatements(statement.Statements)
 		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
 			decIndent()
 			AppendLine("finally")
