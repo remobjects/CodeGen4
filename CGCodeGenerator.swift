@@ -27,6 +27,24 @@ public class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
+	public final func GenerateUnitForSingleType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
+		
+		currentUnit = unit;
+		currentCode = StringBuilder()
+
+		generateHeader()
+		generateDirectives()
+		generateImports()
+		if type is CGGlobalDefinition {
+			generateGlobals()
+		} else {
+			generateTypeDefinition(type)
+		}
+		generateFooter()		
+
+		return currentCode.ToString()
+	}
+	
 	public final func GenerateType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
 		currentUnit = unit;
