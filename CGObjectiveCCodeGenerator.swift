@@ -302,9 +302,11 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
-		//todo
+		// handled in base
 	}
+	*/
 
 	internal func objcGenerateCallSiteForExpression(expression: CGMemberAccessExpression, forceSelf: Boolean = false) {
 		if let callSite = expression.CallSite {

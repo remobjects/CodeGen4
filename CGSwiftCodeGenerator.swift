@@ -399,9 +399,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
-		//todo
+		// handled in base
 	}
+	*/
 
 	internal func swiftGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
@@ -1070,21 +1072,33 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
+	override func generateArrayTypeReference(array: CGArrayTypeReference) {
 		
-		switch (type.ArrayKind){
+		var bounds = array.Bounds.Count
+		if bounds == 0 {
+			bounds = 1
+		}
+		switch (array.ArrayKind){
 			case .Static:
 				fallthrough
 			case .Dynamic:
-				generateTypeReference(type.`Type`)
-				Append("[]")
+				generateTypeReference(array.`Type`)
+				Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
+				for var b: Int32 = 0; b < bounds; b++ {
+					Append("[]")
+				}
 			case .HighLevel:
-				Append("[")
-				generateTypeReference(type.`Type`)
-				Append("]")
+				for var b: Int32 = 0; b < bounds; b++ {
+					Append("[")
+				}
+				generateTypeReference(array.`Type`)
+				Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
+				for var b: Int32 = 0; b < bounds; b++ {
+					Append("]")
+				}
 		}
-		//ToDo: bounds & dimensions
-		Append(swiftSuffixForNullabilityForCollectionType(type))
+		Append(swiftSuffixForNullabilityForCollectionType(array))
+		// bounds are not supported in Swift
 	}
 	
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {

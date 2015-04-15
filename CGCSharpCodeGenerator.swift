@@ -394,9 +394,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
-
+		// handled in base
 	}
+	*/
 
 	internal func cSharpGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
@@ -948,14 +950,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int8: Append("Int8");
+			case .Int8: Append("sbyte");
 			case .UInt8: Append("byte");
-			case .Int16: Append("int16");
-			case .UInt16: Append("UInt16");
+			case .Int16: Append("short");
+			case .UInt16: Append("ushort");
 			case .Int32: Append("int");
 			case .UInt32: Append("uint");
-			case .Int64: Append("Int64");
-			case .UInt64: Append("UInt64");
+			case .Int64: Append("long");
+			case .UInt64: Append("ulong");
 			case .IntPtr: Append("IntPtr");
 			case .UIntPtr: Append("UIntPtr");
 			case .Single: Append("float");
@@ -963,9 +965,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .Boolean: Append("bool")
 			case .String: Append("string")
 			case .AnsiChar: Append("AnsiChar")
-			case .UTF16Char: Append("Char")
+			case .UTF16Char: Append("char") 
 			case .UTF32Char: Append("UInt32")
-			case .Dynamic: Append("Dynamic")
+			case .Dynamic: Append("dynamic")
 			case .InstanceType: Append("instancetype")
 			case .Void: Append("void")
 			case .Object: Append("object")
@@ -995,8 +997,17 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
-
+	override func generateArrayTypeReference(array: CGArrayTypeReference) {
+		generateTypeReference(array.`Type`)
+		var bounds = array.Bounds.Count
+		if bounds == 0 {
+			bounds = 1
+		}
+		for var b: Int32 = 0; b < bounds; b++ {
+			Append("[]")
+		}
+			
+		// bounds are not supported in C#
 	}
 	
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {

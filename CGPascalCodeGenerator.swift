@@ -1176,6 +1176,7 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 					Append(end.ToString())
 				}
 			}
+			Append("]")
 		}
 		Append(" of ")
 		generateTypeReference(array.`Type`)

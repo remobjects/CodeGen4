@@ -351,9 +351,11 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
-
+		// handled in base
 	}
+	*/
 
 	internal func javaGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
