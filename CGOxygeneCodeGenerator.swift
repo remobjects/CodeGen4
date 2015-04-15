@@ -389,8 +389,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		
 		switch (type.Kind) {
-			case .Int8: Append("Int8");
-			case .UInt8: Append("UInt8");
+			case .Int8: Append("SByte");
+			case .UInt8: Append("Byte");
 			case .Int16: Append("Int16");
 			case .UInt16: Append("UInt16");
 			case .Int32: Append("Integer");
