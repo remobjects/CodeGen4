@@ -524,8 +524,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
-		Append("new Array {") 
-		#hint we need an array type for this
+		Append("new[] ")
+		Append("{")
 		for var e = 0; e < array.Elements.Count; e++ {
 			if e > 0 {
 				Append(", ")
@@ -857,20 +857,23 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			generateIdentifier(property.Name)
 		}
+
 		if let params = property.Parameters where params.Count > 0 {
-			
 			Append("[")
 			cSharpGenerateDefinitionParameters(params)
 			Append("]")
-			
 		} 
 
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+			if property.ReadOnly {
+			} else {
+				Append(" { get; }")
+			}
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
+				AppendLine(";")
 			}
-			AppendLine(";")
 		} else {
 			AppendLine(" {")
 			incIndent()
@@ -942,11 +945,26 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	// Type References
 	//
 
-	/*
-	override func generateNamedTypeReference(type: CGNamedTypeReference) {
-
+	func cSharpGenerateSuffixForNullability(type: CGTypeReference) {
+		if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+			if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+				Append("?")
+			}
+		} else if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+			if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
+					Append("!")
+				}
+			}
+		}
 	}
-	*/
+
+	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean = false) {
+		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
+		if !ignoreNullability {
+			cSharpGenerateSuffixForNullability(type)
+		}
+	}
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
@@ -972,6 +990,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .Void: Append("void")
 			case .Object: Append("object")
 		}		
+		if !ignoreNullability {
+			cSharpGenerateSuffixForNullability(type)
+		}
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {

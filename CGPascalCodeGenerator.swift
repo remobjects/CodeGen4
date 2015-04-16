@@ -1078,6 +1078,10 @@ public class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		
 		Append(";")
+
+		if property.ReadOnly {
+			Append(" readonly;")
+		}
 		pascalGenerateVirtualityModifiders(property)
 		AppendLine()
 	}
