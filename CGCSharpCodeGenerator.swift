@@ -650,7 +650,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
