@@ -430,6 +430,16 @@ public __abstract class CGMemberAccessExpression : CGExpression {
 public class CGFieldAccessExpression : CGMemberAccessExpression {
 }
 
+public class CGEnumValueAccessExpression : CGExpression {
+	public var `Type`: CGTypeReference
+	public var ValueName: String
+
+	public init(_ type: CGTypeReference, _ valueName: String) {
+		`Type` = type
+		ValueName = valueName
+	}
+}
+
 public class CGMethodCallExpression : CGMemberAccessExpression{
 	public var Parameters: List<CGCallParameter>
 	public var CallOptionally: Boolean = false // Swift only

@@ -5,7 +5,7 @@ import Sugar.Collections
 // Abstract base implementation for all Pascal-style languages (Oxygene, Delphi)
 //
 
-public class CGPascalCodeGenerator : CGCodeGenerator {
+public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override public init() {
 		useTabs = false

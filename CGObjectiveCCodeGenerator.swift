@@ -6,7 +6,7 @@ import Sugar.Linq
 // Abstract base implementation for Objective-C. Inherited by specific .m and .h Generators
 //
 
-public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
+public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	public init() {
 		keywords = ["__nonnull", "__null_unspecified", "__nullable", "__strong", "__unsafe_unretained", "__weak", 
@@ -410,6 +410,11 @@ public class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append(property.Name)
 		
 		assert(property.Parameters.Count == 0, "Index properties are not supported in Objective-C")
+	}
+
+	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+		// don't prefix with typename in ObjC
+		generateIdentifier(expression.ValueName)
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {

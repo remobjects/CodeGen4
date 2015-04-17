@@ -220,6 +220,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+
+	}
+
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
 
 	}

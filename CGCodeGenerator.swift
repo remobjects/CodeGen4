@@ -1,7 +1,7 @@
 ﻿import Sugar
 import Sugar.Collections
 
-public class CGCodeGenerator {
+public __abstract class CGCodeGenerator {
 	
 	internal var currentUnit: CGCodeUnit!
 	internal var tabSize = 2
@@ -320,7 +320,7 @@ public class CGCodeGenerator {
 		} else if let statement = statement as? CGConstructorCallStatement {
 			generateConstructorCallStatement(statement)
 		} else if let statement = statement as? CGEmptyStatement {
-				AppendLine()
+			AppendLine()
 		} else if let expression = statement as? CGExpression { // should be last but one
 			generateExpressionStatement(expression)
 		} 
@@ -499,6 +499,8 @@ public class CGCodeGenerator {
 			generateNewInstanceExpression(expression)
 		} else if let expression = expression as? CGPropertyAccessExpression {
 			generatePropertyAccessExpression(expression)
+		} else if let expression = expression as? CGEnumValueAccessExpression {
+			generateEnumValueAccessExpression(expression)
 		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
 			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 		} else if let expression = expression as? CGStringLiteralExpression {
@@ -677,6 +679,13 @@ public class CGCodeGenerator {
 	internal func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
 		// descendant must override
 		assert(false, "generatePropertyAccessExpression not implemented")
+	}
+
+	internal func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+		// descendant may override, but this will work for most languages.
+		generateTypeReference(expression.`Type`, ignoreNullability: true)
+		Append(".")
+		generateIdentifier(expression.ValueName)
 	}
 
 	internal func generateStringLiteralExpression(expression: CGStringLiteralExpression) {

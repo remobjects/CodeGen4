@@ -46,4 +46,9 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
+	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+		// don't prefix with typename in Delphi (but do in base Pascal/Oxygene)
+		generateIdentifier(expression.ValueName)
+	}
+
 }
