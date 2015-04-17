@@ -241,7 +241,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
 			decIndent()
 			AppendLine("end;")
-			decIndent()
 		}
 		decIndent()
 		AppendLine("end")	
