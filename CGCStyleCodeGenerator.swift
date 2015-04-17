@@ -215,4 +215,8 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
 	}
 
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+		generateTypeReference(type.`Type`)
+		Append("*")
+	}	
 }

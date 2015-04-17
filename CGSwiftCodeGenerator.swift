@@ -23,7 +23,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
 	
-	public init(dialect: CGSwiftCodeGeneratorDialect) {
+	public convenience init(dialect: CGSwiftCodeGeneratorDialect) {
+		init()
 		Dialect = dialect
 	}	
 
@@ -270,11 +271,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(".")
 		}
 		Append("init(")
-		if let name = statement.ConstructorName {
-			generateIdentifier(removeWithSuffix(name))
-			Append(": ")
+		if let ctorName = statement.ConstructorName {
+			swiftGenerateCallParameters(statement.Parameters, firstParamName: removeWithPrefix(ctorName))
+		} else {
+			swiftGenerateCallParameters(statement.Parameters)
 		}
-		swiftGenerateCallParameters(statement.Parameters)
 		Append(")")
 		AppendLine()
 	}
@@ -417,13 +418,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func swiftGenerateCallParameters(parameters: List<CGCallParameter>) {
+	func swiftGenerateCallParameters(parameters: List<CGCallParameter>, firstParamName: String? = nil) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
 			}
 			if let name = param.Name {
+				generateIdentifier(name)
+				Append(": ")
+			} else if p == 0, let name = firstParamName {
 				generateIdentifier(name)
 				Append(": ")
 			}
@@ -453,7 +457,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
+	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>, firstExternalName: String? = nil) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
@@ -471,6 +475,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				default: 
 			}
 			if let externalName = param.ExternalName {
+				generateIdentifier(externalName)
+				Append(" ")
+			} else if p == 0, let externalName = firstExternalName {
 				generateIdentifier(externalName)
 				Append(" ")
 			} else {
@@ -522,7 +529,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		generateTypeReference(expression.`Type`, ignoreNullability: true)
 		Append("(")
 		if let name = expression.ConstructorName {
-			generateIdentifier(removeWithSuffix(name))
+			generateIdentifier(removeWithPrefix(name))
 			Append(": ")
 		}
 		swiftGenerateCallParameters(expression.Parameters)
@@ -823,10 +830,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("init(")
 		if length(ctor.Name) > 0 {
-			generateIdentifier(removeWithSuffix(ctor.Name))
-			Append(": ")
+			swiftGenerateDefinitionParameters(ctor.Parameters, firstExternalName: removeWithPrefix(ctor.Name))
+		} else {
+			swiftGenerateDefinitionParameters(ctor.Parameters)
 		}
-		swiftGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
 		AppendLine(" {")
 		incIndent()
@@ -1114,7 +1121,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	// Helpers
 	//
 
-	private func removeWithSuffix(name: String) -> String {
+	private func removeWithPrefix(name: String) -> String {
 		if name.ToLower().StartsWith("with") {
 			name = name.Substring(4);
 		}

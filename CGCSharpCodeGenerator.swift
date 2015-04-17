@@ -28,6 +28,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	public var Dialect: CGCSharpCodeGeneratorDialect = .Standard
 
 	public init(dialect: CGCSharpCodeGeneratorDialect) {
+		init()
 		Dialect = dialect
 	}	
 
@@ -359,9 +360,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
+	/*
 	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
-
+		// handled in base
 	}
+	*/
 
 	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
@@ -865,8 +868,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
 			if property.ReadOnly {
-			} else {
 				Append(" { get; }")
+			} else {
+				Append(" { get; set; }")
 			}
 			if let value = property.Initializer {
 				Append(" = ")
@@ -1008,10 +1012,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(")")
 	}
-	
-	override func generatePointerTypeReference(type: CGPointerTypeReference) {
 
+	/*
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+		// handled in base
 	}
+	*/
 	
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 
