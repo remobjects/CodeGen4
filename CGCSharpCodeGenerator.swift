@@ -27,7 +27,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGCSharpCodeGeneratorDialect = .Standard
 
-	public init(dialect: CGCSharpCodeGeneratorDialect) {
+	public convenience init(dialect: CGCSharpCodeGeneratorDialect) {
 		init()
 		Dialect = dialect
 	}	
