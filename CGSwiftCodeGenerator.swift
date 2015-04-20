@@ -357,8 +357,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
-		// todo
+	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
+		Append("{")
+		if method.Parameters.Count > 0 {
+			Append(" (")
+			swiftGenerateDefinitionParameters(method.Parameters)
+			Append(") in")
+		}
+		AppendLine()
+		incIndent()
+		generateStatements(method.LocalVariables)
+		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		decIndent()
+		Append("}")
 	}
 
 	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {

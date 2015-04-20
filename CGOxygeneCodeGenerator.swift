@@ -187,7 +187,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func pascalGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
+	override func pascalGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
@@ -255,7 +255,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append("block")
 		if let parameters = block.Parameters where parameters.Count > 0 {
 			Append("(")
-			pascalGenerateDefinitonParameters(parameters)
+			pascalGenerateDefinitionParameters(parameters)
 			Append(")")
 		}
 		if let returnType = block.ReturnType where !returnType.IsVoid {

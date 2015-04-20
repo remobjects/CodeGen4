@@ -352,8 +352,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		// Todo: generateAwaitExpression
 	}
 
-	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
-
+	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
+		Append("(")
+		cSharpGenerateDefinitionParameters(method.Parameters)
+		AppendLine(") => {")
+		incIndent()
+		generateStatements(method.LocalVariables)
+		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		decIndent()
+		Append("}")
+		
 	}
 
 	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {

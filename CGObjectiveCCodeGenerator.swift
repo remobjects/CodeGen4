@@ -338,7 +338,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		// not needed
 	}
 
-	func objcGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
+	func objcGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
@@ -536,7 +536,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			Append(")")
 			generateIdentifier(method.Name)
 		}
-		objcGenerateDefinitonParameters(method.Parameters)
+		objcGenerateDefinitionParameters(method.Parameters)
 	}
 	
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {

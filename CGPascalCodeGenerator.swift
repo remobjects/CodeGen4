@@ -431,8 +431,40 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateAwaitExpression is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
-		//todo
+	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
+		if method.Lambda {
+			Append("(")
+			pascalGenerateDefinitionParameters(method.Parameters)
+			AppendLine(") -> ")
+			if method.Statements.Count == 0, let expression = method.Statements[0] as? CGExpression {
+				generateExpression(expression)
+			} else {
+				AppendLine("begin")
+				incIndent()
+				generateStatements(method.LocalVariables)
+				generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+				decIndent()
+				AppendLine("end")
+			}
+			
+		} else {
+			Append("method")
+			if method.Parameters.Count > 0 {
+				Append("(")
+				pascalGenerateDefinitionParameters(method.Parameters)
+				AppendLine(")")
+			}
+			if let returnType = method.ReturnType {
+				Append(": ")
+				generateTypeReference(returnType)
+			}
+			AppendLine(" begin")
+			incIndent()
+			generateStatements(method.LocalVariables)
+			generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+			decIndent()
+			Append("end")
+		}
 	}
 
 	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
@@ -536,7 +568,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateDefinitonParameters(parameters: List<CGParameterDefinition>) {
+	func pascalGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
@@ -778,7 +810,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	internal func pascalGenerateNestedTypes(type: CGTypeDefinition) {
 		for m in type.Members {
 			if let nestedType = m as? CGNestedTypeDefinition {
-				nestedType.`Type`.Name = type.Name+nestedType.Name // Todo: nasty hack.
+				nestedType.`Type`.Name = nestedType.Name+" nested in "+type.Name // Todo: nasty hack.
 				generateTypeDefinition(nestedType.`Type`)
 			}
 		}
@@ -871,7 +903,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	internal func pascalGenerateSecondHalfOfMethodHeader(method: CGMethodLikeMemberDefinition, implementation: Boolean) {
 		if let parameters = method.Parameters where parameters.Count > 0 {
 			Append("(")
-			pascalGenerateDefinitonParameters(parameters)
+			pascalGenerateDefinitionParameters(parameters)
 			Append(")")
 		}
 		if let returnType = method.ReturnType where !returnType.IsVoid {
@@ -1012,7 +1044,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateNestedTypeImplementation(nestedType: CGNestedTypeDefinition, type: CGTypeDefinition) {
-		nestedType.`Type`.Name = type.Name+nestedType.Name // Todo: nasty hack.
+		nestedType.`Type`.Name = type.Name+"."+nestedType.Name // Todo: nasty hack.
 		pascalGenerateTypeImplementation(nestedType.`Type`)
 	}
 
@@ -1052,7 +1084,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(property.Name)
 		if let parameters = property.Parameters where parameters.Count > 0 {
 			Append("[")
-			pascalGenerateDefinitonParameters(parameters)
+			pascalGenerateDefinitionParameters(parameters)
 			Append("]")
 		}
 		if let type = property.`Type` {
