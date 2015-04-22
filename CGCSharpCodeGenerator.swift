@@ -503,13 +503,21 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateTypeReference(expression.`Type`)
-		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = expression.ConstructorName {
-			Append(" ")
-			generateIdentifier(name)
+		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+			Append("[")
+			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
+				self.generateExpression(boundExpression)
+			}
+			Append("]")
+		} else {
+			if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = expression.ConstructorName {
+				Append(" ")
+				generateIdentifier(name)
+			}
+			Append("(")
+			cSharpGenerateCallParameters(expression.Parameters)
+			Append(")")
 		}
-		Append("(")
-		cSharpGenerateCallParameters(expression.Parameters)
-		Append(")")
 	}
 
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {

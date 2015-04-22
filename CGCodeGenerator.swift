@@ -1068,6 +1068,15 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
+	func helpGenerateCommaSeparatedList<T: CGEntity>(list: List<T>, callback: (T) -> ()) {
+		for var i = 0; i < list.Count; i++ {
+			if i > 0 {
+				Append(", ")
+			}
+			callback(list[i])
+		}
+	}
+	
 	internal final func uppercaseFirstletter(name: String) -> String {
 		if length(name) >= 1 {
 			name = name.Substring(0, 1).ToUpper()+name.Substring(1)

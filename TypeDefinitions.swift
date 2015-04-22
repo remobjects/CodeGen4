@@ -320,7 +320,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 	/*func RaiseMethodDefinition() -> CGMethodDefinition? {
 		if let raiseStatements = RaiseStatements, type = `Type` {
 			let method = CGMethodDefinition("raise__"+Name, raisetatements)
-			//todo: ths woukd need the same parametersas the block, which we don't have
+			//todo: this would need the same parameters as the block, which we don't have
 			return method
 		}
 		return nil
@@ -329,8 +329,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 
 public class CGNestedTypeDefinition: CGMemberDefinition {
 	public var `Type`: CGTypeDefinition
-	//internal var OuterType: TypeDefinition?
-	
+
 	public init(_ type: CGTypeDefinition) {
 		super.init(type.Name)
 		`Type` = type

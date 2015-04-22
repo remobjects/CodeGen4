@@ -402,9 +402,10 @@ public class CGTupleLiteralExpression : CGExpression {
 
 public class CGNewInstanceExpression : CGExpression {
 	public var `Type`: CGTypeReference
-	public var ConstructorName: String? // an optionally be provided for languages that support named .ctors
+	public var ConstructorName: String? // can optionally be provided for languages that support named .ctors (Elements, Objectice-C, Swift)
 	public var Parameters: List<CGCallParameter>
-	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extnded .ctor calls
+	public var ArrayBounds: List<CGExpression>? // for array initialization.
+	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extended .ctor calls
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type

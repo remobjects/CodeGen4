@@ -503,13 +503,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append(" : ")
-			for var a: Int32 = 0; a < ancestors.Count; a++ {
-				if let ancestor = ancestors[a] {
-					if a > 0 {
-						Append(", ")
-					}
-					generateTypeReference(ancestor, ignoreNullability: true)
-				}
+			helpGenerateCommaSeparatedList(ancestors) { ancestor in
+				self.generateTypeReference(ancestor, ignoreNullability: true)
 			}
 		}
 	}
@@ -538,13 +533,21 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		generateTypeReference(expression.`Type`, ignoreNullability: true)
-		Append("(")
-		if let name = expression.ConstructorName {
-			generateIdentifier(removeWithPrefix(name))
-			Append(": ")
+		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+			Append("[](count: ")
+			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
+				self.generateExpression(boundExpression)
+			}
+			Append(")")
+		} else {
+			Append("(")
+			if let name = expression.ConstructorName {
+				generateIdentifier(removeWithPrefix(name))
+				Append(": ")
+			}
+			swiftGenerateCallParameters(expression.Parameters)
+			Append(")")
 		}
-		swiftGenerateCallParameters(expression.Parameters)
-		Append(")")
 	}
 
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {

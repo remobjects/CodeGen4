@@ -215,13 +215,21 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateTypeReference(expression.`Type`)
-		if let name = expression.ConstructorName {
-			Append(" ")
-			generateIdentifier(name)
+		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+			Append("[")
+			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
+				self.generateExpression(boundExpression)
+			}
+			Append("]")
+		} else {		
+			if let name = expression.ConstructorName {
+				Append(" ")
+				generateIdentifier(name)
+			}
+			Append("(")
+			pascalGenerateCallParameters(expression.Parameters)
+			Append(")")
 		}
-		Append("(")
-		pascalGenerateCallParameters(expression.Parameters)
-		Append(")")
 	}
 	
 	//
