@@ -368,6 +368,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateAssignedExpression(expression: CGAssignedExpression) {
+		if expression.Inverted {
+			Append("not ")
+		}
 		Append("assigned(")
 		generateExpression(expression.Value)
 		Append(")")
