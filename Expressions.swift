@@ -27,7 +27,8 @@ public class CGTypeReferenceExpression : CGExpression{
 }
 
 public class CGAssignedExpression: CGExpression {
-	var Value: CGExpression
+	public var Value: CGExpression
+	public var Inverted: Boolean = false
 	
 	public init(_ value: CGExpression) {
 		Value = value

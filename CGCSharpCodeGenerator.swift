@@ -936,8 +936,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				Append(" = ")
 				generateExpression(value)
 			}
-			AppendLine("")
+			AppendLine()
 		}
+		AppendLine()
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
