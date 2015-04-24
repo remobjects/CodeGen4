@@ -364,7 +364,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		
 	}
 
-	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
 
 	}
 

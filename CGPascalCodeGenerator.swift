@@ -467,8 +467,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
-		assert(false, "generateAnonymousClassOrStructExpression is not supported in base Pascal, only Oxygene")
+	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
+		assert(false, "generateAnonymousTypeExpression is not supported in base Pascal, only Oxygene")
 	}
 
 	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {

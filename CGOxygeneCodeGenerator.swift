@@ -136,7 +136,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		//todo
 	}
 
-	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
 		//todo
 	}
 

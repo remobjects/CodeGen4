@@ -172,7 +172,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
 
 	}
 

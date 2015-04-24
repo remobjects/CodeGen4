@@ -312,7 +312,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
-	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
 
 	}
 

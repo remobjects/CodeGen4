@@ -372,7 +372,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("}")
 	}
 
-	override func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
 		// todo
 	}
 

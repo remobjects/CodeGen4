@@ -475,8 +475,8 @@ public __abstract class CGCodeGenerator {
 			generateAwaitExpression(expression)
 		} else if let expression = expression as? CGAnonymousMethodExpression {
 			generateAnonymousMethodExpression(expression)
-		} else if let expression = expression as? CGAnonymousClassOrStructExpression {
-			generateAnonymousClassOrStructExpression(expression)
+		} else if let expression = expression as? CGAnonymousTypeExpression {
+			generateAnonymousTypeExpression(expression)
 		} else if let expression = expression as? CGPointerDereferenceExpression {
 			generatePointerDereferenceExpression(expression)
 		} else if let expression = expression as? CGParenthesesExpression {
@@ -588,9 +588,9 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generateAnonymousMethodExpression not implemented")
 	}
 
-	internal func generateAnonymousClassOrStructExpression(expression: CGAnonymousClassOrStructExpression) {
+	internal func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
 		// descendant must override
-		assert(false, "generateAnonymousClassOrStructExpression not implemented")
+		assert(false, "generateAnonymousTypeExpression not implemented")
 	}
 
 	internal func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {

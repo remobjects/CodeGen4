@@ -102,11 +102,18 @@ public class CGAnonymousMethodExpression: CGExpression {
 	}
 }
 
-public class CGAnonymousClassOrStructExpression: CGExpression {
-	public var TypeDefinition: CGClassOrStructTypeDefinition
+public enum CGAnonymousTypeKind {
+	case Class
+	case Struct
+	case Interface
+}
+
+public class CGAnonymousTypeExpression: CGExpression {
+	public var Kind: CGAnonymousTypeKind
+	public var Members = List<CGMemberDefinition>()
 	
-	public init(_ typeDefinition: CGClassOrStructTypeDefinition) {
-		TypeDefinition = typeDefinition
+	public init(_ kind: CGAnonymousTypeKind) {
+		Kind = kind
 	}
 }
 
