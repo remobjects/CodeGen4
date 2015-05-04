@@ -197,7 +197,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
 		Append("while ")
 		generateExpression(statement.Condition)
-		AppendLine(" do")
+		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
@@ -437,7 +437,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
 		if method.Lambda {
 			Append("(")
-			pascalGenerateDefinitionParameters(method.Parameters)
+			helpGenerateCommaSeparatedList(method.Parameters) {param in 
+				self.generateIdentifier(param.Name)
+			}
 			AppendLine(") -> ")
 			if method.Statements.Count == 0, let expression = method.Statements[0] as? CGExpression {
 				generateExpression(expression)

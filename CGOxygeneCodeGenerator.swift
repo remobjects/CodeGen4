@@ -71,7 +71,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func generateUsingStatement(statement: CGUsingStatement) {
 		Append("using ")
-		generateExpression(statement.Expression)
+		generateIdentifier(statement.Name)
+		if let type = statement.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
+		Append(" := ")
+		generateExpression(statement.Value)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
@@ -343,6 +349,15 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateSecondHalfOfMethodHeader(ctor, implementation: implementation)
 	}
 	
+	internal func pascalGenerateFinalizerHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, implementation: Boolean) {
+		Append("finailzier ")
+		Append(" ")
+		if implementation {
+			generateIdentifier(type.Name)
+		}
+		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
+	}
+
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		assert(false, "generateDestructorDefinition is not supported in Oxygene")
 	}
@@ -352,11 +367,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
-		pascalGenerateMethodHeader(finalizer, type: type, methodKeyword: "destructor", implementation: false)
+		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: false)
 	}
 
 	override func pascalGenerateFinalizerImplementation(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
-		pascalGenerateMethodHeader(finalizer, type: type, methodKeyword: "destructor", implementation: true)
+		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: true)
 		pascalGenerateMethodBody(finalizer, type: type);
 	}
 

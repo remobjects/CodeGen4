@@ -82,9 +82,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	/*
 	override func generateInlineComment(comment: String) {
-
+		// handled in base
 	}
+	*/
 	
 	//
 	// Statements
@@ -155,7 +157,15 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateUsingStatement(statement: CGUsingStatement) {
 		Append("using (")
-		generateExpression(statement.Expression)
+		if let type = statement.`Type` {
+			generateTypeReference(type)
+			Append(" ")
+		} else {
+			Append("var ")
+		}
+		generateIdentifier(statement.Name)
+		Append(" = ")
+		generateExpression(statement.Value)
 		AppendLine(")")
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 	}
@@ -354,14 +364,15 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
 		Append("(")
-		cSharpGenerateDefinitionParameters(method.Parameters)
+		helpGenerateCommaSeparatedList(method.Parameters) {param in 
+			self.generateIdentifier(param.Name)
+		}
 		AppendLine(") => {")
 		incIndent()
 		generateStatements(method.LocalVariables)
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 		decIndent()
-		Append("}")
-		
+		Append("}")  
 	}
 
 	override func generateAnonymousTypeExpression(type: CGAnonymousTypeExpression) {

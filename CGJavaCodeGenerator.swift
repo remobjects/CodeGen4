@@ -53,9 +53,11 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	/*
 	override func generateInlineComment(comment: String) {
-
+		// handled in base
 	}
+	*/
 	
 	//
 	// Statements
@@ -126,7 +128,15 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateUsingStatement(statement: CGUsingStatement) {
 		Append("using (")
-		generateExpression(statement.Expression)
+		if let type = statement.`Type` {
+			generateTypeReference(type)
+			Append(" ")
+		} else {
+			Append("var ")
+		}
+		generateIdentifier(statement.Name)
+		Append(" = ")
+		generateExpression(statement.Value)
 		AppendLine(")")
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 	}

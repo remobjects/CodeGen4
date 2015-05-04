@@ -78,11 +78,11 @@ public enum CGLoopDirectionKind {
 public class CGForToLoopStatement: CGNestingStatement {
 	public var LoopVariableName: String
 	public var LoopVariableType: CGTypeReference? // nil means it won't be declared, just used
-	public var StartValue: CGIntegerLiteralExpression
-	public var EndValue: CGIntegerLiteralExpression
+	public var StartValue: CGExpression
+	public var EndValue: CGExpression
 	public var Directon: CGLoopDirectionKind = .Forward
 
-	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: CGIntegerLiteralExpression, _ endValue: CGIntegerLiteralExpression, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: CGExpression, _ endValue: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
@@ -160,11 +160,14 @@ public class CGLockingStatement: CGNestingStatement {
 }
 
 public class CGUsingStatement: CGNestingStatement {
-	var Expression: CGExpression
+	public var Name: String
+	public var `Type`: CGTypeReference?
+	public var Value: CGExpression
 	
-	public init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
+	public init(_ name: String, _ value: CGExpression, _ nestedStatement: CGStatement) {
 		super.init(nestedStatement)
-		Expression = expression
+		Name = name
+		Value = value
 	}
 }
 
