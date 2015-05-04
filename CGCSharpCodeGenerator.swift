@@ -364,8 +364,23 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		
 	}
 
-	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
-
+	override func generateAnonymousTypeExpression(type: CGAnonymousTypeExpression) {
+		Append("new { ")
+		incIndent()
+		helpGenerateCommaSeparatedList(type.Members) { m in
+			
+			if let member = m as? CGAnonymousPropertyMemberDefinition {
+					
+				self.generateIdentifier(m.Name)
+				self.Append(" = ")
+				self.generateExpression(member.Value)
+					
+			} else if let member = m as? CGAnonymousMethodMemberDefinition {
+	
+				self.generateStatement(CGUnsupportedStatement("methods are not supported in anonymous classes in C#."))
+			}
+		}
+		Append(" }")
 	}
 
 	/*

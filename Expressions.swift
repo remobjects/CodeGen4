@@ -109,12 +109,45 @@ public enum CGAnonymousTypeKind {
 	case Interface
 }
 
-public class CGAnonymousTypeExpression: CGExpression {
+public class CGAnonymousTypeExpression : CGExpression {
 	public var Kind: CGAnonymousTypeKind
-	public var Members = List<CGMemberDefinition>()
+	public var Ancestor: CGTypeReference?
+	public var Members = List<CGAnonymousMemberDefinition>()
 	
 	public init(_ kind: CGAnonymousTypeKind) {
 		Kind = kind
+	}
+}
+
+public __abstract class CGAnonymousMemberDefinition : CGEntity{
+	public var Name: String	
+
+	public init(_ name: String) {
+		Name = name
+	}
+}
+
+public class CGAnonymousPropertyMemberDefinition : CGAnonymousMemberDefinition{
+	public var Value: CGExpression
+
+	public init(_ name: String, _ value: CGExpression) {
+		super.init(name)
+		Value = value
+	}
+}
+
+public class CGAnonymousMethodMemberDefinition : CGAnonymousMemberDefinition{
+	public var Parameters = List<CGParameterDefinition>()
+	public var ReturnType: CGTypeReference?
+	public var Statements: List<CGStatement>
+
+	public init(_ name: String, _ statements: List<CGStatement>) {
+		super.init(name)
+		Statements = statements;
+	}
+	public init(_ name: String, _ statements: CGStatement...) {
+		super.init(name)
+		Statements = statements.ToList()
 	}
 }
 

@@ -136,8 +136,42 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		//todo
 	}
 
-	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
-		//todo
+	override func generateAnonymousTypeExpression(type: CGAnonymousTypeExpression) {
+		Append("new class ")
+		if let ancestor = type.Ancestor {
+			generateTypeReference(ancestor, ignoreNullability: true)
+			Append(" ")
+		}
+		Append("(")
+		helpGenerateCommaSeparatedList(type.Members) { m in
+			
+			self.generateIdentifier(m.Name)
+			self.Append(" := ")
+			if let member = m as? CGAnonymousPropertyMemberDefinition {
+				
+				self.generateExpression(member.Value)
+				
+			} else if let member = m as? CGAnonymousMethodMemberDefinition {
+
+				self.Append("method ")
+				if member.Parameters.Count > 0 {
+					self.Append("(")
+					self.pascalGenerateDefinitionParameters(member.Parameters)
+					self.Append(")")
+					if let returnType = member.ReturnType {
+						self.Append(": ")
+						self.generateTypeReference(returnType);
+					}
+					self.AppendLine(" begin")
+					self.incIndent()
+					self.generateStatements(member.Statements)
+					self.decIndent()
+					self.Append("end")
+				}
+			}
+			
+		}
+		Append(")")
 	}
 
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {

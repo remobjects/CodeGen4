@@ -372,8 +372,46 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("}")
 	}
 
-	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
-		// todo
+	override func generateAnonymousTypeExpression(type: CGAnonymousTypeExpression) {
+		Append("class ")
+		if let ancestor = type.Ancestor {
+			generateTypeReference(ancestor, ignoreNullability: true)
+			Append(" ")
+		}
+		AppendLine("{")
+		incIndent()
+		helpGenerateCommaSeparatedList(type.Members, separator: { self.AppendLine() }) { m in
+			
+			if let member = m as? CGAnonymousPropertyMemberDefinition {
+				
+				self.Append("var ")
+				self.generateIdentifier(m.Name)
+				self.Append(" = ")
+				self.generateExpression(member.Value)
+				self.AppendLine()
+				
+			} else if let member = m as? CGAnonymousMethodMemberDefinition {
+
+				self.Append("func ")
+				self.generateIdentifier(m.Name)
+				self.Append("func (")
+				self.Append("(")
+				self.swiftGenerateDefinitionParameters(member.Parameters)
+				self.Append(")")
+				if let returnType = member.ReturnType {
+					self.Append(" -> ")
+					self.generateTypeReference(returnType);
+					self.Append(" ")
+				}
+				self.AppendLine(" {")
+				self.incIndent()
+				self.generateStatements(member.Statements)
+				self.decIndent()
+				self.AppendLine("}")
+			}
+		}
+		decIndent()
+		Append("}")
 	}
 
 	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
