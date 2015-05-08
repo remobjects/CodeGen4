@@ -448,7 +448,10 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateExpression(expression: CGExpression) {
 		// descendant should not override
-		if let expression = expression as? CGRawExpression {
+		if let rawExpression = expression as? CGRawExpression {
+			helpGenerateCommaSeparatedList(rawExpression.Lines, separator: { self.AppendLine() }) { line in
+				self.Append(line)
+			}
 		} else if let expression = expression as? CGNamedIdentifierExpression {
 			generateNamedIdentifierExpression(expression)
 		} else if let expression = expression as? CGAssignedExpression {
@@ -1068,11 +1071,11 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
-	func helpGenerateCommaSeparatedList<T: CGEntity>(list: List<T>, callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(list: List<T>, callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, callback: callback);
 	}
 	
-	func helpGenerateCommaSeparatedList<T: CGEntity>(list: List<T>, separator: () -> (), callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(list: List<T>, separator: () -> (), callback: (T) -> ()) {
 		for var i = 0; i < list.Count; i++ {
 			if i > 0 {
 				separator()
