@@ -304,7 +304,14 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 	
 	override func generateBlockType(block: CGBlockTypeDefinition) {
+		generateIdentifier(block.Name)
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("block")
+		pascalGenerateInlineBlockType(block)
+	}
+
+	func pascalGenerateInlineBlockType(block: CGBlockTypeDefinition) {
 		if let parameters = block.Parameters where parameters.Count > 0 {
 			Append("(")
 			pascalGenerateDefinitionParameters(parameters)
@@ -475,7 +482,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
-		generateBlockType(type.Block)
+		pascalGenerateInlineBlockType(type.Block)
 	}
 
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
