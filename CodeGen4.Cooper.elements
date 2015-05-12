@@ -48,8 +48,7 @@
         <Reference Include="com.remobjects.elements.rtl.jar">
             <Private>True</Private>
         </Reference>
-        <Reference Include="sugar">
-            <HintPath>\sugar.jar</HintPath>
+        <Reference Include="sugar.jar">
             <Private>True</Private>
         </Reference>
     </ItemGroup>
