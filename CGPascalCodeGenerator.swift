@@ -667,8 +667,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("#\(expression.Value as! UInt32)")
 	}
 
-	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
-		// todo
+	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+		Append("[")
+		helpGenerateCommaSeparatedList(array.Elements) { e in
+			self.generateExpression(e)
+		}
+		Append("]")
 	}
 
 	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
