@@ -496,6 +496,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(param.`Type`)
 			Append(" ")
 			generateIdentifier(param.Name)
+			if let defaultValue = param.DefaultValue {
+				Append(" = ")
+				generateExpression(defaultValue)
+			}
 		}
 	}
 

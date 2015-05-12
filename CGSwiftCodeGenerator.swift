@@ -535,6 +535,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateIdentifier(param.Name)
 			Append(": ")
 			generateTypeReference(param.`Type`)
+			if let defaultValue = param.DefaultValue {
+				Append(" = ")
+				generateExpression(defaultValue)
+			}
 		}
 	}
 

@@ -298,6 +298,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 			}
 			decIndent()
+			AppendLine("end;")
 		}
 	}
 
@@ -315,8 +316,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("raise ")
 			generateExpression(value)
 			AppendLine(";")
+		} else {
+			AppendLine("raise;")
 		}
-		AppendLine("raise;")
 	}
 
 	override func generateBreakStatement(statement: CGBreakStatement) {
@@ -538,15 +540,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateIfThenElseExpressionExpression is not supported in base Pascal, only Oxygene")
 	}
 
-	internal func pascalGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
+	internal func pascalGenerateCallSiteForExpression(expression: CGMemberAccessExpression) -> Boolean {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
 			if callSite is CGInheritedExpression {
 				Append(" ")
 			} else {
 				Append(".")
+				return false
 			}
 		}
+		return true
 	}
 
 	func pascalGenerateCallParameters(parameters: List<CGCallParameter>) {
@@ -589,6 +593,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateIdentifier(param.Name)
 			Append(": ")
 			generateTypeReference(param.`Type`)
+			if let defaultValue = param.DefaultValue {
+				Append(" = ")
+				generateExpression(defaultValue)
+			}
 		}
 	}
 	
@@ -608,8 +616,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-		pascalGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
+		let needsEscape = pascalGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name, escaped: needsEscape)
 	}
 
 	/*
@@ -619,8 +627,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-		pascalGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
+		let needsEscape = pascalGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name, escaped: needsEscape)
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)		
 		Append(")")
@@ -640,8 +648,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-		pascalGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
+		let needsEscape = pascalGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name, escaped: needsEscape)
 		if expression.Parameters.Count > 0 {
 			Append("[")
 			pascalGenerateCallParameters(expression.Parameters)

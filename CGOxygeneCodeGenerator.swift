@@ -249,6 +249,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			generateIdentifier(param.Name)
 			Append(": ")
 			generateTypeReference(param.`Type`)
+			if let defaultValue = param.DefaultValue {
+				Append(" := ")
+				generateExpression(defaultValue)
+			}
 		}
 	}
 
@@ -350,9 +354,9 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 	
 	internal func pascalGenerateFinalizerHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, implementation: Boolean) {
-		Append("finailzier ")
-		Append(" ")
+		Append("finalizier")
 		if implementation {
+			Append(" ")
 			generateIdentifier(type.Name)
 		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
