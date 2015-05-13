@@ -305,10 +305,12 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	
 	override func generateBlockType(block: CGBlockTypeDefinition) {
 		generateIdentifier(block.Name)
+		pascalGenerateGenericParameters(block.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("block")
 		pascalGenerateInlineBlockType(block)
+		AppendLine(";")
 	}
 
 	func pascalGenerateInlineBlockType(block: CGBlockTypeDefinition) {

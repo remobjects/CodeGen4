@@ -600,6 +600,26 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
+	func pascalGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>) {
+		if let parameters = parameters where parameters.Count > 0 {
+			helpGenerateCommaSeparatedList(parameters) { param in
+				/*if let variance = param.Variance {
+						switch variance {
+							case .Covariance: self.Append("out")
+							case .Contravariance: self.Append("in ")
+						}
+				}*/
+				self.generateIdentifier(param.Name)
+				/*if let constraints = param.Constraints where constraints.Count > 0 {
+					self.Append("where ")
+					self.helpGenerateCommaSeparatedList(constraints) { constrain in
+						//todo: generic constraints
+					}
+				}*/
+			}
+		}
+	}
+
 	func pascalGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append("(")
@@ -784,7 +804,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateStaticPrefix(type.Static)
@@ -805,7 +825,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateStaticPrefix(type.Static)
@@ -835,7 +855,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateSealedPrefix(type.Sealed)
@@ -1076,6 +1096,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if variable.Constant, let initializer = variable.Initializer { 
 			Append("const ")
 			generateIdentifier(variable.Name)
+			if let type = variable.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			}
 			Append(" = ")
 			generateExpression(initializer)
 		} else {
@@ -1085,7 +1109,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				Append(": ")
 				generateTypeReference(type)
 			}
-			if let initializer = variable.Initializer { // todo:Oxygene only?
+			if let initializer = variable.Initializer { // todo: Oxygene only?
 				Append(" := ")
 				generateExpression(initializer)
 			}

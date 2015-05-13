@@ -363,12 +363,18 @@ public class CGParameterDefinition : CGEntity {
 
 public class CGGenericParameterDefinition : CGEntity {
 	public var Constraints = List<CGGenericConstraintDefinition>()
-	var Name: String
+	public var Name: String
+	public var Variance: CGGenericParameterVarianceKind?
 	
 	public init(_ name: String) {
 		Name = name;
 	}
-}	
+}   
+
+public enum CGGenericParameterVarianceKind {
+	case Covariant
+	case Contravariant
+}
 
 public class CGGenericConstraintDefinition : CGEntity {
 }
