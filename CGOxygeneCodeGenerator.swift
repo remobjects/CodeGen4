@@ -363,7 +363,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 	
 	internal func pascalGenerateFinalizerHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, implementation: Boolean) {
-		Append("finalizier")
+		Append("finalizer")
 		if implementation {
 			Append(" ")
 			generateIdentifier(type.Name)
