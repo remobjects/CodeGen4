@@ -26,7 +26,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	}
 }
 
-public class CGGlobalTypeDefinition : CGTypeDefinition {
+public final class CGGlobalTypeDefinition : CGTypeDefinition {
 	private init() {
 		super.init("<Globals>")
 		Static = true

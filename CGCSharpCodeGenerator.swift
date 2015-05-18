@@ -801,7 +801,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
-		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly{
+		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
 			AppendLine(";")
 			return
 		}
@@ -838,7 +838,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 
-		if method.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly{
+		if ctor.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly {
 			AppendLine(";")
 			return
 		}
@@ -864,7 +864,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateDefinitionParameters(dtor.Parameters)
 		Append(")")
 
-		if method.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly{
+		if dtor.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly{
 			AppendLine(";")
 			return
 		}
