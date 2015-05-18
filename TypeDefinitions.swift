@@ -249,7 +249,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		SetExpression = setExpression
 	} 
 	
-	func GetterMethodDefinition() -> CGMethodDefinition? {
+	internal func GetterMethodDefinition() -> CGMethodDefinition? {
 		if let getStatements = GetStatements, type = `Type` {
 			let method = CGMethodDefinition("get__"+Name, getStatements)
 			method.ReturnType = type
@@ -267,7 +267,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	
 	public static let MAGIC_VALUE_PARAMETER_NAME = "___value___"
 	
-	func SetterMethodDefinition() -> CGMethodDefinition? {
+	internal func SetterMethodDefinition() -> CGMethodDefinition? {
 		if let setStatements = SetStatements, type = `Type` {
 			let method = CGMethodDefinition("set__"+Name, setStatements)
 			method.Parameters.AddRange(Parameters)
@@ -299,7 +299,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 		//RaiseStatements = raiseStatements
 	}
 
-	func AddMethodDefinition() -> CGMethodDefinition? {
+	internal func AddMethodDefinition() -> CGMethodDefinition? {
 		if let addStatements = AddStatements, type = `Type` {
 			let method = CGMethodDefinition("add__"+Name, addStatements)
 			method.Parameters.Add(CGParameterDefinition("___value", type))
@@ -308,7 +308,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 		return nil
 	}
 
-	func RemoveMethodDefinition() -> CGMethodDefinition? {
+	internal func RemoveMethodDefinition() -> CGMethodDefinition? {
 		if let removeStatements = RemoveStatements, type = `Type` {
 			let method = CGMethodDefinition("remove__"+Name, removeStatements)
 			method.Parameters.Add(CGParameterDefinition("___value", type))
@@ -317,7 +317,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 		return nil
 	}
 
-	/*func RaiseMethodDefinition() -> CGMethodDefinition? {
+	/*internal func RaiseMethodDefinition() -> CGMethodDefinition? {
 		if let raiseStatements = RaiseStatements, type = `Type` {
 			let method = CGMethodDefinition("raise__"+Name, raisetatements)
 			//todo: this would need the same parameters as the block, which we don't have
