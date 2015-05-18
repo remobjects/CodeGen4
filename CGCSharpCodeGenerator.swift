@@ -837,6 +837,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				break
 			}
 		}
+
+		if method.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly{
+			AppendLine(";")
+			return
+		}
+		
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -856,7 +862,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(type.Name)
 		Append("(")
 		cSharpGenerateDefinitionParameters(dtor.Parameters)
-		AppendLine(")")
+		Append(")")
+
+		if method.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly{
+			AppendLine(";")
+			return
+		}
+		
+		AppendLine()
 		AppendLine("{")
 		incIndent()
 		generateStatements(dtor.LocalVariables)
@@ -924,6 +937,20 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				AppendLine(";")
 			}
 		} else {
+			
+			if definitionOnly {
+				Append("{ ")
+				if property.GetStatements != nil || property.GetExpression != nil {
+					Append("get; ")
+				}
+				if property.SetStatements != nil || property.SetExpression != nil {
+					Append("set; ")
+				}
+				Append("}")
+				AppendLine()
+				return
+			}
+			
 			AppendLine(" {")
 			incIndent()
 			

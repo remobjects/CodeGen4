@@ -26,24 +26,28 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateAll() {
-		generateHeader()
-		generateDirectives()
-		AppendLine("interface")
-		AppendLine()
-		pascalGenerateImports(currentUnit.Imports)
-		generateGlobals()
+		if !definitionOnly {
+			generateHeader()
+			generateDirectives()
+			AppendLine("interface")
+			AppendLine()
+			pascalGenerateImports(currentUnit.Imports)
+			generateGlobals()
+		}
 		if currentUnit.Types.Count > 0 {
 			AppendLine("type")
 			incIndent()
 			generateTypeDefinitions()
 			decIndent()
 		}
-		AppendLine("implementation")
-		AppendLine()
-		pascalGenerateImports(currentUnit.ImplementationImports)
-		pascalGenerateTypeImplementations()
-		pascalGenerateGlobalImplementations()
-		generateFooter()		
+		if !definitionOnly {
+			AppendLine("implementation")
+			AppendLine()
+			pascalGenerateImports(currentUnit.ImplementationImports)
+			pascalGenerateTypeImplementations()
+			pascalGenerateGlobalImplementations()
+			generateFooter()	
+		}	
 	}
 	
 	final func pascalGenerateTypeImplementations() {
@@ -1132,6 +1136,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(": ")
 			generateTypeReference(type)
 		}
+		
+		// todo: initializer for properties?
 		
 		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
 			Append(" read")
