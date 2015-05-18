@@ -1134,19 +1134,31 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		
 		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
-			Append(" read ")
-			generateIdentifier(getterMethod.Name)
+			Append(" read")
+			if !definitionOnly {
+				Append(" ")
+				generateIdentifier(getterMethod.Name)
+			}
 		} else if let getExpression = property.GetExpression {
-			Append(" read ")
-			generateExpression(getExpression)
+			Append(" read")
+			if !definitionOnly {
+				Append(" ")
+				generateExpression(getExpression)
+			}
 		}
 		
 		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
-			Append(" write ")
-			generateIdentifier(setterMethod.Name)
+			Append(" write")
+			if !definitionOnly {
+				Append(" ")
+				generateIdentifier(setterMethod.Name)
+			}
 		} else if let setExpression = property.SetExpression {
-			Append(" write ")
-			generateExpression(setExpression)
+			Append(" write")
+			if !definitionOnly {
+				Append(" ")
+				generateExpression(setExpression)
+			}
 		}
 		
 		Append(";")
@@ -1159,11 +1171,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	func pascalGeneratePropertyAccessorDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
-		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
-			generateMethodDefinition(getterMethod, type: type)
-		}
-		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
-			generateMethodDefinition(setterMethod!, type: type)
+		if !definitionOnly {
+			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+				generateMethodDefinition(getterMethod, type: type)
+			}
+			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+				generateMethodDefinition(setterMethod!, type: type)
+			}
 		}
 	}
 	

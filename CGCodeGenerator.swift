@@ -6,6 +6,7 @@ public __abstract class CGCodeGenerator {
 	internal var currentUnit: CGCodeUnit!
 	internal var tabSize = 2
 	internal var useTabs = false
+	internal var definitionOnly = false
 
 	internal var keywords: List<String>?
 	internal var keywordsAreCaseSensitive = true // keywords List must be lowercase when this is set to false
@@ -53,6 +54,15 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 	
+	public final func GenerateTypeDefinitionOnly(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
+		
+		currentUnit = unit;
+		currentCode = StringBuilder()
+		definitionOnly = true
+		generateTypeDefinition(type)  //TODO
+		return currentCode.ToString()
+	}
+
 	public final func GenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
 		
 		currentUnit = unit;

@@ -399,17 +399,21 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			generateTypeReference(type)
 		}
 		Append(";")
-		//todo: add/remove/raise
+		if !definitionOnly {
+			//todo: add/remove/raise
+		}
 		pascalGenerateVirtualityModifiders(event)
 		AppendLine()
 	}
 
 	override func pascalGenerateEventAccessorDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
-		if let addStatements = event.AddStatements {
-			generateMethodDefinition(event.AddMethodDefinition()!, type: type)
-		}
-		if let removeStatements = event.RemoveStatements {
-			generateMethodDefinition(event.RemoveMethodDefinition()!, type: type)
+		if !definitionOnly {
+			if let addStatements = event.AddStatements {
+				generateMethodDefinition(event.AddMethodDefinition()!, type: type)
+			}
+			if let removeStatements = event.RemoveStatements {
+				generateMethodDefinition(event.RemoveMethodDefinition()!, type: type)
+			}
 		}
 		/*if let raiseStatements = event.RaiseStatements {
 			generateMethodDefinition(event.RaiseMethodDefinition, type: ttpe)

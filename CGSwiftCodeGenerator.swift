@@ -866,7 +866,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(returnType)
 		}
 		
-		if type is CGInterfaceTypeDefinition {
+		if type is CGInterfaceTypeDefinition || definitionOnly {
 			return
 		}
 		
@@ -891,6 +891,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			swiftGenerateDefinitionParameters(ctor.Parameters)
 		}
 		Append(")")
+
+		if type is CGInterfaceTypeDefinition || definitionOnly {
+			return
+		}
+
 		AppendLine(" {")
 		incIndent()
 		generateStatements(ctor.LocalVariables)
@@ -979,6 +984,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				assert(false, "Swift Properties cannot have both accessor statements and an initializer")
 			}
 			
+			if type is CGInterfaceTypeDefinition || definitionOnly {
+				return
+			}
+
 			AppendLine(" {")
 			incIndent()
 			
@@ -1026,6 +1035,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append(": ")
 				generateTypeReference(type)
 			}
+
+			if type is CGInterfaceTypeDefinition || definitionOnly {
+				return
+			}
+
 			// Todo: Add/Rmeove/raise statements?
 		} else {
 			assert(false, "generateEventDefinition is not supported in Swift, except in Silver")
