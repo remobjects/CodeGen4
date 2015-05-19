@@ -362,7 +362,7 @@ public class CGParameterDefinition : CGEntity {
 }
 
 public class CGGenericParameterDefinition : CGEntity {
-	public var Constraints = List<CGGenericConstraintDefinition>()
+	public var Constraints = List<CGGenericConstraint>()
 	public var Name: String
 	public var Variance: CGGenericParameterVarianceKind?
 	
@@ -376,7 +376,32 @@ public enum CGGenericParameterVarianceKind {
 	case Contravariant
 }
 
-public class CGGenericConstraintDefinition : CGEntity {
+public __abstract class CGGenericConstraint : CGEntity {
+}
+
+public class CGGenericHasConstructorConstraint : CGGenericConstraint {
+}
+
+public class CGGenericIsSpecificTypeConstraint : CGGenericConstraint {
+	public var `Type`: CGTypeReference
+	
+	public init(_ type: CGTypeReference) {
+		`Type` = type;
+	}
+}
+
+public class CGGenericIsSpecificTypeKindConstraint : CGGenericConstraint {
+	public var Kind: CGGenericConstraintTypeKind
+	
+	public init(_ kind: CGGenericConstraintTypeKind) {
+		Kind = kind;
+	}
+}
+
+public enum CGGenericConstraintTypeKind {
+	case Class
+	case Struct
+	case Interface
 }
 
 public class CGAttribute: CGEntity {

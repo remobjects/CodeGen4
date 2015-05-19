@@ -607,19 +607,39 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>) {
 		if let parameters = parameters where parameters.Count > 0 {
 			helpGenerateCommaSeparatedList(parameters) { param in
-				/*if let variance = param.Variance {
+				if let variance = param.Variance {
 						switch variance {
-							case .Covariance: self.Append("out")
-							case .Contravariance: self.Append("in ")
+							case .Covariant: self.Append("out ")
+							case .Contravariant: self.Append("in ")
 						}
-				}*/
+				}
 				self.generateIdentifier(param.Name)
-				/*if let constraints = param.Constraints where constraints.Count > 0 {
-					self.Append("where ")
-					self.helpGenerateCommaSeparatedList(constraints) { constrain in
-						//todo: generic constraints
+			}
+		}
+	}
+
+	func pascalGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>) {
+		if let parameters = parameters where parameters.Count > 0 {
+			helpGenerateCommaSeparatedList(parameters) { param in
+				if let constraints = param.Constraints where constraints.Count > 0 {
+					self.Append(" where ")
+					self.helpGenerateCommaSeparatedList(constraints) { constraint in
+						self.generateIdentifier(param.Name)
+						if let constraint = constraint as? CGGenericHasConstructorConstraint {
+							self.Append(" has constructor")
+						//todo: 72051: Silver: after "if let x = x as? Foo", x still has the less concrete type. Sometimes.
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+							self.Append(" is ")
+							self.generateTypeReference(constraint2.`Type`)
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeKindConstraint {
+							switch constraint2.Kind {
+								case .Class: self.Append(" is class")
+								case .Struct: self.Append(" is record")
+								case .Interface: self.Append(" is interface")
+							}
+						}
 					}
-				}*/
+				}
 			}
 		}
 	}
@@ -817,6 +837,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("class")
 		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()
 	}
@@ -838,6 +859,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("record")
 		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()
 	}
@@ -865,6 +887,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("interface")
 		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()
 	}
