@@ -208,9 +208,9 @@ public class CGParenthesesExpression: CGExpression {
 }
 
 public class CGUnaryOperatorExpression: CGExpression {
-	var Value: CGExpression
-	var Operator: CGUnaryOperatorKind? // for standard operators
-	var OperatorString: String? // for custom operators
+	public var Value: CGExpression
+	public var Operator: CGUnaryOperatorKind? // for standard operators
+	public var OperatorString: String? // for custom operators
 
 	public init(_ value: CGExpression, _ `operator`: CGUnaryOperatorKind) {
 		Value = value
@@ -234,10 +234,10 @@ public enum CGUnaryOperatorKind {
 }
 
 public class CGBinaryOperatorExpression: CGExpression {
-	var LefthandValue: CGExpression
-	var RighthandValue: CGExpression
-	var Operator: CGBinaryOperatorKind? // for standard operators
-	var OperatorString: String? // for custom operators
+	public var LefthandValue: CGExpression
+	public var RighthandValue: CGExpression
+	public var Operator: CGBinaryOperatorKind? // for standard operators
+	public var OperatorString: String? // for custom operators
 	
 	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGBinaryOperatorKind) {
 		LefthandValue = lefthandValue
