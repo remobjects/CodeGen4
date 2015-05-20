@@ -606,6 +606,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	func pascalGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>) {
 		if let parameters = parameters where parameters.Count > 0 {
+			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let variance = param.Variance {
 						switch variance {
@@ -615,6 +616,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 				self.generateIdentifier(param.Name)
 			}
+			Append(">")
 		}
 	}
 
