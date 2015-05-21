@@ -853,6 +853,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			swiftGenerateMemberTypeVisibilityPrefix(method.Visibility)
 			swiftGenerateStaticPrefix(method.Static && !type.Static)
 			swiftGenerateVirtualityPrefix(method)
+			if method.External && Dialect == CGSwiftCodeGeneratorDialect.Silver {
+				Append("__extern ")
+			}
 		}
 		Append("func ")
 		generateIdentifier(method.Name)
@@ -866,7 +869,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(returnType)
 		}
 		
-		if type is CGInterfaceTypeDefinition || definitionOnly {
+		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {
 			return
 		}
 		
