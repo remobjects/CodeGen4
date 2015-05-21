@@ -30,7 +30,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 				if !hasFields {
 					hasFields = true
 					AppendLine("{")
-					incIndent();
+					incIndent()
 				}
 				if let type = field.`Type` {
 					generateTypeReference(type)

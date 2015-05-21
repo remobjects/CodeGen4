@@ -45,7 +45,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		generateIdentifier(statement.LoopVariableName)
 		Append(" = ")
 		generateExpression(statement.StartValue)
-		AppendLine("; ")
+		Append("; ")
 		
 		generateIdentifier(statement.LoopVariableName)
 		if statement.Directon == CGLoopDirectionKind.Forward {

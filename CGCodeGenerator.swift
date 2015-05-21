@@ -22,16 +22,19 @@ public __abstract class CGCodeGenerator {
 
 	public final func GenerateUnit(unit: CGCodeUnit) -> String {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
+		definitionOnly = false
+
 		generateAll() 
 		return currentCode.ToString()
 	}
 
 	public final func GenerateUnitForSingleType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
+		definitionOnly = false
 
 		generateHeader()
 		generateDirectives()
@@ -48,25 +51,30 @@ public __abstract class CGCodeGenerator {
 	
 	public final func GenerateType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
+		definitionOnly = false
+		
 		generateTypeDefinition(type) 
 		return currentCode.ToString()
 	}
 	
 	public final func GenerateTypeDefinitionOnly(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
 		definitionOnly = true
-		generateTypeDefinition(type)  //TODO
+		
+		generateTypeDefinition(type)
 		return currentCode.ToString()
 	}
 
 	public final func GenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
+		definitionOnly = false
+
 		if let type = type {
 			generateTypeMember(member, type: type)
 		} else {
@@ -77,8 +85,10 @@ public __abstract class CGCodeGenerator {
 
 	public final func GenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String? {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
+		definitionOnly = false
+
 		if let type = type {
 			doGenerateMemberImplementation(member, type: type)
 		} else {
@@ -89,9 +99,11 @@ public __abstract class CGCodeGenerator {
 
 	public final func GenerateStatement(statement: CGStatement, unit: CGCodeUnit? = nil) -> String? {
 		
-		currentUnit = unit;
+		currentUnit = unit
 		currentCode = StringBuilder()
-		generateStatement(statement);
+		definitionOnly = false
+		
+		generateStatement(statement)
 		return currentCode.ToString()
 	}
 
@@ -128,7 +140,7 @@ public __abstract class CGCodeGenerator {
 	internal func generateHeader() {
 		// descendant can override, if needed
 		if let comment = currentUnit.HeaderComment where comment.Lines.Count > 0 {
-			generateStatement(comment);
+			generateStatement(comment)
 			AppendLine()
 		}
 	}
@@ -143,13 +155,13 @@ public __abstract class CGCodeGenerator {
 	
 	internal func generateDirectives() {
 		for d in currentUnit.Directives {
-			generateDirective(d);
+			generateDirective(d)
 		}
 	}
 	
 	internal func generateImports() {
 		for i in currentUnit.Imports {
-			generateImport(i);
+			generateImport(i)
 		}
 		AppendLine()
 	}
@@ -157,14 +169,14 @@ public __abstract class CGCodeGenerator {
 	internal func generateTypeDefinitions() {
 		// descendant should not usually override
 		for t in currentUnit.Types {
-			generateTypeDefinition(t);
+			generateTypeDefinition(t)
 			AppendLine()
 		}
 	}
 
 	internal func generateGlobals() {
 		for g in currentUnit.Globals {
-			generateGlobal(g);
+			generateGlobal(g)
 			AppendLine()
 		}
 	}
@@ -220,7 +232,7 @@ public __abstract class CGCodeGenerator {
 	internal final func generateStatements(statements: List<CGStatement>) {
 		// descendant should not override
 		for g in statements {
-			generateStatement(g);
+			generateStatement(g)
 		}
 	}
 	
@@ -228,7 +240,7 @@ public __abstract class CGCodeGenerator {
 		// descendant should not override
 		if let statements = statements {
 			for g in statements {
-				generateStatement(g);
+				generateStatement(g)
 			}
 		}
 	}
@@ -236,37 +248,37 @@ public __abstract class CGCodeGenerator {
 	internal final func generateStatementsSkippingOuterBeginEndBlock(statements: List<CGStatement>) {
 		//if statements.Count == 1, let block = statements[0] as? CGBeginEndBlockStatement {
 		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
-			//generateStatements(block.Statements);
-			generateStatements((statements[0] as! CGBeginEndBlockStatement).Statements);
+			//generateStatements(block.Statements)
+			generateStatements((statements[0] as! CGBeginEndBlockStatement).Statements)
 		} else {
-			generateStatements(statements);
+			generateStatements(statements)
 		}
 	}
 	
 	internal final func generateStatementSkippingOuterBeginEndBlock(statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
-			generateStatements(block.Statements);
+			generateStatements(block.Statements)
 		} else {
-			generateStatement(statement);
+			generateStatement(statement)
 		}
 	}
 	
 	internal func generateStatementIndentedUnlessItsABeginEndBlock(statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
-			generateStatement(block);
+			generateStatement(block)
 		} else {
 			incIndent()
-			generateStatement(statement);
+			generateStatement(statement)
 			decIndent()
 		}
 	}
 	
 	internal func generateStatementsIndentedUnlessItsASingleBeginEndBlock(statements: List<CGStatement>) {
 		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
-			generateStatement(statements[0]);
+			generateStatement(statements[0])
 		} else {
 			incIndent()
-			generateStatements(statements);
+			generateStatements(statements)
 			decIndent()
 		}
 	}
@@ -274,11 +286,11 @@ public __abstract class CGCodeGenerator {
 	internal func generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
 			Append(" ")
-			generateStatement(block);
+			generateStatement(block)
 		} else {
 			AppendLine()
 			incIndent()
-			generateStatement(statement);
+			generateStatement(statement)
 			decIndent()
 		}
 	}
@@ -449,7 +461,7 @@ public __abstract class CGCodeGenerator {
 
 	internal func generateExpressionStatement(expression: CGExpression) {
 		generateExpression(expression)
-		generateStatementTerminator();
+		generateStatementTerminator()
 	}
 
 	//
@@ -739,7 +751,7 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
-		// descendant may override if they aren;t happy with the default
+		// descendant may override if they aren't happy with the default
 		return expression.StringRepresentation
 	}
 	
@@ -852,7 +864,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal func generateTypeMembers(type: CGTypeDefinition) {
 		for m in type.Members {
-			generateTypeMember(m, type: type);
+			generateTypeMember(m, type: type)
 			AppendLine()
 		}
 	}
@@ -1033,17 +1045,17 @@ public __abstract class CGCodeGenerator {
 	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		// most language swill want to override this
 		switch (type.Kind) {
-			case .Int8: Append("SByte");
-			case .UInt8: Append("Byte");
-			case .Int16: Append("Int16");
-			case .UInt16: Append("UInt16");
-			case .Int32: Append("Int32");
-			case .UInt32: Append("UInt32");
-			case .Int64: Append("Int64");
-			case .UInt64: Append("UInt16");
-			case .IntPtr: Append("IntPtr");
-			case .UIntPtr: Append("UIntPtr");
-			case .Single: Append("Float");
+			case .Int8: Append("SByte")
+			case .UInt8: Append("Byte")
+			case .Int16: Append("Int16")
+			case .UInt16: Append("UInt16")
+			case .Int32: Append("Int32")
+			case .UInt32: Append("UInt32")
+			case .Int64: Append("Int64")
+			case .UInt64: Append("UInt16")
+			case .IntPtr: Append("IntPtr")
+			case .UIntPtr: Append("UIntPtr")
+			case .Single: Append("Float")
 			case .Double: Append("Double")
 			case .Boolean: Append("Boolean")
 			case .String: Append("String")
@@ -1082,7 +1094,7 @@ public __abstract class CGCodeGenerator {
 	//
 	
 	func helpGenerateCommaSeparatedList<T>(list: List<T>, callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, callback: callback);
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, callback: callback)
 	}
 	
 	func helpGenerateCommaSeparatedList<T>(list: List<T>, separator: () -> (), callback: (T) -> ()) {

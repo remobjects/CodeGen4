@@ -861,17 +861,17 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int8: Append("byte");
-			//case .UInt8: Append("byte");
-			case .Int16: Append("short");
-			//case .UInt16: Append("UInt16");
-			case .Int32: Append("int");
-			//case .UInt32: Append("uint");
-			case .Int64: Append("long");
-			//case .UInt64: Append("UInt64");
-			//case .IntPtr: Append("IntPtr");
-			//case .UIntPtr: Append("UIntPtr");
-			case .Single: Append("float");
+			case .Int8: Append("byte")
+			//case .UInt8: Append("byte")
+			case .Int16: Append("short")
+			//case .UInt16: Append("UInt16")
+			case .Int32: Append("int")
+			//case .UInt32: Append("uint")
+			case .Int64: Append("long")
+			//case .UInt64: Append("UInt64")
+			//case .IntPtr: Append("IntPtr")
+			//case .UIntPtr: Append("UIntPtr")
+			case .Single: Append("float")
 			case .Double: Append("double")
 			case .Boolean: Append("boolean")
 			case .String: Append("String")

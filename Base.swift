@@ -38,7 +38,7 @@ public class CGImport {
 		} else if let sc = StaticClass {
 			return sc.Name
 		}
-		return nil;
+		return nil
 	}
 
 	public init(_ namespace: String) {
@@ -68,7 +68,7 @@ public class CGGlobalFunctionDefinition : CGGlobalDefinition {
 	public var Function: CGMethodDefinition
 
 	public init(_ function: CGMethodDefinition) {
-		Function = function;
+		Function = function
 	}
 }
 
@@ -76,6 +76,6 @@ public class CGGlobalVariableDefinition : CGGlobalDefinition {
 	public var Variable: CGFieldDefinition
 	
 	public init(_ variable: CGFieldDefinition) {
-		Variable = variable;
+		Variable = variable
 	}
 }

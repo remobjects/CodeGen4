@@ -170,7 +170,7 @@ public class CGPointerTypeReference : CGTypeReference {
 	public var `Type`: CGTypeReference
 
 	public init(_ type: CGTypeReference) {
-		`Type` = type;
+		`Type` = type
 		DefaultNullability = .NullableUnwrapped
 	}
 	
@@ -202,7 +202,7 @@ public class CGArrayTypeReference : CGTypeReference {
 	public var ArrayKind: CGArrayKind = .Dynamic
 
 	public init(_ type: CGTypeReference, _ bounds: List<CGArrayBounds>? = default) {
-		`Type` = type;
+		`Type` = type
 		if let bounds = bounds {
 			Bounds = bounds
 		} else {

@@ -584,17 +584,17 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int8: Append("int8");
-			case .UInt8: Append("uint8");
-			case .Int16: Append("int16");
-			case .UInt16: Append("uint16");
-			case .Int32: Append("int32");
-			case .UInt32: Append("uint32");
-			case .Int64: Append("int64");
-			case .UInt64: Append("uint64");
-			case .IntPtr: Append("NSInteger");
-			case .UIntPtr: Append("NSUInteger");
-			case .Single: Append("float");
+			case .Int8: Append("int8")
+			case .UInt8: Append("uint8")
+			case .Int16: Append("int16")
+			case .UInt16: Append("uint16")
+			case .Int32: Append("int32")
+			case .UInt32: Append("uint32")
+			case .Int64: Append("int64")
+			case .UInt64: Append("uint64")
+			case .IntPtr: Append("NSInteger")
+			case .UIntPtr: Append("NSUInteger")
+			case .Single: Append("float")
 			case .Double: Append("double")
 			case .Boolean: Append("BOOL")
 			case .String: Append("NSString *")

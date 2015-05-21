@@ -76,7 +76,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(" = ")
 		generateExpression(statement.StartValue)
-		AppendLine("; ")
+		Append("; ")
 		
 		generateIdentifier(statement.LoopVariableName)
 		if statement.Directon == CGLoopDirectionKind.Forward {
@@ -400,7 +400,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				self.Append(")")
 				if let returnType = member.ReturnType {
 					self.Append(" -> ")
-					self.generateTypeReference(returnType);
+					self.generateTypeReference(returnType)
 					self.Append(" ")
 				}
 				self.AppendLine(" {")
@@ -1101,17 +1101,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int8: Append("Int8");
-			case .UInt8: Append("UInt8");
-			case .Int16: Append("Int16");
-			case .UInt16: Append("UInt16");
-			case .Int32: Append("Int32");
-			case .UInt32: Append("UInt32");
-			case .Int64: Append("Int64");
-			case .UInt64: Append("UInt16");
-			case .IntPtr: Append("Int");
-			case .UIntPtr: Append("UInt");
-			case .Single: Append("Float32");
+			case .Int8: Append("Int8")
+			case .UInt8: Append("UInt8")
+			case .Int16: Append("Int16")
+			case .UInt16: Append("UInt16")
+			case .Int32: Append("Int32")
+			case .UInt32: Append("UInt32")
+			case .Int64: Append("Int64")
+			case .UInt64: Append("UInt16")
+			case .IntPtr: Append("Int")
+			case .UIntPtr: Append("UInt")
+			case .Single: Append("Float32")
 			case .Double: Append("Float64")
 			case .Boolean: Append("Bool")
 			case .String: Append("String")
@@ -1193,7 +1193,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	private func removeWithPrefix(name: String) -> String {
 		if name.ToLower().StartsWith("with") {
-			name = name.Substring(4);
+			name = name.Substring(4)
 		}
 		return lowercasecaseFirstletter(name)
 	}

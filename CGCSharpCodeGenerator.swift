@@ -40,7 +40,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		
 		super.generateHeader()
 		for i in currentUnit.Imports {
-			generateImport(i);
+			generateImport(i)
 		}
 		AppendLine()
 		Append("namespace")
@@ -268,7 +268,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 		Append("// ")
 		generateInlineConstructorCallStatement(statement)
-		AppendLine();
+		AppendLine()
 	}
 	
 	private func generateInlineConstructorCallStatement(statement: CGConstructorCallStatement) {
@@ -1045,17 +1045,17 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int8: Append("sbyte");
-			case .UInt8: Append("byte");
-			case .Int16: Append("short");
-			case .UInt16: Append("ushort");
-			case .Int32: Append("int");
-			case .UInt32: Append("uint");
-			case .Int64: Append("long");
-			case .UInt64: Append("ulong");
-			case .IntPtr: Append("IntPtr");
-			case .UIntPtr: Append("UIntPtr");
-			case .Single: Append("float");
+			case .Int8: Append("sbyte")
+			case .UInt8: Append("byte")
+			case .Int16: Append("short")
+			case .UInt16: Append("ushort")
+			case .Int32: Append("int")
+			case .UInt32: Append("uint")
+			case .Int64: Append("long")
+			case .UInt64: Append("ulong")
+			case .IntPtr: Append("IntPtr")
+			case .UIntPtr: Append("UIntPtr")
+			case .Single: Append("float")
 			case .Double: Append("double")
 			case .Boolean: Append("bool")
 			case .String: Append("string")

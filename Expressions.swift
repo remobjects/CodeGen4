@@ -63,7 +63,7 @@ public class CGSelectorExpression: CGExpression { /* Cocoa only */
 	var Name: String
 	
 	public init(_ name: String) {
-		Name = name;
+		Name = name
 	}
 }
 
@@ -94,12 +94,12 @@ public class CGAnonymousMethodExpression: CGExpression {
 	public init(_ statements: List<CGStatement>) {
 		super.init()
 		Parameters = List<CGParameterDefinition>()
-		Statements = statements;
+		Statements = statements
 	}
 	public init(_ parameters: List<CGParameterDefinition>, _ statements: CGStatement...) {
 		super.init()
 		Statements = statements.ToList()
-		Parameters = parameters;
+		Parameters = parameters
 	}
 }
 
@@ -143,7 +143,7 @@ public class CGAnonymousMethodMemberDefinition : CGAnonymousMemberDefinition{
 
 	public init(_ name: String, _ statements: List<CGStatement>) {
 		super.init(name)
-		Statements = statements;
+		Statements = statements
 	}
 	public init(_ name: String, _ statements: CGStatement...) {
 		super.init(name)
@@ -242,12 +242,12 @@ public class CGBinaryOperatorExpression: CGExpression {
 	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGBinaryOperatorKind) {
 		LefthandValue = lefthandValue
 		RighthandValue = righthandValue
-		Operator = `operator`;
+		Operator = `operator`
 	}
 	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ operatorString: String) {
 		LefthandValue = lefthandValue
 		RighthandValue = righthandValue
-		OperatorString = operatorString;
+		OperatorString = operatorString
 	}
 }
 
@@ -297,7 +297,7 @@ public class CGNamedIdentifierExpression: CGExpression {
 	public var Name: String
 	
 	public init(_ name: String) {
-		Name = name;
+		Name = name
 	}
 }
 
@@ -319,7 +319,7 @@ public class CGLiteralExpression: CGExpression {
 public class CGLanguageAgnosticLiteralExpression: CGExpression {
 	internal var StringRepresentation: String {
 		assert(false, "StringRepresentation not implemented")
-		return "###";
+		return "###"
 	}
 }
 

@@ -22,7 +22,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Attributes = List<CGAttribute>()
 	
 	public init(_ name: String) {
-		Name = name;
+		Name = name
 	}
 }
 
@@ -121,7 +121,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var Attributes = List<CGAttribute>()
 	
 	public init(_ name: String) {
-		Name = name;
+		Name = name
 	}
 }
 
@@ -133,7 +133,7 @@ public class CGEnumValueDefinition: CGMemberDefinition {
 	}
 	public convenience init(_ name: String, _ value: CGExpression) {
 		init(name)
-		Value = value;
+		Value = value
 	}
 }
 
@@ -158,7 +158,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	}
 	public init(_ name: String, _ statements: List<CGStatement>) {
 		super.init(name)
-		Statements = statements;
+		Statements = statements
 	}
 	public init(_ name: String, _ statements: CGStatement...) {
 		super.init(name)
@@ -367,7 +367,7 @@ public class CGGenericParameterDefinition : CGEntity {
 	public var Variance: CGGenericParameterVarianceKind?
 	
 	public init(_ name: String) {
-		Name = name;
+		Name = name
 	}
 }   
 
@@ -386,7 +386,7 @@ public class CGGenericIsSpecificTypeConstraint : CGGenericConstraint {
 	public var `Type`: CGTypeReference
 	
 	public init(_ type: CGTypeReference) {
-		`Type` = type;
+		`Type` = type
 	}
 }
 
@@ -394,7 +394,7 @@ public class CGGenericIsSpecificTypeKindConstraint : CGGenericConstraint {
 	public var Kind: CGGenericConstraintTypeKind
 	
 	public init(_ kind: CGGenericConstraintTypeKind) {
-		Kind = kind;
+		Kind = kind
 	}
 }
 
