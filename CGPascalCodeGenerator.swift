@@ -622,9 +622,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?, needSemicolon: Boolean = false) {
 		if let parameters = parameters where parameters.Count > 0 {
+			var needsWhere = true
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let constraints = param.Constraints where constraints.Count > 0 {
-					self.Append(" where ")
+					if needsWhere {
+						self.Append(" where ")
+						needsWhere = false
+					} else {
+						self.Append(", ")
+					}
 					self.helpGenerateCommaSeparatedList(constraints) { constraint in
 						self.generateIdentifier(param.Name)
 						if let constraint = constraint as? CGGenericHasConstructorConstraint {

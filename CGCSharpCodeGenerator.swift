@@ -520,6 +520,38 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func cSharpGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			var needsWhere = true
+			for param in parameters {
+				if let constraints = param.Constraints where constraints.Count > 0 {
+					if needsWhere {
+						self.Append(" where ")
+						needsWhere = false
+					} else {
+						self.Append(", ")
+					}
+					self.generateIdentifier(param.Name)
+					self.Append(": ")
+					self.helpGenerateCommaSeparatedList(constraints) { constraint in
+						if let constraint = constraint as? CGGenericHasConstructorConstraint {
+							self.Append("new()")
+						//todo: 72051: Silver: after "if let x = x as? Foo", x still has the less concrete type. Sometimes.
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+							self.generateTypeReference(constraint2.`Type`)
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeKindConstraint {
+							switch constraint2.Kind {
+								case .Class: self.Append("class")
+								case .Struct: self.Append("struct")
+								case .Interface: self.Append("interface")
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	func cSharpGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append(" : ")
@@ -736,6 +768,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("class ")
 		generateIdentifier(type.Name)
 		cSharpGenerateGenericParameters(type.GenericParameters)
+		cSharpGenerateGenericConstraints(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -755,6 +788,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("struct ")
 		generateIdentifier(type.Name)
 		cSharpGenerateGenericParameters(type.GenericParameters)
+		cSharpGenerateGenericConstraints(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -772,6 +806,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("interface ")
 		generateIdentifier(type.Name)
 		cSharpGenerateGenericParameters(type.GenericParameters)
+		cSharpGenerateGenericConstraints(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -827,6 +862,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		cSharpGenerateDefinitionParameters(method.Parameters)
 		Append(")")
+		cSharpGenerateGenericConstraints(method.GenericParameters)
 		
 		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
 			AppendLine(";")
