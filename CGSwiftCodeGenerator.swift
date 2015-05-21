@@ -542,6 +542,27 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func swiftGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			Append("<")
+			helpGenerateCommaSeparatedList(parameters) { param in
+				// variance isn't supported in swift
+				self.generateIdentifier(param.Name)
+				if let constraints = param.Constraints where constraints.Count > 0 {
+					//self.helpGenerateCommaSeparatedList(constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint}).ToList()) { constraint in
+					self.helpGenerateCommaSeparatedList(constraints) { constraint in
+						self.Append(": ")
+						if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+							self.generateTypeReference(constraint2.`Type`)
+						}
+						// other constraints aren't supported in Swift
+					}
+				}
+			}
+			Append(">")
+		}
+	}
+
 	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append(" : ")
@@ -782,7 +803,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		swiftGenerateGenericParameters(type.GenericParameters)
 		swiftGenerateAncestorList(type.Ancestors)
 		AppendLine(" { ")
 		incIndent()
@@ -800,7 +821,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		swiftGenerateGenericParameters(type.GenericParameters)
 		swiftGenerateAncestorList(type.Ancestors)
 		AppendLine(" { ")
 		incIndent()
@@ -816,7 +837,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateSealedPrefix(type.Sealed)
 		Append("protocol ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		swiftGenerateGenericParameters(type.GenericParameters)
 		swiftGenerateAncestorList(type.Ancestors)
 		AppendLine(" { ")
 		incIndent()
@@ -859,7 +880,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("func ")
 		generateIdentifier(method.Name)
-		// todo: generics
+		swiftGenerateGenericParameters(method.GenericParameters)
 		Append("(")
 		swiftGenerateDefinitionParameters(method.Parameters)
 		Append(")")

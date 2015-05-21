@@ -609,10 +609,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let variance = param.Variance {
-						switch variance {
-							case .Covariant: self.Append("out ")
-							case .Contravariant: self.Append("in ")
-						}
+					switch variance {
+						case .Covariant: self.Append("out ")
+						case .Contravariant: self.Append("in ")
+					}
 				}
 				self.generateIdentifier(param.Name)
 			}
@@ -620,7 +620,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>) {
+	func pascalGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?, needSemicolon: Boolean = false) {
 		if let parameters = parameters where parameters.Count > 0 {
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let constraints = param.Constraints where constraints.Count > 0 {
@@ -642,6 +642,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						}
 					}
 				}
+			}
+			if needSemicolon {
+				Append(";")
 			}
 		}
 	}
@@ -984,6 +987,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(";");
 		
 		if !implementation {
+			
+			if let method = method as? CGMethodDefinition {
+				pascalGenerateGenericConstraints(method.GenericParameters, needSemicolon: true)
+			}
+
 			pascalGenerateVirtualityModifiders(method)
 			if method.External {
 				Append(" external;")
@@ -1022,6 +1030,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(".")
 		}
 		generateIdentifier(method.Name)
+		pascalGenerateGenericParameters(type.GenericParameters)
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 

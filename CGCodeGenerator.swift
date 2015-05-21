@@ -1099,16 +1099,17 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
-	func helpGenerateCommaSeparatedList<T>(list: List<T>, callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, callback: callback)
 	}
 	
-	func helpGenerateCommaSeparatedList<T>(list: List<T>, separator: () -> (), callback: (T) -> ()) {
-		for var i = 0; i < list.Count; i++ {
-			if i > 0 {
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
+		var count = 0
+		for i in list {
+			if count++ == 0 {
 				separator()
 			}
-			callback(list[i])
+			callback(i)
 		}
 	}
 

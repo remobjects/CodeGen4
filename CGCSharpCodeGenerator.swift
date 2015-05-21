@@ -503,6 +503,23 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func cSharpGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			Append("<")
+			helpGenerateCommaSeparatedList(parameters) { param in
+				if let variance = param.Variance {
+					switch variance {
+						case .Covariant: self.Append("out ")
+						case .Contravariant: self.Append("in ")
+					}
+				}
+				self.generateIdentifier(param.Name)
+				//todo: constraints
+			}
+			Append(">")
+		}
+	}
+
 	func cSharpGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append(" : ")
@@ -718,7 +735,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		cSharpGenerateGenericParameters(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -737,7 +754,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		cSharpGenerateGenericParameters(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -754,7 +771,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("interface ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		cSharpGenerateGenericParameters(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -806,7 +823,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("void ")
 		}
 		generateIdentifier(method.Name)
-		// todo: generics
+		cSharpGenerateGenericParameters(method.GenericParameters)
 		Append("(")
 		cSharpGenerateDefinitionParameters(method.Parameters)
 		Append(")")
