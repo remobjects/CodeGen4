@@ -325,6 +325,19 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
+	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+		generateIdentifier(type.Name)
+		pascalGenerateGenericParameters(type.GenericParameters)
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateStaticPrefix(type.Static)
+		Append("extension class")
+		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateGenericConstraints(type.GenericParameters)
+		AppendLine()
+		incIndent()
+	}
+	
 	//
 	// Type Members
 	//

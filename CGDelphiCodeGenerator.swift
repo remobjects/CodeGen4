@@ -51,4 +51,22 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		generateIdentifier(expression.ValueName)
 	}
 
+	//
+	// Type Definitions
+	//
+	
+	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+		generateIdentifier(type.Name)
+		pascalGenerateGenericParameters(type.GenericParameters)
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateStaticPrefix(type.Static)
+		if type.Ancestors.Count > 0 {
+			Append("class helper for ")
+			generateTypeReference(type.Ancestors[0], ignoreNullability: true)
+		}
+		AppendLine()
+		incIndent()
+	}
+	
 }

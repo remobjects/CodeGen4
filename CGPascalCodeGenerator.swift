@@ -899,6 +899,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine("end;")
 	}	
 	
+	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+		decIndent()
+		AppendLine("end;")
+	}	
+	
 	//
 	// Type Members
 	//
