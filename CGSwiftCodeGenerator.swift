@@ -870,6 +870,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		
 		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {
+			AppendLine();
 			return
 		}
 		
@@ -896,6 +897,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 
 		if type is CGInterfaceTypeDefinition || definitionOnly {
+			AppendLine();
 			return
 		}
 
@@ -908,11 +910,45 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
-		//todo
+		Append("deinit")
+
+		if type is CGInterfaceTypeDefinition || definitionOnly {
+			AppendLine();
+			return
+		}
+
+		AppendLine(" {")
+		incIndent()
+		generateStatements(dtor.LocalVariables)
+		generateStatements(dtor.Statements)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
-		//todo
+		if type is CGInterfaceTypeDefinition {
+			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
+		} else {
+			swiftGenerateMemberTypeVisibilityPrefix(finalizer.Visibility)
+			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
+			swiftGenerateVirtualityPrefix(finalizer)
+			if finalizer.External && Dialect == CGSwiftCodeGeneratorDialect.Silver {
+				Append("__extern ")
+			}
+		}
+		Append("func Finalizer()")
+		
+		if type is CGInterfaceTypeDefinition || finalizer.External || definitionOnly {
+			AppendLine();
+			return
+		}
+		
+		AppendLine(" {")
+		incIndent()
+		generateStatements(finalizer.LocalVariables)
+		generateStatements(finalizer.Statements)
+		decIndent()
+		AppendLine("}")	
 	}
 
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
