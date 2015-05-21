@@ -92,7 +92,7 @@ public class CGPredefinedTypeReference : CGTypeReference {
 				DefaultNullability = .NotNullable
 			case .Dynamic: fallthrough
 			case .InstanceType: fallthrough
-			case .Void: fallthrough
+			case .Void:
 				DefaultValue = CGNilExpression.Nil
 				DefaultNullability = .NotNullable
 				IsClassType = true
