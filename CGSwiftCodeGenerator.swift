@@ -1188,6 +1188,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			Append("ISequence<")
+			generateTypeReference(sequence.`Type`)
+			Append(">")
+		} else {
+			assert(false, "generateSequenceTypeReference is not supported in Swift except in Silver")
+		}
+	}
+	
 	override func generateArrayTypeReference(array: CGArrayTypeReference) {
 		
 		var bounds = array.Bounds.Count

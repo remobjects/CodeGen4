@@ -495,6 +495,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		assert(false, "generateSequenceTypeReference is not supported in Javar")
+	}
+	
 	//
 	// Type Definitions
 	//

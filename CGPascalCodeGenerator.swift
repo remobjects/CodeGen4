@@ -1287,6 +1287,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		assert(false, "generateSequenceTypeReference is not supported in base Pascal, only Oxygene")
+	}
+	
 	override func generateArrayTypeReference(array: CGArrayTypeReference) {
 		Append("array")
 		if let bounds = array.Bounds where bounds.Count > 0 {

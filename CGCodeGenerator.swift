@@ -1011,6 +1011,8 @@ public __abstract class CGCodeGenerator {
 			generatePointerTypeReference(type)
 		} else if let type = type as? CGTupleTypeReference {
 			generateTupleTypeReference(type)
+		} else if let type = type as? CGSequenceTypeReference {
+			generateSequenceTypeReference(type)
 		} else if let type = type as? CGArrayTypeReference {
 			generateArrayTypeReference(type)
 		} else if let type = type as? CGDictionaryTypeReference {
@@ -1079,6 +1081,10 @@ public __abstract class CGCodeGenerator {
 	
 	internal func generateTupleTypeReference(type: CGTupleTypeReference) {
 		assert(false, "generateTupleTypeReference not implemented")
+	}
+	
+	internal func generateSequenceTypeReference(type: CGSequenceTypeReference) {
+		assert(false, "generateSequenceTypeReference not implemented")
 	}
 	
 	internal func generateArrayTypeReference(type: CGArrayTypeReference) {

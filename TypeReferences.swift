@@ -191,6 +191,14 @@ public class CGTupleTypeReference : CGTypeReference {
 	}
 }
 
+public class CGSequenceTypeReference : CGTypeReference {
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type
+	}
+}
+
 /* Arrays */
 
 public enum CGArrayKind {
