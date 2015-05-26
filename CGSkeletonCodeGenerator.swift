@@ -246,6 +246,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	}
 	*/
 	
+	override func generateSetTypeReference(type: CGSetTypeReference) {
+
+	}
+	
 	override func generateSequenceTypeReference(type: CGSequenceTypeReference) {
 
 	}

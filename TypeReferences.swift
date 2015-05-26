@@ -1,4 +1,4 @@
-import Sugar
+﻿import Sugar
 import Sugar.Collections
 import Sugar.Linq
 
@@ -199,6 +199,14 @@ public class CGTupleTypeReference : CGTypeReference {
 }
 
 public class CGSequenceTypeReference : CGTypeReference {
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type
+	}
+}
+
+public class CGSetTypeReference : CGTypeReference {
 	public var `Type`: CGTypeReference
 
 	public init(_ type: CGTypeReference) {

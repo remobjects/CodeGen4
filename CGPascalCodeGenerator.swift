@@ -1312,6 +1312,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
+	override func generateSetTypeReference(setType: CGSetTypeReference) {
+		Append("set of ")
+		generateTypeReference(setType.`Type`, ignoreNullability: true)
+	}
+	
 	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
 		assert(false, "generateSequenceTypeReference is not supported in base Pascal, only Oxygene")
 	}

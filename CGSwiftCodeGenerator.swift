@@ -1224,6 +1224,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
+	override func generateSetTypeReference(setType: CGSetTypeReference) {
+		assert(false, "generateSetTypeReference is not supported in Swift")
+	}
+	
 	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			Append("ISequence<")

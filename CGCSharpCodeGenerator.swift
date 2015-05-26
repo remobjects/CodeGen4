@@ -653,6 +653,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
+	override func generateSetTypeReference(setType: CGSetTypeReference) {
+		assert(false, "generateSetTypeReference is not supported in C#")
+	}
+	
 	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
 		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
 			Append("ISequence<")
