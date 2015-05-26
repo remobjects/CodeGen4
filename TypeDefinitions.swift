@@ -167,6 +167,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 }
 
 public class CGMethodDefinition: CGMethodLikeMemberDefinition {
+	public var GenericParameters: List<CGGenericParameterDefinition>?
 }
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {

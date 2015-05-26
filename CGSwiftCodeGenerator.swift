@@ -552,6 +552,29 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func swiftGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			Append("<")
+			helpGenerateCommaSeparatedList(parameters) { param in
+				self.generateIdentifier(param.Name)
+				// variance isn't supported in swift
+				//todo: 72081: Silver: NRE in "if let"
+				//if let constraints = param.Constraints, filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint}).ToList() where filteredConstraints.Count > 0 {
+				if let constraints = param.Constraints where constraints.Count > 0 {
+					let filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint})
+					self.Append(": ")
+					self.helpGenerateCommaSeparatedList(filteredConstraints) { constraint in
+						if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+							self.generateTypeReference(constraint2.`Type`)
+						}
+						// other constraints aren't supported in Swift
+					}
+				}
+			}
+			Append(">")
+		}
+	}
+
 	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append(" : ")
@@ -792,7 +815,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		swiftGenerateGenericParameters(type.GenericParameters)
 		swiftGenerateAncestorList(type.Ancestors)
 		AppendLine(" { ")
 		incIndent()
@@ -810,7 +833,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		swiftGenerateGenericParameters(type.GenericParameters)
 		swiftGenerateAncestorList(type.Ancestors)
 		AppendLine(" { ")
 		incIndent()
@@ -826,7 +849,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateSealedPrefix(type.Sealed)
 		Append("protocol ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		swiftGenerateGenericParameters(type.GenericParameters)
 		swiftGenerateAncestorList(type.Ancestors)
 		AppendLine(" { ")
 		incIndent()
@@ -869,7 +892,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("func ")
 		generateIdentifier(method.Name)
-		// todo: generics
+		swiftGenerateGenericParameters(method.GenericParameters)
 		Append("(")
 		swiftGenerateDefinitionParameters(method.Parameters)
 		Append(")")
@@ -880,6 +903,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		
 		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {
+			AppendLine();
 			return
 		}
 		
@@ -906,6 +930,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 
 		if type is CGInterfaceTypeDefinition || definitionOnly {
+			AppendLine();
 			return
 		}
 
@@ -918,11 +943,45 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
-		//todo
+		Append("deinit")
+
+		if type is CGInterfaceTypeDefinition || definitionOnly {
+			AppendLine();
+			return
+		}
+
+		AppendLine(" {")
+		incIndent()
+		generateStatements(dtor.LocalVariables)
+		generateStatements(dtor.Statements)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
-		//todo
+		if type is CGInterfaceTypeDefinition {
+			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
+		} else {
+			swiftGenerateMemberTypeVisibilityPrefix(finalizer.Visibility)
+			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
+			swiftGenerateVirtualityPrefix(finalizer)
+			if finalizer.External && Dialect == CGSwiftCodeGeneratorDialect.Silver {
+				Append("__extern ")
+			}
+		}
+		Append("func Finalizer()")
+		
+		if type is CGInterfaceTypeDefinition || finalizer.External || definitionOnly {
+			AppendLine();
+			return
+		}
+		
+		AppendLine(" {")
+		incIndent()
+		generateStatements(finalizer.LocalVariables)
+		generateStatements(finalizer.Statements)
+		decIndent()
+		AppendLine("}")	
 	}
 
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
@@ -1163,6 +1222,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(type.Members[m])
 		}
 		Append(")")
+	}
+	
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			Append("ISequence<")
+			generateTypeReference(sequence.`Type`)
+			Append(">")
+		} else {
+			assert(false, "generateSequenceTypeReference is not supported in Swift except in Silver")
+		}
 	}
 	
 	override func generateArrayTypeReference(array: CGArrayTypeReference) {

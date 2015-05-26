@@ -1,4 +1,4 @@
-﻿import Sugar
+import Sugar
 import Sugar.Collections
 import Sugar.Linq
 
@@ -99,7 +99,10 @@ public class CGPredefinedTypeReference : CGTypeReference {
 				DefaultNullability = .NotNullable
 			case .Dynamic: fallthrough
 			case .InstanceType: fallthrough
-			case .Void: fallthrough
+			case .Void:
+				DefaultValue = CGNilExpression.Nil
+				DefaultNullability = .NotNullable
+				IsClassType = true
 			case .Object: 
 				DefaultValue = CGNilExpression.Nil
 				DefaultNullability = .NullableUnwrapped
@@ -192,6 +195,14 @@ public class CGTupleTypeReference : CGTypeReference {
 	}
 	public convenience init(_ members: CGTypeReference...) {
 		init(members.ToList())
+	}
+}
+
+public class CGSequenceTypeReference : CGTypeReference {
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type
 	}
 }
 

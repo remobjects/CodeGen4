@@ -513,6 +513,55 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func cSharpGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			Append("<")
+			helpGenerateCommaSeparatedList(parameters) { param in
+				if let variance = param.Variance {
+					switch variance {
+						case .Covariant: self.Append("out ")
+						case .Contravariant: self.Append("in ")
+					}
+				}
+				self.generateIdentifier(param.Name)
+				//todo: constraints
+			}
+			Append(">")
+		}
+	}
+
+	func cSharpGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			var needsWhere = true
+			for param in parameters {
+				if let constraints = param.Constraints where constraints.Count > 0 {
+					if needsWhere {
+						self.Append(" where ")
+						needsWhere = false
+					} else {
+						self.Append(", ")
+					}
+					self.generateIdentifier(param.Name)
+					self.Append(": ")
+					self.helpGenerateCommaSeparatedList(constraints) { constraint in
+						if let constraint = constraint as? CGGenericHasConstructorConstraint {
+							self.Append("new()")
+						//todo: 72051: Silver: after "if let x = x as? Foo", x still has the less concrete type. Sometimes.
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+							self.generateTypeReference(constraint2.`Type`)
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeKindConstraint {
+							switch constraint2.Kind {
+								case .Class: self.Append("class")
+								case .Struct: self.Append("struct")
+								case .Interface: self.Append("interface")
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	func cSharpGenerateAncestorList(ancestors: List<CGTypeReference>?) {
 		if let ancestors = ancestors where ancestors.Count > 0 {
 			Append(" : ")
@@ -603,6 +652,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		// default handled in base
 	}
 	*/
+	
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
+			Append("ISequence<")
+			generateTypeReference(sequence.`Type`)
+			Append(">")
+		} else {
+			assert(false, "generateSequenceTypeReference is not supported in C#, except in Hydrogene")
+		}
+	}
 	
 	//
 	// Type Definitions
@@ -718,7 +777,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		cSharpGenerateGenericParameters(type.GenericParameters)
+		cSharpGenerateGenericConstraints(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -737,7 +797,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		cSharpGenerateGenericParameters(type.GenericParameters)
+		cSharpGenerateGenericConstraints(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -754,7 +815,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("interface ")
 		generateIdentifier(type.Name)
-		//ToDo: generic constraints
+		cSharpGenerateGenericParameters(type.GenericParameters)
+		cSharpGenerateGenericConstraints(type.GenericParameters)
 		cSharpGenerateAncestorList(type.Ancestors)
 		AppendLine()
 		AppendLine("{")
@@ -806,10 +868,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("void ")
 		}
 		generateIdentifier(method.Name)
-		// todo: generics
+		cSharpGenerateGenericParameters(method.GenericParameters)
 		Append("(")
 		cSharpGenerateDefinitionParameters(method.Parameters)
 		Append(")")
+		cSharpGenerateGenericConstraints(method.GenericParameters)
 		
 		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
 			AppendLine(";")

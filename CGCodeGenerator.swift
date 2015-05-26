@@ -1011,6 +1011,8 @@ public __abstract class CGCodeGenerator {
 			generatePointerTypeReference(type)
 		} else if let type = type as? CGTupleTypeReference {
 			generateTupleTypeReference(type)
+		} else if let type = type as? CGSequenceTypeReference {
+			generateSequenceTypeReference(type)
 		} else if let type = type as? CGArrayTypeReference {
 			generateArrayTypeReference(type)
 		} else if let type = type as? CGDictionaryTypeReference {
@@ -1081,6 +1083,10 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generateTupleTypeReference not implemented")
 	}
 	
+	internal func generateSequenceTypeReference(type: CGSequenceTypeReference) {
+		assert(false, "generateSequenceTypeReference not implemented")
+	}
+	
 	internal func generateArrayTypeReference(type: CGArrayTypeReference) {
 		assert(false, "generateArrayTypeReference not implemented")
 	}
@@ -1093,16 +1099,17 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
-	func helpGenerateCommaSeparatedList<T>(list: List<T>, callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, callback: callback)
 	}
 	
-	func helpGenerateCommaSeparatedList<T>(list: List<T>, separator: () -> (), callback: (T) -> ()) {
-		for var i = 0; i < list.Count; i++ {
-			if i > 0 {
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
+		var count = 0
+		for i in list {
+			if count++ == 0 {
 				separator()
 			}
-			callback(list[i])
+			callback(i)
 		}
 	}
 

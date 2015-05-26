@@ -460,6 +460,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		assert(false, "generateSequenceTypeReference is not supported in Objective-C")
+	}
+	
 	//
 	// Type Definitions
 	//

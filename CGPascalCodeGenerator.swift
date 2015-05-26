@@ -617,10 +617,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let variance = param.Variance {
-						switch variance {
-							case .Covariant: self.Append("out ")
-							case .Contravariant: self.Append("in ")
-						}
+					switch variance {
+						case .Covariant: self.Append("out ")
+						case .Contravariant: self.Append("in ")
+					}
 				}
 				self.generateIdentifier(param.Name)
 			}
@@ -628,11 +628,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>) {
+	func pascalGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?, needSemicolon: Boolean = false) {
 		if let parameters = parameters where parameters.Count > 0 {
+			var needsWhere = true
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let constraints = param.Constraints where constraints.Count > 0 {
-					self.Append(" where ")
+					if needsWhere {
+						self.Append(" where ")
+						needsWhere = false
+					} else {
+						self.Append(", ")
+					}
 					self.helpGenerateCommaSeparatedList(constraints) { constraint in
 						self.generateIdentifier(param.Name)
 						if let constraint = constraint as? CGGenericHasConstructorConstraint {
@@ -650,6 +656,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						}
 					}
 				}
+			}
+			if needSemicolon {
+				Append(";")
 			}
 		}
 	}
@@ -992,6 +1001,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(";");
 		
 		if !implementation {
+			
+			if let method = method as? CGMethodDefinition {
+				pascalGenerateGenericConstraints(method.GenericParameters, needSemicolon: true)
+			}
+
 			pascalGenerateVirtualityModifiders(method)
 			if method.External {
 				Append(" external;")
@@ -1030,6 +1044,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(".")
 		}
 		generateIdentifier(method.Name)
+		pascalGenerateGenericParameters(type.GenericParameters)
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 
@@ -1297,6 +1312,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+		assert(false, "generateSequenceTypeReference is not supported in base Pascal, only Oxygene")
+	}
+	
 	override func generateArrayTypeReference(array: CGArrayTypeReference) {
 		Append("array")
 		if let bounds = array.Bounds where bounds.Count > 0 {
