@@ -437,6 +437,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	internal func cSharpGenerateStorageModifierPrefix(type: CGTypeReference) {
+		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
+			switch type.StorageModifier {
+				case .Strong: break
+				case .Weak: Append("__weak ")
+				case .Unretained: Append("__unretained ")
+			}
+		}
+	}
+
 	internal func cSharpGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
@@ -889,6 +899,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("const ")
 		}
 		if let type = field.`Type` {
+			cSharpGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 			Append(" ")
 		} else {
@@ -907,6 +918,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateStaticPrefix(property.Static && !type.Static)
 
 		if let type = property.`Type` {
+			cSharpGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 			Append(" ")
 		} else {

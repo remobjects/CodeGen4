@@ -455,6 +455,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	internal func swiftGenerateStorageModifierPrefix(type: CGTypeReference?) {
+		if let type = type {
+			switch type.StorageModifier {
+				case .Strong: break
+				case .Weak: Append("weak ")
+				case .Unretained: Append("unowned ")
+			}
+		}
+	}
+
 	internal func swiftGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
@@ -918,6 +928,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		swiftGenerateStaticPrefix(field.Static && !type.Static)
+		swiftGenerateStorageModifierPrefix(field.`Type`)
 		if field.Constant {
 			Append("let ")
 		} else {
@@ -943,6 +954,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if property.Lazy {
 			Append("lazy ")
 		}
+		swiftGenerateStorageModifierPrefix(property.`Type`)
+		
 		if let params = property.Parameters where params.Count > 0 {
 			
 			Append("subscript ")

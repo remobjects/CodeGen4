@@ -16,6 +16,7 @@ public __abstract class CGTypeReference : CGEntity {
 	public var Nullability: CGTypeNullabilityKind = .Default
 	public var DefaultNullability: CGTypeNullabilityKind = .NotNullable
 	public var DefaultValue: CGExpression?
+	public var StorageModifier: CGStorageModifierKind = .Strong
 	public var IsClassType = false
 	
 	public var ActualNullability: CGTypeNullabilityKind {
@@ -32,6 +33,12 @@ public __abstract class CGTypeReference : CGEntity {
 		return false
 		//return (self as? CGPredefinedTypeReference)?.Kind == CGPredefinedTypeKind.Void // 71722: Silver: can't compare nullable enum to enum
 	}
+}
+
+public enum CGStorageModifierKind {
+	case Strong
+	case Weak
+	case Unretained
 }
 
 public class CGNamedTypeReference : CGTypeReference {

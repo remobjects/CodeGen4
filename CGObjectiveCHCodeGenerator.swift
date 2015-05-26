@@ -106,6 +106,24 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		Append("@property ")
 		
+		Append("(")
+		if property.Atomic {
+			Append("atomic")
+		} else {
+			Append("nonatomic")
+		}
+		if let type = property.`Type` {
+			switch type.StorageModifier {
+				case .Strong: Append(", strong")
+				case .Weak: Append(", weak")
+				case .Unretained: Append(", unsafe_unretained")
+			}
+		}
+		if property.ReadOnly {
+			Append(", readonly")
+		}
+		Append(")")
+		
 		if let type = property.`Type` {
 			generateTypeReference(type)
 			Append(" ")

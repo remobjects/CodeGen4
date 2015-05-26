@@ -544,6 +544,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateIfThenElseExpressionExpression is not supported in base Pascal, only Oxygene")
 	}
 
+	internal func pascalGenerateStorageModifierPrefix(type: CGTypeReference) {
+		switch type.StorageModifier {
+			case .Strong: break
+			case .Weak: Append("weak ")
+			case .Unretained: Append("unretained ")
+		}
+	}
+
 	internal func pascalGenerateCallSiteForExpression(expression: CGMemberAccessExpression) -> Boolean {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
@@ -1141,6 +1149,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateIdentifier(variable.Name)
 			if let type = variable.`Type` {
 				Append(": ")
+				pascalGenerateStorageModifierPrefix(type)
 				generateTypeReference(type)
 			}
 			if let initializer = variable.Initializer { // todo: Oxygene only?
@@ -1164,6 +1173,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		if let type = property.`Type` {
 			Append(": ")
+			pascalGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 		}
 		

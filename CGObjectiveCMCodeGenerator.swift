@@ -78,6 +78,11 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		if field.Static {
 			Append("static ")
 			if let type = field.`Type` {
+				switch type.StorageModifier {
+					case .Strong: Append("__strong ")
+					case .Weak: Append("__weak ")
+					case .Unretained: Append("__unsafe_unretained")
+				}				
 				generateTypeReference(type)
 				Append(" ")
 			} else {
