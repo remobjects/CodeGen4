@@ -503,7 +503,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				case .Params: Append("params ") //todo: Oxygene ony?
 				default: 
 			}
-			generateTypeReference(param.`Type`)
+			if let type = param.`Type` {
+				generateTypeReference(type)
+			} else {
+				Append("object")
+			}
 			Append(" ")
 			generateIdentifier(param.Name)
 			if let defaultValue = param.DefaultValue {

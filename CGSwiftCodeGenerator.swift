@@ -544,7 +544,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			generateIdentifier(param.Name)
 			Append(": ")
-			generateTypeReference(param.`Type`)
+			if let type = param.`Type` {
+				generateTypeReference(type)
+			}
 			if let defaultValue = param.DefaultValue {
 				Append(" = ")
 				generateExpression(defaultValue)
@@ -771,7 +773,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			if p > 0 {
 				Append(", ")
 			}
-			generateTypeReference(block.Parameters[p].`Type`)
+			if let type = block.Parameters[p].`Type` {
+				generateTypeReference(type)
+			} else {
+				Append("Any?")
+			}
 		}
 		Append(") -> ")
 		if let returnType = block.ReturnType {

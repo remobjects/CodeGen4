@@ -352,7 +352,7 @@ public enum ParameterModifierKind {
 public class CGParameterDefinition : CGEntity {
 	public var Name: String
 	public var ExternalName: String? // Swift and Cocoa only
-	public var `Type`: CGTypeReference
+	public var `Type`: CGTypeReference?
 	public var Modifier: ParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	
