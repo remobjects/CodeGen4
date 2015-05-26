@@ -167,7 +167,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 					generateTypeReference(type)
 					Append(" ")
 					generateIdentifier(b.Name)
-					AppendLine("")
+					AppendLine(")")
 					AppendLine("{")
 				} else {
 					AppendLine("__catch ")
