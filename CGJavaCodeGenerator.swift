@@ -23,7 +23,6 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		super.generateHeader()
 		if let namespace = currentUnit.Namespace {
 			Append("package ")
-			Append(" ")
 			generateIdentifier(namespace.Name)
 			AppendLine(";")
 			AppendLine()
