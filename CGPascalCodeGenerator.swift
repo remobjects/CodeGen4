@@ -106,8 +106,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	final func pascalGenerateGlobalImplementation(global: CGGlobalDefinition) {
 		if let global = global as? CGGlobalFunctionDefinition {
 			pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
-		} else if let global = global as? CGGlobalVariableDefinition {
-			generateFieldDefinition(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
 		} 
 		
 		else {
