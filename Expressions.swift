@@ -86,17 +86,17 @@ public class CGAwaitExpression: CGExpression {
 public class CGAnonymousMethodExpression: CGExpression {
 	public var Lambda = true
 
-	public var Parameters: List<CGParameterDefinition>
+	public var Parameters: List<CGAnonymousMethodParameterDefinition>
 	public var ReturnType: CGTypeReference?
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 
 	public init(_ statements: List<CGStatement>) {
 		super.init()
-		Parameters = List<CGParameterDefinition>()
+		Parameters = List<CGAnonymousMethodParameterDefinition>()
 		Statements = statements
 	}
-	public init(_ parameters: List<CGParameterDefinition>, _ statements: CGStatement...) {
+	public init(_ parameters: List<CGAnonymousMethodParameterDefinition>, _ statements: CGStatement...) {
 		super.init()
 		Statements = statements.ToList()
 		Parameters = parameters

@@ -472,7 +472,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("method")
 			if method.Parameters.Count > 0 {
 				Append("(")
-				pascalGenerateDefinitionParameters(method.Parameters)
+				helpGenerateCommaSeparatedList(method.Parameters) { param in
+					self.generateIdentifier(param.Name)
+					if let type = param.`Type` {
+						self.Append(": ")
+						self.generateTypeReference(type)
+					}
+				}
 				AppendLine(")")
 			}
 			if let returnType = method.ReturnType {
@@ -614,11 +620,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			}
 			generateIdentifier(param.Name)
 			Append(": ")
-			if let type = param.`Type` {
-				generateTypeReference(type)
-			} else {
-				Append("???")
-			}
+			generateTypeReference(param.`Type`)
 			if let defaultValue = param.DefaultValue {
 				Append(" = ")
 				generateExpression(defaultValue)

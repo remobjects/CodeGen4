@@ -248,11 +248,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			}
 			generateIdentifier(param.Name)
 			Append(": ")
-			if let type = param.`Type` {
-				generateTypeReference(type)
-			} else {
-				Append("Object")
-			}
+			generateTypeReference(param.`Type`)
 			if let defaultValue = param.DefaultValue {
 				Append(" := ")
 				generateExpression(defaultValue)

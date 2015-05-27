@@ -353,11 +353,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				case .Out: Append("*")
 				default: 
 			}
-			if let type = param.`Type` {
-				generateTypeReference(type)
-			} else {
-				Append("id")
-			}
+			generateTypeReference(param.`Type`)
 			Append(")")
 			generateIdentifier(param.Name)
 		}

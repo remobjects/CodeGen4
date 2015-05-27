@@ -361,7 +361,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("{")
 		if method.Parameters.Count > 0 {
 			Append(" (")
-			swiftGenerateDefinitionParameters(method.Parameters)
+			helpGenerateCommaSeparatedList(method.Parameters) { param in
+				self.generateIdentifier(param.Name)
+				if let type = param.`Type` {
+					self.Append(": ")
+					self.generateTypeReference(type)
+				}
+			}
 			Append(") in")
 		}
 		AppendLine()
@@ -544,9 +550,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			generateIdentifier(param.Name)
 			Append(": ")
-			if let type = param.`Type` {
-				generateTypeReference(type)
-			}
+			generateTypeReference(param.`Type`)
 			if let defaultValue = param.DefaultValue {
 				Append(" = ")
 				generateExpression(defaultValue)
