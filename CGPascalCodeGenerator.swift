@@ -57,8 +57,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	final func pascalGenerateGlobalImplementations() {
-		for t in currentUnit.Globals {
-			pascalGenerateGlobalImplementation();
+		for g in currentUnit.Globals {
+			pascalGenerateGlobalImplementation(g);
 		}
 	}
 
@@ -102,7 +102,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		} 
 	}
 	
-	final func pascalGenerateGlobalImplementation() {
+	
+	final func pascalGenerateGlobalImplementation(global: CGGlobalDefinition) {
+		if let global = global as? CGGlobalFunctionDefinition {
+			pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
+		} else if let global = global as? CGGlobalVariableDefinition {
+			generateFieldDefinition(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
+		} 
+		
+		else {
+			assert(false, "unsupported global found: \(typeOf(global).ToString())")
+		}	
 	}
 
 	//
@@ -1043,7 +1053,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		
 		Append(methodKeyword)
 		Append(" ")
-		if implementation {
+		if implementation && !(type is CGGlobalTypeDefinition) {
 			generateIdentifier(type.Name)
 			Append(".")
 		}
