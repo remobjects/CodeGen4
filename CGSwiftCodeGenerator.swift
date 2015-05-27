@@ -160,7 +160,37 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateUsingStatement(statement: CGUsingStatement) {
-		assert(false, "generateUsingStatement is not supported in Swift")
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			
+			// using isn't really supported. But emit this helpful comment for the benefi of Oxidized code
+			Append("/* __using")
+			generateIdentifier(statement.Name)
+			if let type = statement.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			} 
+			Append(" = ")
+			generateExpression(statement.Value)
+			AppendLine(" { */")
+			
+			Append("let ")
+			generateIdentifier(statement.Name)
+			if let type = statement.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			} 
+			Append(" = ")
+			generateExpression(statement.Value)
+			AppendLine()
+
+			generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+
+			// using isn't really supported.
+			AppendLine("/* } */")
+
+		} else {
+			assert(false, "generateUsingStatement is not supported in Swift")
+		}
 	}
 
 	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
