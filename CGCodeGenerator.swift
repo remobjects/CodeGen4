@@ -1112,7 +1112,7 @@ public __abstract class CGCodeGenerator {
 	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
 		var count = 0
 		for i in list {
-			if count++ == 0 {
+			if count++ > 0 {
 				separator()
 			}
 			callback(i)
