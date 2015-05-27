@@ -115,7 +115,9 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				if let type = b.`Type` {
 					Append("@catch (")
 					generateTypeReference(type)
-					Append(" ")
+					if !objcTypeRefereneIsPointer(type) {
+						Append(" ")
+					}
 					generateIdentifier(b.Name)
 					AppendLine(")")
 				} else {
@@ -162,7 +164,9 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
 		if let type = statement.`Type` {
 			generateTypeReference(type)
-			Append(" ")
+			if !objcTypeRefereneIsPointer(type) {
+				Append(" ")
+			}
 		} else {
 			Append("id ")
 		}
@@ -582,10 +586,19 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Type References
 	//
+	
+	internal func objcTypeRefereneIsPointer(type: CGTypeReference) -> Boolean {
+		if let type = type as? CGNamedTypeReference {
+			return type.IsClassType
+		} else if let type = type as? CGPredefinedTypeReference {
+			return type.Kind == CGPredefinedTypeKind.String || type.Kind == CGPredefinedTypeKind.Object
+		}
+		return false
+	}
 
 	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
 		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
-		if type.IsClassType && !ignoreNullability{
+		if type.IsClassType && !ignoreNullability {
 			Append(" *")
 		}
 	}

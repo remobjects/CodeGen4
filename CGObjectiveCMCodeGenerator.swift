@@ -34,7 +34,9 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 				}
 				if let type = field.`Type` {
 					generateTypeReference(type)
-					Append(" ")
+					if !objcTypeRefereneIsPointer(type) {
+						Append(" ")
+					}
 				} else {
 					Append("id ")
 				}
@@ -84,7 +86,9 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 					case .Unretained: Append("__unsafe_unretained")
 				}				
 				generateTypeReference(type)
-				Append(" ")
+				if !objcTypeRefereneIsPointer(type) {
+					Append(" ")
+				}
 			} else {
 				Append("id ")
 			}

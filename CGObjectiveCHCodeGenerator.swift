@@ -126,7 +126,9 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		
 		if let type = property.`Type` {
 			generateTypeReference(type)
-			Append(" ")
+			if !objcTypeRefereneIsPointer(type) {
+				Append(" ")
+			}
 		} else {
 			Append("id ")
 		}
