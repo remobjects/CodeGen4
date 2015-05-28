@@ -430,7 +430,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 				self.Append("func ")
 				self.generateIdentifier(m.Name)
-				self.Append("func (")
 				self.Append("(")
 				self.swiftGenerateDefinitionParameters(member.Parameters)
 				self.Append(")")
