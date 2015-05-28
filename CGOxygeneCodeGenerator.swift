@@ -164,16 +164,16 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 					self.Append("(")
 					self.pascalGenerateDefinitionParameters(member.Parameters)
 					self.Append(")")
-					if let returnType = member.ReturnType {
-						self.Append(": ")
-						self.generateTypeReference(returnType);
-					}
-					self.AppendLine(" begin")
-					self.incIndent()
-					self.generateStatements(member.Statements)
-					self.decIndent()
-					self.Append("end")
 				}
+				if let returnType = member.ReturnType {
+					self.Append(": ")
+					self.generateTypeReference(returnType);
+				}
+				self.AppendLine(" begin")
+				self.incIndent()
+				self.generateStatements(member.Statements)
+				self.decIndent()
+				self.Append("end")
 			}
 			
 		}
