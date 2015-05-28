@@ -139,7 +139,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-		//todo
+		Append("await ")
+		generateExpression(expression.Expression)
 	}
 
 	override func generateAnonymousTypeExpression(type: CGAnonymousTypeExpression) {

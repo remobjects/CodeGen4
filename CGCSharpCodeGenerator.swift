@@ -359,7 +359,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-		// Todo: generateAwaitExpression
+		Append("await ")
+		generateExpression(expression.Expression)
 	}
 
 	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
@@ -860,6 +861,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(method.Visibility)
 			cSharpGenerateStaticPrefix(method.Static && !type.Static)
+			if method.Awaitable {
+				Append("async ")
+			}
 			if method.External {
 				Append("extern ")
 			}

@@ -314,7 +314,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-		// Todo: generateAwaitExpression
+		assert(false, "generateAwaitExpression is not supported in Java")
 	}
 
 	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {

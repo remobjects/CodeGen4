@@ -149,6 +149,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Empty = false 
 	public var Partial = false /* Oxygene only */
 	public var Async = false /* Oxygene only */
+	public var Awaitable = false /* C# only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 

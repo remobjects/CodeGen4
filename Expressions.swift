@@ -80,7 +80,11 @@ public class CGTypeCastExpression: CGExpression {
 }
 
 public class CGAwaitExpression: CGExpression {
-	//incomplete
+	public var Expression: CGExpression
+
+	public init(_ expression: CGExpression, _ targetType: CGTypeReference) {
+		Expression = expression
+	}
 }
 
 public class CGAnonymousMethodExpression: CGExpression {

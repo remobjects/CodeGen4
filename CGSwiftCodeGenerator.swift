@@ -381,7 +381,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-			// Todo: generateAwaitExpression
+			Append("__await ")
+			generateExpression(expression.Expression)
 		} else {
 			assert(false, "generateEventDefinition is not supported in Swift, except in Silver")
 		}
