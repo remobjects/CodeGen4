@@ -55,7 +55,11 @@ public __abstract class CGCodeGenerator {
 		currentCode = StringBuilder()
 		definitionOnly = false
 		
-		generateTypeDefinition(type) 
+		if type is CGGlobalDefinition {
+			generateGlobals()
+		} else {
+			generateTypeDefinition(type)
+		}
 		return currentCode.ToString()
 	}
 	
@@ -65,7 +69,11 @@ public __abstract class CGCodeGenerator {
 		currentCode = StringBuilder()
 		definitionOnly = true
 		
-		generateTypeDefinition(type)
+		if type is CGGlobalDefinition {
+			generateGlobals()
+		} else {
+			generateTypeDefinition(type)
+		}
 		return currentCode.ToString()
 	}
 

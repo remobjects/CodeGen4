@@ -106,7 +106,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	final func pascalGenerateGlobalImplementation(global: CGGlobalDefinition) {
 		if let global = global as? CGGlobalFunctionDefinition {
 			pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
-		} 
+		}
 		
 		else {
 			assert(false, "unsupported global found: \(typeOf(global).ToString())")
