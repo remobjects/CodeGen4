@@ -39,7 +39,7 @@ public __abstract class CGCodeGenerator {
 		generateHeader()
 		generateDirectives()
 		generateImports()
-		if type is CGGlobalDefinition {
+		if type is CGGlobalTypeDefinition {
 			generateGlobals()
 		} else {
 			generateTypeDefinition(type)
@@ -55,7 +55,7 @@ public __abstract class CGCodeGenerator {
 		currentCode = StringBuilder()
 		definitionOnly = false
 		
-		if type is CGGlobalDefinition {
+		if type is CGGlobalTypeDefinition {
 			generateGlobals()
 		} else {
 			generateTypeDefinition(type)
