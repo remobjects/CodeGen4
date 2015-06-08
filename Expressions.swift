@@ -82,7 +82,7 @@ public class CGTypeCastExpression: CGExpression {
 public class CGAwaitExpression: CGExpression {
 	public var Expression: CGExpression
 
-	public init(_ expression: CGExpression, _ targetType: CGTypeReference) {
+	public init(_ expression: CGExpression) {
 		Expression = expression
 	}
 }
