@@ -69,7 +69,7 @@ public __abstract class CGCodeGenerator {
 		currentCode = StringBuilder()
 		definitionOnly = true
 		
-		if type is CGGlobalDefinition {
+		if type is CGGlobalTypeDefinition {
 			generateGlobals()
 		} else {
 			generateTypeDefinition(type)
