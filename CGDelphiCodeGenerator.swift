@@ -27,13 +27,13 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		if let initialization = currentUnit.Initialization {
 			AppendLine("initialization")
 			incIndent();
-			generateStatements(initialization.Statements)
+			generateStatements(initialization)
 			decIndent();
 		}
-		if let finalization = currentUnit.Finalization {
+		if let finalization = currentUnit.Initialization {
 			AppendLine("finalization")
 			incIndent();
-			generateStatements(finalization.Statements)
+			generateStatements(finalization)
 			decIndent();
 		}
 		super.generateFooter()

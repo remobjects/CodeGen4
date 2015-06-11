@@ -15,8 +15,8 @@ public class CGCodeUnit {
 	public var Globals = List<CGGlobalDefinition>()
 	
 	public var ImplementationImports = List<CGImport>() /* Delphi only */
-	public var Initialization: CGBlockStatement? /* Delphi only */
-	public var Finalization: CGBlockStatement? /* Delphi only */
+	public var Initialization: List<CGStatement>? /* Delphi only */
+	public var Finalization: List<CGStatement>? /* Delphi only */
 
 	public init() {
 	}
