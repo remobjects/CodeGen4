@@ -1058,7 +1058,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(".")
 		}
 		generateIdentifier(method.Name)
-		pascalGenerateGenericParameters(type.GenericParameters)
+		pascalGenerateGenericParameters(method.GenericParameters)
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 
