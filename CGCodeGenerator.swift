@@ -29,6 +29,10 @@ public __abstract class CGCodeGenerator {
 		generateAll() 
 		return currentCode.ToString()
 	}
+	
+	//
+	// Additional public APIs used by IDE Smarts & Co
+	//
 
 	public final func GenerateUnitForSingleType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
