@@ -1189,7 +1189,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(".")
 		}
 		generateIdentifier(method.Name)
-		pascalGenerateGenericParameters(type.GenericParameters)
+		if let realMethod = method as? CGMethodDefinition, genericParameter = realMethod.GenericParameters {
+			pascalGenerateGenericParameters(genericParameter)
+		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 

@@ -14,10 +14,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		
 		// current as of Elements 8.1 and Swift 1.2
 		keywords = ["__abstract", "__await", "__catch", "__event", "__finally", "__inline", "__mapped", "__out", "__partial", "__throw", "__try", "__yield", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", 
-					"as", "associativity", "autoreleasepool", "break", "case", "class", "continue", "convenience", "default", "deinit", "didSet", "do", "dynamicType",
-					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "if", "import", "in", "infix", "init", "inout", "internal", "is",
+					"as", "associativity", "autoreleasepool", "break", "case", "catch", "class", "continue", "convenience", "default", "defer", "deinit", "didSet", "do", "dynamicType",
+					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "guard", "if", "import", "in", "infix", "init", "inout", "internal", "is",
 					"lazy", "left", "let", "mutating", "nil", "none", "nonmutating", "operator", "optional", "override", "postfix", "precedence", "prefix", "private", "protocol", "public",
-					"required", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "true", "Type", "typealias",
+					"repeat", "required", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "true", "try", "Type", "typealias",
 					"unowned", "var", "weak", "where", "while", "willSet"].ToList() as! List<String>
 	}
 
@@ -124,7 +124,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
-		Append("do {")
+		Append("repeat {")
 		incIndent()
 		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
 		decIndent()
