@@ -14,7 +14,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGMemberDefinition>()
-	public var Visibility: CGTypeVisibilityKind = .Assembly
+	public var Visibility: CGTypeVisibilityKind = .Assembly		//in delphi, types with .Private will be put into implementation section
 	public var Static = false
 	public var Sealed = false
 	public var Abstract = false
@@ -80,6 +80,8 @@ public class CGStructTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
 public class CGInterfaceTypeDefinition : CGClassOrStructTypeDefinition {
+	public var InterfaceGuid: Guid?;// legacy delphi only. declaration is :  
+                                  	// type interfaceName = interface (ancestorInterface) ['{GUID}'] memberList end;
 }
 
 public class CGExtensionTypeDefinition : CGClassOrStructTypeDefinition {

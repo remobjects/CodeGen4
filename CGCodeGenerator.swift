@@ -176,7 +176,12 @@ public __abstract class CGCodeGenerator {
 
 	internal func generateTypeDefinitions() {
 		// descendant should not usually override
-		for t in currentUnit.Types {
+		generateTypeDefinitions(currentUnit.Types)
+	}
+
+	internal func generateTypeDefinitions(_ Types : List<CGTypeDefinition>) {
+		// descendant should not usually override
+		for t in Types {
 			generateTypeDefinition(t)
 			AppendLine()
 		}

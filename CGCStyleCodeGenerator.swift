@@ -48,7 +48,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("; ")
 		
 		generateIdentifier(statement.LoopVariableName)
-		if statement.Directon == CGLoopDirectionKind.Forward {
+		if statement.Direction == CGLoopDirectionKind.Forward {
 			Append(" <= ")
 		} else {
 			Append(" >= ")
@@ -57,7 +57,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("; ")
 
 		generateIdentifier(statement.LoopVariableName)
-		if statement.Directon == CGLoopDirectionKind.Forward {
+		if statement.Direction == CGLoopDirectionKind.Forward {
 			Append("++ ")
 		} else {
 			Append("-- ")

@@ -6,6 +6,8 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	public init() {
 		super.init()
+		DelphiMode = true;
+		AlphaSortImplementationMembers = true;
 		
 		// current as of — which version? need to check. XE7?
 		keywords = ["abstract", "and", "add", "async", "as", "begin", "break", "case", "class", "const", "constructor", "continue",
@@ -19,10 +21,36 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 					"unsafe", "uses", "using", "var", "virtual", "where", "while", "with", "write", "xor", "yield"].ToList() as! List<String>
 	}
 
+	override func generateHeader() {
+		AppendLine("unit "+currentUnit.FileName + ";");
+		super.generateHeader();
+	}
+
 	override func generateForwards() {
-		// todo: generate forwards, where needed
+		generateForwards(currentUnit.Types)
 	}
 	
+	internal func generateForwards(_ Types : List<CGTypeDefinition>) {
+		if Types.Count > 0 {
+			AppendLine("{ Forward declarations }");
+			var t = List<CGTypeDefinition>();
+			t.AddRange(Types);
+			t.Sort({return $0.Name.CompareToIgnoreCase($1.Name)});
+			for type in t {
+				if let type = type as? CGInterfaceTypeDefinition {
+					AppendLine(type.Name + " = interface;"); 
+				}
+			}
+			
+			for type in t {
+				if let type = type as? CGClassTypeDefinition {
+					AppendLine(type.Name + " = class;"); 
+				}
+			}
+			AppendLine()
+		}
+	}
+
 	override func generateFooter() {
 		if let initialization = currentUnit.Initialization {
 			AppendLine("initialization")
@@ -30,7 +58,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			generateStatements(initialization)
 			decIndent();
 		}
-		if let finalization = currentUnit.Initialization {
+		if let finalization = currentUnit.Finalization {
 			AppendLine("finalization")
 			incIndent();
 			generateStatements(finalization)
@@ -69,4 +97,38 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		incIndent()
 	}
 	
+
+	override func pascalGenerateInterfaceTypeDefinition() {
+		var t = List<CGTypeDefinition>();
+		for type in currentUnit.Types {
+			if type.Visibility != CGTypeVisibilityKind.Private {
+				t.Add(type)
+			}
+		}
+
+		if t.Count > 0 {
+			AppendLine("type")
+			incIndent()
+			generateForwards(t)
+			generateTypeDefinitions(t)
+			decIndent()
+		}
+	}
+
+	override func pascalGenerateImplementationTypeDefinition() {
+		var t = List<CGTypeDefinition>();
+		for type in currentUnit.Types {
+			if type.Visibility == CGTypeVisibilityKind.Private {
+				t.Add(type)
+			}
+		}
+
+		if t.Count > 0 {
+			AppendLine("type")
+			incIndent()
+			generateForwards(t)
+			generateTypeDefinitions(t)
+			decIndent()
+		}
+	}
 }
