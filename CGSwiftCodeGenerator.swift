@@ -79,7 +79,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("; ")
 		
 		generateIdentifier(statement.LoopVariableName)
-		if statement.Directon == CGLoopDirectionKind.Forward {
+		if statement.Direction == CGLoopDirectionKind.Forward {
 			Append(" <= ")
 		} else {
 			Append(" >= ")
@@ -88,7 +88,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("; ")
 
 		generateIdentifier(statement.LoopVariableName)
-		if statement.Directon == CGLoopDirectionKind.Forward {
+		if statement.Direction == CGLoopDirectionKind.Forward {
 			Append("++ ")
 		} else {
 			Append("-- ")

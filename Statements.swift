@@ -80,7 +80,7 @@ public class CGForToLoopStatement: CGNestingStatement {
 	public var LoopVariableType: CGTypeReference? // nil means it won't be declared, just used
 	public var StartValue: CGExpression
 	public var EndValue: CGExpression
-	public var Directon: CGLoopDirectionKind = .Forward
+	public var Direction: CGLoopDirectionKind = .Forward
 
 	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: CGExpression, _ endValue: CGExpression, _ statement: CGStatement) {
 		super.init(statement)

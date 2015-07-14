@@ -183,7 +183,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append(" := ")
 		generateExpression(statement.StartValue)
-		if statement.Directon == CGLoopDirectionKind.Forward {
+		if statement.Direction == CGLoopDirectionKind.Forward {
 			Append(" to ")
 		} else {
 			Append(" downto ")
