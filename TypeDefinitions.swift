@@ -5,7 +5,7 @@ import Sugar.Linq
 /* Types */
 
 public enum CGTypeVisibilityKind {
-	case Private
+	case Unit
 	case Assembly
 	case Public
 }

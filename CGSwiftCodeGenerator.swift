@@ -732,7 +732,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	func swiftGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {
-			case .Private: Append("private ")
+			case .Unit: Append("internal ")
 			case .Assembly: Append("internal ")
 			case .Public: Append("public ")
 		}

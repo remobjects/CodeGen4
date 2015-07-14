@@ -772,11 +772,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
-		switch visibility {
-			case .Private: Append("private ")
-			case .Assembly: fallthrough
-			case .Public: Append("public ")
-		}
+		// not supported/needed in base Pascal
 	}
 	
 	func pascalGenerateStaticPrefix(isStatic: Boolean) {
