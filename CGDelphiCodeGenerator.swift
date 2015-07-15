@@ -83,7 +83,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 				case .Unit: Append("private")
 				case .UnitAndProtected: fallthrough
 				case .AssemblyAndProtected: fallthrough
-				case .Protected: Append("string protected")
+				case .Protected: Append("strict protected")
 				case .UnitOrProtected: fallthrough
 				case .AssemblyOrProtected: Append("protected")
 				case .Assembly: fallthrough
