@@ -127,7 +127,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	func delphiGenerateInterfaceTypeDefinition() {
 		var t = List<CGTypeDefinition>();
 		for type in currentUnit.Types {
-			if type.Visibility != CGTypeVisibilityKind.Private {
+			if type.Visibility != CGTypeVisibilityKind.Unit {
 				t.Add(type)
 			}
 		}
@@ -144,7 +144,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	func delphiGenerateImplementationTypeDefinition() {
 		var t = List<CGTypeDefinition>();
 		for type in currentUnit.Types {
-			if type.Visibility == CGTypeVisibilityKind.Private {
+			if type.Visibility == CGTypeVisibilityKind.Unit {
 				t.Add(type)
 			}
 		}

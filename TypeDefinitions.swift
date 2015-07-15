@@ -5,7 +5,7 @@ import Sugar.Linq
 /* Types */
 
 public enum CGTypeVisibilityKind {
-	case Private
+	case Unit
 	case Assembly
 	case Public
 }
@@ -14,7 +14,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGMemberDefinition>()
-	public var Visibility: CGTypeVisibilityKind = .Assembly		//in delphi, types with .Private will be put into implementation section
+	public var Visibility: CGTypeVisibilityKind = .Assembly		//in delphi, types with .Unit will be put into implementation section
 	public var Static = false
 	public var Sealed = false
 	public var Abstract = false
