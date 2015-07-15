@@ -820,20 +820,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
-		switch visibility {
-			case .Private: Append("strict private")
-			case .Unit: Append("private")
-			case .UnitAndProtected: fallthrough
-			case .AssemblyAndProtected: fallthrough
-			case .Protected: Append("protected")
-			case .UnitOrProtected: fallthrough
-			case .AssemblyOrProtected: fallthrough
-			case .Assembly: fallthrough
-			case .Published: fallthrough
-			case .Public: Append("public")
-		}
-	}
+	__abstract func pascalGenerateMemberVisibilityKeyword(visibility: CGMemberVisibilityKind)
 
 	func swiftGenerateStaticPrefix(isStatic: Boolean) {
 		if isStatic {
@@ -845,7 +832,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		Append(" = ")
 		generateTypeReference(type.ActualType)
-	    generateStatementTerminator()
+		generateStatementTerminator()
 	}
 
 	override func generateBlockType(type: CGBlockTypeDefinition) {
@@ -975,7 +962,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				if m.Visibility == visibility{
 					if first {
 						decIndent()
-						pascalGenerateMemberTypeVisibilityKeyword(visibility)
+						pascalGenerateMemberVisibilityKeyword(visibility)
 						first = false
 						AppendLine()
 						incIndent()

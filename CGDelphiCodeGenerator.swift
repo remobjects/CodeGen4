@@ -18,9 +18,20 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		"self", "sequence", "set", "shl", "shr", "static", "step", "then", "to", "true", "try", "type", "typeof", "until",
 		"unsafe", "uses", "using", "var", "virtual", "where", "while", "with", "write", "xor", "yield"].ToList() as! List<String>
 	}
+	
+	public var Version: Integer = 7
+
+	public convenience init(version: Integer) {
+		init()
+		Version = version
+	}	
 
 	override func escapeIdentifier(name: String) -> String {
-		return name
+		if Version > 9 {
+			return super.escapeIdentifier(name)
+		} else {
+			return name
+		}
 	}
 
 	override func generateHeader() {
@@ -65,18 +76,33 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		super.generateFooter()
 	}
 
-	override func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
+	override func pascalGenerateMemberVisibilityKeyword(visibility: CGMemberVisibilityKind) {
+		if Version > 11 {
 			switch visibility {
-			case .Private:	Append("private")
-			case .Unit: Append("private")
-			case .UnitAndProtected: fallthrough
-			case .AssemblyAndProtected: fallthrough
-			case .Protected: Append("protected")
-			case .UnitOrProtected: fallthrough
-			case .AssemblyOrProtected: fallthrough
-			case .Assembly: fallthrough
-			case .Published: Append("published")
-			case .Public: Append("public")
+				case .Private: Append("strict private")
+				case .Unit: Append("private")
+				case .UnitAndProtected: fallthrough
+				case .AssemblyAndProtected: fallthrough
+				case .Protected: Append("string protected")
+				case .UnitOrProtected: fallthrough
+				case .AssemblyOrProtected: Append("protected")
+				case .Assembly: fallthrough
+				case .Published: Append("published")
+				case .Public: Append("public")
+			}
+		} else {
+			switch visibility {
+				case .Private: fallthrough
+				case .Unit: Append("private")
+				case .UnitAndProtected: fallthrough
+				case .AssemblyAndProtected: fallthrough
+				case .Protected: Append("protected")
+				case .UnitOrProtected: fallthrough
+				case .AssemblyOrProtected: fallthrough
+				case .Assembly: fallthrough
+				case .Published: Append("published")
+				case .Public: Append("public")
+			}
 		}
 	}
 	
