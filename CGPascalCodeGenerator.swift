@@ -6,7 +6,7 @@ import Sugar.Collections
 //
 
 public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
-	var AlphaSortImplementationMembers: Boolean = false;
+	public var AlphaSortImplementationMembers: Boolean = false;
 
 	override public init() {
 		useTabs = false
