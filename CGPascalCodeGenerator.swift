@@ -884,7 +884,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		decIndent()
 		Append("end")
 		generateStatementTerminator()
-		AppendLine()
 		pascalGenerateNestedTypes(type)
 	}
 
@@ -908,13 +907,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		decIndent()
 		Append("end")
 		generateStatementTerminator()
-		AppendLine()
 		pascalGenerateNestedTypes(type)
 	}
 
 	internal func pascalGenerateNestedTypes(type: CGTypeDefinition) {
 		for m in type.Members {
 			if let nestedType = m as? CGNestedTypeDefinition {
+				AppendLine()
 				nestedType.`Type`.Name = nestedType.Name+" nested in "+type.Name // Todo: nasty hack.
 				generateTypeDefinition(nestedType.`Type`)
 			}
