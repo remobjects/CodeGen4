@@ -884,6 +884,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		decIndent()
 		Append("end")
 		generateStatementTerminator()
+		AppendLine()
 		pascalGenerateNestedTypes(type)
 	}
 
@@ -907,6 +908,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		decIndent()
 		Append("end")
 		generateStatementTerminator()
+		AppendLine()
 		pascalGenerateNestedTypes(type)
 	}
 
