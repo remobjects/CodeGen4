@@ -221,15 +221,20 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal final func generateIdentifier(name: String, escaped: Boolean) {
-		if escaped {
-			var checkName = name
-			if !keywordsAreCaseSensitive {
-				checkName = checkName.ToLower()
-			}
-			if keywords?.Contains(checkName) {
-				Append(escapeIdentifier(name))
+		if escaped {		  
+			if name.Contains(".") {
+				let parts = name.Split(".")
+				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, callback: { part in self.generateIdentifier(part, escaped: true) })				
 			} else {
-				Append(name) 
+				var checkName = name
+				if !keywordsAreCaseSensitive {
+					checkName = checkName.ToLower()
+				}
+				if keywords?.Contains(checkName) {
+					Append(escapeIdentifier(name))
+				} else {
+					Append(name) 
+				}
 			}
 		} else {
 			Append(name)
