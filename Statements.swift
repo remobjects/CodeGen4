@@ -45,6 +45,9 @@ public __abstract class CGBlockStatement : CGStatement {
 	public init(_ statements: List<CGStatement>) {
 		Statements = statements
 	}
+	public convenience init(_ statements: CGStatement...) {
+		init(statements.ToList())
+	}
 }
 
 public __abstract class CGNestingStatement : CGStatement {
@@ -120,6 +123,9 @@ public class CGDoWhileLoopStatement: CGBlockStatement { // also "repeat/until"
 		super.init(statements)
 		Condition = condition
 	}
+	public convenience init(_ condition: CGExpression, _ statements: CGStatement...) {
+		init(condition, statements.ToList())
+	}
 }
 
 public class CGInfiniteLoopStatement: CGNestingStatement {}
@@ -138,6 +144,9 @@ public class CGSwitchStatement: CGStatement {
 			Cases = List<CGSwitchStatementCase>()
 		}
 	}
+	public convenience init(_ expression: CGExpression, _ cases: CGSwitchStatementCase[], _ defaultCase: List<CGStatement>? = nil) {
+		init(expression, cases.ToList(), defaultCase)
+	}
 }
 
 public class CGSwitchStatementCase : CGEntity {
@@ -147,6 +156,9 @@ public class CGSwitchStatementCase : CGEntity {
 	public init(_ caseExpression: CGExpression, _ statements: List<CGStatement>) {
 		CaseExpression = caseExpression
 		Statements = statements
+	}
+	public convenience init(_ caseExpression: CGExpression, _ statements: CGStatement...) {
+		init(caseExpression, statements.ToList())
 	}
 }
 
@@ -230,6 +242,9 @@ public class CGConstructorCallStatement : CGStatement {
 		} else {
 			Parameters = List<CGCallParameter>()
 		}
+	}
+	public convenience init(_ callSite: CGExpression, _ parameters: CGCallParameter...) {
+		init(callSite, parameters.ToList())
 	}
 }
 

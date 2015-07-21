@@ -13,6 +13,9 @@ public class CGRawExpression : CGExpression { // not language-agnostic. obviosul
 	public init(_ lines: List<String>) {
 		Lines = lines
 	}
+	/*public convenience init(_ lines: String ...) {
+		init(lines.ToList())
+	}*/
 	public init(_ lines: String) {
 		Lines = lines.Replace("\r", "").Split("\n").ToList()
 	}
@@ -100,10 +103,16 @@ public class CGAnonymousMethodExpression: CGExpression {
 		Parameters = List<CGAnonymousMethodParameterDefinition>()
 		Statements = statements
 	}
-	public init(_ parameters: List<CGAnonymousMethodParameterDefinition>, _ statements: CGStatement...) {
+	public convenience init(_ statements: CGStatement...) {
+		init(statements.ToList())
+	}
+	public init(_ parameters: List<CGAnonymousMethodParameterDefinition>, _ statements: List<CGStatement>) {
 		super.init()
-		Statements = statements.ToList()
+		Statements = statements
 		Parameters = parameters
+	}
+	public convenience init(_ parameters: CGAnonymousMethodParameterDefinition[], _ statements: CGStatement[]) {
+		init(parameters.ToList(), statements.ToList())
 	}
 }
 
@@ -149,9 +158,8 @@ public class CGAnonymousMethodMemberDefinition : CGAnonymousMemberDefinition{
 		super.init(name)
 		Statements = statements
 	}
-	public init(_ name: String, _ statements: CGStatement...) {
-		super.init(name)
-		Statements = statements.ToList()
+	public convenience init(_ name: String, _ statements: CGStatement...) {
+		init(name, statements.ToList())
 	}
 }
 
@@ -416,6 +424,9 @@ public class CGArrayLiteralExpression: CGExpression {
 	public init(_ elements: List<CGExpression>) {
 		Elements = elements
 	}
+	public convenience init(_ elements: CGExpression...) {
+		init(elements.ToList())
+	}
 }
 
 public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, currently */
@@ -429,6 +440,9 @@ public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, curren
 	public init(_ keys: List<CGExpression>, _ values: List<CGExpression>) {
 		Keys = keys
 		Values = values
+	}
+	public convenience init(_ keys: CGExpression[], _ values: CGExpression[]) {
+		init(keys.ToList(), values.ToList())
 	}
 }
 
@@ -456,13 +470,12 @@ public class CGNewInstanceExpression : CGExpression {
 		`Type` = type
 		Parameters = List<CGCallParameter>()
 	}
-	public init(_ type: CGTypeReference, _ parameters: List<CGCallParameter>?) {
+	public init(_ type: CGTypeReference, _ parameters: List<CGCallParameter>) {
 		`Type` = type
-		if let parameters = parameters {
-			Parameters = parameters
-		} else {
-			Parameters = List<CGCallParameter>()
-		}
+		Parameters = parameters
+	}
+	public convenience init(_ type: CGTypeReference, _ parameters: CGCallParameter...) {
+		init(type, parameters.ToList())
 	}
 }
 
@@ -517,6 +530,9 @@ public class CGMethodCallExpression : CGMemberAccessExpression{
 			Parameters = List<CGCallParameter>()
 		}   
 	}
+	public convenience init(_ callSite: CGExpression?, _ name: String, _ parameters: CGCallParameter...) {
+		init(callSite, name, List<CGCallParameter>(parameters))
+	}
 }
 
 public class CGPropertyAccessExpression: CGMemberAccessExpression {
@@ -529,6 +545,9 @@ public class CGPropertyAccessExpression: CGMemberAccessExpression {
 		} else {
 			Parameters = List<CGCallParameter>()
 		}   
+	}
+	public convenience init(_ callSite: CGExpression?, _ name: String, _ parameters: CGCallParameter...) {
+		init(callSite, name, List<CGCallParameter>(parameters))
 	}
 }
 
@@ -554,5 +573,8 @@ public class CGArrayElementAccessExpression: CGExpression {
 	public init(_ array: CGExpression, _ parameters: List<CGExpression>) {
 		Array = array
 		Parameters = parameters
+	}
+	public convenience init(_ array: CGExpression, _ parameters: CGExpression...) {
+		init(array, parameters.ToList())
 	}
 }
