@@ -1,4 +1,4 @@
-import Sugar
+﻿import Sugar
 import Sugar.Collections
 
 public __abstract class CGCodeGenerator {
@@ -376,9 +376,9 @@ public __abstract class CGCodeGenerator {
 			assert(false, "unsupported statement found: \(typeOf(statement).ToString())")
 		}
 
-		if !assigned(statement.endLocation) {
+		//if !assigned(statement.endLocation) {
 			statement.endLocation = currentLocation;
-		}
+		//} // 72543: Silver: cannot check if nullable struct is assigned
 
 	}
 	
@@ -580,9 +580,9 @@ public __abstract class CGCodeGenerator {
 			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
 		}
 
-		if !assigned(expression.endLocation) {
+		//if !assigned(expression.endLocation) {
 			expression.endLocation = currentLocation;
-		}
+		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 	
 	internal func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
@@ -852,9 +852,9 @@ public __abstract class CGCodeGenerator {
 			assert(false, "unsupported type found: \(typeOf(type).ToString())")
 		}
 
-		if !assigned(type.endLocation) {
+		//if !assigned(type.endLocation) {
 			type.endLocation = currentLocation;
-		}
+		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 	
 	internal func generateInlineComment(comment: String) {
@@ -987,9 +987,14 @@ public __abstract class CGCodeGenerator {
 			assert(false, "unsupported type member found: \(typeOf(type).ToString())")
 		}
 
-		if !assigned(member.endLocation) {
+		//72543: Silver: cannot check if nullable struct is assigned
+		/*if member.endLocation != nil {
 			member.endLocation = currentLocation;
 		}
+		if !assigned(member.endLocation) {
+			member.endLocation = currentLocation;
+		}*/
+		member.endLocation = currentLocation;
 	}
 				
 	internal func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
@@ -1075,9 +1080,9 @@ public __abstract class CGCodeGenerator {
 			assert(false, "unsupported type reference found: \(typeOf(type).ToString())")
 		}
 		
-		if !assigned(type.endLocation) {
+		//if !assigned(type.endLocation) {
 			type.endLocation = currentLocation;
-		}
+		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 	
 	internal func generateNamedTypeReference(type: CGNamedTypeReference) {
