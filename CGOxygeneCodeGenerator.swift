@@ -283,13 +283,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {
-			case .Private: Append("private ")
+			case .Unit: Append("unit ")
 			case .Assembly: Append("assembly ")
 			case .Public: Append("public ")
 		}
 	}
 	
-	override func pascalGenerateMemberTypeVisibilityKeyword(visibility: CGMemberVisibilityKind) {
+	override func pascalGenerateMemberVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("private")
 			case .Unit: Append("unit")

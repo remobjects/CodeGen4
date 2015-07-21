@@ -1,4 +1,4 @@
-﻿import Sugar
+import Sugar
 import Sugar.Collections
 
 public __abstract class CGCodeGenerator {
@@ -180,7 +180,12 @@ public __abstract class CGCodeGenerator {
 
 	internal func generateTypeDefinitions() {
 		// descendant should not usually override
-		for t in currentUnit.Types {
+		generateTypeDefinitions(currentUnit.Types)
+	}
+
+	internal func generateTypeDefinitions(_ Types : List<CGTypeDefinition>) {
+		// descendant should not usually override
+		for t in Types {
 			generateTypeDefinition(t)
 			AppendLine()
 		}
@@ -216,15 +221,20 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal final func generateIdentifier(name: String, escaped: Boolean) {
-		if escaped {
-			var checkName = name
-			if !keywordsAreCaseSensitive {
-				checkName = checkName.ToLower()
-			}
-			if keywords?.Contains(checkName) {
-				Append(escapeIdentifier(name))
+		if escaped {		  
+			if name.Contains(".") {
+				let parts = name.Split(".")
+				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, callback: { part in self.generateIdentifier(part, escaped: true) })				
 			} else {
-				Append(name) 
+				var checkName = name
+				if !keywordsAreCaseSensitive {
+					checkName = checkName.ToLower()
+				}
+				if keywords?.Contains(checkName) {
+					Append(escapeIdentifier(name))
+				} else {
+					Append(name) 
+				}
 			}
 		} else {
 			Append(name)
