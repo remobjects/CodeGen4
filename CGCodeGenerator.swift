@@ -1225,9 +1225,9 @@ public __abstract class CGCodeGenerator {
 		currentLocation.line++
 		currentLocation.column = 0
 		#if ECHOES
-		currentLocation.offset += currentCode.ToString().Length // 72544: Sugar: confusing error calling StringBuilder.Length claims the case is wring when its not, on Echoes
+		currentLocation.offset = currentCode.ToString().Length // 72544: Sugar: confusing error calling StringBuilder.Length claims the case is wring when its not, on Echoes
 		#else
-		currentLocation.offset += currentCode.Length // No member "length" on type "System.Text.StringBuilder!", did you mean "Length"?()
+		currentLocation.offset = currentCode.Length // No member "length" on type "System.Text.StringBuilder!", did you mean "Length"?()
 		#endif
 		atStart = true
 		return currentCode
