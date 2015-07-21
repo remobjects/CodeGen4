@@ -1038,14 +1038,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			incIndent()
 			
 			if let getStatements = property.GetStatements {
-				AppendLine("get{")
+				AppendLine("get")
 				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(getStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let getExpresssion = property.GetExpression {
-				AppendLine("get{")
+				AppendLine("get")
 				AppendLine("{")
 				incIndent()
 				generateStatement(CGReturnStatement(getExpresssion))
