@@ -1,7 +1,15 @@
 ﻿import Sugar
 import Sugar.Collections
 
+public struct CGLocation {
+	var column: Integer
+	var line: Integer
+	var offset: Integer
+}
+
 public __abstract class CGEntity {
+	var startLocation: CGLocation?
+	var endLocation: CGLocation?
 }
 
 public class CGCodeUnit {

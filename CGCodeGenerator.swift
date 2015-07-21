@@ -308,6 +308,9 @@ public __abstract class CGCodeGenerator {
 	}
 
 	internal final func generateStatement(statement: CGStatement) {
+
+		statement.startLocation = currentLocation;
+
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
 			generateCommentStatement(commentStatement)
@@ -362,6 +365,11 @@ public __abstract class CGCodeGenerator {
 		else {
 			assert(false, "unsupported statement found: \(typeOf(statement).ToString())")
 		}
+
+		if !assigned(statement.endLocation) {
+			statement.endLocation = currentLocation;
+		}
+
 	}
 	
 	internal func generateCommentStatement(commentStatement: CGCommentStatement?) {
@@ -482,6 +490,9 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateExpression(expression: CGExpression) {
 		// descendant should not override
+
+		expression.startLocation = currentLocation;
+
 		if let rawExpression = expression as? CGRawExpression {
 			helpGenerateCommaSeparatedList(rawExpression.Lines, separator: { self.AppendLine() }) { line in
 				self.Append(line)
@@ -557,6 +568,10 @@ public __abstract class CGCodeGenerator {
 		else {
 			Append("[UNSUPPORTED: "+expression.ToString()+"]")
 			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
+		}
+
+		if !assigned(expression.endLocation) {
+			expression.endLocation = currentLocation;
 		}
 	}
 	
@@ -802,6 +817,8 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateTypeDefinition(type: CGTypeDefinition) {
 		
+		type.startLocation = currentLocation;
+
 		generateCommentStatement(type.Comment)
 		generateAttributes(type.Attributes)
 		
@@ -823,6 +840,10 @@ public __abstract class CGCodeGenerator {
 		
 		else {
 			assert(false, "unsupported type found: \(typeOf(type).ToString())")
+		}
+
+		if !assigned(type.endLocation) {
+			type.endLocation = currentLocation;
 		}
 	}
 	
@@ -927,6 +948,8 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
 
+		member.startLocation = currentLocation;
+
 		generateCommentStatement(member.Comment)
 		generateAttributes(member.Attributes)
 
@@ -952,6 +975,10 @@ public __abstract class CGCodeGenerator {
 		
 		else {
 			assert(false, "unsupported type member found: \(typeOf(type).ToString())")
+		}
+
+		if !assigned(member.endLocation) {
+			member.endLocation = currentLocation;
 		}
 	}
 				
@@ -1010,6 +1037,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateTypeReference(type: CGTypeReference, ignoreNullability: Boolean) {
 		
+		type.startLocation = currentLocation;
 		//Append("["+type+"|"+Int32(type.ActualNullability).description+"]")
 		
 		// descendant should not override
@@ -1035,6 +1063,10 @@ public __abstract class CGCodeGenerator {
 		
 		else {
 			assert(false, "unsupported type reference found: \(typeOf(type).ToString())")
+		}
+		
+		if !assigned(type.endLocation) {
+			type.endLocation = currentLocation;
 		}
 	}
 	
@@ -1155,6 +1187,8 @@ public __abstract class CGCodeGenerator {
 	private var indent: Int32 = 0
 	private var atStart = true
 	
+	public let currentLocation = CGLocation()
+	
 	internal final func Append(line: String? = nil) -> StringBuilder {
 		if let line = line where length(line) > 0 {			
 			if atStart {
@@ -1162,6 +1196,10 @@ public __abstract class CGCodeGenerator {
 			}
 			currentCode.Append(line)
 			atStart = false
+			
+			let len = line.Length
+			currentLocation.column += len
+			currentLocation.offset += len
 		}
 		return currentCode
 	}
@@ -1169,6 +1207,13 @@ public __abstract class CGCodeGenerator {
 	internal final func AppendLine(line: String? = nil) -> StringBuilder {
 		Append(line)
 		currentCode.AppendLine()
+		currentLocation.line++
+		currentLocation.column = 0
+		#if ECHOES
+		currentLocation.offset += currentCode.ToString().Length
+		#else
+		currentLocation.offset += currentCode.Length // No member "length" on type "System.Text.StringBuilder!", did you mean "Length"?()
+		#endif
 		atStart = true
 		return currentCode
 	}
@@ -1176,10 +1221,14 @@ public __abstract class CGCodeGenerator {
 	private final func AppendIndent() -> StringBuilder {
 		if !codeCompletionMode {
 			if useTabs {
+				currentLocation.column += indent
+				currentLocation.offset += indent
 				for var i: Int32 = 0; i < indent; i++ {
 					currentCode.Append("\t")
 				}
 			} else {
+				currentLocation.column += indent*tabSize
+				currentLocation.offset += indent*tabSize
 				for var i: Int32 = 0; i < indent*tabSize; i++ {
 					currentCode.Append(" ")
 				}
