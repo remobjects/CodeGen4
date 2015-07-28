@@ -906,10 +906,19 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generateTypeMembers(type: CGTypeDefinition) {
+
+		var lastMember: CGMemberDefinition?
 		for m in type.Members {
+			if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) {
+				AppendLine()
+			}
 			generateTypeMember(m, type: type)
-			AppendLine()
+			lastMember = m;
 		}
+	}
+	
+	internal func memberNeedsSpace(member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+		return true
 	}
 	
 	internal func generateClassTypeStart(type: CGClassTypeDefinition) {

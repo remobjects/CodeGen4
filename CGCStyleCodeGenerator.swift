@@ -12,6 +12,23 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		tabSize = 4
 	}
 
+	func memberIsSingleLine(member: CGMemberDefinition) -> Boolean {
+		if member is CGFieldDefinition {
+			return true
+		}
+		if let property = member as? CGPropertyDefinition {
+			return property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil
+		}
+		return false
+	}
+
+	override func memberNeedsSpace(member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+		if memberIsSingleLine(member) && memberIsSingleLine(lastMember) {
+			return false;
+		}
+		return true
+	}
+
 	override func generateInlineComment(comment: String) {
 		comment = comment.Replace("*/", "* /")
 		Append("/* \(comment) */")

@@ -39,7 +39,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateStatementTerminator() {
 		AppendLine() // no ; in Swift
 	}
-
+	
 	//
 	// Statements
 	//
@@ -1072,7 +1072,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			
 		} else {
 			
-			if property.ReadOnly && (property.SetStatements == nil && property.SetExpression == nil && property.GetExpression == nil && property.SetExpression == nil) {
+			if property.ReadOnly && (property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil) {
 				Append("let ")
 			} else {
 				Append("var ")
