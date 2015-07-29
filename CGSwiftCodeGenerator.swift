@@ -954,7 +954,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		
 		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {
-			AppendLine();
+			AppendLine()
 			return
 		}
 		
@@ -981,7 +981,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 
 		if type is CGInterfaceTypeDefinition || definitionOnly {
-			AppendLine();
+			AppendLine()
 			return
 		}
 
@@ -997,7 +997,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("deinit")
 
 		if type is CGInterfaceTypeDefinition || definitionOnly {
-			AppendLine();
+			AppendLine()
 			return
 		}
 
@@ -1023,7 +1023,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("func Finalizer()")
 		
 		if type is CGInterfaceTypeDefinition || finalizer.External || definitionOnly {
-			AppendLine();
+			AppendLine()
 			return
 		}
 		

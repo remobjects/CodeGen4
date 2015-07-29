@@ -53,13 +53,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	
 	final func pascalGenerateTypeImplementations() {
 		for t in currentUnit.Types {
-			pascalGenerateTypeImplementation(t);
+			pascalGenerateTypeImplementation(t)
 		}
 	}
 	
 	final func pascalGenerateGlobalImplementations() {
 		for g in currentUnit.Globals {
-			pascalGenerateGlobalImplementation(g);
+			pascalGenerateGlobalImplementation(g)
 		}
 	}
 
@@ -79,15 +79,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	final func pascalGenerateTypeMemberImplementations(type: CGTypeDefinition) {
 		if AlphaSortImplementationMembers {
-			var temp = List<CGMemberDefinition>();
-			temp.AddRange(type.Members);
-			temp.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)});
+			var temp = List<CGMemberDefinition>()
+			temp.AddRange(type.Members)
+			temp.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
 			for m in temp {
-				pascalGenerateTypeMemberImplementation(m, type: type);
+				pascalGenerateTypeMemberImplementation(m, type: type)
 			}
 		} else {
 			for m in type.Members {
-				pascalGenerateTypeMemberImplementation(m, type: type);
+				pascalGenerateTypeMemberImplementation(m, type: type)
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			decIndent()
 			Append("end")
 		}
-		generateStatementTerminator();
+		generateStatementTerminator()
 	}
 
 	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
@@ -340,7 +340,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateStatementTerminator()
 		}
 		Append("exit")
-		generateStatementTerminator();
+		generateStatementTerminator()
 	}
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
@@ -968,10 +968,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						AppendLine()
 						incIndent()
 					}
-					generateTypeMember(m, type: type);
+					generateTypeMember(m, type: type)
 				}
 			} else {
-				generateTypeMember(m, type: type);
+				generateTypeMember(m, type: type)
 			}
 		}
 	}
@@ -1022,7 +1022,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(": ")
 			generateTypeReference(returnType)
 		}
-		Append(";");
+		Append(";")
 
 		if !implementation {
 
@@ -1126,7 +1126,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateMethodImplementation(method: CGMethodDefinition, type: CGTypeDefinition) {
 		if (method.Virtuality != CGMemberVirtualityKind.Abstract) && !method.External && !method.Empty {
 			pascalGenerateMethodHeader(method, type: type, methodKeyword: pascalKeywordForMethod(method), implementation: true)
-			pascalGenerateMethodBody(method, type: type);
+			pascalGenerateMethodBody(method, type: type)
 		}
 	}
 
@@ -1137,7 +1137,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateConstructorImplementation(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		if ctor.Virtuality != CGMemberVirtualityKind.Abstract && !ctor.External && !ctor.Empty {
 			pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: true)
-			pascalGenerateMethodBody(ctor, type: type);
+			pascalGenerateMethodBody(ctor, type: type)
 		}
 	}
 
@@ -1147,7 +1147,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGenerateDestructorImplementation(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(dtor, type: type, methodKeyword: "destructor", implementation: true)
-		pascalGenerateMethodBody(dtor, type: type);
+		pascalGenerateMethodBody(dtor, type: type)
 	}
 
 	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
@@ -1164,7 +1164,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGenerateCustomOperatorImplementation(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: true)
-		pascalGenerateMethodBody(customOperator, type: type);
+		pascalGenerateMethodBody(customOperator, type: type)
 	}
 
 	func pascalGenerateNestedTypeImplementation(nestedType: CGNestedTypeDefinition, type: CGTypeDefinition) {
@@ -1308,19 +1308,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int: Append("Integer");
-			case .UInt: Append("");
-			case .Int8: Append("");
-			case .UInt8: Append("Byte");
-			case .Int16: Append("");
-			case .UInt16: Append("Word");
-			case .Int32: Append("Integer");
-			case .UInt32: Append("");
-			case .Int64: Append("");
-			case .UInt64: Append("");
-			case .IntPtr: Append("");
-			case .UIntPtr: Append("");
-			case .Single: Append("");
+			case .Int: Append("Integer")
+			case .UInt: Append("")
+			case .Int8: Append("")
+			case .UInt8: Append("Byte")
+			case .Int16: Append("")
+			case .UInt16: Append("Word")
+			case .Int32: Append("Integer")
+			case .UInt32: Append("")
+			case .Int64: Append("")
+			case .UInt64: Append("")
+			case .IntPtr: Append("")
+			case .UIntPtr: Append("")
+			case .Single: Append("")
 			case .Double: Append("")
 			case .Boolean: Append("")
 			case .String: Append("")

@@ -168,7 +168,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 				}
 				if let returnType = member.ReturnType {
 					self.Append(": ")
-					self.generateTypeReference(returnType);
+					self.generateTypeReference(returnType)
 				}
 				self.AppendLine(" begin")
 				self.incIndent()
@@ -399,7 +399,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func pascalGenerateFinalizerImplementation(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: true)
-		pascalGenerateMethodBody(finalizer, type: type);
+		pascalGenerateMethodBody(finalizer, type: type)
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
@@ -473,19 +473,19 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		
 		switch (type.Kind) {
-			case .Int: Append("NativeInt");
-			case .UInt: Append("NativeUInt");
-			case .Int8: Append("SByte");
-			case .UInt8: Append("Byte");
-			case .Int16: Append("Int16");
-			case .UInt16: Append("UInt16");
-			case .Int32: Append("Integer");
-			case .UInt32: Append("UInt32");
-			case .Int64: Append("Int64");
-			case .UInt64: Append("UInt64");
-			case .IntPtr: Append("IntPrt");
-			case .UIntPtr: Append("UIntPtr");
-			case .Single: Append("Single");
+			case .Int: Append("NativeInt")
+			case .UInt: Append("NativeUInt")
+			case .Int8: Append("SByte")
+			case .UInt8: Append("Byte")
+			case .Int16: Append("Int16")
+			case .UInt16: Append("UInt16")
+			case .Int32: Append("Integer")
+			case .UInt32: Append("UInt32")
+			case .Int64: Append("Int64")
+			case .UInt64: Append("UInt64")
+			case .IntPtr: Append("IntPrt")
+			case .UIntPtr: Append("UIntPtr")
+			case .Single: Append("Single")
 			case .Double: Append("Double")
 			case .Boolean: Append("Boolean")
 			case .String: Append("String")

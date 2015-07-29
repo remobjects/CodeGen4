@@ -35,25 +35,27 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateHeader() {
-		AppendLine("unit "+currentUnit.FileName + ";");
-		super.generateHeader();
+		AppendLine("unit "+currentUnit.FileName + ";")
+		super.generateHeader()
 	}
 	
 	internal func generateForwards(_ Types : List<CGTypeDefinition>) {
 		if Types.Count > 0 {
-			AppendLine("{ Forward declarations }");
-			var t = List<CGTypeDefinition>();
-			t.AddRange(Types);
-			t.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)});
+			AppendLine("{ Forward declarations }")
+			var t = List<CGTypeDefinition>()
+			t.AddRange(Types)
+			if AlphaSortImplementationMembers {
+				t.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
+			}
 			for type in t {
 				if let type = type as? CGInterfaceTypeDefinition {
-					AppendLine(type.Name + " = interface;"); 
+					AppendLine(type.Name + " = interface;") 
 				}
 			}
 			
 			for type in t {
 				if let type = type as? CGClassTypeDefinition {
-					AppendLine(type.Name + " = class;"); 
+					AppendLine(type.Name + " = class;") 
 				}
 			}
 			AppendLine()
@@ -63,15 +65,15 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	override func generateFooter() {
 		if let initialization = currentUnit.Initialization {
 			AppendLine("initialization")
-			incIndent();
+			incIndent()
 			generateStatements(initialization)
-			decIndent();
+			decIndent()
 		}
 		if let finalization = currentUnit.Finalization {
 			AppendLine("finalization")
-			incIndent();
+			incIndent()
 			generateStatements(finalization)
-			decIndent();
+			decIndent()
 		}
 		super.generateFooter()
 	}
@@ -151,7 +153,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	func delphiGenerateInterfaceTypeDefinition() {
-		var t = List<CGTypeDefinition>();
+		var t = List<CGTypeDefinition>()
 		for type in currentUnit.Types {
 			if type.Visibility != CGTypeVisibilityKind.Unit {
 				t.Add(type)
@@ -168,7 +170,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	func delphiGenerateImplementationTypeDefinition() {
-		var t = List<CGTypeDefinition>();
+		var t = List<CGTypeDefinition>()
 		for type in currentUnit.Types {
 			if type.Visibility == CGTypeVisibilityKind.Unit {
 				t.Add(type)
@@ -211,11 +213,11 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		// lets put it into "()" if left or right is CGBinaryOperatorExpression
 
 		if let expression = expression.LefthandValue as? CGBinaryOperatorExpression {
-			Append("(");
+			Append("(")
 		}
 		generateExpression(expression.LefthandValue)
 		if let expression = expression.LefthandValue as? CGBinaryOperatorExpression {
-			Append(")");
+			Append(")")
 		}
 		Append(" ")
 		if let operatorString = expression.OperatorString {
@@ -225,11 +227,11 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 		Append(" ")
 		if let expression = expression.RighthandValue as? CGBinaryOperatorExpression {
-			Append("(");
+			Append("(")
 		}
 		generateExpression(expression.RighthandValue)
 		if let expression = expression.RighthandValue as? CGBinaryOperatorExpression {
-			Append(")");
+			Append(")")
 		}
 	}
 
@@ -268,7 +270,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		if let k = type.InterfaceGuid {
-			AppendLine("['{" + k.ToString() + "}']");
+			AppendLine("['{" + k.ToString() + "}']")
 		}
 		incIndent()
 	}
@@ -323,10 +325,10 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		if b {
 			/*generate code like
 				if Result then
-					System.Inc(fCurrentIndex);
+					System.Inc(fCurrentIndex)
 				instead of
 				if Result then begin
-					System.Inc(fCurrentIndex);
+					System.Inc(fCurrentIndex)
 				end;
 			works only if else statement isn't used
 			otherwise need to add global variable and handle it in "generateStatementTerminator"
@@ -346,7 +348,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 				decIndent()
 				Append("end")
 			}
-			generateStatementTerminator();
+			generateStatementTerminator()
 		}
 	}
 
@@ -456,29 +458,29 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int: Append("Integer");
-			case .UInt: Append("");
-			case .Int8: Append("Shortint");
-			case .UInt8: Append("Byte");
-			case .Int16: Append("Smallint");
-			case .UInt16: Append("Word");
-			case .Int32: Append("Integer");
-			case .UInt32: Append("Cardinal");
-			case .Int64: Append("Int64");
-			case .UInt64: Append("UInt64");
-			case .IntPtr: Append("");
-			case .UIntPtr: Append("");
-			case .Single: Append("Single");
-			case .Double: Append("Double");
-			case .Boolean: Append("Boolean");
-			case .String: Append("String");
-			case .AnsiChar: Append("AnsiChar");
-			case .UTF16Char: Append("");
-			case .UTF32Char: Append("");
-			case .Dynamic: Append("{DYNAMIC}");
-			case .InstanceType: Append("{INSTANCETYPE}");
-			case .Void: Append("Pointer");
-			case .Object: Append("Object");
+			case .Int: Append("Integer")
+			case .UInt: Append("")
+			case .Int8: Append("Shortint")
+			case .UInt8: Append("Byte")
+			case .Int16: Append("Smallint")
+			case .UInt16: Append("Word")
+			case .Int32: Append("Integer")
+			case .UInt32: Append("Cardinal")
+			case .Int64: Append("Int64")
+			case .UInt64: Append("UInt64")
+			case .IntPtr: Append("")
+			case .UIntPtr: Append("")
+			case .Single: Append("Single")
+			case .Double: Append("Double")
+			case .Boolean: Append("Boolean")
+			case .String: Append("String")
+			case .AnsiChar: Append("AnsiChar")
+			case .UTF16Char: Append("")
+			case .UTF32Char: Append("")
+			case .Dynamic: Append("{DYNAMIC}")
+			case .InstanceType: Append("{INSTANCETYPE}")
+			case .Void: Append("Pointer")
+			case .Object: Append("Object")
 			case .Class: Append("")
 		}
 	}
