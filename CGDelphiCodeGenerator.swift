@@ -44,7 +44,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			AppendLine("{ Forward declarations }");
 			var t = List<CGTypeDefinition>();
 			t.AddRange(Types);
-			t.Sort({return $0.Name.CompareToIgnoreCase($1.Name)});
+			t.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)});
 			for type in t {
 				if let type = type as? CGInterfaceTypeDefinition {
 					AppendLine(type.Name + " = interface;"); 

@@ -81,7 +81,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if AlphaSortImplementationMembers {
 			var temp = List<CGMemberDefinition>();
 			temp.AddRange(type.Members);
-			temp.Sort({return $0.Name.CompareToIgnoreCase($1.Name)});
+			temp.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)});
 			for m in temp {
 				pascalGenerateTypeMemberImplementation(m, type: type);
 			}
