@@ -68,6 +68,8 @@ public class CGPredefinedTypeReference : CGTypeReference {
 	public init(_ kind: CGPredefinedTypeKind) {
 		Kind = kind
 		switch Kind {
+			case .Int: fallthrough
+			case .UInt: fallthrough
 			case .Int8: fallthrough
 			case .UInt8: fallthrough
 			case .Int16: fallthrough
@@ -107,6 +109,10 @@ public class CGPredefinedTypeReference : CGTypeReference {
 				DefaultValue = CGNilExpression.Nil
 				DefaultNullability = .NullableUnwrapped
 				IsClassType = true
+			case .Class: 
+				DefaultValue = CGNilExpression.Nil
+				DefaultNullability = .NullableUnwrapped
+				IsClassType = true
 		}
 	}
 	public convenience init(_ kind: CGPredefinedTypeKind, defaultNullability: CGTypeNullabilityKind) {
@@ -118,6 +124,8 @@ public class CGPredefinedTypeReference : CGTypeReference {
 		DefaultValue = defaultValue
 	}
 
+	public static lazy var Int = CGPredefinedTypeReference(.Int)
+	public static lazy var UInt = CGPredefinedTypeReference(.UInt)
 	public static lazy var Int8 = CGPredefinedTypeReference(.Int8)
 	public static lazy var UInt8 = CGPredefinedTypeReference(.UInt8)
 	public static lazy var Int16 = CGPredefinedTypeReference(.Int16)
@@ -140,9 +148,12 @@ public class CGPredefinedTypeReference : CGTypeReference {
 	public static lazy var InstanceType = CGPredefinedTypeReference(.InstanceType)
 	public static lazy var Void = CGPredefinedTypeReference(.Void)
 	public static lazy var Object = CGPredefinedTypeReference(.Object)
+	public static lazy var Class = CGPredefinedTypeReference(.Class)
 }
 
 public enum CGPredefinedTypeKind {
+	case Int
+	case UInt
 	case Int8
 	case UInt8
 	case Int16
@@ -165,6 +176,7 @@ public enum CGPredefinedTypeKind {
 	case InstanceType // aka "Self"
 	case Void
 	case Object
+	case Class
 }
 
 public class CGInlineBlockTypeReference : CGTypeReference {

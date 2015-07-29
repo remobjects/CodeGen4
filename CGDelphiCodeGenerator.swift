@@ -456,6 +456,8 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
+			case .Int: Append("Integer");
+			case .UInt: Append("");
 			case .Int8: Append("Shortint");
 			case .UInt8: Append("Byte");
 			case .Int16: Append("Smallint");
@@ -477,6 +479,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			case .InstanceType: Append("{INSTANCETYPE}");
 			case .Void: Append("Pointer");
 			case .Object: Append("Object");
+			case .Class: Append("")
 		}
 	}
 }

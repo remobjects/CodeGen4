@@ -224,8 +224,12 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
 		Append("[")
-		generateExpression(expression.Expression)
-		Append("Class]")
+		if let typeReferenceExpression = expression.Expression as? CGTypeReferenceExpression {
+			generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
+		} else {
+			generateExpression(expression.Expression)
+		}
+		Append(" Class]")
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
@@ -314,8 +318,8 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	internal func objcGenerateCallSiteForExpression(expression: CGMemberAccessExpression, forceSelf: Boolean = false) {
 		if let callSite = expression.CallSite {
-			if let typeRef = callSite as? CGTypeReferenceExpression {
-				generateTypeReference(typeRef.`Type`, ignoreNullability: true)
+			if let typeReferenceExpression = expression.CallSite as? CGTypeReferenceExpression {
+				generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
 			} else {
 				generateExpression(callSite)
 			}
@@ -412,8 +416,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		objcGenerateCallSiteForExpression(property, forceSelf: true)
 		Append(".")
 		Append(property.Name)
-		
-		assert(property.Parameters.Count == 0, "Index properties are not supported in Objective-C")
+
+		if let params = property.Parameters where params.Count > 0 {
+			assert(false, "Index properties are not supported in Objective-C")
+		}
 	}
 
 	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
@@ -605,6 +611,8 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
+			case .Int: Append("NSInteger");
+			case .UInt: Append("NSUInteger");
 			case .Int8: Append("int8")
 			case .UInt8: Append("uint8")
 			case .Int16: Append("int16")
@@ -618,14 +626,15 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			case .Single: Append("float")
 			case .Double: Append("double")
 			case .Boolean: Append("BOOL")
-			case .String: Append("NSString *")
+			case .String: if ignoreNullability { Append("NSString") } else { Append("NSString *") }
 			case .AnsiChar: Append("char")
 			case .UTF16Char: Append("UInt16")
 			case .UTF32Char: Append("UInt32")
 			case .Dynamic: Append("id")
 			case .InstanceType: Append("instancetype")
 			case .Void: Append("void")
-			case .Object: Append("NSObject *")
+			case .Object: if ignoreNullability { Append("NSObject")  } else { Append("NSObject *") }
+			case .Class: Append("Class")
 		}		
 	}
 

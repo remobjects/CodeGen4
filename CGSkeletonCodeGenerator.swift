@@ -356,6 +356,8 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
+			case .Int: Append("")
+			case .UInt: Append("")
 			case .Int8: Append("")
 			case .UInt8: Append("")
 			case .Int16: Append("")
@@ -377,6 +379,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 			case .InstanceType: Append("")
 			case .Void: Append("")
 			case .Object: Append("")
+			case .Class: Append("")
 		}		
 	}
 

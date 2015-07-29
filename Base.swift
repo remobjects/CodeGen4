@@ -1,6 +1,13 @@
 ﻿import Sugar
 import Sugar.Collections
 
+public enum CGPlatform {
+	case Echoes
+	case Cooper
+	case Nougat
+	case Gotham
+}
+
 public struct CGLocation {
 	public var column: Integer
 	public var line: Integer

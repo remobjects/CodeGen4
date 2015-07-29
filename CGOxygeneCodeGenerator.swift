@@ -473,6 +473,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		
 		switch (type.Kind) {
+			case .Int: Append("NativeInt");
+			case .UInt: Append("NativeUInt");
 			case .Int8: Append("SByte");
 			case .UInt8: Append("Byte");
 			case .Int16: Append("Int16");
@@ -494,6 +496,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .InstanceType: Append("instancetype")
 			case .Void: Append("{VOID}")
 			case .Object: Append("Object")
+			case .Class: Append("Class") // todo: make platform-specific
 		}		
 	}
 

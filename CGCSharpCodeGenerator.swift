@@ -613,7 +613,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
 		cSharpGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
-		if expression.Parameters.Count > 0 {
+		if let params = expression.Parameters where params.Count > 0 {
 			Append("[")
 			cSharpGenerateCallParameters(expression.Parameters)
 			Append("]")
@@ -1128,6 +1128,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
+			case .Int: Append("int")
+			case .UInt: Append("uint")
 			case .Int8: Append("sbyte")
 			case .UInt8: Append("byte")
 			case .Int16: Append("short")
@@ -1149,6 +1151,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .InstanceType: Append("instancetype")
 			case .Void: Append("void")
 			case .Object: Append("object")
+			case .Class: Append("Class") // todo: make platform-specific
 		}		
 		if !ignoreNullability {
 			cSharpGenerateSuffixForNullability(type)

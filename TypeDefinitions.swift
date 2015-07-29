@@ -81,7 +81,7 @@ public class CGStructTypeDefinition : CGClassOrStructTypeDefinition {
 
 public class CGInterfaceTypeDefinition : CGClassOrStructTypeDefinition {
 	public var InterfaceGuid: Guid?;// legacy delphi only. declaration is :  
-                                  	// type interfaceName = interface (ancestorInterface) ['{GUID}'] memberList end;
+									  // type interfaceName = interface (ancestorInterface) ['{GUID}'] memberList end;
 }
 
 public class CGExtensionTypeDefinition : CGClassOrStructTypeDefinition {
@@ -286,6 +286,8 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		}
 		return nil
 	}
+	
+	public var isShortcutProperty: Boolean { get { return GetStatements == nil && SetStatements == nil && GetExpression == nil && SetExpression == nil } }
 }
 
 public class CGEventDefinition: CGFieldLikeMemberDefinition {

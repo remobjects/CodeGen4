@@ -297,7 +297,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 		if let callSite = statement.CallSite {
-			generateExpression(callSite)
+			if let typeReferenceExpression = statement.CallSite as? CGTypeReferenceExpression {
+				generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
+			} else {
+				generateExpression(callSite)
+			}
 			Append(".")
 		}
 		Append("init(")
@@ -334,7 +338,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
 		generateExpression(expression.Expression)
-		Append(".Type")
+		if expression.Expression is CGTypeReferenceExpression {
+			Append(".self as! AnyClass")
+		} else {
+			Append(".dynamicType")
+		}
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
@@ -503,7 +511,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	internal func swiftGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
-			generateExpression(callSite)
+			if let typeReferenceExpression = expression.CallSite as? CGTypeReferenceExpression {
+				generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
+			} else {
+				generateExpression(callSite)
+			}
 			if expression.NilSafe {
 				Append("?")
 			} else if expression.UnwrapNullable {
@@ -575,7 +587,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			} else if p == 0, let externalName = firstExternalName {
 				generateIdentifier(externalName)
 				Append(" ")
-			} else {
+			} else if p > 0 {
 				Append("_ ")
 			}
 			generateIdentifier(param.Name)
@@ -664,7 +676,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
 		swiftGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
-		if expression.Parameters.Count > 0 {
+		if let params = expression.Parameters where params.Count > 0 {
 			Append("[")
 			swiftGenerateCallParameters(expression.Parameters)
 			Append("]")
@@ -845,7 +857,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		decIndent()
 		AppendLine("}")
-		AppendLine()
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
@@ -965,7 +976,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if length(ctor.Name) > 0 {
 			swiftGenerateDefinitionParameters(ctor.Parameters, firstExternalName: removeWithPrefix(ctor.Name))
 		} else {
-			swiftGenerateDefinitionParameters(ctor.Parameters)
+			swiftGenerateDefinitionParameters(ctor.Parameters, firstExternalName: "_")
 		}
 		Append(")")
 
@@ -1050,6 +1061,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
 		swiftGenerateStaticPrefix(property.Static && !type.Static)
+		swiftGenerateVirtualityPrefix(property)
 		if property.Lazy {
 			Append("lazy ")
 		}
@@ -1072,7 +1084,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			
 		} else {
 			
-			if property.ReadOnly && (property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil) {
+			if property.ReadOnly && (property.isShortcutProperty) {
 				Append("let ")
 			} else {
 				Append("var ")
@@ -1084,7 +1096,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 
-		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+		if property.isShortcutProperty {
 		
 			if let value = property.Initializer {
 				Append(" = ")
@@ -1216,6 +1228,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
+			case .Int: Append("Int")
+			case .UInt: Append("UInt")
 			case .Int8: Append("Int8")
 			case .UInt8: Append("UInt8")
 			case .Int16: Append("Int16")
@@ -1237,6 +1251,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .InstanceType: Append("Self")
 			case .Void: Append("()")
 			case .Object: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("Object") } else { Append("NSObject") }
+			case .Class: Append("AnyClass")
 		}		
 		if !ignoreNullability {
 			Append(swiftSuffixForNullability(type.Nullability, defaultNullability: type.DefaultNullability))

@@ -748,7 +748,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
 		let needsEscape = pascalGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name, escaped: needsEscape)
-		if expression.Parameters.Count > 0 {
+		if let params = expression.Parameters where params.Count > 0 {
 			Append("[")
 			pascalGenerateCallParameters(expression.Parameters)
 			Append("]")
@@ -1308,6 +1308,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
+			case .Int: Append("Integer");
+			case .UInt: Append("");
 			case .Int8: Append("");
 			case .UInt8: Append("Byte");
 			case .Int16: Append("");
@@ -1329,6 +1331,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			case .InstanceType: Append("{INSTANCETYPE}")
 			case .Void: Append("{VOID}")
 			case .Object: Append("Object")
+			case .Class: Append("")
 		}		
 	}
 

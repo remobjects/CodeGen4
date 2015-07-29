@@ -192,8 +192,16 @@ public __abstract class CGCodeGenerator {
 	}
 
 	internal func generateGlobals() {
+
+		var lastGlobal: CGGlobalDefinition?
 		for g in currentUnit.Globals {
+			if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
+				AppendLine()
+			}
 			generateGlobal(g)
+			lastGlobal = g;
+		}
+		if lastGlobal != nil {
 			AppendLine()
 		}
 	}
@@ -211,6 +219,36 @@ public __abstract class CGCodeGenerator {
 		// descendant must override this or generateImports()
 		assert(false, "generateImport not implemented")
 	}
+	
+	//
+	// Helpers
+	//
+
+	internal func memberNeedsSpace(member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+		if memberIsSingleLine(member) && memberIsSingleLine(lastMember) {
+			return false;
+		}
+		return true
+	}
+	
+	internal func globalNeedsSpace(global: CGGlobalDefinition, afterGlobal lastGlobal: CGGlobalDefinition) -> Boolean {
+		if globalIsSingleLine(global) && globalIsSingleLine(lastGlobal) {
+			return false;
+		}
+		return true
+	}
+	
+	internal func memberIsSingleLine(member: CGMemberDefinition) -> Boolean {
+		return false
+	}
+
+	internal func globalIsSingleLine(global: CGGlobalDefinition) -> Boolean {
+		if global is CGGlobalVariableDefinition {
+			return true
+		}
+		return false
+	}
+
 
 	//
 	// Indentifiers
@@ -917,10 +955,6 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func memberNeedsSpace(member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
-		return true
-	}
-	
 	internal func generateClassTypeStart(type: CGClassTypeDefinition) {
 		// descendant must override
 		assert(false, "generateClassTypeStart not implemented")
@@ -1117,6 +1151,8 @@ public __abstract class CGCodeGenerator {
 	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		// most language swill want to override this
 		switch (type.Kind) {
+			case .Int: Append("Int")
+			case .UInt: Append("UInt")
 			case .Int8: Append("SByte")
 			case .UInt8: Append("Byte")
 			case .Int16: Append("Int16")
@@ -1138,6 +1174,7 @@ public __abstract class CGCodeGenerator {
 			case .InstanceType: Append("instancetype")
 			case .Void: Append("Void")
 			case .Object: Append("Object")
+			case .Class: Append("Class")
 		}		
 	}
 	

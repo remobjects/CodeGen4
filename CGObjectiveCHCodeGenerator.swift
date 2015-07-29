@@ -104,6 +104,11 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	}
 	
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		
+		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
+			return // we don't need to re-emit overriden properties in header?
+		}
+		
 		Append("@property ")
 		
 		Append("(")
@@ -113,16 +118,20 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 			Append("nonatomic")
 		}
 		if let type = property.`Type` {
-			switch type.StorageModifier {
-				case .Strong: Append(", strong")
-				case .Weak: Append(", weak")
-				case .Unretained: Append(", unsafe_unretained")
+			if type.IsClassType {
+				switch type.StorageModifier {
+					case .Strong: Append(", strong")
+					case .Weak: Append(", weak")
+					case .Unretained: Append(", unsafe_unretained")
+				}
+			} else {
+				//todo?
 			}
 		}
 		if property.ReadOnly {
 			Append(", readonly")
 		}
-		Append(")")
+		Append(") ")
 		
 		if let type = property.`Type` {
 			generateTypeReference(type)
