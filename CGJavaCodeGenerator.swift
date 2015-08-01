@@ -355,7 +355,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		// handled in base
 	}
 	*/

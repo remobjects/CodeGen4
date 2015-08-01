@@ -582,7 +582,7 @@ public __abstract class CGCodeGenerator {
 		} else if let expression = expression as? CGBinaryOperatorExpression {
 			generateBinaryOperatorExpression(expression)
 		} else if let expression = expression as? CGIfThenElseExpression {
-			generateIfThenElseExpressionExpression(expression)
+			generateIfThenElseExpression(expression)
 		} else if let expression = expression as? CGLocalVariableAccessExpression {
 			generateLocalVariableAccessExpression(expression)
 		} else if let expression = expression as? CGFieldAccessExpression {
@@ -737,9 +737,9 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generateBinaryOperator not implemented")
 	}
 
-	internal func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	internal func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		// descendant must override
-		assert(false, "generateIfThenElseExpressionExpression not implemented")
+		assert(false, "generateIfThenElseExpression not implemented")
 	}
 
 	internal func generateLocalVariableAccessExpression(expression: CGLocalVariableAccessExpression) {

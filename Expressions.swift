@@ -288,18 +288,20 @@ public enum CGBinaryOperatorKind {
 	case Is
 	case IsNot
 	case In /* Oxygene only */
-	case NotIn
-	/*case Assign
+	case NotIn /* Oxygene only */
+	case Assign
 	case AssignAddition
 	case AssignSubtraction
 	case AssignMultiplication
 	case AssignDivision
-	case AssignModulus
+	/*case AssignModulus
 	case AssignBitwiseAnd
 	case AssignBitwiseOr
 	case AssignBitwiseXor
 	case AssignShl
 	case AssignShr*/
+	case AddEvent
+	case RemoveEvent
 }
 
 

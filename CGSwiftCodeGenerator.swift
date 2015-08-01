@@ -483,12 +483,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Is: Append("is")
+			case .AddEvent: Append("+=") // Silver only
+			case .RemoveEvent: Append("-=") // Silver only
 			default: super.generateBinaryOperator(`operator`)
 		}
 	}
 
 	/*
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		// handled in base
 	}
 	*/

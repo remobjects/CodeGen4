@@ -196,11 +196,16 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			//case .IsNot:
 			//case .In:
 			//case .NotIn:
+			case .Assign: Append("=")
+			case .AssignAddition: Append("+=")
+			case .AssignSubtraction: Append("-=")
+			case .AssignMultiplication: Append("*=")
+			case .AssignDivision: Append("/=")
 			default: Append("/* NOT SUPPORTED */") /* Oxygene only */
 		}
 	}
 
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		Append("(")
 		generateExpression(expression.Condition)
 		Append(" ? ")

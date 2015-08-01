@@ -189,11 +189,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Implies: Append("implies")
 			case .IsNot: Append("is not")
 			case .NotIn: Append("not in")
+			case .AddEvent: Append("+=")
+			case .RemoveEvent: Append("-=")
 			default: super.generateBinaryOperator(`operator`)
 		}
 	}
 
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		Append("(if ")
 		generateExpression(expression.Condition)
 		Append(" then (")

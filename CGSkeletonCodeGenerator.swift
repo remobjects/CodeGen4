@@ -196,7 +196,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 
 	}
 
