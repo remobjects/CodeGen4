@@ -227,7 +227,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
+		Append("'\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))'")
 	}
 
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {
