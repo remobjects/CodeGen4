@@ -685,17 +685,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	internal func swiftEscapeCharactersInStringLiteral(string: String) -> String {
-		return string.Replace("\"", "\\\"")
-		//todo: this is incomplete, we need to escape any invalid chars
+	internal func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+		return "\\u{"+Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4)
 	}
 
+	/*
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
-		Append("\"\(swiftEscapeCharactersInStringLiteral(expression.Value))\"")
+		// handled in base
 	}
+	*/
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-		Append("\"\(swiftEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
+		// Swift uses " and not ', even for chars.
+		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
 	}
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
