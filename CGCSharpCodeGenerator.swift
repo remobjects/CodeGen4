@@ -622,11 +622,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	internal func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+	override func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
 		if ch <= 0xffff {
-			return "\\U\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4))"
+			return "\\u\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4))"
 		} else {
-			return "\\Uffff" // C# cannot resally handle 32bit escapes
+			return "\\U\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 8))"
 		}
 	}
 
