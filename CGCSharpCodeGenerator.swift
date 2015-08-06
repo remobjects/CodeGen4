@@ -422,12 +422,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Is: Append("is")
+			case .AddEvent: Append("+=")
+			case .RemoveEvent: Append("-=")
 			default: super.generateBinaryOperator(`operator`)
 		}
 	}
 
 	/*
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		// handled in base
 	}
 	*/
@@ -617,6 +619,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("[")
 			cSharpGenerateCallParameters(expression.Parameters)
 			Append("]")
+		}
+	}
+
+	override func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+		if ch <= 0xffff {
+			return "\\u\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4))"
+		} else {
+			return "\\U\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 8))"
 		}
 	}
 

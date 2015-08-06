@@ -196,11 +196,16 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			//case .IsNot:
 			//case .In:
 			//case .NotIn:
+			case .Assign: Append("=")
+			case .AssignAddition: Append("+=")
+			case .AssignSubtraction: Append("-=")
+			case .AssignMultiplication: Append("*=")
+			case .AssignDivision: Append("/=")
 			default: Append("/* NOT SUPPORTED */") /* Oxygene only */
 		}
 	}
 
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
 		Append("(")
 		generateExpression(expression.Condition)
 		Append(" ? ")
@@ -213,8 +218,37 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func cStyleEscapeCharactersInStringLiteral(string: String) -> String {
-		return string.Replace("\"", "\\\"")
-		//todo: this is incomplete, we need to escape any invalid chars
+		let result = StringBuilder()
+		let len = string.Length
+		for var i: Integer = 0; i < len; i++ {
+			let ch = string[i]
+			switch ch {
+				case "\0": result.Append("\\0")
+				case "\\": result.Append("\\\\")
+				case "\'": result.Append("\\'")
+				case "\"": result.Append("\\\"")
+				//case "\b": result.Append("\\b") // swift doesn't do \b
+				case "\t": result.Append("\\t")
+				case "\r": result.Append("\\r")
+				case "\n": result.Append("\\n")
+				/*
+				case "\0".."\31": result.Append("\\"+Integer(ch).ToString()) // Cannot use the binary operator ".."
+				case "\u{0080}".."\u{ffffffff}": result.Append("\\u{"+Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4)) // Cannot use the binary operator ".."
+				*/
+				default: 
+					if ch < 32 || ch > 0x7f {
+						result.Append(cStyleEscapeSequenceForCharacter(ch))
+					} else {
+						result.Append(ch)
+					}
+					
+			}
+		}
+		return result.ToString()
+	}
+	
+	internal func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+		return "\\U"+Sugar.Cryptography.Utils.ToHexString(Integer(ch), 8) // plain C: always use 8 hex digits with "\U"
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
@@ -222,7 +256,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
+		Append("'\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))'")
 	}
 
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {

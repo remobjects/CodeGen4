@@ -571,12 +571,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			//case .IsNot:
 			case .In: Append("in")
 			//case .NotIn:
+			case .Assign: Append(":=")
+			//case .AssignAddition: 
+			//case .AssignSubtraction:
+			//case .AssignMultiplication:
+			//case .AssignDivision: 
+			//case .AddEvent: 
+			//case .RemoveEvent: 
 			default: Append("/* NOT SUPPORTED */")
 		}
 	}
 
-	override func generateIfThenElseExpressionExpression(expression: CGIfThenElseExpression) {
-		assert(false, "generateIfThenElseExpressionExpression is not supported in base Pascal, only Oxygene")
+	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
+		assert(false, "generateIfThenElseExpression is not supported in base Pascal, only Oxygene")
 	}
 
 	internal func pascalGenerateStorageModifierPrefix(type: CGTypeReference) {
@@ -836,7 +843,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateBlockType(type: CGBlockTypeDefinition) {
-		assert(false, "generateIfThenElseExpressionExpression is not supported in base Pascal, only Oxygene")
+		assert(false, "generateIfThenElseExpression is not supported in base Pascal, only Oxygene")
 	}
 
 	override func generateEnumType(type: CGEnumTypeDefinition) {
