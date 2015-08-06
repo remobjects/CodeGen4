@@ -112,6 +112,11 @@ public extension CGExpression {
 	public func AsCallParameter(name: String) -> CGCallParameter {
 		return CGCallParameter(self, name)
 	}
+	public func AsEllipsisCallParameter() -> CGCallParameter {
+		let result = CGCallParameter(self)
+		result.EllipsisParameter = true
+		return result
+	}
 }
 
 public extension CGTypeReference {

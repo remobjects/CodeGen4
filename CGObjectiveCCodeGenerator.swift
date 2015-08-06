@@ -185,7 +185,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	*/
 	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
-		Append("[")
+		Append("self = [")
 		if let callSite = statement.CallSite {
 			generateExpression(callSite)
 		} else {
@@ -229,7 +229,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			generateExpression(expression.Expression)
 		}
-		Append(" Class]")
+		Append(" class]")
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
@@ -242,7 +242,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
 		Append("((")
-		generateTypeReference(cast.TargetType, ignoreNullability: true)
+		generateTypeReference(cast.TargetType)//, ignoreNullability: true)
 		Append(")(")
 		generateExpression(cast.Expression)
 		Append("))")
@@ -331,13 +331,33 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	func objcGenerateCallParameters(parameters: List<CGCallParameter>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
+			
+			if param.EllipsisParameter {
+				if p > 0 {
+					Append(", ")
+				} else {
+					Append(":")
+				}
+			} else {
+				if p > 0 {
+					Append(" ")
+				}
+				if let name = param.Name {
+					generateIdentifier(name)
+				} 
+				Append(":")
+			}
+			generateExpression(param.Value)
+		}
+	}
+
+	func objcGenerateFunctionCallParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			
 			if p > 0 {
-				Append(" ")
-			}
-			if let name = param.Name {
-				generateIdentifier(name)
-			}
-			Append(":")
+				Append(", ")
+			} 
 			generateExpression(param.Value)
 		}
 	}
@@ -387,18 +407,28 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-		objcGenerateCallSiteForExpression(expression, forceSelf: true)
-		Append(".")
+		if expression.CallSite != nil {
+			objcGenerateCallSiteForExpression(expression, forceSelf: true)
+			Append("->")
+		}
 		generateIdentifier(expression.Name)
 	}
 
 	override func generateMethodCallExpression(method: CGMethodCallExpression) {
-		Append("[")
-		objcGenerateCallSiteForExpression(method, forceSelf: true)
-		Append(" ")
-		Append(method.Name)
-		objcGenerateCallParameters(method.Parameters)
-		Append("]")
+		if method.CallSite != nil {
+			Append("[")
+			objcGenerateCallSiteForExpression(method, forceSelf: true)
+			Append(" ")
+			Append(method.Name)
+			objcGenerateCallParameters(method.Parameters)
+			Append("]")
+		} else {
+			// nil means its a function
+			Append(method.Name)
+			Append("(")
+			objcGenerateFunctionCallParameters(method.Parameters)
+			Append(")")
+		}
 	}
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {

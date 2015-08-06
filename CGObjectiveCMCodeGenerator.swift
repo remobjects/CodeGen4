@@ -12,7 +12,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 	}
 	
 	override func generateImport(imp: CGImport) {
-		// ignore imports,they are in the .h
+		// ignore imports, they are in the .h
 	}
 
 	//
@@ -51,6 +51,14 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		
 		AppendLine()
 	}
+
+	override func generateStructType(type: CGStructTypeDefinition) {
+		// structs don't appear in .m
+	}
+	
+	override func generateInterfaceType(type: CGInterfaceTypeDefinition) {
+		// protocols don't appear in .m
+	}
 	
 	//
 	// Type Members
@@ -72,6 +80,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine("{")
 		incIndent()
 		generateStatements(ctor.Statements)
+		AppendLine("return self;")
 		decIndent()
 		AppendLine("}")
 	}
@@ -96,6 +105,5 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 			AppendLine(";")
 		}
 		// instance fields are generated in TypeStart
-	}
-	
+	}	
 }

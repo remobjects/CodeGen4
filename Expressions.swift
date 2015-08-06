@@ -555,6 +555,7 @@ public class CGCallParameter: CGEntity {
 	public var Name: String? // optional, for named parameters or prooperty initialziers
 	public var Value: CGExpression
 	public var Modifier: ParameterModifierKind = .In
+	public var EllipsisParameter: Boolean = false // used mainly for Objective-C, wioch needs a different syntax when passing elipsis paframs
 	
 	public init(_ value: CGExpression) {
 		Value = value
