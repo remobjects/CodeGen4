@@ -32,6 +32,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Dialect = dialect
 	}	
 
+	public override var defaultFileExtension: String { return "cs" }
+
 	override func escapeIdentifier(name: String) -> String {
 		return "@\(name)"
 	}

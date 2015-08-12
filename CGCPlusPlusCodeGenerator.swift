@@ -9,4 +9,7 @@ public enum CGCPlusPlusCodeGeneratorDialect {
 public class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGCPlusPlusCodeGeneratorDialect = .Standard
+
+	public override var defaultFileExtension: String { return "cpp" }
+
 }

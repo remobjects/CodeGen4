@@ -14,6 +14,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 					"void", "class", "finally", "long", "strictfp", "volatile", "const", "float", "native", "super", "while"].ToList() as! List<String>
 	}
 
+	public override var defaultFileExtension: String { return "java" }
+
 	override func escapeIdentifier(name: String) -> String {
 		return name // todo
 	}

@@ -14,6 +14,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		keywordsAreCaseSensitive = false
 	}
 
+	public override var defaultFileExtension: String { return "pas" }
+
 	override func doGenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
 		pascalGenerateTypeMemberImplementation(member, type: type)
 	}

@@ -13,6 +13,8 @@ import Sugar.Collections
 
 public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
+	public override var defaultFileExtension: String { return "" }
+
 	override func escapeIdentifier(name: String) -> String {
 		return name
 	}

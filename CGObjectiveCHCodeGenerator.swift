@@ -3,6 +3,8 @@ import Sugar.Collections
 
 public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 
+	public override var defaultFileExtension: String { return "h" }
+
 	override func generateForwards() {
 		for t in currentUnit.Types {
 			if let type = t as? CGClassTypeDefinition {

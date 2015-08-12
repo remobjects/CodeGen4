@@ -19,6 +19,8 @@ public __abstract class CGCodeGenerator {
 	//
 	// Public APIS
 	//
+	
+	public __abstract var defaultFileExtension: String { get }
 
 	public final func GenerateUnit(unit: CGCodeUnit) -> String {
 		

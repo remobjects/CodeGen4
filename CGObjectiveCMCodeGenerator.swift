@@ -4,6 +4,8 @@ import Sugar.IO
 
 public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 
+	public override var defaultFileExtension: String { return "m" }
+
 	override func generateHeader() {
 		
 		if let fileName = currentUnit.FileName {

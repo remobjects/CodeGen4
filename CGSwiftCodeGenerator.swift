@@ -28,6 +28,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Dialect = dialect
 	}	
 
+	public override var defaultFileExtension: String { return "swift" }
+
 	override func escapeIdentifier(name: String) -> String {
 		return "`\(name)`"
 	}
