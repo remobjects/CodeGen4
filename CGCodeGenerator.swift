@@ -168,16 +168,21 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generateDirectives() {
-		for d in currentUnit.Directives {
-			generateDirective(d)
+		if currentUnit.Directives.Count > 0 {
+			for d in currentUnit.Directives {
+				generateDirective(d)
+			}
+			AppendLine()
 		}
 	}
 	
 	internal func generateImports() {
-		for i in currentUnit.Imports {
-			generateImport(i)
+		if currentUnit.Imports.Count > 0 {
+			for i in currentUnit.Imports {
+				generateImport(i)
+			}
+			AppendLine()
 		}
-		AppendLine()
 	}
 
 	internal func generateTypeDefinitions() {
