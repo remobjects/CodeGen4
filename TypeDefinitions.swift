@@ -210,6 +210,9 @@ public class CGCustomOperatorDefinition: CGMethodLikeMemberDefinition {
 public __abstract class CGFieldLikeMemberDefinition: CGMemberDefinition {
 	public var `Type`: CGTypeReference?
 
+	public init(_ name: String) {
+		super.init(name)
+	}
 	public init(_ name: String, _ type: CGTypeReference) {
 		super.init(name)
 		`Type` = type
@@ -236,6 +239,9 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var GetExpression: CGExpression?
 	public var SetExpression: CGExpression?
 	
+	public init(_ name: String) {
+		super.init(name)
+	}
 	public init(_ name: String, _ type: CGTypeReference) {
 		super.init(name, type)
 	}
