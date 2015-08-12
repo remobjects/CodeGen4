@@ -35,7 +35,6 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func generateHeader() {
 		
-		super.generateHeader()
 		Append("namespace")
 		if let namespace = currentUnit.Namespace {
 			Append(" ")
@@ -43,6 +42,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		AppendLine(";")
 		AppendLine()
+		super.generateHeader()
 	}
 	
 	override func generateGlobals() {

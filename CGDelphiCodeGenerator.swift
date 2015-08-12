@@ -35,7 +35,10 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateHeader() {
-		AppendLine("unit "+currentUnit.FileName + ";")
+		Append("unit ")
+		Append(currentUnit.FileName)
+		AppendLine(";")
+		AppendLine()
 		super.generateHeader()
 	}
 	
