@@ -3,14 +3,14 @@ import Sugar.Collections
 import Sugar.Linq
 
 public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
-	
+
 	public init() {
 		super.init()
-		
+
 		// current as of Elements 8.1 and C# 6.0
-		keywords = ["abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized", "boolean", "do", "if", 
-					"private", "this", "break", "double", "implements", "protected", "throw", "byte", "else", "import", "public", "throws", "case", 
-					"enum", "instanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char", "final", "interface", "static", 
+		keywords = ["abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized", "boolean", "do", "if",
+					"private", "this", "break", "double", "implements", "protected", "throw", "byte", "else", "import", "public", "throws", "case",
+					"enum", "instanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char", "final", "interface", "static",
 					"void", "class", "finally", "long", "strictfp", "volatile", "const", "float", "native", "super", "while"].ToList() as! List<String>
 	}
 
@@ -21,7 +21,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateHeader() {
-		
+
 		super.generateHeader()
 		if let namespace = currentUnit.Namespace {
 			Append("package ")
@@ -30,15 +30,15 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine()
 		}
 	}
-	
+
 	override func generateFooter() {
 	}
-	
+
 	override func generateImport(imp: CGImport) {
 		if imp.StaticClass != nil {
 			AppendLine("import "+imp.StaticClass!.Name+";")
 		} else {
-			AppendLine("import "+imp.Namespace!.Name+";")
+			AppendLine("import "+imp.Namespace!.Name+".*;")
 		}
 	}
 
@@ -59,11 +59,11 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		// handled in base
 	}
 	*/
-	
+
 	//
 	// Statements
 	//
-	
+
 	// in C-styleCG Base class
 	/*
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
@@ -217,7 +217,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 		} else {
 			Append("var ")
-		}		
+		}
 		generateIdentifier(statement.Name)
 		if let value = statement.Value {
 			Append(" = ")
@@ -230,8 +230,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
 		// handled in base
 	}
-	*/	
-	
+	*/
+
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 		if let callSite = statement.CallSite where callSite is CGInheritedExpression {
 			generateExpression(callSite)
@@ -244,7 +244,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("(")
 		javaGenerateCallParameters(statement.Parameters)
-		Append(")")
+		AppendLine(");")
 	}
 
 	//
@@ -312,7 +312,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
-		Append("value") 
+		Append("value")
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
@@ -410,7 +410,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				case .Const: Append("const ")
 				case .Out: Append("out ") //todo: Oxygene ony?
 				case .Params: Append("params ") //todo: Oxygene ony?
-				default: 
+				default:
 			}
 			generateTypeReference(param.`Type`)
 			Append(" ")
@@ -487,7 +487,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
-		Append("{") 
+		Append("{")
 		for var e = 0; e < array.Elements.Count; e++ {
 			if e > 0 {
 				Append(", ")
@@ -506,19 +506,19 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		// default handled in base
 	}
 	*/
-	
+
 	override func generateSetTypeReference(setType: CGSetTypeReference) {
 		assert(false, "generateSetTypeReference is not supported in Java")
 	}
-	
+
 	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
 		assert(false, "generateSequenceTypeReference is not supported in Javar")
 	}
-	
+
 	//
 	// Type Definitions
 	//
-	
+
 	override func generateAttribute(attribute: CGAttribute) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
@@ -526,10 +526,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append("(")
 			javaGenerateAttributeParameters(parameters)
 			Append(")")
-		}		
+		}
 		AppendLine("]")
 	}
-	
+
 	func javaGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {
 			case .Unit: Append("internal ")
@@ -537,7 +537,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			case .Public: Append("public ")
 		}
 	}
-	
+
+	func javaGenerateMemberTypeVirtualityPrefix(virtuality: CGMemberVirtualityKind) {
+		switch virtuality {
+			case .Override: AppendLine("@Override");
+			default:
+		}
+	}
+
 	func javaGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("private ")
@@ -552,13 +559,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			case .Public: Append("public ")
 		}
 	}
-	
+
 	func javaGenerateStaticPrefix(isStatic: Boolean) {
 		if isStatic {
 			Append("static ")
 		}
 	}
-	
+
 	func javaGenerateAbstractPrefix(isAbstract: Boolean) {
 		if isAbstract {
 			Append("abstract ")
@@ -574,8 +581,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	func javaGenerateVirtualityPrefix(member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
-			//case .Virtual: 
-			//case .Override: 
+			//case .Virtual:
+			//case .Override:
 			//case .Reintroduce:
 			case .Abstract: Append("abstract ")
 			case .Final: Append("final ")
@@ -586,11 +593,11 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 
 	}
-	
+
 	override func generateBlockType(type: CGBlockTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateEnumType(type: CGEnumTypeDefinition) {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("enum ")
@@ -603,7 +610,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		
+
 		for var m = 0; m < type.Members.Count; m++ {
 			if let member = type.Members[m] as? CGEnumValueDefinition {
 				if m > 0 {
@@ -617,12 +624,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		AppendLine()
-		
+
 		decIndent()
 		AppendLine("}")
 		AppendLine()
 	}
-	
+
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
 		javaGenerateStaticPrefix(type.Static)
@@ -636,12 +643,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("{")
 		incIndent()
 	}
-	
+
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine("}")
 	}
-	
+
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
 		javaGenerateStaticPrefix(type.Static)
@@ -655,12 +662,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("{")
 		incIndent()
 	}
-	
+
 	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-	}		
-	
+	}
+
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
 		javaGenerateSealedPrefix(type.Sealed)
@@ -672,12 +679,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("{")
 		incIndent()
 	}
-	
+
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-	}	
-	
+	}
+
 	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
 		AppendLine("[Category]")
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
@@ -689,21 +696,22 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("{")
 		incIndent()
 	}
-	
+
 	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
 		decIndent()
 		AppendLine("}")
-	}	
+	}
 
 	//
 	// Type Members
 	//
-	
+
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
 
 		if type is CGInterfaceTypeDefinition {
 			javaGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
+			javaGenerateMemberTypeVirtualityPrefix(method.Virtuality)
 			javaGenerateMemberTypeVisibilityPrefix(method.Visibility)
 			javaGenerateStaticPrefix(method.Static && !type.Static)
 			if method.External {
@@ -722,12 +730,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		javaGenerateDefinitionParameters(method.Parameters)
 		Append(")")
-		
+
 		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External {
 			AppendLine(";")
 			return
 		}
-		
+
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -736,20 +744,20 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		decIndent()
 		AppendLine("}")
 	}
-	
+
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		
+
 		if type is CGInterfaceTypeDefinition {
 		} else {
 			javaGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
 		}
 
+		generateIdentifier(type.Name)
+		Append("(")
 		if ctor.Parameters.Count > 0 {
-			generateIdentifier(type.Name)
-			Append("(")
 			javaGenerateDefinitionParameters(ctor.Parameters)
-			AppendLine(")")
 		}
+			AppendLine(")")
 		AppendLine("{")
 		incIndent()
 		generateStatements(ctor.LocalVariables)
@@ -794,19 +802,19 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			Append("var ")
 		}
-		
+
 		if property.Default {
 			Append("this")
 		} else {
 			generateIdentifier(property.Name)
 		}
 		if let params = property.Parameters where params.Count > 0 {
-			
+
 			Append("[")
 			javaGenerateDefinitionParameters(params)
 			Append("]")
-			
-		} 
+
+		}
 
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
 			if let value = property.Initializer {
@@ -817,7 +825,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			AppendLine(" {")
 			incIndent()
-			
+
 			if let getStatements = property.GetStatements {
 				AppendLine("get{")
 				AppendLine("{")
@@ -833,7 +841,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				decIndent()
 				AppendLine("}")
 			}
-			
+
 			if let setStatements = property.SetStatements {
 				AppendLine("set")
 				AppendLine("{")
@@ -849,10 +857,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				decIndent()
 				AppendLine("}")
 			}
-			
+
 			decIndent()
 			Append("}")
-			
+
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
@@ -878,7 +886,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	*/
-	
+
 	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int8: Append("byte")
@@ -893,7 +901,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			//case .UIntPtr: Append("UIntPtr")
 			case .Single: Append("float")
 			case .Double: Append("double")
-			case .Boolean: Append("boolean")
+			case .Boolean: Append("Boolean")
 			case .String: Append("String")
 			//case .AnsiChar: Append("AnsiChar")
 			case .UTF16Char: Append("Char")
@@ -903,7 +911,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			case .Void: Append("void")
 			case .Object: Append("Object")
 			default: Append("/*Unsupportyed type*/")
-		}		
+		}
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
@@ -920,19 +928,19 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(")")
 	}
-	
+
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {
 
 	}
-	
+
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 
 	}
-	
+
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 
 	}
-	
+
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
 
 	}
