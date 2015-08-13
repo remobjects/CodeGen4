@@ -335,7 +335,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateStaticPrefix(type.Static)
 		Append("extension class")
-		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateAncestorList(type)
 		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()

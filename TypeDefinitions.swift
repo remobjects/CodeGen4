@@ -56,20 +56,35 @@ public class CGEnumTypeDefinition : CGTypeDefinition {
 
 public __abstract class CGClassOrStructTypeDefinition : CGTypeDefinition {
 	public var Ancestors: List<CGTypeReference>
+	public var ImplementedInterfaces: List<CGTypeReference>
 	public var Partial = false
 	
 	public init(_ name: String) {
 		super.init(name)
 		Ancestors = List<CGTypeReference>()
+		ImplementedInterfaces = List<CGTypeReference>()
 	}
 	public init(_ name: String, _ ancestor: CGTypeReference) {
 		super.init(name)
 		Ancestors = List<CGTypeReference>()
 		Ancestors.Add(ancestor)
+		ImplementedInterfaces = List<CGTypeReference>()
 	}
 	public init(_ name: String, _ ancestors: List<CGTypeReference>) {
 		super.init(name)
 		Ancestors = ancestors
+		ImplementedInterfaces = List<CGTypeReference>()
+	}
+	public init(_ name: String, _ ancestor: CGTypeReference, _ interfaces: List<CGTypeReference>) {
+		super.init(name)
+		Ancestors = List<CGTypeReference>()
+		Ancestors.Add(ancestor)
+		ImplementedInterfaces = interfaces
+	}
+	public init(_ name: String, _ ancestors: List<CGTypeReference>, _ interfaces: List<CGTypeReference>) {
+		super.init(name)
+		Ancestors = ancestors
+		ImplementedInterfaces = interfaces
 	}
 }
 

@@ -567,16 +567,23 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	func cSharpGenerateAncestorList(ancestors: List<CGTypeReference>?) {
-		if let ancestors = ancestors where ancestors.Count > 0 {
+	func cSharpGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+		if type.Ancestors.Count > 0 || type.ImplementedInterfaces.Count > 0 {
 			Append(" : ")
-			for var a: Int32 = 0; a < ancestors.Count; a++ {
-				if let ancestor = ancestors[a] {
-					if a > 0 {
-						Append(", ")
-					}
-					generateTypeReference(ancestor)
+			var needsComma = false
+			for ancestor in type.Ancestors {
+				if needsComma {
+					Append(", ")
 				}
+				generateTypeReference(ancestor, ignoreNullability: true)
+				needsComma = true
+			}
+			for interface in type.ImplementedInterfaces {
+				if needsComma {
+					Append(", ")
+				}
+				generateTypeReference(interface, ignoreNullability: true)
+				needsComma = true
 			}
 		}
 	}
@@ -796,7 +803,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(type.Name)
 		cSharpGenerateGenericParameters(type.GenericParameters)
 		cSharpGenerateGenericConstraints(type.GenericParameters)
-		cSharpGenerateAncestorList(type.Ancestors)
+		cSharpGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -816,7 +823,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(type.Name)
 		cSharpGenerateGenericParameters(type.GenericParameters)
 		cSharpGenerateGenericConstraints(type.GenericParameters)
-		cSharpGenerateAncestorList(type.Ancestors)
+		cSharpGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -834,7 +841,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(type.Name)
 		cSharpGenerateGenericParameters(type.GenericParameters)
 		cSharpGenerateGenericConstraints(type.GenericParameters)
-		cSharpGenerateAncestorList(type.Ancestors)
+		cSharpGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -851,7 +858,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateStaticPrefix(type.Static)
 		Append("class ")
 		generateIdentifier(type.Name)
-		cSharpGenerateAncestorList(type.Ancestors)
+		cSharpGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()

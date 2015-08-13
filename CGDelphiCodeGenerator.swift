@@ -269,7 +269,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("interface")
-		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateAncestorList(type)
 		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		if let k = type.InterfaceGuid {

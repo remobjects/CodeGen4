@@ -387,22 +387,29 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func objcGenerateAncestorList(ancestors: List<CGTypeReference>?) {
-		if let ancestors = ancestors where ancestors.Count > 0 {
+	func objcGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+		if type.Ancestors.Count > 0 {
 			Append(" : ")
-			for var a: Int32 = 0; a < ancestors.Count; a++ {
-				if let ancestor = ancestors[a] {
-					if a == 1 {
-						Append(" <")
-					} else if a > 1 {
+			for var a: Int32 = 0; a < type.Ancestors.Count; a++ {
+				if let ancestor = type.Ancestors[a] {
+					if a > 0 {
 						Append(", ")
 					}
 					generateTypeReference(ancestor, ignoreNullability: true)
 				}
 			}
-			if ancestors.Count > 1 {
-				Append(">")
+		}
+		if type.ImplementedInterfaces.Count > 0 {
+			Append(" <")
+			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
+				if let interface = type.ImplementedInterfaces[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(interface, ignoreNullability: true)
+				}
 			}
+			Append(">")
 		}
 	}
 

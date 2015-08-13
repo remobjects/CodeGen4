@@ -418,15 +418,26 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func javaGenerateAncestorList(ancestors: List<CGTypeReference>?) {
-		if let ancestors = ancestors where ancestors.Count > 0 {
+	func javaGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+		if type.Ancestors.Count > 0 {
 			Append(" extends ")
-			for var a: Int32 = 0; a < ancestors.Count; a++ {
-				if let ancestor = ancestors[a] {
+			for var a: Int32 = 0; a < type.Ancestors.Count; a++ {
+				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
 						Append(", ")
 					}
 					generateTypeReference(ancestor)
+				}
+			}
+		}
+		if type.ImplementedInterfaces.Count > 0 {
+			Append(" implements ")
+			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
+				if let interface = type.ImplementedInterfaces[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(interface)
 				}
 			}
 		}
@@ -620,7 +631,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("class ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
-		javaGenerateAncestorList(type.Ancestors)
+		javaGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -639,7 +650,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("struct ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
-		javaGenerateAncestorList(type.Ancestors)
+		javaGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -656,7 +667,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("interface ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
-		javaGenerateAncestorList(type.Ancestors)
+		javaGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()
@@ -673,7 +684,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateStaticPrefix(type.Static)
 		Append("class ")
 		generateIdentifier(type.Name)
-		javaGenerateAncestorList(type.Ancestors)
+		javaGenerateAncestorList(type)
 		AppendLine()
 		AppendLine("{")
 		incIndent()

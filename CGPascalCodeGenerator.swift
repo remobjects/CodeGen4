@@ -707,16 +707,23 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateAncestorList(ancestors: List<CGTypeReference>?) {
-		if let ancestors = ancestors where ancestors.Count > 0 {
+	func pascalGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+		if type.Ancestors.Count > 0 || type.ImplementedInterfaces.Count > 0 {
 			Append("(")
-			for var a: Int32 = 0; a < ancestors.Count; a++ {
-				if let ancestor = ancestors[a] {
-					if a > 0 {
-						Append(", ")
-					}
-					generateTypeReference(ancestor)
+			var needsComma = false
+			for ancestor in type.Ancestors {
+				if needsComma {
+					Append(", ")
 				}
+				generateTypeReference(ancestor, ignoreNullability: true)
+				needsComma = true
+			}
+			for interface in type.ImplementedInterfaces {
+				if needsComma {
+					Append(", ")
+				}
+				generateTypeReference(interface, ignoreNullability: true)
+				needsComma = true
 			}
 			Append(")")
 		}
@@ -883,7 +890,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateAbstractPrefix(type.Abstract)
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("class")
-		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateAncestorList(type)
 		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()
@@ -906,7 +913,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateAbstractPrefix(type.Abstract)
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("record")
-		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateAncestorList(type)
 		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()
@@ -936,7 +943,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		pascalGenerateSealedPrefix(type.Sealed)
 		Append("interface")
-		pascalGenerateAncestorList(type.Ancestors)
+		pascalGenerateAncestorList(type)
 		pascalGenerateGenericConstraints(type.GenericParameters)
 		AppendLine()
 		incIndent()

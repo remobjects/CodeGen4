@@ -627,11 +627,23 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func swiftGenerateAncestorList(ancestors: List<CGTypeReference>?) {
-		if let ancestors = ancestors where ancestors.Count > 0 {
+	func swiftGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+		if type.Ancestors.Count > 0 || type.ImplementedInterfaces.Count > 0 {
 			Append(" : ")
-			helpGenerateCommaSeparatedList(ancestors) { ancestor in
-				self.generateTypeReference(ancestor, ignoreNullability: true)
+			var needsComma = false
+			for ancestor in type.Ancestors {
+				if needsComma {
+					Append(", ")
+				}
+				generateTypeReference(ancestor, ignoreNullability: true)
+				needsComma = true
+			}
+			for interface in type.ImplementedInterfaces {
+				if needsComma {
+					Append(", ")
+				}
+				generateTypeReference(interface, ignoreNullability: true)
+				needsComma = true
 			}
 		}
 	}
@@ -873,7 +885,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("class ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
-		swiftGenerateAncestorList(type.Ancestors)
+		swiftGenerateAncestorList(type)
 		AppendLine(" { ")
 		incIndent()
 	}
@@ -891,7 +903,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("struct ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
-		swiftGenerateAncestorList(type.Ancestors)
+		swiftGenerateAncestorList(type)
 		AppendLine(" { ")
 		incIndent()
 	}
@@ -907,7 +919,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("protocol ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
-		swiftGenerateAncestorList(type.Ancestors)
+		swiftGenerateAncestorList(type)
 		AppendLine(" { ")
 		incIndent()
 	}

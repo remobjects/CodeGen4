@@ -63,7 +63,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
 		Append("@interface ")
 		generateIdentifier(type.Name)
-		objcGenerateAncestorList(type.Ancestors)
+		objcGenerateAncestorList(type)
 		AppendLine()
 		AppendLine()
 	}
@@ -84,7 +84,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
 		Append("@protocol ")
 		generateIdentifier(type.Name)
-		objcGenerateAncestorList(type.Ancestors)
+		objcGenerateAncestorList(type)
 	}
 	
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
