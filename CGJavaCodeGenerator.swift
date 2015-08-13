@@ -269,10 +269,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
-		Append("typeof(")
+	override func generateTypeOfExpression(expression: CGTypeOfExpression) {		
 		generateExpression(expression.Expression)
-		Append(")")
+		Append(".class")
 	}
 
 	override func generateDefaultExpression(expression: CGDefaultExpression) {
@@ -938,7 +937,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
-
+		generateTypeReference(type.`Type`)
+		Append("[]")
 	}
 
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
