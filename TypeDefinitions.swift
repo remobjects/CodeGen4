@@ -447,7 +447,7 @@ public class CGAttribute: CGEntity {
 	public init(_ type: CGTypeReference) {
 		`Type` = type
 	}
-	init(_ type: CGTypeReference,_ parameters: List<CGCallParameter>) {
+	public init(_ type: CGTypeReference,_ parameters: List<CGCallParameter>) {
 		`Type` = type
 		Parameters = parameters
 	}
