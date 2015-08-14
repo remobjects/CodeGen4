@@ -537,11 +537,6 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func javaGenerateAnnotation(name: String) {
-		Append("@");
-		AppendLine(name);
-	}
-
 	func javaGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: Append("private ")
@@ -709,7 +704,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			javaGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
 			if method.Virtuality == CGMemberVirtualityKind.Override {
-				javaGenerateAnnotation("Override");
+				generateAttribute(CGAttribute("Override".AsTypeReference()));
 			}
 			
 			javaGenerateMemberTypeVisibilityPrefix(method.Visibility)
