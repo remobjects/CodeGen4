@@ -519,14 +519,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	override func generateAttribute(attribute: CGAttribute) {
-		Append("[")
+		Append("@")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
 			Append("(")
 			javaGenerateAttributeParameters(parameters)
 			Append(")")
 		}
-		AppendLine("]")
+		AppendLine("")
 	}
 
 	func javaGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
