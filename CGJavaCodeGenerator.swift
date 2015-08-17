@@ -771,7 +771,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		javaGenerateStaticPrefix(field.Static && !type.Static)
 		if field.Constant {
-			Append("const ")
+			Append("final ")
 		}
 		if let type = field.`Type` {
 			generateTypeReference(type)
