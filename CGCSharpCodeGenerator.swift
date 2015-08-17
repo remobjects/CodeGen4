@@ -495,17 +495,22 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if p > 0 {
 				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = param.ExternalName {
 					Append(") ")
+					param.startLocation = currentLocation
 					generateIdentifier(name)
 					Append("(")
 				} else {
 					Append(", ")
+					param.startLocation = currentLocation
 				}
+			} else {
+				param.startLocation = currentLocation
 			}
+			
 			switch param.Modifier {
-				case .Var: Append("var ")
-				case .Const: Append("const ")
-				case .Out: Append("out ") //todo: Oxygene ony?
-				case .Params: Append("params ") //todo: Oxygene ony?
+				case .Var: Append("ref ")
+				case .Const: Append("const ") //todo: Oxygene ony?
+				case .Out: Append("out ")
+				case .Params: Append("params ")
 				default: 
 			}
 			generateTypeReference(param.`Type`)
@@ -515,6 +520,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				Append(" = ")
 				generateExpression(defaultValue)
 			}
+			param.endLocation = currentLocation
 		}
 	}
 
