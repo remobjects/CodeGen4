@@ -574,6 +574,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			if p > 0 {
 				Append(", ")
 			} 
+			param.startLocation = currentLocation
 			switch param.Modifier {
 				case .Out: 
 					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
@@ -601,6 +602,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append(" = ")
 				generateExpression(defaultValue)
 			}
+			param.endLocation = currentLocation
 		}
 	}
 
