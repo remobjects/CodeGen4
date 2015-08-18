@@ -972,7 +972,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		
 		if let returnType = method.ReturnType {
 			Append(" -> ")
+			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
 		}
 		
 		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {

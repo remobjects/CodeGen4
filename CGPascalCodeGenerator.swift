@@ -1039,7 +1039,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		if let returnType = method.ReturnType where !returnType.IsVoid {
 			Append(": ")
+			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
 		}
 		Append(";")
 

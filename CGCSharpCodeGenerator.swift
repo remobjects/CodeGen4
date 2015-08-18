@@ -897,7 +897,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			cSharpGenerateVirtualityPrefix(method)
 		}
 		if let returnType = method.ReturnType {
+			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
 			Append(" ")
 		} else {
 			Append("void ")
