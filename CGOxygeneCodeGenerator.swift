@@ -236,11 +236,15 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			if p > 0 {
 				if let name = param.ExternalName {
 					Append(") ")
+					param.startLocation = currentLocation
 					generateIdentifier(name)
 					Append("(")
 				} else {
 					Append("; ")
+					param.startLocation = currentLocation
 				}
+			} else {
+				param.startLocation = currentLocation
 			}
 			switch param.Modifier {
 				case .Var: Append("var ")
@@ -256,6 +260,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 				Append(" := ")
 				generateExpression(defaultValue)
 			}
+			param.endLocation = currentLocation
 		}
 	}
 
@@ -285,6 +290,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {
+			case .Unspecified: break /* no-op */
 			case .Unit: Append("unit ")
 			case .Assembly: Append("assembly ")
 			case .Public: Append("public ")
@@ -293,6 +299,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	
 	override func pascalGenerateMemberVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		switch visibility {
+			case .Unspecified: break /* no-op */
 			case .Private: Append("private")
 			case .Unit: Append("unit")
 			case .UnitOrProtected: Append("unit or protected")

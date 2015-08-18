@@ -979,9 +979,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				if m.Visibility == visibility{
 					if first {
 						decIndent()
-						pascalGenerateMemberVisibilityKeyword(visibility)
+						if visibility != CGMemberVisibilityKind.Unspecified {
+							pascalGenerateMemberVisibilityKeyword(visibility)
+							AppendLine()
+						}
 						first = false
-						AppendLine()
 						incIndent()
 					}
 					generateTypeMember(m, type: type)
@@ -996,6 +998,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if type is CGInterfaceTypeDefinition {
 			generateTypeMembers(type, forVisibility: nil)
 		} else {
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unspecified)
 			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
 			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
 			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)

@@ -531,6 +531,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	func javaGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {
+			case .Unspecified: break /* no-op */
 			case .Unit: Append("internal ")
 			case .Assembly: Append("internal ")
 			case .Public: Append("public ")
@@ -539,6 +540,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	func javaGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
 		switch visibility {
+			case .Unspecified: break /* no-op */
 			case .Private: Append("private ")
 			case .Unit: fallthrough
 			case .UnitOrProtected: fallthrough

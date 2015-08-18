@@ -5,6 +5,7 @@ import Sugar.Linq
 /* Types */
 
 public enum CGTypeVisibilityKind {
+	case Unspecified
 	case Unit
 	case Assembly
 	case Public
@@ -105,6 +106,7 @@ public class CGExtensionTypeDefinition : CGClassOrStructTypeDefinition {
 /* Type members */
 
 public enum CGMemberVisibilityKind {
+	case Unspecified
 	case Private
 	case Unit
 	case UnitOrProtected

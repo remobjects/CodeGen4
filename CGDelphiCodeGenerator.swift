@@ -84,6 +84,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	override func pascalGenerateMemberVisibilityKeyword(visibility: CGMemberVisibilityKind) {
 		if Version > 11 {
 			switch visibility {
+				case .Unspecified: break /* no-op */
 				case .Private: Append("strict private")
 				case .Unit: Append("private")
 				case .UnitAndProtected: fallthrough
@@ -97,6 +98,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			}
 		} else {
 			switch visibility {
+				case .Unspecified: break /* no-op */
 				case .Private: fallthrough
 				case .Unit: Append("private")
 				case .UnitAndProtected: fallthrough
