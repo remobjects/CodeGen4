@@ -380,18 +380,34 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 }
 
 public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	public var Value: Double = 0
+	public var DoubleValue: Double?
+	public var IntegerValue: Integer?
+	public var StringValue: String?
 	
-	public static lazy let Zero: CGFloatLiteralExpression = 0.0.AsLiteralExpression()
+	public static lazy let Zero: CGFloatLiteralExpression = CGFloatLiteralExpression(0)
 	
 	public init() {
 	}
 	public init(_ value: Double) {
-		Value = value
+		DoubleValue = value
+	}
+	public init(_ value: Integer) {
+		IntegerValue = value
+	}
+	public init(_ value: String) {
+		StringValue = value
 	}
 
 	override var StringRepresentation: String {
-		return Value.ToString() // todo: force dot into float literal?
+		if let value = DoubleValue {
+			return value.ToString() // todo: force dot into float literal?
+		} else if let value = IntegerValue {
+			return value.ToString()+".0"
+		} else if let value = StringValue {
+			return value
+		} else {
+			return "0.0"
+		}
 	}
 }
 
