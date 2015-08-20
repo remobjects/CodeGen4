@@ -432,23 +432,22 @@ public __abstract class CGCodeGenerator {
 	internal func generateCommentStatement(commentStatement: CGCommentStatement?) {
 		if let commentStatement = commentStatement {
 			for line in commentStatement.Lines {
-				generateSingleLineCommentPrefix()
 				AppendLine(line)
 			}
 		}
 	}
 	
-	private var inCodeCommentStatment = false
+	private var inCodeCommentStatement = false
 	
 	internal func generateCodeCommentStatement(commentStatement: CGCodeCommentStatement) {
 		
-		assert(!inCodeCommentStatment, "Cannot nest CGCodeCommentStatements")
+		assert(!inCodeCommentStatement, "Cannot nest CGCodeCommentStatements")
 		
-		inCodeCommentStatment = true
+		inCodeCommentStatement = true
 		__try {
 			generateStatement(commentStatement.CommentedOutStatement)
-		} __catch {
-			inCodeCommentStatment = false
+		} __finally {
+			inCodeCommentStatement = false
 		}
 	}
 
@@ -1278,6 +1277,10 @@ public __abstract class CGCodeGenerator {
 		if let line = line where length(line) > 0 {			
 			if atStart {
 				AppendIndent()
+				atStart = false
+				if inCodeCommentStatement {
+					generateSingleLineCommentPrefix()
+				}
 			}
 			currentCode.Append(line)
 			atStart = false
@@ -1310,18 +1313,12 @@ public __abstract class CGCodeGenerator {
 				currentLocation.offset += indent
 				for var i: Int32 = 0; i < indent; i++ {
 					currentCode.Append("\t")
-					if inCodeCommentStatment {
-						generateSingleLineCommentPrefix()
-					}
 				}
 			} else {
 				currentLocation.column += indent*tabSize
 				currentLocation.offset += indent*tabSize
 				for var i: Int32 = 0; i < indent*tabSize; i++ {
 					currentCode.Append(" ")
-					if inCodeCommentStatment {
-						generateSingleLineCommentPrefix()
-					}
 				}
 			}
 		}
