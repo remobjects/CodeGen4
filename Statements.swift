@@ -58,6 +58,14 @@ public __abstract class CGNestingStatement : CGStatement {
 	}
 }
 
+public class CGCodeCommentStatement : CGStatement {
+	public var CommentedOutStatement: CGStatement
+
+	public init(_ statement: CGStatement) {
+		CommentedOutStatement = statement
+	}
+}
+
 public class CGBeginEndBlockStatement : CGBlockStatement { //"begin/end" or "{/}"
 }
 

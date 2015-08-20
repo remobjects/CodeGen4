@@ -217,9 +217,9 @@ public __abstract class CGCodeGenerator {
 		AppendLine(directive)
 	}
 
-	internal func generateSingleLineComment(comment: String) {
+	internal func generateSingleLineCommentPrefix() {
 		// descendant may override, but this will work for all current languages we support.
-		AppendLine("// "+comment)
+		Append("// ")
 	}
 	
 	internal func generateImport(`import`: CGImport) {
@@ -369,6 +369,8 @@ public __abstract class CGCodeGenerator {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
 			generateCommentStatement(commentStatement)
+		} else if let commentStatement = statement as? CGCodeCommentStatement {
+			generateCodeCommentStatement(commentStatement)
 		} else if let rawStatement = statement as? CGRawStatement {
 			for line in rawStatement.Lines {
 				AppendLine(line)
@@ -430,8 +432,23 @@ public __abstract class CGCodeGenerator {
 	internal func generateCommentStatement(commentStatement: CGCommentStatement?) {
 		if let commentStatement = commentStatement {
 			for line in commentStatement.Lines {
-				generateSingleLineComment(line)
+				generateSingleLineCommentPrefix()
+				AppendLine(line)
 			}
+		}
+	}
+	
+	private var inCodeCommentStatment = false
+	
+	internal func generateCodeCommentStatement(commentStatement: CGCodeCommentStatement) {
+		
+		assert(!inCodeCommentStatment, "Cannot nest CGCodeCommentStatements")
+		
+		inCodeCommentStatment = true
+		__try {
+			generateStatement(commentStatement.CommentedOutStatement)
+		} __catch {
+			inCodeCommentStatment = false
 		}
 	}
 
@@ -1293,12 +1310,18 @@ public __abstract class CGCodeGenerator {
 				currentLocation.offset += indent
 				for var i: Int32 = 0; i < indent; i++ {
 					currentCode.Append("\t")
+					if inCodeCommentStatment {
+						generateSingleLineCommentPrefix()
+					}
 				}
 			} else {
 				currentLocation.column += indent*tabSize
 				currentLocation.offset += indent*tabSize
 				for var i: Int32 = 0; i < indent*tabSize; i++ {
 					currentCode.Append(" ")
+					if inCodeCommentStatment {
+						generateSingleLineCommentPrefix()
+					}
 				}
 			}
 		}
