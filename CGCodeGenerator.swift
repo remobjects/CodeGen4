@@ -432,6 +432,7 @@ public __abstract class CGCodeGenerator {
 	internal func generateCommentStatement(commentStatement: CGCommentStatement?) {
 		if let commentStatement = commentStatement {
 			for line in commentStatement.Lines {
+				generateSingleLineCommentPrefix()
 				AppendLine(line)
 			}
 		}
