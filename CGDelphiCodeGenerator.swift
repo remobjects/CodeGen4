@@ -143,19 +143,99 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			AppendLine("interface")
 			AppendLine()
 			pascalGenerateImports(currentUnit.Imports)
-			generateGlobals()
+			delphiGenerateGlobalInterfaces()
 		}
 		delphiGenerateInterfaceTypeDefinition()
 		if !definitionOnly {
 			AppendLine("implementation")
 			AppendLine()
+			delphiGenerateImplementationDirectives()
 			pascalGenerateImports(currentUnit.ImplementationImports)		
+			delphiGenerateGlobalImplementations()
 			delphiGenerateImplementationTypeDefinition()
-			pascalGenerateTypeImplementations()
-			pascalGenerateGlobalImplementations()
+			pascalGenerateTypeImplementations()			
 			generateFooter()
 		}
 	}
+
+	final func delphiGenerateImplementationDirectives() {
+		if currentUnit.ImplementationDirectives.Count > 0 {
+			for d in currentUnit.ImplementationDirectives {
+				generateDirective(d)
+			}
+			AppendLine()
+		}
+	}
+
+	var needCR: Boolean = false;	
+	final func delphiGenerateGlobalImplementations() {
+		// step1: generate global consts and vars
+		needCR = false;
+		for g in currentUnit.Globals {
+			if let global = g as? CGGlobalVariableDefinition {
+				if global.Variable.Visibility == CGMemberVisibilityKind.Private {
+					generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
+					needCR = true;
+				}
+			}
+			else if let global = g as? CGGlobalFunctionDefinition {
+				// will be processed at step2
+			}	
+		   	else {
+				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+			}	
+		}
+		if needCR {	AppendLine();}
+		// step2: generate global methods
+		for g in currentUnit.Globals {
+			if let global = g as? CGGlobalVariableDefinition {
+				// already processed in step1
+			}
+			else if let global = g as? CGGlobalFunctionDefinition {
+				pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
+			}	
+		    else {
+				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+			}	
+		}	
+	}
+
+	final func delphiGenerateGlobalInterfaces() {
+		// step1: generate global consts and vars
+		needCR = false;
+		for g in currentUnit.Globals {
+			if let global = g as? CGGlobalVariableDefinition {
+				if global.Variable.Visibility != CGMemberVisibilityKind.Private {
+					generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
+					needCR = true;
+				}
+			}
+			else if let global = g as? CGGlobalFunctionDefinition {
+				// will be processed at step2
+			}	
+		   	else {
+				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+			}	
+		}
+		if needCR {	AppendLine();}
+		// step2: generate global methods
+		for g in currentUnit.Globals {
+			if let global = g as? CGGlobalVariableDefinition {
+				// already processed in step1
+			}
+			else if let global = g as? CGGlobalFunctionDefinition {
+				if global.Function.Visibility != CGMemberVisibilityKind.Private {
+					generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
+				}
+			}	
+		    else {
+				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+			}	
+		}
+		
+	}
+
+
 
 	func delphiGenerateInterfaceTypeDefinition() {
 		var t = List<CGTypeDefinition>()
@@ -294,6 +374,9 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			Append(" = ")
 			generateExpression(initializer)
 		} else {
+			if type == CGGlobalTypeDefinition.GlobalType {
+				Append("var ")
+			}
 			generateIdentifier(variable.Name)
 			if let type = variable.`Type` {
 				Append(": ")
