@@ -1016,7 +1016,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		cSharpGenerateMemberTypeVisibilityPrefix(property.Visibility)
 		cSharpGenerateStaticPrefix(property.Static && !type.Static)
-
+		cSharpGenerateVirtualityPrefix(property)
+		
 		if let type = property.`Type` {
 			cSharpGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
@@ -1113,6 +1114,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
 		cSharpGenerateMemberTypeVisibilityPrefix(event.Visibility)
 		cSharpGenerateStaticPrefix(event.Static && !type.Static)
+		cSharpGenerateVirtualityPrefix(event)
+		
 		Append("event ")
 		if let type = event.`Type` {
 			generateTypeReference(type)
