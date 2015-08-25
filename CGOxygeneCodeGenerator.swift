@@ -318,17 +318,16 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateGenericParameters(block.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(block.Visibility)
-		Append("block")
 		pascalGenerateInlineBlockType(block)
 		AppendLine(";")
 	}
 
 	func pascalGenerateInlineBlockType(block: CGBlockTypeDefinition) {
+		Append("block(")
 		if let parameters = block.Parameters where parameters.Count > 0 {
-			Append("(")
 			pascalGenerateDefinitionParameters(parameters)
-			Append(")")
 		}
+		Append(")")
 		if let returnType = block.ReturnType where !returnType.IsVoid {
 			Append(": ")
 			generateTypeReference(returnType)
@@ -505,7 +504,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .InstanceType: Append("instancetype")
 			case .Void: Append("{VOID}")
 			case .Object: Append("Object")
-			case .Class: Append("Class") // todo: make platform-specific
+			case .Class: generateIdentifier("Class") // todo: make platform-specific
 		}		
 	}
 

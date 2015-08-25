@@ -256,7 +256,6 @@ public __abstract class CGCodeGenerator {
 		return false
 	}
 
-
 	//
 	// Indentifiers
 	//
@@ -1175,30 +1174,30 @@ public __abstract class CGCodeGenerator {
 	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		// most language swill want to override this
 		switch (type.Kind) {
-			case .Int: Append("Int")
-			case .UInt: Append("UInt")
-			case .Int8: Append("SByte")
-			case .UInt8: Append("Byte")
-			case .Int16: Append("Int16")
-			case .UInt16: Append("UInt16")
-			case .Int32: Append("Int32")
-			case .UInt32: Append("UInt32")
-			case .Int64: Append("Int64")
-			case .UInt64: Append("UInt16")
-			case .IntPtr: Append("IntPtr")
-			case .UIntPtr: Append("UIntPtr")
-			case .Single: Append("Float")
-			case .Double: Append("Double")
-			case .Boolean: Append("Boolean")
-			case .String: Append("String")
-			case .AnsiChar: Append("AnsiChar")
-			case .UTF16Char: Append("Char")
-			case .UTF32Char: Append("UInt32")
-			case .Dynamic: Append("dynamic")
-			case .InstanceType: Append("instancetype")
-			case .Void: Append("Void")
-			case .Object: Append("Object")
-			case .Class: Append("Class")
+			case .Int: generateIdentifier("Int")
+			case .UInt: generateIdentifier("UInt")
+			case .Int8: generateIdentifier("SByte")
+			case .UInt8: generateIdentifier("Byte")
+			case .Int16: generateIdentifier("Int16")
+			case .UInt16: generateIdentifier("UInt16")
+			case .Int32: generateIdentifier("Int32")
+			case .UInt32: generateIdentifier("UInt32")
+			case .Int64: generateIdentifier("Int64")
+			case .UInt64: generateIdentifier("UInt16")
+			case .IntPtr: generateIdentifier("IntPtr")
+			case .UIntPtr: generateIdentifier("UIntPtr")
+			case .Single: generateIdentifier("Float")
+			case .Double: generateIdentifier("Double")
+			case .Boolean: generateIdentifier("Boolean")
+			case .String: generateIdentifier("String")
+			case .AnsiChar: generateIdentifier("AnsiChar")
+			case .UTF16Char: generateIdentifier("Char")
+			case .UTF32Char: generateIdentifier("UInt32")
+			case .Dynamic: generateIdentifier("dynamic")
+			case .InstanceType: generateIdentifier("instancetype")
+			case .Void: generateIdentifier("Void")
+			case .Object: generateIdentifier("Object")
+			case .Class: generateIdentifier("Class")
 		}		
 	}
 	
