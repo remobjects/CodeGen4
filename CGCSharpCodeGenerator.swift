@@ -1039,6 +1039,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} 
 
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+			
 			if property.ReadOnly {
 				Append(" { get; }")
 			} else {
@@ -1047,8 +1048,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
-				AppendLine(";")
+				Append(";")
 			}
+			AppendLine()
+			
 		} else {
 			
 			if definitionOnly {
@@ -1064,7 +1067,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				return
 			}
 			
-			AppendLine(" {")
+			AppendLine()
+			AppendLine("{")
 			incIndent()
 			
 			if let getStatements = property.GetStatements {
@@ -1105,10 +1109,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
+				Append(";")
 			}
 			AppendLine()
 		}
-		AppendLine()
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
@@ -1138,12 +1142,15 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	func cSharpGenerateSuffixForNullability(type: CGTypeReference) {
-		if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
-			if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+		if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+			//Append("/*default not null*/")
+			if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
 				Append("?")
 			}
-		} else if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
-			if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+		} else {
+			//Append("/*default nullable*/")
+			if type.Nullability == CGTypeNullabilityKind.NotNullable {
+				//Append("/*not null*/")
 				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
 					Append("!")
 				}

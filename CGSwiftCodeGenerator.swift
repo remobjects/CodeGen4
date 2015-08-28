@@ -1171,9 +1171,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			
 			decIndent()
-			Append("}")
+			AppendLine("}")
 		}
-		AppendLine()
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {

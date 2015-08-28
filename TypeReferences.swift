@@ -54,6 +54,15 @@ public class CGNamedTypeReference : CGTypeReference {
 		init(name)
 		DefaultNullability = defaultNullability
 	}
+	public convenience init(_ name: String, nullability: CGTypeNullabilityKind) {
+		init(name)
+		Nullability = nullability
+	}
+	public convenience init(_ name: String, defaultNullability: CGTypeNullabilityKind, nullability: CGTypeNullabilityKind) {
+		init(name)
+		DefaultNullability = defaultNullability
+		Nullability = nullability
+	}
 	public convenience init(_ name: String, isClassType: Boolean) {
 		init(name)
 		IsClassType = isClassType
@@ -119,10 +128,18 @@ public class CGPredefinedTypeReference : CGTypeReference {
 		init(kind)
 		DefaultNullability = defaultNullability
 	}
+	public convenience init(_ kind: CGPredefinedTypeKind, nullability: CGTypeNullabilityKind) {
+		init(kind)
+		Nullability = nullability
+	}
 	public convenience init(_ kind: CGPredefinedTypeKind, defaultValue: CGExpression) {
 		init(kind)
 		DefaultValue = defaultValue
 	}
+	
+	public lazy var NullableUnwrapped: CGPredefinedTypeReference = ActualNullability == CGTypeNullabilityKind.NullableUnwrapped ? self : CGPredefinedTypeReference(Kind, nullability: CGTypeNullabilityKind.NullableUnwrapped)
+	public lazy var NullableNotUnwrapped: CGPredefinedTypeReference = ActualNullability == CGTypeNullabilityKind.NullableNotUnwrapped ? self : CGPredefinedTypeReference(Kind, nullability: CGTypeNullabilityKind.NullableNotUnwrapped)
+	public lazy var NotNullable: CGPredefinedTypeReference = ActualNullability == CGTypeNullabilityKind.NotNullable ? self : CGPredefinedTypeReference(Kind, nullability: CGTypeNullabilityKind.NotNullable)
 
 	public static lazy var Int = CGPredefinedTypeReference(.Int)
 	public static lazy var UInt = CGPredefinedTypeReference(.UInt)
