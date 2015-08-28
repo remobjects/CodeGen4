@@ -7,11 +7,11 @@ public extension Sugar.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(# defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
+	public func AsTypeReference(defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
 		return CGNamedTypeReference(self, defaultNullability: defaultNullability)
 	}
 
-	public func AsTypeReference(# isClassType: Boolean) -> CGTypeReference {
+	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
 		return CGNamedTypeReference(self, isClassType: isClassType)
 	}
 
@@ -19,7 +19,7 @@ public extension Sugar.String {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
 	
-	public func AsTypeReferenceExpression(# defaultNullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
+	public func AsTypeReferenceExpression(defaultNullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: defaultNullability))
 	}
 	
