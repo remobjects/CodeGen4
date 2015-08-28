@@ -930,6 +930,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
 		}
+		cSharpGenerateStaticPrefix(ctor.Static && !type.Static)
+		cSharpGenerateVirtualityPrefix(ctor)
 
 		if length(ctor.Name) > 0 {
 			Append("this ")
