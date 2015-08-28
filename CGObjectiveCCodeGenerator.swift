@@ -727,7 +727,26 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
-
+		
+		let block = type.Block
+		
+		if let returnType = block.ReturnType {
+			generateTypeReference(returnType)
+		} else {
+			Append("void")
+		}	   
+		Append("(^)(") 
+		for var p: Int32 = 0; p < block.Parameters.Count; p++ {
+			if p > 0 {
+				Append(", ")
+			}
+			if let type = block.Parameters[p].`Type` {
+				generateTypeReference(type)
+			} else {
+				Append("id")
+			}
+		}
+		Append(")")
 	}
 	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
