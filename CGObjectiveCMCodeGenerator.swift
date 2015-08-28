@@ -26,30 +26,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		generateIdentifier(type.Name)
 		AppendLine()
 		
-		var hasFields = false
-		for m in type.Members {
-			if let field = m as? CGFieldDefinition {
-				if !hasFields {
-					hasFields = true
-					AppendLine("{")
-					incIndent()
-				}
-				if let type = field.`Type` {
-					generateTypeReference(type)
-					if !objcTypeRefereneIsPointer(type) {
-						Append(" ")
-					}
-				} else {
-					Append("id ")
-				}
-				generateIdentifier(field.Name)
-				AppendLine(";")
-			}
-		}
-		if hasFields {
-			decIndent()
-			AppendLine("}")
-		}
+		//objcGenerateFields(type)
 		
 		AppendLine()
 	}
@@ -91,6 +68,9 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
 			Append("@synthesize ")
 			generateIdentifier(property.Name)
+			// 32-bit OS X Objective-C needs properies explicitly synthesized
+			Append(" = __p_")
+			generateIdentifier(property.Name, escaped: false)
 			AppendLine(";")
 		} else {
 			if let method = property.GetterMethodDefinition() {

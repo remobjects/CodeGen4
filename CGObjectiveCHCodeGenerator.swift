@@ -69,6 +69,8 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		generateIdentifier(type.Name)
 		objcGenerateAncestorList(type)
 		AppendLine()
+		// 32-bit OS X Objective-C needs fields declared in @interface, not @implementation
+		objcGenerateFields(type)
 		AppendLine()
 	}
 	

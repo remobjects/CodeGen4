@@ -546,6 +546,54 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("@end")
 	}
 	
+	func objcGenerateFields(type: CGTypeDefinition) {
+		var hasFields = false
+		for m in type.Members {
+			if let property = m as? CGPropertyDefinition {
+
+				// 32-bit OS X Objective-C needs properies explicitly synthesized
+				if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+					if !hasFields {
+						hasFields = true
+						AppendLine("{")
+						incIndent()
+					}
+					if let type = property.`Type` {
+						generateTypeReference(type)
+						if !objcTypeRefereneIsPointer(type) {
+							Append(" ")
+						}
+					} else {
+						Append("id ")
+					}
+					Append("__p_")
+					generateIdentifier(property.Name, escaped: false)
+					AppendLine(";")
+				}
+			} else if let field = m as? CGFieldDefinition {
+				if !hasFields {
+					hasFields = true
+					AppendLine("{")
+					incIndent()
+				}
+				if let type = field.`Type` {
+					generateTypeReference(type)
+					if !objcTypeRefereneIsPointer(type) {
+						Append(" ")
+					}
+				} else {
+					Append("id ")
+				}
+				generateIdentifier(field.Name)
+				AppendLine(";")
+			}
+		}
+		if hasFields {
+			decIndent()
+			AppendLine("}")
+		}
+	}
+	
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
 		// overriden in H
 	}
