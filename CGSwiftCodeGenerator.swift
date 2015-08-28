@@ -339,7 +339,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
-		generateExpression(expression.Expression)
+		if let typeReferenceExpression = expression.Expression as? CGTypeReferenceExpression {
+			generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
+		} else {
+			generateExpression(expression.Expression)
+		}
 		if expression.Expression is CGTypeReferenceExpression {
 			Append(".self as! AnyClass")
 		} else {
