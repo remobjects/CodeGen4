@@ -11,6 +11,10 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 				Append("@class ")
 				generateIdentifier(type.Name)
 				AppendLine(";")
+			} else if let type = t as? CGInterfaceTypeDefinition {
+				Append("@protocol ")
+				generateIdentifier(type.Name)
+				AppendLine(";")
 			}
 		}
 	}
@@ -85,9 +89,12 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		Append("@protocol ")
 		generateIdentifier(type.Name)
 		objcGenerateAncestorList(type)
+		AppendLine()
+		AppendLine()
 	}
 	
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+		AppendLine()
 		AppendLine("@end")
 	}	
 
@@ -108,7 +115,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		
 		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
-			return // we don't need to re-emit overriden properties in header?
+			Append("// overriden ") // we don't need to re-emit overriden properties in header?
 		}
 		
 		Append("@property ")

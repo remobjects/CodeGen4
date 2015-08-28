@@ -87,6 +87,21 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine("}")
 	}
 	
+	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+			Append("@synthesize ")
+			generateIdentifier(property.Name)
+			AppendLine(";")
+		} else {
+			if let method = property.GetterMethodDefinition() {
+				generateMethodDefinition(method, type: type)
+			}
+			if let method = property.SetterMethodDefinition() {
+				generateMethodDefinition(method, type: type)
+			}
+		}
+	}
+	
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
 		if field.Static {
 			Append("static ")

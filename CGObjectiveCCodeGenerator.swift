@@ -276,9 +276,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		// todo
 	}
 
+	/*
 	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
-		//todo
+		// handled in base
 	}
+	*/
 
 	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
@@ -540,6 +542,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
+		AppendLine()
 		AppendLine("@end")
 	}
 	
