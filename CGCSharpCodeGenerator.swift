@@ -48,7 +48,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("namespace")
 		if let namespace = currentUnit.Namespace {
 			Append(" ")
-			generateIdentifier(namespace.Name)
+			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
 		}
 		AppendLine()
 		AppendLine("{")
@@ -66,9 +66,13 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateImport(imp: CGImport) {
 		if imp.StaticClass != nil {
-			AppendLine("using static "+imp.StaticClass!.Name+";")
+			Append("using static ")
+			generateIdentifier(imp.StaticClass!.Name, alwaysEmitNamespace: true)
+			AppendLine(";")
 		} else {
-			AppendLine("using "+imp.Namespace!.Name+";")
+			Append("using ")
+			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
+			AppendLine(";")
 		}
 	}
 

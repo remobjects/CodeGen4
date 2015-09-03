@@ -141,7 +141,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			AppendLine("uses")
 			incIndent()
 			for var i: Int32 = 0; i < imports.Count; i++ {
-				Append(imports[i].Name)
+				generateIdentifier(imports[i].Name, alwaysEmitNamespace: true)
 				if i < imports.Count-1 {
 					AppendLine(",")
 				} else {

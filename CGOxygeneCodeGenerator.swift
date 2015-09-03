@@ -38,7 +38,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append("namespace")
 		if let namespace = currentUnit.Namespace {
 			Append(" ")
-			generateIdentifier(namespace.Name)
+			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
 		}
 		AppendLine(";")
 		AppendLine()

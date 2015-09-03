@@ -48,7 +48,7 @@ public class CGImport {
 	public var Namespace: CGNamespaceReference?
 	public var StaticClass: CGNamedTypeReference?
 	
-	public var Name: String? {
+	public var Name: String! {
 		if let ns = Namespace {
 			return ns.Name
 		} else if let sc = StaticClass {

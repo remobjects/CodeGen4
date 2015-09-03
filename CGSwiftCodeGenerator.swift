@@ -35,7 +35,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateImport(imp: CGImport) {
-		AppendLine("import \(imp.Name)")
+		Append("import ")
+		generateIdentifier(imp.Name, alwaysEmitNamespace: true)
+		AppendLine()
 	}
 
 	override func generateStatementTerminator() {

@@ -21,6 +21,8 @@ public __abstract class CGCodeGenerator {
 	//
 	
 	public __abstract var defaultFileExtension: String { get }
+	
+	public var omitNamespacePrefixes: Boolean = false
 
 	public final func GenerateUnit(unit: CGCodeUnit) -> String {
 		
@@ -260,11 +262,29 @@ public __abstract class CGCodeGenerator {
 	// Indentifiers
 	//
 
-	internal final func generateIdentifier(name: String) {
+	internal final __inline func generateIdentifier(name: String) {
 		generateIdentifier(name, escaped: true)
 	}
 	
-	internal final func generateIdentifier(name: String, escaped: Boolean) {
+	internal final __inline func generateIdentifier(name: String, escaped: Boolean) {
+		generateIdentifier(name, escaped: escaped, alwaysEmitNamespace: false)
+	}
+	
+	internal final __inline func generateIdentifier(name: String, alwaysEmitNamespace: Boolean) {
+		generateIdentifier(name, escaped: true, alwaysEmitNamespace: alwaysEmitNamespace)
+	}
+	
+	internal final func generateIdentifier(name: String, escaped: Boolean, alwaysEmitNamespace: Boolean) {
+		
+		if omitNamespacePrefixes && !alwaysEmitNamespace {
+			if name.Contains(".") {
+				if let parts = name.Split(".") where parts.count > 0 {
+					generateIdentifier(parts[length(parts)-1], escaped: escaped)
+					return
+				}
+			} 
+		}
+		
 		if escaped {		  
 			if name.Contains(".") {
 				let parts = name.Split(".")

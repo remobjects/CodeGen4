@@ -25,7 +25,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		super.generateHeader()
 		if let namespace = currentUnit.Namespace {
 			Append("package ")
-			generateIdentifier(namespace.Name)
+			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
 			AppendLine(";")
 			AppendLine()
 		}
@@ -36,9 +36,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateImport(imp: CGImport) {
 		if imp.StaticClass != nil {
-			AppendLine("import "+imp.StaticClass!.Name+";")
+			Append("import ")
+			generateIdentifier(imp.StaticClass!.Name, alwaysEmitNamespace: true)
+			AppendLine(";")
 		} else {
-			AppendLine("import "+imp.Namespace!.Name+".*;")
+			Append("import ")
+			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
+			AppendLine(".*;")
 		}
 	}
 
