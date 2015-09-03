@@ -749,6 +749,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+		Append("__kindof ")
+		generateTypeReference(type.`Type`)
+	}
+	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
 
 	}

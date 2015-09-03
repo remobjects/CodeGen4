@@ -1297,6 +1297,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(">")
 	}
 	
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			Append("dynamic<")
+			generateTypeReference(type.`Type`)
+			Append(">")
+		} else {
+			assert(false, "generateKindOfTypeReference is not supported in Swift, except in Silver")
+		}
+	}
+	
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 		Append("(")
 		for var m: Int32 = 0; m < type.Members.Count; m++ {

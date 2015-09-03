@@ -216,6 +216,15 @@ public class CGPointerTypeReference : CGTypeReference {
 	public static lazy var VoidPointer = CGPointerTypeReference(CGPredefinedTypeReference.Void)
 }
 
+public class CGKindOfTypeReference : CGTypeReference {
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type
+		DefaultNullability = .NullableUnwrapped
+	}
+}
+
 public class CGTupleTypeReference : CGTypeReference {
 	public var Members: List<CGTypeReference>
 	

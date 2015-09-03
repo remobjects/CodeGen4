@@ -1224,6 +1224,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
+			Append("dynamic<")
+			generateTypeReference(type.`Type`)
+			Append(">")
+		} else {
+			assert(false, "generateKindOfTypeReference is not supported in C#, except in Hydrogene")
+		}
+	}
+	
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 
 	}

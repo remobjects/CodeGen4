@@ -512,6 +512,12 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateInlineBlockType(type.Block)
 	}
 
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+		Append("dynamic<")
+		generateTypeReference(type.`Type`)
+		Append(">")
+	}
+	
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 		Append("tuple of (")
 		for var m: Int32 = 0; m < type.Members.Count; m++ {

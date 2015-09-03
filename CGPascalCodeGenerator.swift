@@ -1365,6 +1365,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateTypeReference(type.`Type`)
 	}
 
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+		assert(false, "generateKindOfTypeReference is not supported in base Pascal, only Oxygene")
+	}
+	
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}

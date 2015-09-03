@@ -393,6 +393,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+
+	}
+	
 	override func generateTupleTypeReference(type: CGTupleTypeReference) {
 
 	}
