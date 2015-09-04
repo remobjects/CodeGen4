@@ -230,6 +230,23 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
+	override func generateParameterDefinition(param: CGParameterDefinition) {
+		switch param.Modifier {
+			case .Var: Append("var ")
+			case .Const: Append("const ")
+			case .Out: Append("out ")
+			case .Params: Append("params ")
+			default: 
+		}
+		generateIdentifier(param.Name)
+		Append(": ")
+		generateTypeReference(param.`Type`)
+		if let defaultValue = param.DefaultValue {
+			Append(" := ")
+			generateExpression(defaultValue)
+		}
+	}
+
 	override func pascalGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
@@ -246,20 +263,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			} else {
 				param.startLocation = currentLocation
 			}
-			switch param.Modifier {
-				case .Var: Append("var ")
-				case .Const: Append("const ")
-				case .Out: Append("out ") //todo: Oxygene ony?
-				case .Params: Append("params ") //todo: Oxygene ony?
-				default: 
-			}
-			generateIdentifier(param.Name)
-			Append(": ")
-			generateTypeReference(param.`Type`)
-			if let defaultValue = param.DefaultValue {
-				Append(" := ")
-				generateExpression(defaultValue)
-			}
+			
+			generateParameterDefinition(param)
 			param.endLocation = currentLocation
 		}
 	}

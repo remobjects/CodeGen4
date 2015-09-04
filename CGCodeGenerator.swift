@@ -121,6 +121,14 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
+	public final func GenerateParameterDefinition(parameter: CGParameterDefinition, unit: CGCodeUnit? = nil) -> String {
+		currentUnit = unit
+		currentCode = StringBuilder()
+		definitionOnly = false
+		generateParameterDefinition(parameter)
+		return currentCode.ToString()
+	}
+	
 	public final func GenerateStatement(statement: CGStatement, unit: CGCodeUnit? = nil) -> String? {
 		
 		currentUnit = unit
@@ -1136,6 +1144,11 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generateNestedTypeDefinition not implemented")
 	}
 
+	internal func generateParameterDefinition(parameter: CGParameterDefinition) {
+		// descendant must override omnly if they use this, or to support GenerateParameterDefinition()
+		assert(false, "generateParameterDefinition not implemented")
+	}
+	
 	//
 	// Type References
 	//

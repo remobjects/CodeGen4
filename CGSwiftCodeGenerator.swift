@@ -574,6 +574,40 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	override func generateParameterDefinition(param: CGParameterDefinition) {
+		swiftGenerateParameterDefinition(param, emitExternal: false, first: true, firstExternalName: nil) // never emit the _
+	}
+	
+	private func swiftGenerateParameterDefinition(param: CGParameterDefinition, emitExternal: Boolean, first: Boolean, firstExternalName: String? = nil) {
+		switch param.Modifier {
+			case .Out: 
+				if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+					Append("__out ")
+				} else {
+					fallthrough
+				}
+			case .Var: 
+				Append("inout ")
+			default: 
+		}
+		if emitExternal, let externalName = param.ExternalName {
+			generateIdentifier(externalName)
+			Append(" ")
+		} else if first, let externalName = firstExternalName {
+			generateIdentifier(externalName)
+			Append(" ")
+		} else if emitExternal && !first {
+			Append("_ ")
+		}
+		generateIdentifier(param.Name)
+		Append(": ")
+		generateTypeReference(param.`Type`)
+		if let defaultValue = param.DefaultValue {
+			Append(" = ")
+			generateExpression(defaultValue)
+		}
+	}
+
 	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>, firstExternalName: String? = nil) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
@@ -581,33 +615,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append(", ")
 			} 
 			param.startLocation = currentLocation
-			switch param.Modifier {
-				case .Out: 
-					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-						Append("__out ")
-					} else {
-						fallthrough
-					}
-				case .Var: 
-					Append("inout ")
-				default: 
-			}
-			if let externalName = param.ExternalName {
-				generateIdentifier(externalName)
-				Append(" ")
-			} else if p == 0, let externalName = firstExternalName {
-				generateIdentifier(externalName)
-				Append(" ")
-			} else if p > 0 {
-				Append("_ ")
-			}
-			generateIdentifier(param.Name)
-			Append(": ")
-			generateTypeReference(param.`Type`)
-			if let defaultValue = param.DefaultValue {
-				Append(" = ")
-				generateExpression(defaultValue)
-			}
+			swiftGenerateParameterDefinition(param, emitExternal: true, first: p == 0, firstExternalName: firstExternalName)
 			param.endLocation = currentLocation
 		}
 	}
@@ -1116,6 +1124,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			
 			if property.ReadOnly && (property.isShortcutProperty) {
 				Append("let ")
+			} else if property.WriteOnly {
+				Append("private(set) var ")
 			} else {
 				Append("var ")
 			}

@@ -492,15 +492,32 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			generateExpression(param.Value)
 		}
 	}
+	
+	override func generateParameterDefinition(param: CGParameterDefinition) {
+		switch param.Modifier {
+			case .Var: Append("ref ")
+			case .Const: Append("const ") //todo: Oxygene ony?
+			case .Out: Append("out ")
+			case .Params: Append("params ")
+			default: 
+		}
+		generateTypeReference(param.`Type`)
+		Append(" ")
+		generateIdentifier(param.Name)
+		if let defaultValue = param.DefaultValue {
+			Append(" = ")
+			generateExpression(defaultValue)
+		}
+	}
 
 	func cSharpGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
-				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = param.ExternalName {
+				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let externalName = param.ExternalName {
 					Append(") ")
 					param.startLocation = currentLocation
-					generateIdentifier(name)
+					generateIdentifier(externalName)
 					Append("(")
 				} else {
 					Append(", ")
@@ -510,20 +527,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				param.startLocation = currentLocation
 			}
 			
-			switch param.Modifier {
-				case .Var: Append("ref ")
-				case .Const: Append("const ") //todo: Oxygene ony?
-				case .Out: Append("out ")
-				case .Params: Append("params ")
-				default: 
-			}
-			generateTypeReference(param.`Type`)
-			Append(" ")
-			generateIdentifier(param.Name)
-			if let defaultValue = param.DefaultValue {
-				Append(" = ")
-				generateExpression(defaultValue)
-			}
+			generateParameterDefinition(param)
 			param.endLocation = currentLocation
 		}
 	}
