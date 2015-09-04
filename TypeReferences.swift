@@ -13,11 +13,12 @@ public enum CGTypeNullabilityKind {
 }
 
 public __abstract class CGTypeReference : CGEntity {
-	public var Nullability: CGTypeNullabilityKind = .Default
-	public var DefaultNullability: CGTypeNullabilityKind = .NotNullable
-	public var DefaultValue: CGExpression?
-	public var StorageModifier: CGStorageModifierKind = .Strong
-	public var IsClassType = false
+	public private(set) var Nullability: CGTypeNullabilityKind = .Default
+	public private(set) var DefaultNullability: CGTypeNullabilityKind = .NotNullable
+	public private(set) var DefaultValue: CGExpression?
+	#hint StorageModifier shoudln't really be on the type? refactor!
+	public private(set) var StorageModifier: CGStorageModifierKind = .Strong
+	public private(set) var IsClassType = false
 	
 	public var ActualNullability: CGTypeNullabilityKind {
 		if Nullability == CGTypeNullabilityKind.Default || Nullability == CGTypeNullabilityKind.Unknown {
