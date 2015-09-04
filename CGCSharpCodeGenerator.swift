@@ -1048,6 +1048,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			
 			if property.ReadOnly {
 				Append(" { get; }")
+			} else if property.WriteOnly {
+				Append(" { set; }")
 			} else {
 				Append(" { get; set; }")
 			}

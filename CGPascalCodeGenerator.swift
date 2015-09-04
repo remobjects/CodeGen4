@@ -1257,6 +1257,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				Append(" ")
 				generateExpression(getExpression)
 			}
+		} else if property.ReadOnly && definitionOnly {
+			Append(" read")
 		}
 
 		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
@@ -1271,11 +1273,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				Append(" ")
 				generateExpression(setExpression)
 			}
+		} else if property.WriteOnly {
+			Append(" write")
 		}
 
 		Append(";")
 
-		if property.ReadOnly {
+		if property.ReadOnly && !definitionOnly {
 			Append(" readonly;")
 		}
 		if property.Default {

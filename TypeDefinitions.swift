@@ -239,6 +239,7 @@ public __abstract class CGFieldLikeMemberDefinition: CGMemberDefinition {
 public __abstract class CGFieldOrPropertyDefinition: CGFieldLikeMemberDefinition {
 	public var Initializer: CGExpression?
 	public var ReadOnly = false
+	public var WriteOnly = false
 }
 
 public class CGFieldDefinition: CGFieldOrPropertyDefinition {

@@ -86,6 +86,14 @@ public __abstract class CGCodeGenerator {
 	}
 
 	public final func GenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
+		return doGenerateMember(member, type: type, unit: unit, definitionOnly: false)
+	}
+	
+	public final func GenerateMemberDefinition(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
+		return doGenerateMember(member, type: type, unit: unit, definitionOnly: true)
+	}
+	
+	internal final func doGenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil, definitionOnly: Boolean) -> String {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
