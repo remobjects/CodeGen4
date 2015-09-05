@@ -378,12 +378,12 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				generateIdentifier(externalName)
 			}
 			Append(":(")
+			generateTypeReference(param.`Type`)
 			switch param.Modifier {
 				case .Var: Append("*")
 				case .Out: Append("*")
 				default: 
 			}
-			generateTypeReference(param.`Type`)
 			Append(")")
 			generateIdentifier(param.Name)
 		}

@@ -169,6 +169,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Partial = false /* Oxygene only */
 	public var Async = false /* Oxygene only */
 	public var Awaitable = false /* C# only */
+	public var Throws = false /* Swift and Java only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 
@@ -370,7 +371,7 @@ public class CGNestedTypeDefinition: CGMemberDefinition {
 // Parameters
 //
 
-public enum ParameterModifierKind {
+public enum CGParameterModifierKind {
 	case In
 	case Out
 	case Var
@@ -382,7 +383,7 @@ public class CGParameterDefinition : CGEntity {
 	public var Name: String
 	public var ExternalName: String? // Swift and Cocoa only
 	public var `Type`: CGTypeReference
-	public var Modifier: ParameterModifierKind = .In
+	public var Modifier: CGParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	
 	public init(_ name: String, _ type: CGTypeReference) {

@@ -258,7 +258,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				AppendLine("__throw")
 			}
 		} else {
-			assert(false, "generateThrowStatement is not supported in Swift, except in Silver")
+			if let value = statement.Exception {
+				Append("throw ")
+				generateExpression(value)
+				AppendLine()
+			} else {
+				AppendLine("throw")
+			}
 		}
 	}
 
@@ -983,6 +989,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		swiftGenerateDefinitionParameters(method.Parameters)
 		Append(")")
+		
+		if method.Throws {
+			Append(" throws")
+		}
 		
 		if let returnType = method.ReturnType {
 			Append(" -> ")
