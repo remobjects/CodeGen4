@@ -1318,6 +1318,10 @@ public __abstract class CGCodeGenerator {
 	private var indent: Int32 = 0
 	private var atStart = true
 	
+	internal var positionedAfterPeriod: Boolean {
+		return currentCode.ToString().EndsWith(".")
+	}
+	
 	public let currentLocation = CGLocation()
 	
 	internal final func Append(line: String? = nil) -> StringBuilder {

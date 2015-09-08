@@ -21,7 +21,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func escapeIdentifier(name: String) -> String {
-		return "&\(name)"
+		if (!positionedAfterPeriod) {
+			return "&\(name)"
+		}
+		return name
 	}
 
 	//
