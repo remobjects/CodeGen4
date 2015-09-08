@@ -231,9 +231,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("throw ")
 			generateExpression(value)
-			AppendLine()
 		} else {
-			AppendLine("throw")
+			Append("throw")
 		}
 		AppendLine(";")
 	}
