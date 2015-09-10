@@ -1154,6 +1154,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			} else {
 				swiftGenerateDefaultInitializerForType(property.`Type`)
 			}
+			AppendLine()
 			
 		} else {
 			
