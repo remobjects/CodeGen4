@@ -535,7 +535,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
-		Append("sequende of ")
+		Append("sequence of ")
 		generateTypeReference(sequence.`Type`)
 	}
 	
