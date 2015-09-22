@@ -312,7 +312,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		return nil
 	}
 	
-	public var isShortcutProperty: Boolean { get { return GetStatements == nil && SetStatements == nil && GetExpression == nil && SetExpression == nil } }
+	public var IsShortcutProperty: Boolean { get { return GetStatements == nil && SetStatements == nil && GetExpression == nil && SetExpression == nil } }
 }
 
 public class CGEventDefinition: CGFieldLikeMemberDefinition {

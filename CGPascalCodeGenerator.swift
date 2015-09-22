@@ -1247,44 +1247,53 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 
 		// todo: initializer for properties?
+		
+		if property.IsShortcutProperty {
 
-		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
-			Append(" read")
-			if !definitionOnly {
-				Append(" ")
-				generateIdentifier(getterMethod.Name)
+			if let value = property.Initializer {
+				Append(" := ")
+				generateExpression(value)
 			}
-		} else if let getExpression = property.GetExpression {
-			Append(" read")
-			if !definitionOnly {
-				Append(" ")
-				generateExpression(getExpression)
+			if property.ReadOnly {
+				Append(" readonly;")
 			}
-		} else if property.ReadOnly && definitionOnly {
-			Append(" read")
+			
+		} else {
+			
+			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+				Append(" read")
+				if !definitionOnly {
+					Append(" ")
+					generateIdentifier(getterMethod.Name)
+				}
+			} else if let getExpression = property.GetExpression {
+				Append(" read")
+				if !definitionOnly {
+					Append(" ")
+					generateExpression(getExpression)
+				}
+			} else if !property.WriteOnly {
+				Append(" read")
+			}
+	
+			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+				Append(" write")
+				if !definitionOnly {
+					Append(" ")
+					generateIdentifier(setterMethod.Name)
+				}
+			} else if let setExpression = property.SetExpression {
+				Append(" write")
+				if !definitionOnly {
+					Append(" ")
+					generateExpression(setExpression)
+				}
+			} else if !property.ReadOnly {
+				Append(" write")
+			}
 		}
-
-		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
-			Append(" write")
-			if !definitionOnly {
-				Append(" ")
-				generateIdentifier(setterMethod.Name)
-			}
-		} else if let setExpression = property.SetExpression {
-			Append(" write")
-			if !definitionOnly {
-				Append(" ")
-				generateExpression(setExpression)
-			}
-		} else if property.WriteOnly {
-			Append(" write")
-		}
-
 		Append(";")
 
-		if property.ReadOnly && !definitionOnly {
-			Append(" readonly;")
-		}
 		if property.Default {
 			Append(" default;")
 		}

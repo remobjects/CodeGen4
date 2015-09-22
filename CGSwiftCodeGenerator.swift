@@ -1132,7 +1132,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			
 		} else {
 			
-			if property.ReadOnly && (property.isShortcutProperty) {
+			if property.ReadOnly && (property.IsShortcutProperty) {
 				Append("let ")
 			} else if property.WriteOnly {
 				Append("private(set) var ")
@@ -1146,7 +1146,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 
-		if property.isShortcutProperty {
+		if property.IsShortcutProperty {
 		
 			if let value = property.Initializer {
 				Append(" = ")
