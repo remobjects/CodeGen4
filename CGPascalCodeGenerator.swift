@@ -1250,12 +1250,24 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		
 		if property.IsShortcutProperty {
 
-			if let value = property.Initializer {
-				Append(" := ")
-				generateExpression(value)
-			}
-			if property.ReadOnly {
-				Append(" readonly;")
+			if type is CGInterfaceTypeDefinition || property.Virtuality == CGMemberVirtualityKind.Abstract {
+			
+				if !property.WriteOnly {
+					Append(" read")
+				}
+				if !property.ReadOnly {
+					Append(" write")
+				}
+			
+			} else {
+			
+				if let value = property.Initializer {
+					Append(" := ")
+					generateExpression(value)
+				}
+				if property.ReadOnly {
+					Append(" readonly;")
+				}
 			}
 			
 		} else {
@@ -1272,8 +1284,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					Append(" ")
 					generateExpression(getExpression)
 				}
-			} else if !property.WriteOnly {
-				Append(" read")
 			}
 	
 			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
@@ -1288,8 +1298,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					Append(" ")
 					generateExpression(setExpression)
 				}
-			} else if !property.ReadOnly {
-				Append(" write")
 			}
 		}
 		Append(";")
