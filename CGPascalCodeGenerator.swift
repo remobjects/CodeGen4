@@ -1112,7 +1112,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateIdentifier(type.Name)
 			Append(".")
 		}
-		if let name = method.Name {
+		if length(method.Name) > 0 {
 			generateIdentifier(method.Name)
 		} else {
 			Append("Create")

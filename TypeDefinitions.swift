@@ -196,10 +196,13 @@ public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 		super.init("")
 	}
 	public init(_ name: String, _ statements: List<CGStatement>) {
+		if name == ".ctor" || name == ".cctor" {
+			name = ""
+		}
 		super.init(name, statements)
 	}
-	public init(_ name: String, _ statements: CGStatement...) {
-		super.init(name, statements.ToList())
+	convenience public init(_ name: String, _ statements: CGStatement...) {
+		init(name, statements.ToList())
 	}
 }
 
