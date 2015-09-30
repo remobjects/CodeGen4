@@ -14,7 +14,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 					"default", "delegate", "deprecated", "desc", "distinct", "div", "do", "downto", "dynamic", 
 					"each", "else", "empty", "end", "ensure", "enum", "equals", "event", "except", "exit", "extension", "external", 
 					"false", "finalizer", "finally", "flags", "for", "from", "function", 
-					"global", "group", 
+					"global", "goto", "group", 
 					"has", 
 					"if", "implementation", "implements", "implies", "in", "index", "inherited", "inline", "interface", "invariants", "is", "iterator", 
 					"join", 
