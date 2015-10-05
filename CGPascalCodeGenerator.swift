@@ -480,8 +480,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			helpGenerateCommaSeparatedList(method.Parameters) {param in
 				self.generateIdentifier(param.Name)
 			}
-			AppendLine(") -> ")
-			if method.Statements.Count == 0, let expression = method.Statements[0] as? CGExpression {
+			Append(") -> ")
+			if method.Statements.Count == 1, let expression = method.Statements[0] as? CGExpression {
 				generateExpression(expression)
 			} else {
 				AppendLine("begin")
@@ -489,7 +489,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				generateStatements(method.LocalVariables)
 				generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 				decIndent()
-				AppendLine("end")
+				Append("end")
 			}
 
 		} else {
