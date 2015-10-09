@@ -17,7 +17,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 					"as", "associativity", "autoreleasepool", "break", "case", "catch", "class", "continue", "convenience", "default", "defer", "deinit", "didSet", "do", "dynamicType",
 					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "guard", "if", "import", "in", "infix", "init", "inout", "internal", "is",
 					"lazy", "left", "let", "mutating", "nil", "none", "nonmutating", "operator", "optional", "override", "postfix", "precedence", "prefix", "private", "protocol", "public",
-					"repeat", "required", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "true", "try", "Type", "typealias",
+					"repeat", "required", "rethrows", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "Type", "typealias",
 					"unowned", "var", "weak", "where", "while", "willSet"].ToList() as! List<String>
 	}
 
@@ -990,15 +990,15 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
-		if method.Throws {
-			Append(" throws")
-		}
-		
 		if let returnType = method.ReturnType {
 			Append(" -> ")
 			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
 			returnType.endLocation = currentLocation
+		}
+		
+		if method.Throws {
+			Append(" throws")
 		}
 		
 		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {
