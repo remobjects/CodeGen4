@@ -412,12 +412,13 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 }
 
 public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	public let Value: Boolean = false
+	public let Value: Boolean
 	
 	public static lazy let True = CGBooleanLiteralExpression(true)
 	public static lazy let False = CGBooleanLiteralExpression(false)
 	
-	public init() {
+	public convenience init() {
+		init(false)
 	}
 	public init(_ bool: Boolean) {
 		Value = bool
