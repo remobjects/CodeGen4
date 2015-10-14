@@ -142,11 +142,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("@throw ")
 			generateExpression(value)
-			AppendLine()
+			AppendLine(";")
 		} else {
-			AppendLine("@throw")
+			AppendLine("@throw;")
 		}
-		AppendLine(";")
 	}
 
 	/*

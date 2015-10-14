@@ -74,9 +74,11 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 			AppendLine(";")
 		} else {
 			if let method = property.GetterMethodDefinition() {
+				method.Name = property.Name
 				generateMethodDefinition(method, type: type)
 			}
 			if let method = property.SetterMethodDefinition() {
+				method.Name = "set"+uppercaseFirstletter(property.Name)
 				generateMethodDefinition(method, type: type)
 			}
 		}
