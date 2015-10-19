@@ -1322,7 +1322,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString().EndsWith(".")
 	}
 	
-	public let currentLocation = CGLocation()
+	internal private(set) var currentLocation = CGLocation()
 	
 	internal final func Append(line: String? = nil) -> StringBuilder {
 		if let line = line where length(line) > 0 {			
@@ -1346,7 +1346,7 @@ public __abstract class CGCodeGenerator {
 	internal final func AppendLine(line: String? = nil) -> StringBuilder {
 		Append(line)
 		currentCode.AppendLine()
-		currentLocation.line++
+		currentLocation.line += 1 // workaeround for  currentLocation.line++ // E111 Variable expected
 		currentLocation.column = 0
 		#if ECHOES
 		currentLocation.offset = currentCode.ToString().Length // 72544: Sugar: confusing error calling StringBuilder.Length claims the case is wring when its not, on Echoes
