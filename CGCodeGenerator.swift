@@ -1006,7 +1006,7 @@ public __abstract class CGCodeGenerator {
 
 		var lastMember: CGMemberDefinition?
 		for m in type.Members {
-			if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) {
+			if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
 				AppendLine()
 			}
 			generateTypeMember(m, type: type)

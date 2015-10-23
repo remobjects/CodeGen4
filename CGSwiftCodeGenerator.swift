@@ -1163,6 +1163,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			
 			if type is CGInterfaceTypeDefinition || definitionOnly {
+				AppendLine()
 				return
 			}
 
@@ -1214,6 +1215,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 
 			if type is CGInterfaceTypeDefinition || definitionOnly {
+				AppendLine()
 				return
 			}
 
