@@ -15,7 +15,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGMemberDefinition>()
-	public var Visibility: CGTypeVisibilityKind = .Assembly		//in delphi, types with .Unit will be put into implementation section
+	public var Visibility: CGTypeVisibilityKind = .Unspecified		//in delphi, types with .Unit will be put into implementation section
 	public var Static = false
 	public var Sealed = false
 	public var Abstract = false
