@@ -36,7 +36,7 @@ public class CGAssignedExpression: CGExpression {
 	public init(_ value: CGExpression) {
 		Value = value
 	}
-	public init(_ value: CGExpression, inverted: Bool) {
+	public init(_ value: CGExpression, inverted: Boolean) {
 		Value = value
 		Inverted = inverted
 	}
