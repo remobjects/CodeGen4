@@ -1266,7 +1266,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					generateExpression(value)
 				}
 				if property.ReadOnly {
-					Append(" readonly;")
+					Append("; readonly")
 				}
 			}
 			

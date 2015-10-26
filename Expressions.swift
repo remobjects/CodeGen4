@@ -36,6 +36,10 @@ public class CGAssignedExpression: CGExpression {
 	public init(_ value: CGExpression) {
 		Value = value
 	}
+	public init(_ value: CGExpression, inverted: Bool) {
+		Value = value
+		Inverted = inverted
+	}
 }
 
 public class CGSizeOfExpression: CGExpression {
