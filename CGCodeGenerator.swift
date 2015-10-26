@@ -1294,15 +1294,15 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	static final func uppercaseFirstletter(name: String) -> String {
+	public static final func uppercaseFirstletter(name: String) -> String {
 		if length(name) >= 1 {
 			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
 		}
 		return name
 	}
 	
-	static final func lowercasecaseFirstletter(name: String) -> String {
-		//todo: maybe  not loweercase if second lette risn also uppercase?
+	public static final func lowercasecaseFirstletter(name: String) -> String {
+		//todo: maybe  not lowercase if second letter is also uppercase?
 		if length(name) >= 1 {
 			name = name.Substring(0, 1).ToLower()+name.Substring(1)
 		}
