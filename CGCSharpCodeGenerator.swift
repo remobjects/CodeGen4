@@ -406,11 +406,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-		// handled in base
+		if let `operator` = expression.Operator where `operator` == .ForceUnwrapNullable && Dialect == .Hydrogene {
+			generateExpression(expression.Value)
+			Append("!")
+		} else {
+			super.generateUnaryOperatorExpression(expression)
+		}
 	}
-	*/
 
 	/*
 	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {

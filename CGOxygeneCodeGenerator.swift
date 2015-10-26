@@ -181,6 +181,15 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append(")")
 	}
 
+	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+		if let `operator` = expression.Operator where `operator` == .ForceUnwrapNullable {
+			generateExpression(expression.Value)
+			Append(" as not nullable")
+		} else {
+			super.generateUnaryOperatorExpression(expression)
+		}
+	}
+
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .NotEquals: Append("≠")

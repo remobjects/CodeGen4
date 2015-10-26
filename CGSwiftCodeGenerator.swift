@@ -476,11 +476,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		//todo
 	}
 
-	/*
 	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
-		// handled in base
+		if let `operator` = expression.Operator where `operator` == .ForceUnwrapNullable {
+			generateExpression(expression.Value)
+			Append("!")
+		} else {
+			super.generateUnaryOperatorExpression(expression)
+		}
 	}
-	*/
 
 	/*
 	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {

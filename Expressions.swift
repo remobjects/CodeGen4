@@ -247,6 +247,7 @@ public enum CGUnaryOperatorKind {
 	case Minus
 	case Not
 	case AddressOf
+	case ForceUnwrapNullable
 }
 
 public class CGBinaryOperatorExpression: CGExpression {

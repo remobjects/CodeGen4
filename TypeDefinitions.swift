@@ -286,12 +286,14 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 			let method = CGMethodDefinition(prefix+Name, getStatements)
 			method.ReturnType = type
 			method.Parameters = Parameters
+			method.Static = Static
 			return method
 		} else if let getExpression = GetExpression, type = `Type` {
 			let method = CGMethodDefinition(prefix+Name)
 			method.ReturnType = type
 			method.Parameters = Parameters
 			method.Statements.Add(getExpression.AsReturnStatement())
+			method.Static = Static
 			return method
 		}
 		return nil
