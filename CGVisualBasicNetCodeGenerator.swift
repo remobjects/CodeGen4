@@ -178,17 +178,21 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
+		AppendLine()
 	}
 
 	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
-
+		generateExpression(statement.Target)
+		Append(" = ")
+		generateExpression(statement.Value)
+		AppendLine()
 	}	
 	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 
 	}
 
-	internal func generateStatementTerminator() {
+	override func generateStatementTerminator() {
 		AppendLine()
 	}
 
@@ -196,13 +200,32 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Expressions
 	//
 
+	internal func vbGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
+		if let callSite = expression.CallSite {
+			generateExpression(callSite)
+			Append(".")
+		}
+	}
+
+	func vbGenerateCallParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			generateExpression(param.Value)
+		}
+	}
+
 	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
 
 	}
 
+	/*
 	override func generateAssignedExpression(expression: CGAssignedExpression) {
-
+		// handled in base
 	}
+	*/
 
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
 
@@ -225,15 +248,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateInheritedExpression(expression: CGInheritedExpression) {
-
+		Append("MyBase")
 	}
 
 	override func generateSelfExpression(expression: CGSelfExpression) {
-
+		Append("Me")
 	}
 
 	override func generateNilExpression(expression: CGNilExpression) {
-
+		Append("Nothing")
 	}
 
 	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
@@ -316,31 +339,67 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-
+		vbGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
 	}
 
+	/*
 	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
-
+		// handled in base
 	}
+	*/
 
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-
+		Append("Call ")
+		vbGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
+		Append("(")
+		vbGenerateCallParameters(expression.Parameters)
+		Append(")")
 	}
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
-
+		Append("New ")
+		generateTypeReference(expression.`Type`)
+		/*if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+			Append("[")
+			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
+				self.generateExpression(boundExpression)
+			}
+			Append("]")
+		} else {*/
+			Append("(")
+			vbGenerateCallParameters(expression.Parameters)
+			Append(")")
+		//}
 	}
 
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-
+		vbGenerateCallSiteForExpression(expression)
+		generateIdentifier(expression.Name)
 	}
 
+	/*
 	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
-
+		// handled in base
+	}
+	*/
+	
+	internal func vbEscapeCharactersInStringLiteral(string: String) -> String {
+		let result = StringBuilder()
+		let len = string.Length
+		for var i: Integer = 0; i < len; i++ {
+			let ch = string[i]
+			switch ch {
+				case "\"": result.Append("\"\"")
+				default: result.Append(ch)
+			}
+		}
+		return result.ToString()
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
-
+		Append("\"\(vbEscapeCharactersInStringLiteral(expression.Value))\"")
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
