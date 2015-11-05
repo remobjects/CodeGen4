@@ -269,6 +269,7 @@ public class CGBinaryOperatorExpression: CGExpression {
 }
 
 public enum CGBinaryOperatorKind {
+	case Concat // string concat, can be different than +
 	case Addition
 	case Subtraction
 	case Multiplication

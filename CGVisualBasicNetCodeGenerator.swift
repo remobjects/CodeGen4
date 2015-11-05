@@ -127,8 +127,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			decIndent()
 		}
 		decIndent()
-		Append("End Select")
-		generateStatementTerminator()
+		AppendLine("End Select")
 	}
 
 	override func generateLockingStatement(statement: CGLockingStatement) {
@@ -147,7 +146,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateReturnStatement(statement: CGReturnStatement) {
-
+		if let value = statement.Value {
+			Append("Return ")
+			generateExpression(value)
+			AppendLine()
+		} else {
+			AppendLine("Return")
+		}
 	}
 
 	override func generateThrowStatement(statement: CGThrowStatement) {
@@ -173,7 +178,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		AppendLine(";")
 	}
 
 	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
@@ -182,6 +186,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 
+	}
+
+	internal func generateStatementTerminator() {
+		AppendLine()
 	}
 
 	//
@@ -266,8 +274,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
+			case .Concat: Append("&")
 			case .Addition: Append("+")
-			case .Concal: Append("&")
 			case .Subtraction: Append("-")
 			case .Multiplication: Append("*")
 			case .Division: Append("/")
@@ -300,6 +308,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			//case .AddEvent: 
 			//case .RemoveEvent: 
 			default: Append("/* NOT SUPPORTED */")
+		}
 	}
 
 	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
@@ -368,6 +377,169 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 	
+	func vbGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
+		switch visibility {
+			case .Unspecified: break /* no-op */
+			case .Unit: Append("Private ")
+			case .Assembly: Append("Friend ")
+			case .Public: Append("Public ")
+		}
+	}
+	
+	func vbGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+		switch visibility {
+			case .Unspecified: break /* no-op */
+			case .Private: Append("Private ")
+			case .Unit: fallthrough
+			case .UnitOrProtected: fallthrough
+			case .UnitAndProtected: fallthrough
+			case .Assembly: fallthrough
+			case .AssemblyAndProtected: Append("Friend ")
+			case .AssemblyOrProtected: Append("Protected Friend")
+			case .Protected: Append("Protected ")
+			case .Published: fallthrough
+			case .Public: Append("Public ")
+		}
+	}
+	
+	func vbGenerateStaticPrefix(isStatic: Boolean) {
+		if isStatic {
+			Append("Shared ")
+		}
+	}
+	
+	func vbGenerateAbstractPrefix(isAbstract: Boolean) {
+		if isAbstract {
+			Append("Abstract ")
+		}
+	}
+
+	func vbGenerateSealedPrefix(isSealed: Boolean) {
+		if isSealed {
+			Append("Final ")
+		}
+	}
+
+	func vbGenerateVirtualityPrefix(member: CGMemberDefinition) {
+		switch member.Virtuality {
+			//case .None
+			case .Virtual: Append("Virtual ")
+			case .Abstract: Append("MustOverride ")
+			case .Override: Append("Overrides ")
+			case .Final: Append("NotOverridable ")
+			case .Reintroduce: Append("Shadows ")
+			default:
+		}
+	}
+
+	override func generateParameterDefinition(param: CGParameterDefinition) {
+		switch param.Modifier {
+			case .Var: Append("ref ")
+			case .Const: Append("const ") //todo: Oxygene ony?
+			case .Out: Append("out ")
+			case .Params: Append("params ")
+			default: 
+		}
+		generateIdentifier(param.Name)
+		Append(" As ")
+		generateTypeReference(param.`Type`)
+		if let defaultValue = param.DefaultValue {
+			Append(" = ")
+			generateExpression(defaultValue)
+		}
+	}
+
+	func vbGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+				param.startLocation = currentLocation
+			} else {
+				param.startLocation = currentLocation
+			}
+			generateParameterDefinition(param)
+			param.endLocation = currentLocation
+		}
+	}
+
+	func vbGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			Append("<")
+			helpGenerateCommaSeparatedList(parameters) { param in
+				if let variance = param.Variance {
+					switch variance {
+						case .Covariant: self.Append("out ")
+						case .Contravariant: self.Append("in ")
+					}
+				}
+				self.generateIdentifier(param.Name)
+				//todo: constraints
+			}
+			Append(">")
+		}
+	}
+
+	func vbGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?) {
+		if let parameters = parameters where parameters.Count > 0 {
+			var needsWhere = true
+			for param in parameters {
+				if let constraints = param.Constraints where constraints.Count > 0 {
+					if needsWhere {
+						self.Append(" where ")
+						needsWhere = false
+					} else {
+						self.Append(", ")
+					}
+					self.generateIdentifier(param.Name)
+					self.Append(": ")
+					self.helpGenerateCommaSeparatedList(constraints) { constraint in
+						if let constraint = constraint as? CGGenericHasConstructorConstraint {
+							self.Append("new()")
+						//todo: 72051: Silver: after "if let x = x as? Foo", x still has the less concrete type. Sometimes.
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+							self.generateTypeReference(constraint2.`Type`)
+						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeKindConstraint {
+							switch constraint2.Kind {
+								case .Class: self.Append("class")
+								case .Struct: self.Append("struct")
+								case .Interface: self.Append("interface")
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	func vbGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+		if type.Ancestors.Count > 0 {
+			Append(" Of ")
+			for var a: Int32 = 0; a < type.Ancestors.Count; a++ {
+				if let ancestor = type.Ancestors[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(ancestor)
+				}
+			}
+		}
+		if type.ImplementedInterfaces.Count > 0 {
+			AppendLine()
+			incIndent()
+			Append("Implements ")
+			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
+				if let interface = type.ImplementedInterfaces[a] {
+					if a > 0 {
+						Append(", ")
+					}
+					generateTypeReference(interface)
+				}
+			}
+			decIndent()
+		}
+	}
+
 	override func generateAliasType(type: CGTypeAliasDefinition) {
 
 	}
@@ -381,29 +553,61 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
-
+		vbGenerateTypeVisibilityPrefix(type.Visibility)
+		vbGenerateStaticPrefix(type.Static)
+		vbGenerateAbstractPrefix(type.Abstract)
+		vbGenerateSealedPrefix(type.Sealed)
+		Append("Class ")
+		generateIdentifier(type.Name)
+		vbGenerateGenericParameters(type.GenericParameters)
+		vbGenerateGenericConstraints(type.GenericParameters)
+		vbGenerateAncestorList(type)
+		AppendLine()
+		incIndent()
 	}
 	
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
-
+		decIndent()
+		AppendLine("End Class")
 	}
 	
 	override func generateStructTypeStart(type: CGStructTypeDefinition) {
-
+		vbGenerateTypeVisibilityPrefix(type.Visibility)
+		vbGenerateStaticPrefix(type.Static)
+		vbGenerateAbstractPrefix(type.Abstract)
+		vbGenerateSealedPrefix(type.Sealed)
+		Append("Structure ")
+		generateIdentifier(type.Name)
+		vbGenerateGenericParameters(type.GenericParameters)
+		vbGenerateGenericConstraints(type.GenericParameters)
+		vbGenerateAncestorList(type)
+		AppendLine()
+		incIndent()
 	}
 	
 	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
-
-	}	
+		decIndent()
+		AppendLine("End Structure")
+	}		
 	
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
-
+		vbGenerateTypeVisibilityPrefix(type.Visibility)
+		vbGenerateSealedPrefix(type.Sealed)
+		Append("Interface ")
+		generateIdentifier(type.Name)
+		vbGenerateGenericParameters(type.GenericParameters)
+		vbGenerateGenericConstraints(type.GenericParameters)
+		vbGenerateAncestorList(type)
+		AppendLine()
+		AppendLine("{")
+		incIndent()
 	}
 	
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
-
-	}	
-	
+		decIndent()
+		AppendLine("End Interface")
+	}
+		
 	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
 
 	}
@@ -417,7 +621,43 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
-
+		if type is CGInterfaceTypeDefinition {
+			vbGenerateStaticPrefix(method.Static && !type.Static)
+		} else {
+			vbGenerateMemberTypeVisibilityPrefix(method.Visibility)
+			vbGenerateStaticPrefix(method.Static && !type.Static)
+			if method.Awaitable {
+				Append("Async ")
+			}
+			/*if method.External {
+				Append("extern ")
+			}*/
+			vbGenerateVirtualityPrefix(method)
+		}
+		Append("Sub ")
+		generateIdentifier(method.Name)
+		vbGenerateGenericParameters(method.GenericParameters)
+		Append("(")
+		vbGenerateDefinitionParameters(method.Parameters)
+		Append(")")
+		if let returnType = method.ReturnType {
+			Append(" As ")
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+		}
+		AppendLine()
+		//vbGenerateGenericConstraints(method.GenericParameters)
+		
+		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
+			return
+		}
+		
+		incIndent()
+		generateStatements(method.LocalVariables)
+		generateStatements(method.Statements)
+		decIndent()
+		AppendLine("End Sub")
 	}
 	
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
@@ -433,11 +673,121 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
-
+		vbGenerateMemberTypeVisibilityPrefix(field.Visibility)
+		vbGenerateStaticPrefix(field.Static && !type.Static)
+		if field.Constant {
+			Append("Const ")
+		} else {
+			Append("Dim ")
+		}
+		generateIdentifier(field.Name)
+		if let type = field.`Type` {
+			Append(" As ")
+			//vbGenerateStorageModifierPrefix(type)
+			generateTypeReference(type)
+		} else {
+		}
+		if let value = field.Initializer {
+			Append(" = ")
+			generateExpression(value)
+		}
+		AppendLine(";")
 	}
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		vbGenerateStaticPrefix(property.Static && !type.Static)
+		vbGenerateVirtualityPrefix(property)
+		
+		Append("Property ")
+		//if property.Default {
+		//	Append("this")
+		//} else {
+			generateIdentifier(property.Name)
+		//}
+		if let type = property.`Type` {
+			Append(" As ")
+			//vbGenerateStorageModifierPrefix(type)
+			generateTypeReference(type)
+		}
 
+		if let params = property.Parameters where params.Count > 0 {
+			Append("[")
+			vbGenerateDefinitionParameters(params)
+			Append("]")
+		} 
+
+		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+			
+			if property.ReadOnly {
+				Append(" { get; }")
+			} else if property.WriteOnly {
+				Append(" { set; }")
+			} else {
+				Append(" { get; set; }")
+			}
+			if let value = property.Initializer {
+				Append(" = ")
+				generateExpression(value)
+				Append(";")
+			}
+			AppendLine()
+			
+		} else {
+			
+			if definitionOnly {
+				/*Append("{ ")
+				if property.GetStatements != nil || property.GetExpression != nil {
+					Append("get; ")
+				}
+				if property.SetStatements != nil || property.SetExpression != nil {
+					Append("set; ")
+				}
+				Append("}")
+				AppendLine()*/
+				return
+			}
+
+			AppendLine()
+			incIndent()
+			
+			if let getStatements = property.GetStatements {
+				AppendLine("Get")
+				incIndent()
+				generateStatementsSkippingOuterBeginEndBlock(getStatements)
+				decIndent()
+				AppendLine("End Get")
+			} else if let getExpresssion = property.GetExpression {
+				incIndent()
+				generateStatement(CGReturnStatement(getExpresssion))
+				decIndent()
+				AppendLine("End Get")
+			}
+			
+			if let setStatements = property.SetStatements {
+				AppendLine("Set")
+				incIndent()
+				generateStatementsSkippingOuterBeginEndBlock(setStatements)
+				decIndent()
+				AppendLine("End Set")
+			} else if let setExpression = property.SetExpression {
+				AppendLine("Set")
+				incIndent()
+				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
+				decIndent()
+				AppendLine("End Set")
+			}
+			
+			decIndent()
+			Append("End Property")
+
+			/*if let value = property.Initializer {
+				Append(" = ")
+				generateExpression(value)
+				Append(";")
+			}*/
+			AppendLine()
+		}
 	}
 
 	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {

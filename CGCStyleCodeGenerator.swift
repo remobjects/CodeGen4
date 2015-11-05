@@ -172,6 +172,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	
 	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
+			case .Concat: fallthrough
 			case .Addition: Append("+")
 			case .Subtraction: Append("-")
 			case .Multiplication: Append("*")
