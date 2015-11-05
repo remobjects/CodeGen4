@@ -166,6 +166,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .Minus: Append("-")
 			case .Not: Append("!")
 			case .AddressOf: Append("&")
+			case .ForceUnwrapNullable: // no-op
 		}
 	}
 	

@@ -218,7 +218,7 @@ public __abstract class CGCodeGenerator {
 
 	internal func generateGlobals() {
 
-		var lastGlobal: CGGlobalDefinition?
+		var lastGlobal: CGGlobalDefinition? = nil
 		for g in currentUnit.Globals {
 			if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
 				AppendLine()
@@ -1004,7 +1004,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal func generateTypeMembers(type: CGTypeDefinition) {
 
-		var lastMember: CGMemberDefinition?
+		var lastMember: CGMemberDefinition? = nil
 		for m in type.Members {
 			if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
 				AppendLine()

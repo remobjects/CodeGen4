@@ -546,6 +546,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			case .Minus: Append("-")
 			case .Not: Append("not ")
 			case .AddressOf: Append("@")
+			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
 		}
 	}
 
@@ -583,7 +584,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			//case .AssignDivision: 
 			//case .AddEvent: 
 			//case .RemoveEvent: 
-			default: Append("/* NOT SUPPORTED */")
+			default: Append("{ NOT SUPPORTED }")
 		}
 	}
 
