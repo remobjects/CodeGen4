@@ -21,8 +21,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}*/
 	
 	override func generateImport(imp: CGImport) {
-
+		if imp.StaticClass != nil {
+			//todo
+		} else {
+			Append("Imports ")
+			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
+		}
 	}
+
 
 	internal func generateSingleLineCommentPrefix() {
 		Append("' ")
@@ -221,11 +227,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 
-	/*
 	override func generateAssignedExpression(expression: CGAssignedExpression) {
-		// handled in base
+		if !expression.Inverted {
+			Append("Not ")
+		}
+		generateExpression(expression.Value)
+		Append("Is Nothong")
 	}
-	*/
 
 	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
 
@@ -350,7 +358,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-		Append("Call ")
+		//Append("Call ")
 		vbGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
 		Append("(")
@@ -750,13 +758,20 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		AppendLine(";")
 	}
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
 		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
 		vbGenerateStaticPrefix(property.Static && !type.Static)
 		vbGenerateVirtualityPrefix(property)
+		
+		if property.ReadOnly || (property.SetStatements == nil && property.SetExpression == nil && (property.GetStatements != nil || property.GetExpression != nil)) {
+			Append("ReadOnly ")
+		} else {
+			if property.WriteOnly || (property.GetStatements == nil && property.GetExpression == nil && (property.SetStatements != nil || property.SetExpression != nil)) {
+				Append("ReadOnly ")
+			}
+		}
 		
 		Append("Property ")
 		//if property.Default {
@@ -788,7 +803,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
-				Append(";")
 			}
 			AppendLine()
 			
@@ -821,6 +835,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				generateStatement(CGReturnStatement(getExpresssion))
 				decIndent()
 				AppendLine("End Get")
+			} else {
+				AppendLine("WriteOnly")
 			}
 			
 			if let setStatements = property.SetStatements {
@@ -835,6 +851,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
 				decIndent()
 				AppendLine("End Set")
+			} else {
+				AppendLine("ReadOnly")
 			}
 			
 			decIndent()
@@ -843,7 +861,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			/*if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
-				Append(";")
 			}*/
 			AppendLine()
 		}

@@ -281,15 +281,15 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		SetExpression = setExpression
 	} 
 	
-	internal func GetterMethodDefinition(prefix: String = "get__") -> CGMethodDefinition? {
+	internal func GetterMethodDefinition(`prefix`: String = "get__") -> CGMethodDefinition? {
 		if let getStatements = GetStatements, type = `Type` {
-			let method = CGMethodDefinition(prefix+Name, getStatements)
+			let method = CGMethodDefinition(`prefix`+Name, getStatements)
 			method.ReturnType = type
 			method.Parameters = Parameters
 			method.Static = Static
 			return method
 		} else if let getExpression = GetExpression, type = `Type` {
-			let method = CGMethodDefinition(prefix+Name)
+			let method = CGMethodDefinition(`prefix`+Name)
 			method.ReturnType = type
 			method.Parameters = Parameters
 			method.Statements.Add(getExpression.AsReturnStatement())
@@ -301,14 +301,14 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	
 	public static let MAGIC_VALUE_PARAMETER_NAME = "___value___"
 	
-	internal func SetterMethodDefinition(prefix: String = "set__") -> CGMethodDefinition? {
+	internal func SetterMethodDefinition(`prefix`: String = "set__") -> CGMethodDefinition? {
 		if let setStatements = SetStatements, type = `Type` {
-			let method = CGMethodDefinition(prefix+Name, setStatements)
+			let method = CGMethodDefinition(`prefix`+Name, setStatements)
 			method.Parameters.AddRange(Parameters)
 			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
 			return method
 		} else if let setExpression = SetExpression, type = `Type` {
-			let method = CGMethodDefinition(prefix+Name)
+			let method = CGMethodDefinition(`prefix`+Name)
 			method.Parameters.AddRange(Parameters)
 			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
 			method.Statements.Add(CGAssignmentStatement(setExpression, CGLocalVariableAccessExpression(MAGIC_VALUE_PARAMETER_NAME)))
