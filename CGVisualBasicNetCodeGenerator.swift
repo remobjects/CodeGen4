@@ -3,7 +3,7 @@ import Sugar.Collections
 
 public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
-	public override var defaultFileExtension: String { return ".vb" }
+	public override var defaultFileExtension: String { return "vb" }
 
 	override func escapeIdentifier(name: String) -> String {
 		return name
@@ -17,8 +17,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 	
-	/*override func generateImports() {
-	}*/
+	override func generateImports() {
+		super.generateImports()
+		if currentUnit.Imports.Count > 0 {
+			AppendLine()
+		}
+	}
 	
 	override func generateImport(imp: CGImport) {
 		if imp.StaticClass != nil {
@@ -30,10 +34,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 
-	internal func generateSingleLineCommentPrefix() {
+	override func generateSingleLineCommentPrefix() {
 		Append("' ")
 	}
-	
+
 	override func generateInlineComment(comment: String) {
 
 	}
