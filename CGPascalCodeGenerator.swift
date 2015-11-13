@@ -766,6 +766,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(")")
 	}
 
+	override func generateDestroyInstanceExpression(expression: CGDestroyInstanceExpression) {
+		generateExpression(expression.Instance);
+		Append(".Free");
+	}
+
 	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
 		let needsEscape = pascalGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name, escaped: needsEscape)

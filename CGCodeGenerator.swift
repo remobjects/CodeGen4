@@ -652,6 +652,8 @@ public __abstract class CGCodeGenerator {
 			generateMethodCallExpression(expression)
 		} else if let expression = expression as? CGNewInstanceExpression {
 			generateNewInstanceExpression(expression)
+		} else if let expression = expression as? CGDestroyInstanceExpression {
+			generateDestroyInstanceExpression(expression)
 		} else if let expression = expression as? CGPropertyAccessExpression {
 			generatePropertyAccessExpression(expression)
 		} else if let expression = expression as? CGEnumValueAccessExpression {
@@ -833,6 +835,11 @@ public __abstract class CGCodeGenerator {
 	internal func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		// descendant must override
 		assert(false, "generateNewInstanceExpression not implemented")
+	}
+
+	internal func generateDestroyInstanceExpression(expression: CGDestroyInstanceExpression) {
+		// descendant must override
+		assert(false, "generateDestroyInstanceExpression not implemented")
 	}
 
 	internal func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {

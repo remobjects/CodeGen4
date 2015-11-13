@@ -504,6 +504,15 @@ public class CGNewInstanceExpression : CGExpression {
 	}
 }
 
+public class CGDestroyInstanceExpression : CGExpression {
+
+	public var Instance: CGExpression;
+ 
+	public init(_ instance: CGExpression) {
+		Instance = instance;
+	}
+}
+
 public class CGLocalVariableAccessExpression : CGExpression {
 	public var Name: String
 	public var NilSafe: Boolean = false // true to use colon or elvis operator
@@ -514,11 +523,19 @@ public class CGLocalVariableAccessExpression : CGExpression {
 	}
 }
 
+public enum CGCallSiteKind {
+	case Unspecified
+	case Static
+	case Instance
+	case Reference
+}
+
 public __abstract class CGMemberAccessExpression : CGExpression {
 	public var CallSite: CGExpression? // can be nil to call a local or global function/variable. Should be set to CGSelfExpression for local methods.
 	public var Name: String
 	public var NilSafe: Boolean = false // true to use colon or elvis operator
 	public var UnwrapNullable: Boolean = false // Swift only
+	public var CallSiteKind: CGCallSiteKind = .Unspecified //C++ only
 
 	public init(_ callSite: CGExpression?, _ name: String) {
 		CallSite = callSite
