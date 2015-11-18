@@ -696,7 +696,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
-		generateTypeReference(expression.`Type`, ignoreNullability: true)
+		generateExpression(expression.`Type`, ignoreNullability: true)
 		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
 			Append("[](count: ")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 

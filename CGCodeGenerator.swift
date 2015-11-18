@@ -595,6 +595,13 @@ public __abstract class CGCodeGenerator {
 	// Expressions
 	//
 	
+	internal final func generateExpression(expression: CGExpression, ignoreNullability: Boolean) {
+		if let expression = expression as? CGTypeReferenceExpression {
+			generateTypeReferenceExpression(expression)
+		} else {
+			generateExpression(expression)
+		}
+	}
 	internal final func generateExpression(expression: CGExpression) {
 		// descendant should not override
 
@@ -838,7 +845,7 @@ public __abstract class CGCodeGenerator {
 	}
 
 	internal func generateDestroyInstanceExpression(expression: CGDestroyInstanceExpression) {
-		// descendant must override
+		// descendant must override, if they support this
 		assert(false, "generateDestroyInstanceExpression not implemented")
 	}
 

@@ -754,7 +754,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
-		generateTypeReference(expression.`Type`)
+		generateExpression(expression.`Type`)
 		Append(".")
 		if let name = expression.ConstructorName {
 			generateIdentifier(name)

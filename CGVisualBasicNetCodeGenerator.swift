@@ -372,7 +372,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		Append("New ")
-		generateTypeReference(expression.`Type`)
+		generateExpression(expression.`Type`)
 		/*if let bounds = expression.ArrayBounds where bounds.Count > 0 {
 			Append("[")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 

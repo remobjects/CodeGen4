@@ -485,21 +485,30 @@ public class CGTupleLiteralExpression : CGExpression {
 /* Calls */
 
 public class CGNewInstanceExpression : CGExpression {
-	public var `Type`: CGTypeReference
+	public var `Type`: CGExpression
 	public var ConstructorName: String? // can optionally be provided for languages that support named .ctors (Elements, Objectice-C, Swift)
 	public var Parameters: List<CGCallParameter>
 	public var ArrayBounds: List<CGExpression>? // for array initialization.
 	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extended .ctor calls
 
-	public init(_ type: CGTypeReference) {
+	public convenience init(_ type: CGTypeReference) {
+		init(type.AsExpression())
+	}
+	public convenience init(_ type: CGTypeReference, _ parameters: List<CGCallParameter>) {
+		init(type.AsExpression(), parameters)
+	}
+	public convenience init(_ type: CGTypeReference, _ parameters: CGCallParameter...) {
+		init(type.AsExpression(), parameters)
+	}
+	public init(_ type: CGExpression) {
 		`Type` = type
 		Parameters = List<CGCallParameter>()
 	}
-	public init(_ type: CGTypeReference, _ parameters: List<CGCallParameter>) {
+	public init(_ type: CGExpression, _ parameters: List<CGCallParameter>) {
 		`Type` = type
 		Parameters = parameters
 	}
-	public convenience init(_ type: CGTypeReference, _ parameters: CGCallParameter...) {
+	public convenience init(_ type: CGExpression, _ parameters: CGCallParameter...) {
 		init(type, parameters.ToList())
 	}
 }

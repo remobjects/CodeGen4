@@ -619,7 +619,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
 		Append("new ")
-		generateTypeReference(expression.`Type`)
+		generateExpression(expression.`Type`, ignoreNullability: true)
 		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
 			Append("[")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
