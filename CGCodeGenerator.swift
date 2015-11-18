@@ -597,7 +597,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateExpression(expression: CGExpression, ignoreNullability: Boolean) {
 		if let expression = expression as? CGTypeReferenceExpression {
-			generateTypeReferenceExpression(expression)
+			generateTypeReferenceExpression(expression, ignoreNullability: ignoreNullability)
 		} else {
 			generateExpression(expression)
 		}
@@ -893,6 +893,11 @@ public __abstract class CGCodeGenerator {
 		Append(")")
 	}
 	
+	internal func generateTypeReferenceExpression(expression: CGTypeReferenceExpression, ignoreNullability: Boolean) {
+		// descendant may override, but this will work for most languages.
+		generateTypeReference(expression.`Type`, ignoreNullability: ignoreNullability)
+	}
+
 	internal func generateTypeReferenceExpression(expression: CGTypeReferenceExpression) {
 		// descendant may override, but this will work for most languages.
 		generateTypeReference(expression.`Type`)
@@ -1222,7 +1227,7 @@ public __abstract class CGCodeGenerator {
 				if p > 0 {
 					Append(",")
 				}
-				generateTypeReference(param)
+				generateTypeReference(param, ignoreNullability: ignoreNullability)
 			}
 			Append(">")
 		}
