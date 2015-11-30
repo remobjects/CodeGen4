@@ -260,6 +260,8 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var SetStatements: List<CGStatement>?
 	public var GetExpression: CGExpression?
 	public var SetExpression: CGExpression?
+	public var GetterVisibility: CGMemberVisibilityKind?
+	public var SetterVisibility: CGMemberVisibilityKind?
 	
 	public init(_ name: String) {
 		super.init(name)

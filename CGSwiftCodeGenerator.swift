@@ -794,19 +794,22 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	func swiftGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+	func swiftGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind, appendSpace: Boolean = true) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
-			case .Private: Append("private ")
+			case .Private: Append("private")
 			case .Unit: fallthrough
 			case .UnitOrProtected: fallthrough
 			case .UnitAndProtected: fallthrough
 			case .Assembly: fallthrough
-			case .AssemblyAndProtected: Append("internal ")
+			case .AssemblyAndProtected: Append("internal")
 			case .AssemblyOrProtected: fallthrough
 			case .Protected: fallthrough
 			case .Published: fallthrough
-			case .Public: Append("public ")
+			case .Public: Append("public")
+		}
+		if appendSpace {
+			Append(" ")
 		}
 	}
 	
@@ -1110,7 +1113,26 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
-		swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+
+		if property.GetterVisibility != nil || property.SetterVisibility != nil {
+			if let v = property.GetterVisibility {
+				swiftGenerateMemberTypeVisibilityPrefix(v, appendSpace: false)
+				Append("(get) ")
+			} else {
+				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+			}
+					
+			if let v = property.SetterVisibility {
+				swiftGenerateMemberTypeVisibilityPrefix(v, appendSpace: false)
+				Append("(set) ")
+			} else {
+				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, appendSpace: false)
+				Append("(set) ")
+			}
+		} else {
+			swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		}
+		
 		swiftGenerateStaticPrefix(property.Static && !type.Static)
 		swiftGenerateVirtualityPrefix(property)
 		if property.Lazy {

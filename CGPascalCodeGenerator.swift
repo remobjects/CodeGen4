@@ -1255,6 +1255,23 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		// todo: initializer for properties?
 		
+		func appendRead() {
+			self.Append(" ")
+			if let v = property.GetterVisibility {
+				self.pascalGenerateMemberVisibilityKeyword(v)
+				self.Append(" ")
+			}
+			self.Append("read")
+		}
+		func appendWrite() {
+			self.Append(" ")
+			if let v = property.SetterVisibility {
+				self.pascalGenerateMemberVisibilityKeyword(v)
+				self.Append(" ")
+			} 
+			self.Append("write")
+		}
+		
 		if property.IsShortcutProperty {
 
 			if type is CGInterfaceTypeDefinition || property.Virtuality == CGMemberVirtualityKind.Abstract {
@@ -1267,6 +1284,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 			
 			} else {
+				
+				if !property.ReadOnly && property.GetterVisibility != nil || property.SetterVisibility != nil {
+					appendRead()
+					appendWrite()
+				}
 			
 				if let value = property.Initializer {
 					Append(" := ")
@@ -1280,13 +1302,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		} else {
 			
 			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
-				Append(" read")
+				appendRead()
 				if !definitionOnly {
 					Append(" ")
 					generateIdentifier(getterMethod.Name)
 				}
 			} else if let getExpression = property.GetExpression {
-				Append(" read")
+				appendRead()
 				if !definitionOnly {
 					Append(" ")
 					generateExpression(getExpression)
@@ -1294,13 +1316,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			}
 	
 			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
-				Append(" write")
+				appendWrite()
 				if !definitionOnly {
 					Append(" ")
 					generateIdentifier(setterMethod.Name)
 				}
 			} else if let setExpression = property.SetExpression {
-				Append(" write")
+				appendWrite()
 				if !definitionOnly {
 					Append(" ")
 					generateExpression(setExpression)

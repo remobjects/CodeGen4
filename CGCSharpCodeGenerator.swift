@@ -1050,14 +1050,37 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("]")
 		} 
 
+		func appendGet() {
+			self.Append(" ")
+			if let v = property.GetterVisibility {
+				self.cSharpGenerateMemberTypeVisibilityPrefix(v)
+			}
+			self.Append("get")
+		}
+		func appendSet() {
+			self.Append(" ")
+			if let v = property.SetterVisibility {
+				self.cSharpGenerateMemberTypeVisibilityPrefix(v)
+			} 
+			self.Append("set")
+		}
+
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
 			
 			if property.ReadOnly {
-				Append(" { get; }")
+				Append(" { ")
+				appendGet()
+				Append("; }")
 			} else if property.WriteOnly {
-				Append(" { set; }")
+				Append(" { ")
+				appendSet()
+				Append("; }")
 			} else {
-				Append(" { get; set; }")
+				Append(" { ")
+				appendGet()
+				Append("; ")
+				appendSet()
+				Append("; }")
 			}
 			if let value = property.Initializer {
 				Append(" = ")
@@ -1071,10 +1094,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if definitionOnly {
 				Append("{ ")
 				if property.GetStatements != nil || property.GetExpression != nil {
-					Append("get; ")
+					appendGet()
 				}
 				if property.SetStatements != nil || property.SetExpression != nil {
-					Append("set; ")
+					appendSet()
 				}
 				Append("}")
 				AppendLine()
@@ -1086,14 +1109,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			incIndent()
 			
 			if let getStatements = property.GetStatements {
-				AppendLine("get")
+				appendGet()
 				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(getStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let getExpresssion = property.GetExpression {
-				AppendLine("get")
+				appendGet()
 				AppendLine("{")
 				incIndent()
 				generateStatement(CGReturnStatement(getExpresssion))
@@ -1102,14 +1125,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			}
 			
 			if let setStatements = property.SetStatements {
-				AppendLine("set")
+				appendSet()
 				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(setStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let setExpression = property.SetExpression {
-				AppendLine("set")
+				appendSet()
 				AppendLine("{")
 				incIndent()
 				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
