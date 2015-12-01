@@ -272,11 +272,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
 		Append("// ")
-		generateInlineConstructorCallStatement(statement)
+		cSharpGenerateInlineConstructorCallStatement(statement)
 		AppendLine()
 	}
 	
-	private func generateInlineConstructorCallStatement(statement: CGConstructorCallStatement) {
+	private func cSharpGenerateInlineConstructorCallStatement(statement: CGConstructorCallStatement) {
 		if let callSite = statement.CallSite where callSite is CGInheritedExpression {
 			generateExpression(callSite)
 		} else {
@@ -955,7 +955,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		for s in ctor.Statements {
 			if let ctorCall = s as? CGConstructorCallStatement {
 				Append(" : ") 
-				generateInlineConstructorCallStatement(ctorCall)
+				cSharpGenerateInlineConstructorCallStatement(ctorCall)
 				break
 			}
 		}
