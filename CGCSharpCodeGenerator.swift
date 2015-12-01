@@ -609,11 +609,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(expression.Name)
 	}
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-		cSharpGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
+	override func generateMethodCallExpression(method: CGMethodCallExpression) {
+		cSharpGenerateCallSiteForExpression(method)
+		generateIdentifier(method.Name)
+		generateGenericArguments(method.GenericArguments)
 		Append("(")
-		cSharpGenerateCallParameters(expression.Parameters)		
+		cSharpGenerateCallParameters(method.Parameters)		
 		Append(")")
 	}
 

@@ -684,14 +684,15 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-		swiftGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
-		if expression.CallOptionally {
+	override func generateMethodCallExpression(method: CGMethodCallExpression) {
+		swiftGenerateCallSiteForExpression(method)
+		generateIdentifier(method.Name)
+		generateGenericArguments(method.GenericArguments)
+		if method.CallOptionally {
 			Append("?")
 		}
 		Append("(")
-		swiftGenerateCallParameters(expression.Parameters)		
+		swiftGenerateCallParameters(method.Parameters)		
 		Append(")")
 	}
 	
@@ -996,15 +997,15 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
+		if method.Throws {
+			Append(" throws")
+		}
+		
 		if let returnType = method.ReturnType {
 			Append(" -> ")
 			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
 			returnType.endLocation = currentLocation
-		}
-		
-		if method.Throws {
-			Append(" throws")
 		}
 		
 		if type is CGInterfaceTypeDefinition || method.External || definitionOnly {

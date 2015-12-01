@@ -361,12 +361,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 	*/
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
+	override func generateMethodCallExpression(method: CGMethodCallExpression) {
 		//Append("Call ")
-		vbGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
+		vbGenerateCallSiteForExpression(method)
+		generateIdentifier(method.Name)
+		generateGenericArguments(method.GenericArguments)
 		Append("(")
-		vbGenerateCallParameters(expression.Parameters)
+		vbGenerateCallParameters(method.Parameters)
 		Append(")")
 	}
 

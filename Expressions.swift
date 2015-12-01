@@ -567,6 +567,7 @@ public class CGEnumValueAccessExpression : CGExpression {
 
 public class CGMethodCallExpression : CGMemberAccessExpression{
 	public var Parameters: List<CGCallParameter>
+	public var GenericArguments: List<CGTypeReference>?
 	public var CallOptionally: Boolean = false // Swift only
 
 	public init(_ callSite: CGExpression?, _ name: String) {

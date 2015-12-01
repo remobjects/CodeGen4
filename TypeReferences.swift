@@ -50,7 +50,7 @@ public enum CGStorageModifierKind {
 
 public class CGNamedTypeReference : CGTypeReference {
 	public let Name: String
-	public var GenericParameters: List<CGTypeReference>?
+	public var GenericArguments: List<CGTypeReference>?
 
 	public init(_ name: String) {
 		Name = name
@@ -78,7 +78,7 @@ public class CGNamedTypeReference : CGTypeReference {
 
 	override func copyWithNullability(nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		let result = CGNamedTypeReference(Name, defaultNullability: DefaultNullability, nullability: nullability)
-		result.GenericParameters = GenericParameters
+		result.GenericArguments = GenericArguments
 
 		result.DefaultValue = DefaultValue
 		result.StorageModifier = StorageModifier

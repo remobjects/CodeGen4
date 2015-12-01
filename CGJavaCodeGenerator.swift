@@ -451,11 +451,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(expression.Name)
 	}
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-		javaGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
+	override func generateMethodCallExpression(method: CGMethodCallExpression) {
+		javaGenerateCallSiteForExpression(method)
+		generateIdentifier(method.Name)
+		generateGenericArguments(method.GenericArguments)
 		Append("(")
-		javaGenerateCallParameters(expression.Parameters)
+		javaGenerateCallParameters(method.Parameters)
 		Append(")")
 	}
 

@@ -745,11 +745,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	*/
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
-		let needsEscape = pascalGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name, escaped: needsEscape)
+	override func generateMethodCallExpression(method: CGMethodCallExpression) {
+		let needsEscape = pascalGenerateCallSiteForExpression(method)
+		generateIdentifier(method.Name, escaped: needsEscape)
+		generateGenericArguments(method.GenericArguments)
 		Append("(")
-		pascalGenerateCallParameters(expression.Parameters)
+		pascalGenerateCallParameters(method.Parameters)
 		Append(")")
 	}
 
