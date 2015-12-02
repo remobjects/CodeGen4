@@ -339,7 +339,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-		assert(false, "generateAwaitExpression is not supported in C++")
+		if Dialect == CGCPlusPlusCodeGeneratorDialect.CPlusPlusBuilder {
+			Append("__await ")
+			generateExpression(expression.Expression)
+		} else {
+			assert(false, "generateAwaitExpression is not supported in C++")
+		}
 	}
 
 	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
