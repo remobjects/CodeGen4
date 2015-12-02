@@ -715,12 +715,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-		swiftGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
-		if let params = expression.Parameters where params.Count > 0 {
+	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
+		swiftGenerateCallSiteForExpression(property)
+		generateIdentifier(property.Name)
+		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
-			swiftGenerateCallParameters(expression.Parameters)
+			swiftGenerateCallParameters(property.Parameters)
 			Append("]")
 		}
 	}

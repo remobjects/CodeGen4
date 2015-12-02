@@ -638,12 +638,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-		cSharpGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
-		if let params = expression.Parameters where params.Count > 0 {
+	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
+		cSharpGenerateCallSiteForExpression(property)
+		generateIdentifier(property.Name)
+		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
-			cSharpGenerateCallParameters(expression.Parameters)
+			cSharpGenerateCallParameters(property.Parameters)
 			Append("]")
 		}
 	}
