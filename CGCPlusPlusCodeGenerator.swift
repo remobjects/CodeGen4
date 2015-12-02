@@ -339,7 +339,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-		if Dialect == CGCPlusPlusCodeGeneratorDialect.CPlusPlusBuilder {
+		if Dialect == CGCPlusPlusCodeGeneratorDialect.VCPlusPlus {
 			Append("__await ")
 			generateExpression(expression.Expression)
 		} else {
