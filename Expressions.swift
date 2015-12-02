@@ -589,7 +589,6 @@ public class CGMethodCallExpression : CGMemberAccessExpression{
 
 public class CGPropertyAccessExpression: CGMemberAccessExpression {
 	public var Parameters: List<CGCallParameter>
-	public var GenericArguments: List<CGTypeReference>?
 
 	public init(_ callSite: CGExpression?, _ name: String, _ parameters: List<CGCallParameter>?) {
 		super.init(callSite, name)

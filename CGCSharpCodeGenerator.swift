@@ -641,7 +641,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
 		cSharpGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		generateGenericArguments(property.GenericArguments)
 		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
 			cSharpGenerateCallParameters(property.Parameters)

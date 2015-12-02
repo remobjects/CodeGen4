@@ -471,7 +471,6 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
 		javaGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		generateGenericArguments(property.GenericArguments)
 		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
 			javaGenerateCallParameters(property.Parameters)

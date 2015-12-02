@@ -775,7 +775,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
 		let needsEscape = pascalGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name, escaped: needsEscape)
-		generateGenericArguments(property.GenericArguments)
 		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
 			pascalGenerateCallParameters(property.Parameters)

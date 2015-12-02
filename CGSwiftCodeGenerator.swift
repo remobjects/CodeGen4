@@ -718,7 +718,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
 		swiftGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		generateGenericArguments(property.GenericArguments)
 		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
 			swiftGenerateCallParameters(property.Parameters)

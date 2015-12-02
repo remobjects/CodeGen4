@@ -390,7 +390,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
 		vbGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		generateGenericArguments(property.GenericArguments)
 		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
 			vbGenerateCallParameters(property.Parameters)
