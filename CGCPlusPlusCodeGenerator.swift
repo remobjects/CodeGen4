@@ -503,7 +503,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					}				
 					else if let typeref = expression.CallSite as? CGSelfExpression {
 						Append(".")
-					}								
+					}	
+					else {  
+						Append(".")
+					}
 			}			
 		}
 	}
