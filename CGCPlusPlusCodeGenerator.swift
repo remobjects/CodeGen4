@@ -306,7 +306,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
-		if !cast.ThrowsException {
+		if cast.ThrowsException {
 			//dynamic_cast<MyClass *>(ptr)
 			Append("dynamic_cast<")
 			generateTypeReference(cast.TargetType)
@@ -316,7 +316,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			// (MyClass *)ptr
 			Append("(")
-			generateTypeReference(cast.TargetType)			
+			generateTypeReference(cast.TargetType)		
 			Append(")")
 			generateExpression(cast.Expression)
 		}
