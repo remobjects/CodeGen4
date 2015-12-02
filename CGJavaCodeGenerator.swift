@@ -468,12 +468,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 
-	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-		javaGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name)
-		if let params = expression.Parameters where params.Count > 0 {
+	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
+		javaGenerateCallSiteForExpression(property)
+		generateIdentifier(property.Name)
+		generateGenericArguments(property.GenericArguments)
+		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
-			javaGenerateCallParameters(expression.Parameters)
+			javaGenerateCallParameters(property.Parameters)
 			Append("]")
 		}
 	}

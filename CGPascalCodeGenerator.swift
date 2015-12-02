@@ -772,12 +772,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(".Free");
 	}
 
-	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
-		let needsEscape = pascalGenerateCallSiteForExpression(expression)
-		generateIdentifier(expression.Name, escaped: needsEscape)
-		if let params = expression.Parameters where params.Count > 0 {
+	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
+		let needsEscape = pascalGenerateCallSiteForExpression(property)
+		generateIdentifier(property.Name, escaped: needsEscape)
+		generateGenericArguments(property.GenericArguments)
+		if let params = property.Parameters where params.Count > 0 {
 			Append("[")
-			pascalGenerateCallParameters(expression.Parameters)
+			pascalGenerateCallParameters(property.Parameters)
 			Append("]")
 		}
 	}
