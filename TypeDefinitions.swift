@@ -160,6 +160,17 @@ public class CGEnumValueDefinition: CGMemberDefinition {
 // Methods & Co
 //
 
+public enum CGCallingConventionKind {
+	case CDecl /* C++ and Delphi */
+	case Pascal /* C++ and Delphi */
+	case StdCall /* C++ and Delphi */
+	case FastCall /* C++ */
+	case SafeCall /* C++ and Delphi */
+	case ClrCall /* VC++ */
+	case ThisCall /* VC++ */
+	case VectorCall /* VC++ */
+}
+
 public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
@@ -170,6 +181,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Async = false /* Oxygene only */
 	public var Awaitable = false /* C# only */
 	public var Throws = false /* Swift and Java only */
+	public var CallingConvention: CGCallingConventionKind? /* Delphi and C++Builder only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 

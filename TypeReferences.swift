@@ -262,6 +262,15 @@ public class CGPointerTypeReference : CGTypeReference {
 	}
 }
 
+public class CGConstantTypeReference : CGTypeReference { /* C++ only, currently */
+	public var `Type`: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		`Type` = type
+		DefaultNullability = .NullableUnwrapped
+	}
+}
+
 public class CGKindOfTypeReference : CGTypeReference {
 	public var `Type`: CGTypeReference
 

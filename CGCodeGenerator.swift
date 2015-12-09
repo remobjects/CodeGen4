@@ -1190,6 +1190,8 @@ public __abstract class CGCodeGenerator {
 			generateInlineBlockTypeReference(type)
 		} else if let type = type as? CGPointerTypeReference {
 			generatePointerTypeReference(type)
+		} else if let type = type as? CGConstantTypeReference {
+			generateConstantTypeReference(type)
 		} else if let type = type as? CGKindOfTypeReference {
 			generateKindOfTypeReference(type)
 		} else if let type = type as? CGTupleTypeReference {
@@ -1239,7 +1241,7 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
-		// most language swill want to override this
+		// most languages will want to override this
 		switch (type.Kind) {
 			case .Int: generateIdentifier("Int")
 			case .UInt: generateIdentifier("UInt")
@@ -1274,6 +1276,11 @@ public __abstract class CGCodeGenerator {
 	
 	internal func generatePointerTypeReference(type: CGPointerTypeReference) {
 		assert(false, "generatPointerTypeReference not implemented")
+	}
+	
+	internal func generateConstantTypeReference(type: CGConstantTypeReference) {
+		// override if the langage supports const types
+		generateTypeReference(type.`Type`)
 	}
 	
 	internal func generateKindOfTypeReference(type: CGKindOfTypeReference) {
