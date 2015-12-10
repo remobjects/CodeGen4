@@ -141,12 +141,34 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(ctor, type: type, header: false)
-		AppendLine(";")
+		AppendLine()
+		AppendLine("{")
+		incIndent()
+		// process local variables
+		if let localVariables = ctor.LocalVariables where localVariables.Count > 0 {		
+			for v in localVariables {
+				generateVariableDeclarationStatement(v);
+			}
+		}
+		generateStatements(ctor.Statements)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(dtor, type: type, header: false)
-		AppendLine(";")
+		AppendLine()
+		AppendLine("{")
+		incIndent()
+		// process local variables
+		if let localVariables = dtor.LocalVariables where localVariables.Count > 0 {		
+			for v in localVariables {
+				generateVariableDeclarationStatement(v);
+			}
+		}
+		generateStatements(dtor.Statements)
+		decIndent()
+		AppendLine("}")
 	}
 
 

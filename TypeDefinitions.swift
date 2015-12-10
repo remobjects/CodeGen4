@@ -169,6 +169,7 @@ public enum CGCallingConventionKind {
 	case ClrCall /* VC++ */
 	case ThisCall /* VC++ */
 	case VectorCall /* VC++ */
+	case Register	/* C++Builder and Delphi */
 }
 
 public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {

@@ -339,7 +339,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAwaitExpression(expression: CGAwaitExpression) {
-		if Dialect == CGCPlusPlusCodeGeneratorDialect.VCPlusPlus {
+		if isVC() {
 			Append("__await ")
 			generateExpression(expression.Expression)
 		} else {
@@ -704,7 +704,33 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Type Members
 	//
-	
+	func cppGenerateCallingConversion(callingConvention: CGCallingConventionKind){	
+		if isCBuilder() {	
+			switch callingConvention {		
+				case .CDecl:		 Append("__cdecl ")
+				case .Pascal:		 Append("__pascal ")
+				case .FastCall:		 Append("__msfastcall ")
+				case .StdCall:		 Append("__stdcall ")
+				case .Register:		 Append("__fastcall ")
+				default:
+			}
+		}
+		else if isVC(){		
+			switch callingConvention {		
+				case .CDecl:		 Append("__cdecl ")
+				case .ClrCall:		 Append("__clrcall ")
+				case .StdCall:		 Append("__stdcall ")
+				case .FastCall:		 Append("__fastcall ")
+				case .ThisCall:		 Append("__thiscall ")
+				case .VectorCall:	 Append("__vectorcall ")
+				default:
+			}
+		}
+		else if isStandard() {		
+			// only cdecl is used be default;
+		}
+	}	
+
 	func cppGenerateMethodDefinitionHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, header: Boolean) {
 		if header {
 			if method.Static {
@@ -718,7 +744,14 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				default: // ????
 			}
 		}
-
+		if let returnType = method.ReturnType {
+			generateTypeReference(returnType)
+		} else {
+			Append("void")
+		}
+		Append(" ")
+		if let conversion = method.CallingConvention {
+			cppGenerateCallingConversion(conversion)		}
 		if let ctor = method as? CGConstructorDefinition {
 			if let lname = ctor.Name where lname != "" {
 				generateIdentifier(uppercaseFirstletter(ctor.Name))
@@ -730,17 +763,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			Append("~")
 			generateIdentifier(uppercaseFirstletter(type.Name));
 		} else {
-			if let returnType = method.ReturnType {
-				generateTypeReference(returnType)
-			} else {
-				Append("void")
-			}
-			Append(" ")
-			//if (header){
-				if (isCBuilder())	{
-					Append("__fastcall ");
-				}
-			//}
 			if !header {
 				generateIdentifier(type.Name)
 				Append("::")
@@ -750,6 +772,26 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		cppGenerateDefinitionParameters(method.Parameters)
 		Append(")")
+		if !header {
+			if let ctor = method as? CGConstructorDefinition {
+				if let classtype = type as? CGClassOrStructTypeDefinition {		
+					if classtype.Ancestors.Count > 0 {			
+						Append(":")
+						generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
+						Append("(")
+						for var p = 0; p < method.Parameters.Count; p++ {
+							let param = method.Parameters[p]
+							if p > 0 {
+								Append(", ")
+							}
+							generateIdentifier(param.Name)
+						}
+						Append(")")
+					}
+				} 
+
+			}
+		}
 	}
 	
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
@@ -848,6 +890,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
+	override func generateConstantTypeReference(type: CGConstantTypeReference) {		
+		generateTypeReference(type.`Type`)
+		Append(" const")
+	}
+
 //	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
 //		Append("__kindof ")
 //		generateTypeReference(type.`Type`)

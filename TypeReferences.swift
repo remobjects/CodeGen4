@@ -279,7 +279,11 @@ public class CGConstantTypeReference : CGTypeReference { /* C++ only, currently 
 
 	override func copyWithNullability(nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		let result = CGConstantTypeReference(`Type`)
+
 		result.Nullability = nullability
+		result.DefaultValue = DefaultValue
+		result.StorageModifier = StorageModifier
+		result.IsClassType = IsClassType
 		return result
 	}
 }
