@@ -1279,7 +1279,7 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generateConstantTypeReference(type: CGConstantTypeReference) {
-		// override if the langage supports const types
+		// override if the language supports const types
 		generateTypeReference(type.`Type`)
 	}
 	

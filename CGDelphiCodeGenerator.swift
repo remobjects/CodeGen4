@@ -112,7 +112,18 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			}
 		}
 	}
-	
+
+	override func pascalGenerateCallingConversion(callingConvention: CGCallingConventionKind){
+		switch callingConvention {	
+			case .Register:		 fallthrough 		   //default case
+			case .Pascal:		 Append(" pascal;")	   //backward compatibility
+			case .CDecl:		 Append(" cdecl;")
+			case .SafeCall:		 Append(" safecall;")
+			case .StdCall:		 Append(" stdcall;")
+			default:
+		}
+	}	
+
 	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
 		// don't prefix with typename in Delphi (but do in base Pascal/Oxygene)
 		generateIdentifier(expression.ValueName)

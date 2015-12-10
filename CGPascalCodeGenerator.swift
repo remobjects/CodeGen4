@@ -644,12 +644,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if p > 0 {
 				Append("; ")
 			}
-			switch param.Modifier {
-				case .Var: Append("var ")
-				case .Const: Append("const ")
-				case .Out: Append("out ")
-				case .Params: Append("params ") //todo: Oxygene ony?
-				default:
+			if let exp = param.`Type` as? CGConstantTypeReference {			
+				Append("const ")
+			}
+			else {
+				switch param.Modifier {
+					case .Var: Append("var ")
+					case .Const: Append("const ")
+					case .Out: Append("out ")
+					case .Params: Append("params ") //todo: Oxygene ony?
+					default:
+				}
 			}
 			generateIdentifier(param.Name)
 			Append(": ")
@@ -1042,6 +1047,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	internal func pascalGenerateCallingConversion(callingConvention: CGCallingConventionKind){
+		//overridden in delphi codegen
+	}
+
 	internal func pascalGenerateSecondHalfOfMethodHeader(method: CGMethodLikeMemberDefinition, implementation: Boolean) {
 		if let parameters = method.Parameters where parameters.Count > 0 {
 			Append("(")
@@ -1086,6 +1095,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if method.Overloaded {
 				Append(" overload;")
 			}
+			if let conversion = method.CallingConvention {			
+				pascalGenerateCallingConversion(conversion);
+			}
+
 		}
 
 		AppendLine()
