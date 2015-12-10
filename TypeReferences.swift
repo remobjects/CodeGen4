@@ -243,10 +243,16 @@ public class CGInlineBlockTypeReference : CGTypeReference {
 
 public class CGPointerTypeReference : CGTypeReference {
 	public var `Type`: CGTypeReference
+	public var Reference = false /* C++ only: "&" (true) vs "*" (false) */
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
 		DefaultNullability = .NullableUnwrapped
+	}
+	
+	public convenience init(_ type: CGTypeReference, reference: Boolean) { /* C++ only */
+		init(type)
+		Reference = reference
 	}
 	
 	public static lazy var VoidPointer = CGPointerTypeReference(CGPredefinedTypeReference.Void)
@@ -258,6 +264,7 @@ public class CGPointerTypeReference : CGTypeReference {
 		result.DefaultValue = DefaultValue
 		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
+		result.Reference = Reference
 		return result
 	}
 }
@@ -268,6 +275,12 @@ public class CGConstantTypeReference : CGTypeReference { /* C++ only, currently 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
 		DefaultNullability = .NullableUnwrapped
+	}
+
+	override func copyWithNullability(nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		let result = CGConstantTypeReference(`Type`)
+		result.Nullability = nullability
+		return result
 	}
 }
 
