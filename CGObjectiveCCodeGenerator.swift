@@ -690,7 +690,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
-		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
+		super.generateNamedTypeReference(type, ignoreNamespace: true, ignoreNullability: ignoreNullability)
 		if type.IsClassType && !ignoreNullability {
 			Append(" *")
 		}

@@ -70,7 +70,6 @@ public class CGImport {
 
 public class CGNamespaceReference {
 	public var Name: String
-	public var IsStaticClass = false /* C# only */
 
 	public init(_ name: String) {
 		Name = name

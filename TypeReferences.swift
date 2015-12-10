@@ -50,12 +50,24 @@ public enum CGStorageModifierKind {
 
 public class CGNamedTypeReference : CGTypeReference {
 	public let Name: String
+	public private(set) var Namespace: CGNamespaceReference?
 	public var GenericArguments: List<CGTypeReference>?
+	
+	public var FullName: String {
+		if let namespace = Namespace {
+			return namespace.Name+"."+Name
+		}
+		return Name
+	}
 
 	public init(_ name: String) {
 		Name = name
 		IsClassType = true
 		DefaultNullability = .NullableUnwrapped
+	}
+	public convenience init(_ name: String, namespace: CGNamespaceReference) {
+		init(name)
+		Namespace = namespace
 	}
 	public convenience init(_ name: String, defaultNullability: CGTypeNullabilityKind) {
 		init(name)
@@ -75,11 +87,18 @@ public class CGNamedTypeReference : CGTypeReference {
 		IsClassType = isClassType
 		DefaultNullability = isClassType ? CGTypeNullabilityKind.NullableUnwrapped : CGTypeNullabilityKind.NotNullable
 	}
+	public convenience init(_ name: String, namespace: CGNamespaceReference, isClassType: Boolean) {
+		init(name)
+		Namespace = namespace
+		IsClassType = isClassType
+		DefaultNullability = isClassType ? CGTypeNullabilityKind.NullableUnwrapped : CGTypeNullabilityKind.NotNullable
+	}
 
 	override func copyWithNullability(nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		let result = CGNamedTypeReference(Name, defaultNullability: DefaultNullability, nullability: nullability)
 		result.GenericArguments = GenericArguments
 
+		result.Namespace = Namespace
 		result.DefaultValue = DefaultValue
 		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType

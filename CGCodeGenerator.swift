@@ -1216,7 +1216,7 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generateNamedTypeReference(type: CGNamedTypeReference) {
-		generateNamedTypeReference(type, ignoreNullability:false)
+		generateNamedTypeReference(type, ignoreNamespace: false, ignoreNullability: false)
 	}
 	
 	internal func generateGenericArguments(genericArguments: List<CGTypeReference>?) {
@@ -1235,8 +1235,16 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
+		generateNamedTypeReference(type, ignoreNamespace: false, ignoreNullability: ignoreNullability)
+	}
+	
+	internal func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNamespace: Boolean, ignoreNullability: Boolean) {
 		// descendant may override, but this will work for most languages.
-		generateIdentifier(type.Name)
+		if ignoreNamespace {
+			generateIdentifier(type.Name)
+		} else {
+			generateIdentifier(type.FullName)
+		}
 		generateGenericArguments(type.GenericArguments)
 	}
 	

@@ -493,7 +493,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			switch expression.CallSiteKind{					
 				case .Instance: Append(".");					
 				case .Reference: Append("->");					
-				case .Static: 	Append("::");
+				case .Static:	 Append("::");
 				case .Unspecified: 
 					if let typeref = expression.CallSite as? CGTypeReferenceExpression {
 						Append("::")
@@ -751,7 +751,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(" ")
 		if let conversion = method.CallingConvention {
-			cppGenerateCallingConversion(conversion)		}
+			cppGenerateCallingConversion(conversion)
+		}
 		if let ctor = method as? CGConstructorDefinition {
 			if let lname = ctor.Name where lname != "" {
 				generateIdentifier(uppercaseFirstletter(ctor.Name))
@@ -831,8 +832,17 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	// Type References
 	//
 	
-	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
-		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
+	override func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNamespace: Boolean, ignoreNullability: Boolean) {
+		if ignoreNamespace {
+			generateIdentifier(type.Name)
+		} else {
+			if let namespace = type.Namespace {
+				generateIdentifier(namespace.Name)
+				Append("::")
+			}
+			generateIdentifier(type.Name)
+		}
+		super.generateNamedTypeReference(type, ignoreNamespace: ignoreNamespace, ignoreNullability: ignoreNullability)
 		if type.IsClassType && !ignoreNullability {
 			Append("*")
 		}
@@ -850,19 +860,19 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			case .UInt32: Append("unsigned int")		//+
 			case .Int64: if isCBuilder() {Append("__int64")} else {Append("long int")}				//+
 			case .UInt64: Append("unsigned long int")	//+
-			case .IntPtr: Append("IntPtr")			    //???????
+			case .IntPtr: Append("IntPtr")				//???????
 			case .UIntPtr: Append("UIntPtr")			//???????
-			case .Single: Append("float") 				//+
+			case .Single: Append("float")				 //+
 			case .Double: Append("double")				//+
 			case .Boolean: Append("bool")				//+
-			case .String: Append("string") 				//+
+			case .String: Append("string")				 //+
 			case .AnsiChar: Append("char")				//+
 			case .UTF16Char: Append("wchar_t")			//+
 			case .UTF32Char: Append("wchar_t")			//+
 			case .Dynamic: Append("{DYNAMIC}")					//??????
 			case .InstanceType: Append("{INSTANCETYPE}")	//??????
 			case .Void: Append("void")					//+
-			case .Object:  Append("{OBJECT}")          	//??????
+			case .Object:  Append("{OBJECT}")			  //??????
 			case .Class: Append("{CLASS}")				//??????
 		}		
 	}
