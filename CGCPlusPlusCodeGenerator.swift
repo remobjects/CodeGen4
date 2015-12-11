@@ -732,35 +732,46 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}	
 
 	func cppGenerateMethodDefinitionHeader(method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, header: Boolean) {
+		let isCtor = (method as? CGConstructorDefinition) != nil;
+		let isDtor = (method as? CGDestructorDefinition) != nil;
+		let isInterface = (type as? CGInterfaceTypeDefinition) != nil;
 		if header {
 			if method.Static {
 				Append("static ")
 			}
 		}
 		if header {
-			switch (method.Virtuality) {
-				case .Virtual:	   Append("virtual ");
-				case .Reintroduce: if isCBuilder() { Append("HIDESBASE "); }
-				default: // ????
+			if type != CGGlobalTypeDefinition.GlobalType {
+				// virtuality isn't supported for globals
+				switch (method.Virtuality) {
+					case .Virtual:	   Append("virtual ");
+					case .Override:	   Append("virtual ");
+					case .Reintroduce: if isCBuilder() { Append("HIDESBASE "); }
+					default: // ????
+				}
 			}
 		}
-		if let returnType = method.ReturnType {
-			generateTypeReference(returnType)
-		} else {
-			Append("void")
+
+		if !isCtor && !isDtor{		
+			// ctor&dtor have no result
+			if let returnType = method.ReturnType {
+				generateTypeReference(returnType)
+			} else {
+				Append("void")
+			}
+			Append(" ")
 		}
-		Append(" ")
 		if let conversion = method.CallingConvention {
-			cppGenerateCallingConversion(conversion)
-		}
-		if let ctor = method as? CGConstructorDefinition {
-			if let lname = ctor.Name where lname != "" {
-				generateIdentifier(uppercaseFirstletter(ctor.Name))
+
+			cppGenerateCallingConversion(conversion)		}
+		if isCtor {			
+			if let lname = method.Name where lname != "" {
+				generateIdentifier(uppercaseFirstletter(method.Name))
 			}
 			else {
 				generateIdentifier(uppercaseFirstletter(type.Name))
 			}
-		} else if let ctor = method as? CGDestructorDefinition {
+		} else if isDtor {
 			Append("~")
 			generateIdentifier(uppercaseFirstletter(type.Name));
 		} else {
@@ -773,24 +784,27 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		cppGenerateDefinitionParameters(method.Parameters)
 		Append(")")
-		if !header {
-			if let ctor = method as? CGConstructorDefinition {
-				if let classtype = type as? CGClassOrStructTypeDefinition {		
-					if classtype.Ancestors.Count > 0 {			
-						Append(":")
-						generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
-						Append("(")
-						for var p = 0; p < method.Parameters.Count; p++ {
-							let param = method.Parameters[p]
-							if p > 0 {
-								Append(", ")
-							}
-							generateIdentifier(param.Name)
+		if header && isInterface {		
+			Append(" = 0")
+		}
+		if !header && isCtor {
+			if let classtype = type as? CGClassOrStructTypeDefinition {		
+				if classtype.Ancestors.Count > 0 {			
+					AppendLine();
+					incIndent()
+					Append(": ")
+					generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
+					Append("(")
+					for var p = 0; p < method.Parameters.Count; p++ {
+						let param = method.Parameters[p]
+						if p > 0 {
+							Append(", ")
 						}
-						Append(")")
+						generateIdentifier(param.Name)
 					}
-				} 
-
+					Append(")")
+					decIndent()
+				}
 			}
 		}
 	}
@@ -836,13 +850,13 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if ignoreNamespace {
 			generateIdentifier(type.Name)
 		} else {
-			if let namespace = type.Namespace {
+			if let namespace = type.Namespace where (namespace.Name != "") {
 				generateIdentifier(namespace.Name)
 				Append("::")
 			}
 			generateIdentifier(type.Name)
 		}
-		super.generateNamedTypeReference(type, ignoreNamespace: ignoreNamespace, ignoreNullability: ignoreNullability)
+		generateGenericArguments(type.GenericArguments)
 		if type.IsClassType && !ignoreNullability {
 			Append("*")
 		}
@@ -932,4 +946,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+		generateTypeReference(type.`Type`)
+		if type.Reference {
+			Append("&")
+		}		else {		
+			Append("*")		}	}	
 }
