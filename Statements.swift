@@ -263,6 +263,7 @@ public class CGVariableDeclarationStatement: CGStatement {
 	public var `Type`: CGTypeReference?
 	public var Value: CGExpression?
 	public var Constant = false
+	public var ReadOnly = false
 
 	public init(_ name: String, _ type: CGTypeReference?, _ value: CGExpression? = nil) {
 		Name = name

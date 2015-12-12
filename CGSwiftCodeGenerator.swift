@@ -281,7 +281,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
-		if statement.Constant {
+		if statement.Constant || statement.ReadOnly {
 			Append("let ")
 		} else {
 			Append("var ")
@@ -353,7 +353,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateExpression(expression.Expression)
 		}
 		if expression.Expression is CGTypeReferenceExpression {
-			Append(".self as! AnyClass")
+			Append(".self")
 		} else {
 			Append(".dynamicType")
 		}
@@ -1027,7 +1027,13 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
 			swiftGenerateVirtualityPrefix(ctor)
 		}
-		Append("init(")
+		Append("init")
+		switch ctor.Nullability {
+			case .NullableUnwrapped: Append("!")
+			case .NullableNotUnwrapped: Append("?")
+			default: 
+		}
+		Append("(")
 		if length(ctor.Name) > 0 {
 			swiftGenerateDefinitionParameters(ctor.Parameters, firstExternalName: removeWithPrefix(ctor.Name))
 		} else {
