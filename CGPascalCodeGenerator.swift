@@ -73,6 +73,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	final func pascalGenerateTypeImplementation(type: CGTypeDefinition) {
+
+		if let condition = type.Condition {
+			generateConditionStart(condition)
+			defer {
+				generateConditionEnd()
+			}
+		}
+
 		if let type = type as? CGClassTypeDefinition {
 			pascalGenerateTypeMemberImplementations(type)
 		} else if let type = type as? CGStructTypeDefinition {
@@ -98,6 +106,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	
 	final func pascalGenerateTypeMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
+
+		if let condition = member.Condition {
+			generateConditionStart(condition)
+			defer {
+				generateConditionEnd()
+			}
+		}
+
 		if let member = member as? CGConstructorDefinition {
 			pascalGenerateConstructorImplementation(member, type:type)
 		} else if let member = member as? CGDestructorDefinition {
@@ -164,6 +180,33 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	// Statements
 	//
 	
+	override func generateConditionStart(condition: CGConditionalDefine) {
+		if let name = condition.Expression as? CGNamedIdentifierExpression {
+			Append("{$IFDEF ")
+			Append(name.Name)
+		} else {
+			//if let not = statement.Condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			   let name = not.Value as? CGNamedIdentifierExpression {
+				Append("{$IFNDEF ")
+				Append(name.Name)
+			} else {
+				Append("{$IF ")
+				generateExpression(condition.Expression)
+			}
+		}
+		generateConditionalDefine(condition)
+		AppendLine("}")
+	}
+	
+	override func generateConditionElse() {
+		AppendLine("{$ELSE}")
+	}
+	
+	override func generateConditionEnd() {
+		AppendLine("{$ENDIF}")
+	}
+
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 		AppendLine("begin")
 		incIndent()
@@ -544,7 +587,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		switch (`operator`) {
 			case .Plus: Append("+")
 			case .Minus: Append("-")
-			case .Not: Append("not ")
+			case .Not: if inConditionExpression { Append("NOT ") } else { Append("not ") }
 			case .AddressOf: Append("@")
 			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
 		}
@@ -565,9 +608,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			case .LessThanOrEquals: Append("<=")
 			case .GreaterThan: Append(">")
 			case .GreatThanOrEqual: Append(">=")
-			case .LogicalAnd: Append("and")
-			case .LogicalOr: Append("or")
-			case .LogicalXor: Append("xor")
+			case .LogicalAnd: if inConditionExpression { Append("AND") } else { Append("and") }
+			case .LogicalOr: if inConditionExpression { Append("OR") } else { Append("or") }
+			case .LogicalXor: if inConditionExpression { Append("XOR") } else { Append("xor") }
 			case .Shl: Append("shl")
 			case .Shr: Append("shr")
 			case .BitwiseAnd: Append("and")

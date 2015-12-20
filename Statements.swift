@@ -66,6 +66,31 @@ public class CGCodeCommentStatement : CGStatement {
 	}
 }
 
+public class CGConditionalBlockStatement : CGBlockStatement {
+	public var Condition: CGConditionalDefine
+	public var ElseStatements: List<CGStatement>?
+
+	public init(_ condition: CGConditionalDefine) {
+		Condition = condition
+		Statements = List<CGStatement>()
+	}
+
+	public init(_ condition: CGConditionalDefine, _ statements: List<CGStatement>) {
+		Condition = condition
+		Statements = statements
+	}
+
+	public convenience init(_ condition: CGConditionalDefine, _ statements: CGStatement...) {
+		init(condition, statements.ToList())
+	}
+
+	public init(_ condition: CGConditionalDefine, _ statements: List<CGStatement>, _ elseStatements: List<CGStatement>) {
+		Condition = condition
+		Statements = statements
+		ElseStatements = elseStatements
+	}
+}
+
 public class CGBeginEndBlockStatement : CGBlockStatement { //"begin/end" or "{/}"
 }
 

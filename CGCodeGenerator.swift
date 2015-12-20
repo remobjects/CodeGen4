@@ -412,6 +412,8 @@ public __abstract class CGCodeGenerator {
 			}
 		} else if let statement = statement as? CGBeginEndBlockStatement {
 			generateBeginEndStatement(statement)
+		} else if let statement = statement as? CGConditionalBlockStatement {
+			generateConditionalBlockStatement(statement)
 		} else if let statement = statement as? CGIfThenElseStatement {
 			generateIfElseStatement(statement)
 		} else if let statement = statement as? CGForToLoopStatement {
@@ -485,6 +487,39 @@ public __abstract class CGCodeGenerator {
 		} __finally {
 			inCodeCommentStatement = false
 		}
+	}
+	
+	internal func generateConditionalDefine(condition: CGConditionalDefine) {
+		inConditionExpression = true
+		defer { inConditionExpression = false }
+		generateExpression(condition.Expression)
+	}
+
+	internal func generateConditionStart(condition: CGConditionalDefine) {
+		// descendant must override this
+		assert(false, "generateConditionStart not implemented")
+	}
+	internal func generateConditionElse() {
+		// descendant must override this
+		assert(false, "generateConditionElse not implemented")
+	}
+	internal func generateConditionEnd() {
+		// descendant must override this
+		assert(false, "generateConditionEnd not implemented")
+	}
+
+	internal func generateConditionalBlockStatement(statement: CGConditionalBlockStatement) {
+		generateConditionStart(statement.Condition)
+		incIndent()
+		generateStatements(statement.Statements)
+		decIndent()
+		if let elseStatements = statement.ElseStatements {
+			generateConditionElse()
+			incIndent()
+			generateStatements(elseStatements)
+			decIndent()
+		}
+		generateConditionEnd()
 	}
 
 	internal func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
@@ -943,8 +978,14 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateTypeDefinition(type: CGTypeDefinition) {
 		
-		type.startLocation = currentLocation;
+		if let condition = type.Condition {
+			generateConditionStart(condition)
+			defer {
+				generateConditionEnd()
+			}
+		}
 
+		type.startLocation = currentLocation;
 		generateCommentStatement(type.Comment)
 		generateAttributes(type.Attributes)
 		
@@ -1079,8 +1120,14 @@ public __abstract class CGCodeGenerator {
 	
 	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
 
-		member.startLocation = currentLocation;
+		if let condition = type.Condition {
+			generateConditionStart(condition)
+			defer {
+				generateConditionEnd()
+			}
+		}
 
+		member.startLocation = currentLocation;
 		generateCommentStatement(member.Comment)
 		generateAttributes(member.Attributes)
 
@@ -1357,6 +1404,7 @@ public __abstract class CGCodeGenerator {
 	private var currentCode: StringBuilder!
 	private var indent: Int32 = 0
 	private var atStart = true
+	internal var inConditionExpression = false
 	
 	internal var positionedAfterPeriod: Boolean {
 		return currentCode.ToString().EndsWith(".")

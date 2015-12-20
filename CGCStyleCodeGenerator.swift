@@ -27,6 +27,33 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("/* \(comment) */")
 	}
 	
+	override func generateConditionStart(condition: CGConditionalDefine) {
+		if let name = condition.Expression as? CGNamedIdentifierExpression {
+			Append("#ifdef ")
+			Append(name.Name)
+		} else {
+			//if let not = statement.Condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			   let name = not.Value as? CGNamedIdentifierExpression {
+				Append("#ifndef ")
+				Append(name.Name)
+			} else {
+				Append("#if ")
+				generateExpression(condition.Expression)
+			}
+		}
+		generateConditionalDefine(condition)
+		AppendLine()
+	}
+	
+	override func generateConditionElse() {
+		AppendLine("#else")
+	}
+	
+	override func generateConditionEnd() {
+		AppendLine("#endif")
+	}
+
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 		AppendLine("{")
 		incIndent()

@@ -21,6 +21,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Abstract = false
 	public var Comment: CGCommentStatement?
 	public var Attributes = List<CGAttribute>()
+	public var Condition: CGConditionalDefine?
 	
 	public init(_ name: String) {
 		Name = name
@@ -138,6 +139,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var LockedOn: CGExpression? /* Oxygene only */
 	public var Comment: CGCommentStatement?
 	public var Attributes = List<CGAttribute>()
+	public var Condition: CGConditionalDefine?
 	
 	public init(_ name: String) {
 		Name = name

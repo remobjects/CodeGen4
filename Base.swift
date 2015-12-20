@@ -76,6 +76,26 @@ public class CGNamespaceReference {
 	}
 }
 
+public class CGConditionalDefine {
+	public var Expression: CGExpression
+
+	public init(_ expression: CGExpression) {
+		Expression = expression
+	}
+
+	public convenience init(_ define: String) {
+		init(CGNamedIdentifierExpression(define)) 
+	}
+
+	public init(_ define: String, inverted: Boolean) {
+		if inverted {
+			Expression = CGUnaryOperatorExpression.NotExpression(CGNamedIdentifierExpression(define))
+		} else {
+			Expression = CGNamedIdentifierExpression(define)
+		}
+	}
+}
+
 public __abstract class CGGlobalDefinition {
 }
 

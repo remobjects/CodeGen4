@@ -42,6 +42,18 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Statements
 	//
 	
+	override func generateConditionStart(condition: CGConditionalDefine) {
+
+	}
+
+	override func generateConditionElse() {
+
+	}
+
+	override func generateConditionEnd() {
+
+	}
+
 	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
 
 	}
