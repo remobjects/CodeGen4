@@ -594,6 +594,19 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append("]")
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+		if let type = expression.ElementType {
+			generateTypeReference(type, ignoreNullability: true)
+		}
+		Append("() << ")
+		for var e = 0; e < expression.Elements.Count; e++ {
+			if e > 0 {
+				Append(", ")
+			}
+			generateExpression(expression.Elements[e])
+		}
+	}
+
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("{")
@@ -763,7 +776,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 		if let conversion = method.CallingConvention {
 
-			cppGenerateCallingConversion(conversion)		}
+			cppGenerateCallingConversion(conversion)		}
 		if isCtor {			
 			if let lname = method.Name where lname != "" {
 				generateIdentifier(uppercaseFirstletter(method.Name))
@@ -950,6 +963,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		generateTypeReference(type.`Type`)
 		if type.Reference {
 			Append("&")
-		}		else {		
-			Append("*")		}	}	
+		}		else {		
+			Append("*")		}	}	
 }

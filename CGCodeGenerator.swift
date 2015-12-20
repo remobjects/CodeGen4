@@ -708,6 +708,8 @@ public __abstract class CGCodeGenerator {
 			generateCharacterLiteralExpression(expression)
 		} else if let expression = expression as? CGArrayLiteralExpression {
 			generateArrayLiteralExpression(expression)
+		} else if let expression = expression as? CGSetLiteralExpression {
+			generateSetLiteralExpression(expression)
 		} else if let expression = expression as? CGDictionaryLiteralExpression {
 			generateDictionaryExpression(expression)
 		} else if let expression = expression as? CGTupleLiteralExpression {
@@ -909,6 +911,11 @@ public __abstract class CGCodeGenerator {
 	internal func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
 		// descendant must override
 		assert(false, "generateArrayLiteralExpression not implemented")
+	}
+
+	internal func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+		// descendant must override
+		assert(false, "generateSetLiteralExpression not implemented")
 	}
 
 	internal func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {

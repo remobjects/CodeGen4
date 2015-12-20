@@ -488,6 +488,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append("]")
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+			assert(false, "Sets are not supported in Objective-C")
+	}
+
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("@{")

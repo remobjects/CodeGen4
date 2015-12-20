@@ -188,7 +188,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("{$IFDEF ")
 			Append(name.Name)
 		} else {
-			//if let not = statement.Condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
+			//if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
 			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
 			   let name = not.Value as? CGNamedIdentifierExpression {
 				Append("{$IFNDEF ")
@@ -846,6 +846,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("[")
 		helpGenerateCommaSeparatedList(array.Elements) { e in
+			self.generateExpression(e)
+		}
+		Append("]")
+	}
+
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+		Append("[")
+		helpGenerateCommaSeparatedList(expression.Elements) { e in
 			self.generateExpression(e)
 		}
 		Append("]")

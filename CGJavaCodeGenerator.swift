@@ -501,6 +501,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("}")
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+		assert(false, "Sets are not supported in Java")
+	}
+
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 
 	}

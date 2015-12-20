@@ -428,6 +428,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+
+	}
+
 	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
 
 	}

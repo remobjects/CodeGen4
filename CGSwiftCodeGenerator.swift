@@ -751,6 +751,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("]")
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+		Append("Set([")
+		for var e = 0; e < expression.Elements.Count; e++ {
+			if e > 0 {
+				Append(", ")
+			}
+			generateExpression(expression.Elements[e])
+		}
+		Append("])")
+	}
+
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("[")

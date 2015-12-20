@@ -250,6 +250,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+
+	}
+
 	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
 
 	}

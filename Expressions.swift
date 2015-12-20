@@ -454,6 +454,25 @@ public class CGArrayLiteralExpression: CGExpression {
 	}
 }
 
+public class CGSetLiteralExpression: CGExpression {
+	public var Elements: List<CGExpression> 
+	public var ElementType: CGTypeReference?
+	
+	public init() {
+		Elements = List<CGExpression>()
+	}
+	public init(_ elements: List<CGExpression>) {
+		Elements = elements
+	}
+	public init(_ elements: List<CGExpression>, _ type: CGTypeReference) {
+		Elements = elements
+		ElementType = type
+	}
+	public convenience init(_ elements: CGExpression...) {
+		init(elements.ToList())
+	}
+}
+
 public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, currently */
 	public var Keys: List<CGExpression> 
 	public var Values: List<CGExpression> 

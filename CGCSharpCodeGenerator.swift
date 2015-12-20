@@ -680,6 +680,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("}")
 	}
 
+	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+		assert(false, "Sets are not supported in C#")
+	}
+
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 
 	}
