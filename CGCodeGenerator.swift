@@ -980,9 +980,6 @@ public __abstract class CGCodeGenerator {
 		
 		if let condition = type.Condition {
 			generateConditionStart(condition)
-			defer {
-				generateConditionEnd()
-			}
 		}
 
 		type.startLocation = currentLocation;
@@ -1009,9 +1006,14 @@ public __abstract class CGCodeGenerator {
 			assert(false, "unsupported type found: \(typeOf(type).ToString())")
 		}
 
-		//if !assigned(type.endLocation) {
+		if !assigned(type.endLocation) {
 			type.endLocation = currentLocation;
-		//} // 72543: Silver: cannot check if nullable struct is assigned
+		} // 72543: Silver: cannot check if nullable struct is assigned
+
+		if let condition = type.Condition {
+			generateConditionEnd()
+		}
+
 	}
 	
 	internal func generateInlineComment(comment: String) {

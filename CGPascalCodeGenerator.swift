@@ -76,9 +76,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		if let condition = type.Condition {
 			generateConditionStart(condition)
-			defer {
-				generateConditionEnd()
-			}
 		}
 
 		if let type = type as? CGClassTypeDefinition {
@@ -87,6 +84,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateTypeMemberImplementations(type)
 		} else if let type = type as? CGExtensionTypeDefinition {
 			pascalGenerateTypeMemberImplementations(type)
+		}
+
+		if let condition = type.Condition {
+			generateConditionEnd()
 		}
 	}
 
@@ -109,9 +110,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		if let condition = member.Condition {
 			generateConditionStart(condition)
-			defer {
-				generateConditionEnd()
-			}
 		}
 
 		if let member = member as? CGConstructorDefinition {
@@ -131,6 +129,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		} else if let member = member as? CGNestedTypeDefinition {
 			pascalGenerateNestedTypeImplementation(member, type:type)
 		}
+
+		if let condition = member.Condition {
+			generateConditionEnd()
+		}
+
 	}
 	
 	
