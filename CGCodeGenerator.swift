@@ -231,8 +231,14 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	internal final func generateDirective(directive: String) {
-		AppendLine(directive)
+	internal final func generateDirective(directive: CGCompilerDirective) {
+		if let condition = directive.Condition {
+			generateConditionStart(condition)
+		}
+		AppendLine(directive.Directive)
+		if let condition = directive.Condition {
+			generateConditionEnd()
+		}
 	}
 
 	internal func generateSingleLineCommentPrefix() {

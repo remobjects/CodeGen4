@@ -24,13 +24,13 @@ public class CGCodeUnit {
 	public var FileName: String?
 	public var Namespace: CGNamespaceReference?
 	public var HeaderComment = CGCommentStatement()
-	public var Directives = List<String>() /* will not be language agnostic */
+	public var Directives = List<CGCompilerDirective>() /* will not be language agnostic */
 	public var Imports = List<CGImport>()
 	public var Types = List<CGTypeDefinition>()
 	public var Globals = List<CGGlobalDefinition>()
 	
-	public var ImplementationDirectives = List<String>() /* Delphi only */
-	public var ImplementationImports = List<CGImport>()  /* Delphi only */
+	public var ImplementationDirectives = List<CGCompilerDirective>() /* Pascal only */
+	public var ImplementationImports = List<CGImport>()  /* Pascal only */
 	public var Initialization: List<CGStatement>? /* Delphi only */
 	public var Finalization: List<CGStatement>? /* Delphi only */
 
@@ -41,6 +41,19 @@ public class CGCodeUnit {
 	}
 	public init(_ namespace: CGNamespaceReference) {
 		Namespace = namespace
+	}
+}
+
+public class CGCompilerDirective {
+	var Directive: String /* will not be language agnostic */
+	var Condition: CGConditionalDefine?
+	
+	init(_ directive: String) {
+		Directive = directive
+	}
+	convenience init(_ directive: String, _ condition: CGConditionalDefine) {
+		init(directive)
+		Condition = condition
 	}
 }
 

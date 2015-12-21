@@ -34,6 +34,10 @@ public extension Sugar.String {
 	public func AsRawExpression() -> CGRawExpression {
 		return CGRawExpression(self)
 	}
+
+	public func AsCompilerDirective() -> CGCompilerDirective {
+		return CGCompilerDirective(self)
+	}
 }
 #endif
 
@@ -69,6 +73,10 @@ public extension RemObjects.Elements.System.String {
 
 	public func AsRawExpression() -> CGRawExpression {
 		return CGRawExpression(self)
+	}
+
+	public func AsCompilerDirective() -> CGCompilerDirective {
+		return CGCompilerDirective(self)
 	}
 }
 
