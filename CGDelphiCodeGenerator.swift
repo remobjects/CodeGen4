@@ -115,7 +115,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	override func pascalGenerateCallingConversion(callingConvention: CGCallingConventionKind){
 		switch callingConvention {	
-			case .Register:		 fallthrough 		   //default case
+			case .Register:		 fallthrough			//default case
 			case .Pascal:		 Append(" pascal;")	   //backward compatibility
 			case .CDecl:		 Append(" cdecl;")
 			case .SafeCall:		 Append(" safecall;")
@@ -193,7 +193,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed at step2
 			}	
-		   	else {
+			   else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}	
 		}
@@ -206,7 +206,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			else if let global = g as? CGGlobalFunctionDefinition {
 				pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 			}	
-		    else {
+			else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}	
 		}	
@@ -225,7 +225,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed in delphiGenerateGlobalInterfaceMethods
 			}	
-		   	else {
+			   else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}	
 		}
@@ -242,7 +242,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 					generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 				}
 			}	
-		    else {
+			else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}	
 		}
@@ -415,6 +415,44 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		Append("^")
 		generateTypeReference(type.`Type`)
 	}
+	
+	//
+	// Statements
+	//
+
+	override func generateConditionStart(condition: CGConditionalDefine) {
+		if let name = condition.Expression as? CGNamedIdentifierExpression {
+			Append("{$IFDEF ")
+			Append(name.Name)
+		} else {
+			//if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			   let name = not.Value as? CGNamedIdentifierExpression {
+				Append("{$IFNDEF ")
+				Append(name.Name)
+			} else {
+				Append("{$IF ")
+				generateExpression(condition.Expression)
+			}
+		}
+		generateConditionalDefine(condition)
+		AppendLine("}")
+	}
+	
+	override func generateConditionEnd(condition: CGConditionalDefine) {
+		if let name = condition.Expression as? CGNamedIdentifierExpression {
+			AppendLine("{$ENDIF}")
+		} else {
+			//if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			   let name = not.Value as? CGNamedIdentifierExpression {
+				AppendLine("{$ENDIF}")
+			} else {
+				AppendLine("{$IFEND}")
+			}
+		}
+	}
+
 
 	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 		Append("if ")

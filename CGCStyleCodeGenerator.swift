@@ -50,7 +50,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine("#else")
 	}
 	
-	override func generateConditionEnd() {
+	override func generateConditionEnd(condition: CGConditionalDefine) {
 		AppendLine("#endif")
 	}
 

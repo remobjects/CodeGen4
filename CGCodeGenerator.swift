@@ -237,7 +237,7 @@ public __abstract class CGCodeGenerator {
 		}
 		AppendLine(directive.Directive)
 		if let condition = directive.Condition {
-			generateConditionEnd()
+			generateConditionEnd(condition)
 		}
 	}
 
@@ -509,7 +509,7 @@ public __abstract class CGCodeGenerator {
 		// descendant must override this
 		assert(false, "generateConditionElse not implemented")
 	}
-	internal func generateConditionEnd() {
+	internal func generateConditionEnd(condition: CGConditionalDefine) {
 		// descendant must override this
 		assert(false, "generateConditionEnd not implemented")
 	}
@@ -525,7 +525,7 @@ public __abstract class CGCodeGenerator {
 			generateStatements(elseStatements)
 			decIndent()
 		}
-		generateConditionEnd()
+		generateConditionEnd(statement.Condition)
 	}
 
 	internal func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
@@ -1024,7 +1024,7 @@ public __abstract class CGCodeGenerator {
 		} // 72543: Silver: cannot check if nullable struct is assigned
 
 		if let condition = type.Condition {
-			generateConditionEnd()
+			generateConditionEnd(condition)
 		}
 
 	}
@@ -1137,9 +1137,6 @@ public __abstract class CGCodeGenerator {
 
 		if let condition = type.Condition {
 			generateConditionStart(condition)
-			defer {
-				generateConditionEnd()
-			}
 		}
 
 		member.startLocation = currentLocation;
@@ -1178,6 +1175,10 @@ public __abstract class CGCodeGenerator {
 			member.endLocation = currentLocation;
 		}*/
 		member.endLocation = currentLocation;
+
+		if let condition = type.Condition {
+			generateConditionEnd(condition)
+		}
 	}
 				
 	internal func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {

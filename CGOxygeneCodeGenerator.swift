@@ -57,12 +57,6 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	// Statements
 	//
 
-	override func generateConditionStart(condition: CGConditionalDefine) {
-		Append("{$IF ")
-		generateConditionalDefine(condition) // Oxygene is easier than plain Pascal here
-		AppendLine("}")
-	}
-
 	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
 		Append("loop")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)

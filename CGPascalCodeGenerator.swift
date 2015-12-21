@@ -87,7 +87,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 
 		if let condition = type.Condition {
-			generateConditionEnd()
+			generateConditionEnd(condition)
 		}
 	}
 
@@ -131,7 +131,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 
 		if let condition = member.Condition {
-			generateConditionEnd()
+			generateConditionEnd(condition)
 		}
 
 	}
@@ -184,29 +184,16 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateConditionStart(condition: CGConditionalDefine) {
-		if let name = condition.Expression as? CGNamedIdentifierExpression {
-			Append("{$IFDEF ")
-			Append(name.Name)
-		} else {
-			//if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
-			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
-			   let name = not.Value as? CGNamedIdentifierExpression {
-				Append("{$IFNDEF ")
-				Append(name.Name)
-			} else {
-				Append("{$IF ")
-				generateExpression(condition.Expression)
-			}
-		}
-		generateConditionalDefine(condition)
+		Append("{$IF ")
+		generateConditionalDefine(condition) // Oxygene is easier than plain Pascal here
 		AppendLine("}")
 	}
-	
+
 	override func generateConditionElse() {
 		AppendLine("{$ELSE}")
 	}
 	
-	override func generateConditionEnd() {
+	override func generateConditionEnd(condition: CGConditionalDefine) {
 		AppendLine("{$ENDIF}")
 	}
 

@@ -50,7 +50,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateConditionEnd() {
+	override func generateConditionEnd(condition: CGConditionalDefine) {
 
 	}
 
