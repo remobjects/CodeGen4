@@ -213,10 +213,11 @@ public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 		super.init("")
 	}
 	public init(_ name: String, _ statements: List<CGStatement>) {
-		if name == ".ctor" || name == ".cctor" {
-			name = ""
+		var name1 = name // 73985: Silver: can't redeclare a local param as read-write var
+		if name1 == ".ctor" || name1 == ".cctor" {
+			name1 = ""
 		}
-		super.init(name, statements)
+		super.init(name1, statements)
 	}
 	convenience public init(_ name: String, _ statements: CGStatement...) {
 		init(name, statements.ToList())

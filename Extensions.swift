@@ -48,7 +48,7 @@ public extension RemObjects.Elements.System.String {
 	}
 
 	public func AsTypeReference(defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
-		return CGNamedTypeReference(self, nullability: defaultNullability)
+		return CGNamedTypeReference(self, defaultNullability: defaultNullability)
 	}
 
 	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {

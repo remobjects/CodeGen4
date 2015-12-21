@@ -1441,9 +1441,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	private func removeWithPrefix(name: String) -> String {
-		if name.ToLower().StartsWith("with") {
-			name = name.Substring(4)
+		var name1 = name // 73985: Silver: can't redeclare a local param as read-write var
+		if name1.ToLower().StartsWith("with") {
+			name1 = name1.Substring(4)
 		}
-		return lowercasecaseFirstletter(name)
+		return lowercasecaseFirstletter(name1)
 	}
 }

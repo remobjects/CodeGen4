@@ -73,10 +73,6 @@ public class CGNamedTypeReference : CGTypeReference {
 		init(name)
 		DefaultNullability = defaultNullability
 	}
-	public convenience init(_ name: String, nullability: CGTypeNullabilityKind) {
-		init(name)
-		Nullability = nullability
-	}
 	public convenience init(_ name: String, defaultNullability: CGTypeNullabilityKind, nullability: CGTypeNullabilityKind) {
 		init(name)
 		DefaultNullability = defaultNullability
@@ -160,13 +156,14 @@ public class CGPredefinedTypeReference : CGTypeReference {
 				IsClassType = true
 		}
 	}
-	public convenience init(_ kind: CGPredefinedTypeKind, defaultNullability: CGTypeNullabilityKind) {
+	public convenience init(_ kind: CGPredefinedTypeKind, defaultNullability: CGTypeNullabilityKind?, nullability: CGTypeNullabilityKind?) {
 		init(kind)
-		DefaultNullability = defaultNullability
-	}
-	public convenience init(_ kind: CGPredefinedTypeKind, nullability: CGTypeNullabilityKind) {
-		init(kind)
-		Nullability = nullability
+		if let defaultNullability = defaultNullability {
+			DefaultNullability = defaultNullability
+		}
+		if let nullability = nullability {
+			Nullability = nullability
+		}
 	}
 	public convenience init(_ kind: CGPredefinedTypeKind, defaultValue: CGExpression) {
 		init(kind)
@@ -178,7 +175,7 @@ public class CGPredefinedTypeReference : CGTypeReference {
 	public lazy var NotNullable: CGPredefinedTypeReference = ActualNullability == CGTypeNullabilityKind.NotNullable ? self : CGPredefinedTypeReference(Kind, nullability: CGTypeNullabilityKind.NotNullable)*/
 
 	override func copyWithNullability(nullability: CGTypeNullabilityKind) -> CGTypeReference {
-		let result = CGPredefinedTypeReference(Kind, nullability: nullability)
+		let result = CGPredefinedTypeReference(Kind, defaultNullability: nil, nullability: nullability)
 
 		result.DefaultValue = DefaultValue
 		result.StorageModifier = StorageModifier

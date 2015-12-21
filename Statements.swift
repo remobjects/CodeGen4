@@ -295,10 +295,10 @@ public class CGVariableDeclarationStatement: CGStatement {
 		`Type` = type
 		Value = value
 	}
-	public convenience init(_ name: String, _ type: CGTypeReference?, _ value: CGExpression? = nil, constant: Boolean) {
+	/*public convenience init(_ name: String, _ type: CGTypeReference?, _ value: CGExpression? = nil, constant: Boolean) {
 		init(name, type, value)
 		Constant = constant
-	}
+	}*/
 	public convenience init(_ name: String, _ type: CGTypeReference?, _ value: CGExpression? = nil, readOnly: Boolean) {
 		init(name, type, value)
 		ReadOnly = readOnly

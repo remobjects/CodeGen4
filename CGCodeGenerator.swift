@@ -97,7 +97,7 @@ public __abstract class CGCodeGenerator {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
-		definitionOnly = false
+		self.definitionOnly = definitionOnly
 
 		if let type = type {
 			generateTypeMember(member, type: type)
@@ -111,7 +111,7 @@ public __abstract class CGCodeGenerator {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
-		definitionOnly = false
+		self.definitionOnly = definitionOnly
 
 		if let type = type {
 			doGenerateMemberImplementation(member, type: type)
@@ -124,7 +124,8 @@ public __abstract class CGCodeGenerator {
 	public final func GenerateParameterDefinition(parameter: CGParameterDefinition, unit: CGCodeUnit? = nil) -> String {
 		currentUnit = unit
 		currentCode = StringBuilder()
-		definitionOnly = false
+		self.definitionOnly = definitionOnly
+
 		generateParameterDefinition(parameter)
 		return currentCode.ToString()
 	}
@@ -1397,18 +1398,20 @@ public __abstract class CGCodeGenerator {
 	}
 
 	public static final func uppercaseFirstletter(name: String) -> String {
-		if length(name) >= 1 {
-			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
+		var name1 = name // 73985: Silver: can't redeclare a local param as read-write var
+		if length(name1) >= 1 {
+			name1 = name1.Substring(0, 1).ToUpper()+name1.Substring(1)
 		}
-		return name
+		return name1
 	}
 	
 	public static final func lowercasecaseFirstletter(name: String) -> String {
 		//todo: maybe  not lowercase if second letter is also uppercase?
-		if length(name) >= 1 {
-			name = name.Substring(0, 1).ToLower()+name.Substring(1)
+		var name1 = name // 73985: Silver: can't redeclare a local param as read-write var
+		if length(name1) >= 1 {
+			name1 = name1.Substring(0, 1).ToLower()+name1.Substring(1)
 		}
-		return name
+		return name1
 	}
 	
 	//
