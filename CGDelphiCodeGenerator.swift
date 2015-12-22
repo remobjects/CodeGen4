@@ -115,7 +115,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	override func pascalGenerateCallingConversion(callingConvention: CGCallingConventionKind){
 		switch callingConvention {	
-			case .Register:		 fallthrough			//default case
+			case .Register:		 break				   //default case
 			case .Pascal:		 Append(" pascal;")	   //backward compatibility
 			case .CDecl:		 Append(" cdecl;")
 			case .SafeCall:		 Append(" safecall;")
