@@ -435,7 +435,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 				generateExpression(condition.Expression)
 			}
 		}
-		generateConditionalDefine(condition)
+//		generateConditionalDefine(condition)
 		AppendLine("}")
 	}
 	

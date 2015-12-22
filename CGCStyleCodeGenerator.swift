@@ -42,7 +42,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 				generateExpression(condition.Expression)
 			}
 		}
-		generateConditionalDefine(condition)
+//		generateConditionalDefine(condition)
 		AppendLine()
 	}
 	
