@@ -5,6 +5,25 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 
 	public override var defaultFileExtension: String { return "h" }
 
+	override func generateAll() {
+		generateHeader()
+		generateDirectives()
+		if let namespace = currentUnit.Namespace {
+			AppendLine();
+			generateImports()
+			AppendLine("namespace \(namespace.Name)");
+			AppendLine("{")
+			incIndent();
+			generateForwards()
+			generateGlobals()
+			generateTypeDefinitions()
+			decIndent()
+			AppendLine("}")
+			AppendLine("using namespace \(namespace.Name);");
+		}
+		generateFooter()
+	}
+
 	override func generateHeader() {
 		super.generateHeader()
 		var lnamespace = "";
@@ -30,6 +49,9 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			lnamespace = namespace.Name+"H";
 		}
 		if isCBuilder() {
+			generatePragma("pack(pop)");
+			generatePragma("option pop");
+			AppendLine("");
 			generatePragma("delphiheader end.");
 		}
 		AppendLine("#endif // \(lnamespace)");
@@ -106,9 +128,9 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	}
 	
 	override func generateClassTypeStart(type: CGClassTypeDefinition) {
-		if isCBuilder() {
-			AppendLine("class DELPHICLASS \(type.Name);");
-		}
+//		if isCBuilder() {
+//			AppendLine("class DELPHICLASS \(type.Name);");
+//		}
 		Append("class ")
 		generateIdentifier(type.Name)
 		cppGenerateAncestorList(type)
@@ -153,9 +175,9 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	}	
 	
 	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
-		Append("__interface ")
-		generateIdentifier(type.Name)
-		AppendLine(";");
+//		Append("__interface ")
+//		generateIdentifier(type.Name)
+//		AppendLine(";");
 		if isCBuilder() {
 			//typedef System::DelphiInterface<IMegaDemoService> _di_IMegaDemoService;
 			Append("typedef System::DelphiInterface<");
@@ -167,7 +189,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		Append("__interface ")
 		if isCBuilder() {
 			if let k = type.InterfaceGuid {
-				Append("INTERFACE_UUID(\"{" + k.ToString() + "}\")" );
+				Append("INTERFACE_UUID(\"{" + k.ToString() + "}\") ");
 			}
 		}
 		generateIdentifier(type.Name)
@@ -335,7 +357,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		if let type = type as? CGInterfaceTypeDefinition {
 			decIndent();
 			cppHGenerateMemberVisibilityPrefix(CGMemberVisibilityKind.Public);
-			incIndent();
+			incIndent();			
 			super.generateTypeMembers(type);
 		}
 		else {

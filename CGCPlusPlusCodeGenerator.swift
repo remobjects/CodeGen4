@@ -64,21 +64,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAll() {
-		generateHeader()
-		generateDirectives()
-		if let namespace = currentUnit.Namespace {
-			AppendLine();
-			generateImports()
-			AppendLine("namespace \(namespace.Name)");
-			AppendLine("{")
-			generateForwards()
-			generateGlobals()
-			generateTypeDefinitions()
-			AppendLine("}")
+		// overriden in .h and .cpp
 		}
-		generateFooter()
-	}
-
 	//
 	// Statements
 	//
@@ -247,22 +234,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	*/
 	
 	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
-		Append("self = [")
-		if let callSite = statement.CallSite {
-			generateExpression(callSite)
-		} else {
-			generateExpression(CGSelfExpression.`Self`)
+		// empty
 		}
-		Append(" init")
-		if let name = statement.ConstructorName {
-			generateIdentifier(uppercaseFirstletter(name))
-		}
-		Append("(")
-		cppGenerateCallParameters(statement.Parameters)
-		Append(")")
-		Append("]")
-		AppendLine(";")
-	}
 
 	//
 	// Expressions
@@ -447,6 +420,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 			switch param.Modifier {
 				case .Const: Append("const ")
+				case .Var:   Append("/* var */ ")
+				case .Out:   Append("/* out */ ")				
 				default:
 			}
 			generateTypeReference(param.`Type`)
@@ -598,12 +573,15 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if let type = expression.ElementType {
 			generateTypeReference(type, ignoreNullability: true)
 		}
-		Append("() << ")
-		for var e = 0; e < expression.Elements.Count; e++ {
-			if e > 0 {
-				Append(", ")
+		Append("()")
+		if expression.Elements.Count > 0 {
+			Append(" << ")
+			for var e = 0; e < expression.Elements.Count; e++ {
+				if e > 0 {
+					Append(", ")
+				}
+				generateExpression(expression.Elements[e])
 			}
-			generateExpression(expression.Elements[e])
 		}
 	}
 
@@ -748,13 +726,20 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		let isCtor = (method as? CGConstructorDefinition) != nil;
 		let isDtor = (method as? CGDestructorDefinition) != nil;
 		let isInterface = (type as? CGInterfaceTypeDefinition) != nil;
+		let isGlobal = type == CGGlobalTypeDefinition.GlobalType;
 		if header {
 			if method.Static {
-				Append("static ")
+				if isCBuilder()	{			
+					Append("__classmethod ")
+				}
+				else 
+				{
+					Append("static ")
+				}				
 			}
 		}
 		if header {
-			if type != CGGlobalTypeDefinition.GlobalType {
+			if !isGlobal {
 				// virtuality isn't supported for globals
 				switch (method.Virtuality) {
 					case .Virtual:	   Append("virtual ");
@@ -778,8 +763,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 
 			cppGenerateCallingConversion(conversion)		}
 		if isCtor {			
+			if !header {
+				generateIdentifier(type.Name)
+				Append("::")
+			}
 			if let lname = method.Name where lname != "" {
-				generateIdentifier(uppercaseFirstletter(method.Name))
+				generateIdentifier(uppercaseFirstletter(lname))
 			}
 			else {
 				generateIdentifier(uppercaseFirstletter(type.Name))
@@ -789,8 +778,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			generateIdentifier(uppercaseFirstletter(type.Name));
 		} else {
 			if !header {
-				generateIdentifier(type.Name)
-				Append("::")
+				if !isGlobal {			
+					generateIdentifier(type.Name)
+					Append("::")
+				}
 			}
 			generateIdentifier(method.Name)
 		}
@@ -952,9 +943,9 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 
 	func cppGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
 		switch visibility {
-			case .Unspecified: fallthrough
-			case .Unit: fallthrough
-			case .Assembly: fallthrough
+			case .Unspecified: break
+			case .Unit: break
+			case .Assembly: break
 			case .Public: Append("public ")		
 		}
 	}

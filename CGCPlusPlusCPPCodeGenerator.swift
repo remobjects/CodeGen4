@@ -5,6 +5,19 @@ import Sugar.IO
 public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	public override var defaultFileExtension: String { return "cpp" }
 
+	override func generateAll() {
+		generateHeader()
+		generateDirectives()
+		if let namespace = currentUnit.Namespace {
+			AppendLine();
+			generateImports()
+			generateForwards()
+			generateGlobals()
+			generateTypeDefinitions()
+		}
+		generateFooter()
+	}
+
 	override func generateHeader() {
 		super.generateHeader()
 		var lnamespace = "";
