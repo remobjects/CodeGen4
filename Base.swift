@@ -45,13 +45,13 @@ public class CGCodeUnit {
 }
 
 public class CGCompilerDirective {
-	var Directive: String /* will not be language agnostic */
-	var Condition: CGConditionalDefine?
+	public var Directive: String /* will not be language agnostic */
+	public var Condition: CGConditionalDefine?
 	
-	init(_ directive: String) {
+	public init(_ directive: String) {
 		Directive = directive
 	}
-	convenience init(_ directive: String, _ condition: CGConditionalDefine) {
+	public convenience init(_ directive: String, _ condition: CGConditionalDefine) {
 		init(directive)
 		Condition = condition
 	}
