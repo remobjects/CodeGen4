@@ -79,11 +79,21 @@ public class CGTypeCastExpression: CGExpression {
 	public var TargetType: CGTypeReference
 	public var ThrowsException = false
 	public var GuaranteedSafe = false // in Silver, this uses "as"
+	public var CastKind: CGTypeCastKind? // C++ only
 
 	public init(_ expression: CGExpression, _ targetType: CGTypeReference) {
 		Expression = expression
 		TargetType = targetType
 	}
+}
+
+public enum CGTypeCastKind { // C++ only
+	case Constant
+	case Dynamic
+	case Reinterpret
+	case Static
+	case Interface // C++Builder only
+	case Safe // VC++ only
 }
 
 public class CGAwaitExpression: CGExpression {
