@@ -24,17 +24,6 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		if let namespace = currentUnit.Namespace {
 			lnamespace = namespace.Name;
 		}
-		// c++Builder part
-		if isCBuilder(){
-			if let initialization = currentUnit.Initialization {
-				AppendLine("void __initialization_\(lnamespace)();")
-				generatePragma("startup __initialization_\(lnamespace)")
-			}
-			if let finalization = currentUnit.Finalization {
-				AppendLine("void __finalization_\(lnamespace)();")
-				generatePragma("exit __finalization_\(lnamespace)")
-			}
-		}		
 		if let fileName = currentUnit.FileName {
 			AppendLine("#include \"\(Path.ChangeExtension(fileName, ".h"))\"")
 		}
@@ -46,7 +35,10 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 			lnamespace = namespace.Name;
 		}
 		if isCBuilder() {
+			// c++Builder part
 			if let initialization = currentUnit.Initialization {
+				AppendLine("void __initialization_\(lnamespace)();")
+				generatePragma("startup __initialization_\(lnamespace)")
 				AppendLine("void __initialization_\(lnamespace)()")
 				AppendLine("{")
 				incIndent()
@@ -55,6 +47,8 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 				AppendLine("}")
 			}
 			if let finalization = currentUnit.Finalization {
+				AppendLine("void __finalization_\(lnamespace)();")
+				generatePragma("exit __finalization_\(lnamespace)")
 				AppendLine("void __finalization_\(lnamespace)()")
 				AppendLine("{")
 				incIndent()

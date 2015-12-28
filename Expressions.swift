@@ -451,6 +451,7 @@ public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 
 public class CGArrayLiteralExpression: CGExpression {
 	public var Elements: List<CGExpression> 
+	public var ElementType: CGTypeReference?		//c++ only at this moment
 	public var ArrayKind: CGArrayKind = .Dynamic
 	
 	public init() {
@@ -459,6 +460,12 @@ public class CGArrayLiteralExpression: CGExpression {
 	public init(_ elements: List<CGExpression>) {
 		Elements = elements
 	}
+
+	public init(_ elements: List<CGExpression>, _ type: CGTypeReference) {
+		Elements = elements
+		ElementType = type
+	}
+
 	public convenience init(_ elements: CGExpression...) {
 		init(elements.ToList())
 	}

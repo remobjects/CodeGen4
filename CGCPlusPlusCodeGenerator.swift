@@ -397,17 +397,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func cppGenerateFunctionCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
-			let param = parameters[p]
-			
-			if p > 0 {
-				Append(", ")
-			} 
-			generateExpression(param.Value)
-		}
-	}
-
 	func cppGenerateAttributeParameters(parameters: List<CGCallParameter>) {
 		// not needed
 	}
@@ -449,16 +438,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		if type.ImplementedInterfaces.Count > 0 {
-			Append(" <")
 			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
 				if let interface = type.ImplementedInterfaces[a] {
-					if a > 0 {
 						Append(", ")
-					}
 					generateTypeReference(interface, ignoreNullability: true)
 				}
 			}
-			Append(">")
 		}
 	}
 
@@ -499,17 +484,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if method.CallSite != nil {
 			cppGenerateCallSiteForExpression(method, forceSelf: true)
 			cppGenerateAddressing(method)
-			Append(method.Name)
-			Append("(")
-			cppGenerateCallParameters(method.Parameters)
-			Append(")")
-		} else {
-			// nil means its a function
-			Append(method.Name)
-			Append("(")
-			cppGenerateFunctionCallParameters(method.Parameters)
-			Append(")")
 		}
+		Append(method.Name)
+		Append("(")
+		cppGenerateCallParameters(method.Parameters)
+		Append(")")
 	}
 
 	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
@@ -559,6 +538,31 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+		if isCBuilder() {	
+			if array.ArrayKind == .Dynamic {				
+				var isOpenArray = false
+				if let ltype = array.ElementType {					
+					// open array
+					isOpenArray = true;
+					Append("OPENARRAY(")
+					generateTypeReference(ltype)
+					Append(", (")
+				}
+				else {					
+					// array of const
+					Append("ARRAYOFCONST(")
+				}
+				for var e = 0; e < array.Elements.Count; e++ {
+					if e > 0 {
+						Append(", ")
+					}
+					generateExpression(array.Elements[e])
+				}
+				if isOpenArray { Append(")")}
+				Append(")")
+				return;				
+			}
+		}
 		Append("[")
 		for var e = 0; e < array.Elements.Count; e++ {
 			if e > 0 {
@@ -739,7 +743,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		if header {
-			if !isGlobal {
+			if isInterface && isCBuilder(){		
+				Append("virtual ");
+			}
+			else if !isGlobal {
 				// virtuality isn't supported for globals
 				switch (method.Virtuality) {
 					case .Virtual:	   Append("virtual ");

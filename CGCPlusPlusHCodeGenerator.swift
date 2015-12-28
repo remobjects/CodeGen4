@@ -26,10 +26,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 
 	override func generateHeader() {
 		super.generateHeader()
-		var lnamespace = "";
-		if let namespace = currentUnit.Namespace {
-			lnamespace = namespace.Name+"H";
-		}
+		var lnamespace = currentUnit.FileName+"H";
 		AppendLine("#ifndef \(lnamespace)");
 		AppendLine("#define \(lnamespace)");
 		AppendLine();
@@ -44,10 +41,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	}
 		
 	override func generateFooter(){
-		var lnamespace = "";
-		if let namespace = currentUnit.Namespace {
-			lnamespace = namespace.Name+"H";
-		}
+		var lnamespace = currentUnit.FileName+"H";
 		if isCBuilder() {
 			generatePragma("pack(pop)");
 			generatePragma("option pop");
@@ -71,12 +65,21 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 				Append("__interface ")
 				generateIdentifier(type.Name)
 				AppendLine(";")
+
+				if isCBuilder() {
+					//typedef System::DelphiInterface<IMegaDemoService> _di_IMegaDemoService;
+					Append("typedef System::DelphiInterface<");
+					generateIdentifier(type.Name);
+					Append("> _di_");
+					generateIdentifier(type.Name);
+					AppendLine(";");
+				}
 			}
 		}
 	}
 	
 	override func generateImport(imp: CGImport) {
-		AppendLine("#include <\(imp.Name).hpp>")
+		AppendLine("#include <\(imp.Name)>")
 	}
 
 	//
@@ -178,14 +181,6 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 //		Append("__interface ")
 //		generateIdentifier(type.Name)
 //		AppendLine(";");
-		if isCBuilder() {
-			//typedef System::DelphiInterface<IMegaDemoService> _di_IMegaDemoService;
-			Append("typedef System::DelphiInterface<");
-			generateIdentifier(type.Name);
-			Append("> _di_");
-			generateIdentifier(type.Name);
-			AppendLine(";");
-		}
 		Append("__interface ")
 		if isCBuilder() {
 			if let k = type.InterfaceGuid {
@@ -202,7 +197,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {		
 		decIndent()
 		AppendLine()
-		AppendLine("}")
+		AppendLine("};")
 	}	
 
 	//
