@@ -1198,6 +1198,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		AppendLine("begin")
 		incIndent()
+		if let localVariables = method.LocalVariables where localVariables.Count > 0 {
+			for v in localVariables {
+				if let val = v.Value {
+					generateIdentifier(v.Name)
+					Append(" := ")
+					generateExpressionStatement(val)
+				}
+			}
+		}
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 		decIndent()
 		Append("end")
