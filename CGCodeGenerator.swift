@@ -1385,15 +1385,31 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
-	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, callback: callback)
+	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: 2048, callback: callback)
 	}
 	
-	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
+	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
+		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: 2048, callback: callback)
+	}
+	
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Integer, callback: (T) -> ()) {
+		let startLocation = currentLocation.column
 		var count = 0
 		for i in list {
 			if count++ > 0 {
 				separator()
+				if currentLocation.column > wrapWhenItExceedsLineLength {
+					AppendLine()
+					let space = GetIndentStringToColumn(startLocation)
+
+					//bypass the regular indent. probably could be refacrored better
+					currentCode.Append(space)
+					atStart = false
+					let len = space.Length
+					currentLocation.column += len
+					currentLocation.offset += len
+				}
 			}
 			callback(i)
 		}
@@ -1483,5 +1499,22 @@ public __abstract class CGCodeGenerator {
 			}
 		}
 		return currentCode
-	}	 
+	}
+	
+	private final func GetIndentStringToColumn(column: Integer) -> String {
+		var space = ""
+		if useTabs {
+			for var i: Int32 = 0; i < column/tabSize; i++ {
+				currentCode.Append("\t")
+			}
+			for var i: Int32 = 0; i < column%tabSize; i++ {
+				currentCode.Append(" ")
+			}
+		} else {
+			for var i: Int32 = 0; i < column; i++ {
+				space = space+(" ")
+			}
+		}
+		return space
+	}
 }
