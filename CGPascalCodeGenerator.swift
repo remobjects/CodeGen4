@@ -154,8 +154,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateInlineComment(comment: String) {
-		var comment1 = comment.Replace("}", "*)") // 73985: Silver: can't redeclare a local param as read-write var
-		Append("{ \(comment1) }")
+		var comment = comment.Replace("}", "*)")
+		Append("{ \(comment) }")
 	}
 	
 	internal func pascalGenerateImports(imports: List<CGImport>) {

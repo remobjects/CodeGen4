@@ -1416,20 +1416,20 @@ public __abstract class CGCodeGenerator {
 	}
 
 	public static final func uppercaseFirstletter(name: String) -> String {
-		var name1 = name // 73985: Silver: can't redeclare a local param as read-write var
-		if length(name1) >= 1 {
-			name1 = name1.Substring(0, 1).ToUpper()+name1.Substring(1)
+		var name = name
+		if length(name) >= 1 {
+			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
 		}
-		return name1
+		return name
 	}
 	
 	public static final func lowercasecaseFirstletter(name: String) -> String {
 		//todo: maybe  not lowercase if second letter is also uppercase?
-		var name1 = name // 73985: Silver: can't redeclare a local param as read-write var
-		if length(name1) >= 1 {
-			name1 = name1.Substring(0, 1).ToLower()+name1.Substring(1)
+		var name = name
+		if length(name) >= 1 {
+			name = name.Substring(0, 1).ToLower()+name.Substring(1)
 		}
-		return name1
+		return name
 	}
 	
 	//
