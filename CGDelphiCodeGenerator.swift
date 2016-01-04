@@ -185,7 +185,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		needCR = false;
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
-				if global.Variable.Visibility == CGMemberVisibilityKind.Private {
+				if (global.Variable.Visibility == .Private)||(global.Variable.Visibility == .Unit)  {
 					generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
 					needCR = true;
 				}

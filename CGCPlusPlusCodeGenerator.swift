@@ -29,6 +29,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		return Dialect == CGCPlusPlusCodeGeneratorDialect.VCPlusPlus;
 	}
 
+	func generateLineBreak(value : Int32){
+		if (value % 8 == 7) {
+			AppendLine("");
+		}
+	}
+
 	public init() {
 		// from http://en.cppreference.com/w/cpp/keyword
 		keywords = ["alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", 
@@ -387,7 +393,9 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
+				generateLineBreak(p)
 			}
+			
 			switch param.Modifier {
 				case .Var: Append(" &")
 				case .Out: Append(" &")
@@ -406,6 +414,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
+				generateLineBreak(p)
 			}
 			switch param.Modifier {
 				case .Const: Append("const ")
@@ -432,6 +441,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
 						Append(", ")
+						generateLineBreak(a)
 					}
 					generateTypeReference(ancestor, ignoreNullability: true)
 				}
@@ -440,7 +450,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if type.ImplementedInterfaces.Count > 0 {
 			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
 				if let interface = type.ImplementedInterfaces[a] {
-						Append(", ")
+					Append(", ")
+					generateLineBreak(a)
 					generateTypeReference(interface, ignoreNullability: true)
 				}
 			}
@@ -509,7 +520,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
-		cppGenerateCallSiteForExpression(property, forceSelf: true)
+		cppGenerateCallSiteForExpression(property, forceSelf: false)
 		cppGenerateAddressing(property)
 		Append(property.Name)
 
@@ -550,15 +561,16 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				}
 				else {					
 					// array of const
-					Append("ARRAYOFCONST(")
+					Append("ARRAYOFCONST((")
 				}
 				for var e = 0; e < array.Elements.Count; e++ {
 					if e > 0 {
 						Append(", ")
+						generateLineBreak(e)
 					}
 					generateExpression(array.Elements[e])
 				}
-				if isOpenArray { Append(")")}
+				Append(")")
 				Append(")")
 				return;				
 			}
@@ -567,6 +579,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		for var e = 0; e < array.Elements.Count; e++ {
 			if e > 0 {
 				Append(", ")
+				generateLineBreak(e)
 			}
 			generateExpression(array.Elements[e])
 		}
@@ -583,6 +596,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			for var e = 0; e < expression.Elements.Count; e++ {
 				if e > 0 {
 					Append(", ")
+					generateLineBreak(e)
 				}
 				generateExpression(expression.Elements[e])
 			}
@@ -595,6 +609,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		for var e = 0; e < dictionary.Keys.Count; e++ {
 			if e > 0 {
 				Append(", ")
+				generateLineBreak(e)
 			}
 			generateExpression(dictionary.Keys[e])
 			Append(": ")
@@ -806,12 +821,23 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					Append(": ")
 					generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
 					Append("(")
-					for var p = 0; p < method.Parameters.Count; p++ {
-						let param = method.Parameters[p]
-						if p > 0 {
-							Append(", ")
+					var processed = false;
+			        for s in method.Statements {
+						if let ctorCall = s as? CGConstructorCallStatement {
+							cppGenerateCallParameters(ctorCall.Parameters);
+							processed = true;
+							break
 						}
-						generateIdentifier(param.Name)
+                	}
+					if !processed{
+						for var p = 0; p < method.Parameters.Count; p++ {
+							let param = method.Parameters[p]
+							if p > 0 {
+								Append(", ")
+								generateLineBreak(p)
+							}
+							generateIdentifier(param.Name)
+						}
 					}
 					Append(")")
 					decIndent()
@@ -838,7 +864,29 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
-		// overriden in H
+		// use field as is 
+		if let type = field.`Type` {	
+			if field.Constant {
+				Append("const ")
+			}
+			generateTypeReference(type, ignoreNullability: false)
+			Append(" ")
+			generateIdentifier(field.Name)
+			if let value = field.Initializer {
+				Append(" = ")
+				generateExpression(value)
+			}
+			AppendLine(";")
+		} else {
+		// without type, generate as define
+			Append("#define ");			
+			generateIdentifier(field.Name)
+			if let value = field.Initializer {
+				Append(" ")
+				generateExpression(value)
+			}
+			AppendLine();
+		}		
 	}
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -915,6 +963,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		for var p: Int32 = 0; p < block.Parameters.Count; p++ {
 			if p > 0 {
 				Append(", ")
+				generateLineBreak(p)
 			}
 			if let type = block.Parameters[p].`Type` {
 				generateTypeReference(type)
@@ -936,7 +985,22 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 //	}
 	
 	override func generateArrayTypeReference(type: CGArrayTypeReference) {
-
+		if isCBuilder() {	
+			if type.ArrayKind == .Dynamic {		
+				Append("DynamicArray<")
+				generateTypeReference(type.`Type`)
+				Append(">")
+				return
+			}
+		}
+		generateTypeReference(type.`Type`)
+		var bounds = type.Bounds.Count
+		if bounds == 0 {
+			bounds = 1
+		}
+		for var b: Int32 = 0; b < bounds; b++ {
+			Append("[]")
+		}
 	}
 	
 	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {

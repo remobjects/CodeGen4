@@ -12,10 +12,34 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 			AppendLine();
 			generateImports()
 			generateForwards()
-			generateGlobals()
+			cppGenerateCPPGlobals()
 			generateTypeDefinitions()
 		}
 		generateFooter()
+	}
+
+	func cppGenerateCPPGlobals(){
+		var lastGlobal: CGGlobalDefinition? = nil
+		for g in currentUnit.Globals {
+			var visibility: CGMemberVisibilityKind = .Unspecified;
+ 			if let method = g as? CGGlobalFunctionDefinition {			
+				visibility = method.Function.Visibility;
+			}
+ 			if let variable = g as? CGGlobalVariableDefinition {			
+				visibility = variable.Variable.Visibility;
+			}
+			// generate only .Unit & .Private visibility
+			if ((visibility == .Unit)||(visibility == .Private)){			
+				if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
+					AppendLine()
+				}
+				generateGlobal(g)
+				lastGlobal = g;
+			}
+		}
+		if lastGlobal != nil {
+			AppendLine()
+		}
 	}
 
 	override func generateHeader() {
@@ -126,25 +150,11 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 //		}
 	}
 	
-//	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
-//		if field.Static {
-//			Append("static ")
-//			if let type = field.`Type` {
-//				switch type.StorageModifier {
-//					case .Strong: Append("__strong ")
-//					case .Weak: Append("__weak ")
-//					case .Unretained: Append("__unsafe_unretained")
-//				}				
-//				generateTypeReference(type)
-//				Append(" ")
-//			} else {
-//				Append("id ")
-//			}
-//			generateIdentifier(field.Name)
-//			AppendLine(";")
-//		}
-//		// instance fields are generated in TypeStart
-//	}	
+	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+		if type == CGGlobalTypeDefinition.GlobalType { 
+			super.generateFieldDefinition(field, type: type)
+		}
+	}	
 
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(ctor, type: type, header: false)

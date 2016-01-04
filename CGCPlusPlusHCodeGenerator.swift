@@ -10,18 +10,59 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		generateDirectives()
 		if let namespace = currentUnit.Namespace {
 			AppendLine();
-			generateImports()
+			cppHgenerateImports()
 			AppendLine("namespace \(namespace.Name)");
 			AppendLine("{")
 			incIndent();
 			generateForwards()
-			generateGlobals()
+			cppGenerateHeaderGlobals()
 			generateTypeDefinitions()
 			decIndent()
 			AppendLine("}")
 			AppendLine("using namespace \(namespace.Name);");
 		}
 		generateFooter()
+	}
+
+	func cppGenerateHeaderGlobals(){
+		var lastGlobal: CGGlobalDefinition? = nil
+		for g in currentUnit.Globals {
+			var visibility: CGMemberVisibilityKind = .Unspecified;
+ 			if let method = g as? CGGlobalFunctionDefinition {			
+				visibility = method.Function.Visibility;
+			}
+ 			if let variable = g as? CGGlobalVariableDefinition {			
+				visibility = variable.Variable.Visibility;
+			}
+			// skip .Unit & .Private visibility - they will be put into .cpp
+			if !((visibility == .Unit)||(visibility == .Private)){			
+				if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
+					AppendLine()
+				}
+				generateGlobal(g)
+				lastGlobal = g;
+			}
+		}
+		if lastGlobal != nil {
+			AppendLine()
+		}
+	}
+
+	func cppHgenerateImports(){
+		var needLF = false;
+		if currentUnit.Imports.Count > 0 {
+			for i in currentUnit.Imports {
+				generateImport(i)
+			}
+			needLF = true;
+		}
+		if currentUnit.ImplementationImports.Count > 0 {
+			for i in currentUnit.ImplementationImports {
+				generateImport(i)
+			}
+			needLF = true;
+		}
+		if needLF {AppendLine()}
 	}
 
 	override func generateHeader() {
@@ -87,7 +128,11 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	//
 	
 	override func generateAliasType(type: CGTypeAliasDefinition) {
-
+		Append("typedef ")
+		generateTypeReference(type.ActualType)
+		Append(" ")
+		generateIdentifier(type.Name)
+		AppendLine(";")
 	}
 	
 	override func generateBlockType(type: CGBlockTypeDefinition) {
@@ -217,32 +262,6 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(dtor, type: type, header: true)
 		Append(";")
-	}
-
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
-		// use field as is 
-		if let type = field.`Type` {	
-			if field.Constant {
-				Append("const ")
-			}
-			generateTypeReference(type, ignoreNullability: false)
-			Append(" ")
-			generateIdentifier(field.Name)
-			if let value = field.Initializer {
-				Append(" = ")
-				generateExpression(value)
-			}
-			AppendLine(";")
-		} else {
-			// without type, generate as define
-			Append("#define ");			
-			generateIdentifier(field.Name)
-			if let value = field.Initializer {
-				Append(" ")
-				generateExpression(value)
-			}
-			AppendLine();
-		}		
 	}
 	
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
