@@ -23,7 +23,7 @@ public __abstract class CGCodeGenerator {
 	public __abstract var defaultFileExtension: String { get }
 	
 	public var omitNamespacePrefixes: Boolean = false
-	public var splitLinesLongerThan: Int = 2048
+	public var splitLinesLongerThan: Integer = 2048
 
 	public final func GenerateUnit(unit: CGCodeUnit) -> String {
 		
