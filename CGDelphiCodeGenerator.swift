@@ -36,7 +36,13 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	override func generateHeader() {
 		Append("unit ")
-		Append(currentUnit.FileName)
+		if let fileName = currentUnit.FileName {
+			Append(fileName)
+		} else if let namespace = currentUnit.Namespace {
+			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
+		} else {
+			Append("{unit name unknown}")
+		}
 		AppendLine(";")
 		AppendLine()
 		super.generateHeader()

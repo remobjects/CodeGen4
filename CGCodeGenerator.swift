@@ -1395,21 +1395,14 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Integer, callback: (T) -> ()) {
-		let startLocation = currentLocation.column
+		let startLocation = currentLocation.virtualColumn
 		var count = 0
 		for i in list {
 			if count++ > 0 {
 				separator()
-				if currentLocation.column > wrapWhenItExceedsLineLength {
+				if currentLocation.virtualColumn > wrapWhenItExceedsLineLength {
 					AppendLine()
-					let space = GetIndentStringToColumn(startLocation)
-
-					//bypass the regular indent. probably could be refacrored better
-					currentCode.Append(space)
-					atStart = false
-					let len = space.Length
-					currentLocation.column += len
-					currentLocation.offset += len
+					AppendIndentToVirtualColumn(startLocation)
 				}
 			}
 			callback(i)
@@ -1450,8 +1443,8 @@ public __abstract class CGCodeGenerator {
 	
 	internal private(set) var currentLocation = CGLocation()
 	
-	internal final func Append(line: String? = nil) -> StringBuilder {
-		if let line = line where length(line) > 0 {			
+	internal final func Append(line: String) -> StringBuilder {
+		if length(line) > 0 {			
 			if atStart {
 				AppendIndent()
 				atStart = false
@@ -1464,16 +1457,21 @@ public __abstract class CGCodeGenerator {
 			
 			let len = line.Length
 			currentLocation.column += len
+			currentLocation.virtualColumn += len
 			currentLocation.offset += len
 		}
 		return currentCode
 	}
 	
 	internal final func AppendLine(line: String? = nil) -> StringBuilder {
-		Append(line)
+		if let line = line {
+			Append(line)
+		}
 		currentCode.AppendLine()
-		currentLocation.line += 1 // workaeround for  currentLocation.line++ // E111 Variable expected
+		//currentLocation.line++// cannot use binary operator?
+		currentLocation.line += 1 // workaround for currentLocation.line++ // E111 Variable expected
 		currentLocation.column = 0
+		currentLocation.virtualColumn = 0
 		#if ECHOES
 		currentLocation.offset = currentCode.ToString().Length // 72544: Sugar: confusing error calling StringBuilder.Length claims the case is wring when its not, on Echoes
 		#else
@@ -1487,13 +1485,19 @@ public __abstract class CGCodeGenerator {
 		if !codeCompletionMode {
 			if useTabs {
 				currentLocation.column += indent
+				currentLocation.virtualColumn += indent*tabSize
 				currentLocation.offset += indent
+				//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
+				//currentCode.Append(String(count: indent, repeatingValue:"\t"))
 				for var i: Int32 = 0; i < indent; i++ {
 					currentCode.Append("\t")
 				}
 			} else {
 				currentLocation.column += indent*tabSize
+				currentLocation.virtualColumn += indent*tabSize
 				currentLocation.offset += indent*tabSize
+				//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
+				//currentCode.Append(String(count: indent*tabSize, repeatedValue:" "))
 				for var i: Int32 = 0; i < indent*tabSize; i++ {
 					currentCode.Append(" ")
 				}
@@ -1502,20 +1506,30 @@ public __abstract class CGCodeGenerator {
 		return currentCode
 	}
 	
-	private final func GetIndentStringToColumn(column: Integer) -> String {
-		var space = ""
+	private final func AppendIndentToVirtualColumn(targetColumn: Integer) {
+		atStart = false
 		if useTabs {
-			for var i: Int32 = 0; i < column/tabSize; i++ {
+			currentLocation.column += targetColumn/tabSize+targetColumn%tabSize
+			currentLocation.virtualColumn += targetColumn
+			currentLocation.offset += targetColumn/tabSize+targetColumn%tabSize
+			//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
+			//currentCode.Append(String(count: targetColumn/tabSize, repeatedValue:"\t"))
+			//currentCode.Append(String(count: targetColumn%tabSize, repeatedValue:" "))
+			for var i: Int32 = 0; i < targetColumn/tabSize; i++ {
 				currentCode.Append("\t")
 			}
-			for var i: Int32 = 0; i < column%tabSize; i++ {
+			for var i: Int32 = 0; i < targetColumn%tabSize; i++ {
 				currentCode.Append(" ")
 			}
 		} else {
-			for var i: Int32 = 0; i < column; i++ {
-				space = space+(" ")
+			currentLocation.column += targetColumn
+			currentLocation.virtualColumn += targetColumn
+			currentLocation.offset += targetColumn
+			//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
+			//currentCode.Append(String(count: targetColumn, repeatedValue:" "))
+			for var i: Int32 = 0; i < targetColumn; i++ {
+				currentCode.Append(" ")
 			}
 		}
-		return space
 	}
 }

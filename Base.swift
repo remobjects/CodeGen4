@@ -10,6 +10,7 @@ public enum CGPlatform {
 
 public struct CGLocation {
 	public var column: Integer
+	public var virtualColumn: Integer
 	public var line: Integer
 	public var offset: Integer
 }
