@@ -7,7 +7,7 @@ public __abstract class CGCodeGenerator {
 	internal var tabSize = 2
 	internal var useTabs = false
 	internal var definitionOnly = false
-
+	
 	internal var keywords: List<String>?
 	internal var keywordsAreCaseSensitive = true // keywords List must be lowercase when this is set to false
 	
@@ -23,6 +23,7 @@ public __abstract class CGCodeGenerator {
 	public __abstract var defaultFileExtension: String { get }
 	
 	public var omitNamespacePrefixes: Boolean = false
+	public var splitLinesLongerThan: Int = 2048
 
 	public final func GenerateUnit(unit: CGCodeUnit) -> String {
 		
@@ -1386,11 +1387,11 @@ public __abstract class CGCodeGenerator {
 	//
 	
 	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: 2048, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: splitLinesLongerThan, callback: callback)
 	}
 	
 	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: 2048, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: splitLinesLongerThan, callback: callback)
 	}
 	
 	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Integer, callback: (T) -> ()) {
