@@ -69,6 +69,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		//		"volatile", "wchar_t", "while", "xor", "xor_eq"].ToList() as! List<String>;		
 	}
 
+	public convenience init(dialect: CGCPlusPlusCodeGeneratorDialect) {
+		init()
+		Dialect = dialect
+	}	
+
 	override func generateAll() {
 		// overriden in .h and .cpp
 		}
@@ -822,13 +827,13 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
 					Append("(")
 					var processed = false;
-			        for s in method.Statements {
+					for s in method.Statements {
 						if let ctorCall = s as? CGConstructorCallStatement {
 							cppGenerateCallParameters(ctorCall.Parameters);
 							processed = true;
 							break
 						}
-                	}
+					}
 					if !processed{
 						for var p = 0; p < method.Parameters.Count; p++ {
 							let param = method.Parameters[p]
