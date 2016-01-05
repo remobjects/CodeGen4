@@ -29,12 +29,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		return Dialect == CGCPlusPlusCodeGeneratorDialect.VCPlusPlus;
 	}
 
-	func generateLineBreak(value : Int32){
-		if (value % 8 == 7) {
-			AppendLine("");
-		}
-	}
-
 	public init() {
 		// from http://en.cppreference.com/w/cpp/keyword
 		keywords = ["alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", 
@@ -398,7 +392,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
-				generateLineBreak(p)
 			}
 			
 			switch param.Modifier {
@@ -419,7 +412,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
-				generateLineBreak(p)
 			}
 			switch param.Modifier {
 				case .Const: Append("const ")
@@ -446,7 +438,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
 						Append(", ")
-						generateLineBreak(a)
 					}
 					generateTypeReference(ancestor, ignoreNullability: true)
 				}
@@ -456,7 +447,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
 				if let interface = type.ImplementedInterfaces[a] {
 					Append(", ")
-					generateLineBreak(a)
 					generateTypeReference(interface, ignoreNullability: true)
 				}
 			}
@@ -568,26 +558,18 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					// array of const
 					Append("ARRAYOFCONST((")
 				}
-				for var e = 0; e < array.Elements.Count; e++ {
-					if e > 0 {
-						Append(", ")
-						generateLineBreak(e)
-					}
-					generateExpression(array.Elements[e])
-				}
+				helpGenerateCommaSeparatedList(array.Elements) { e in
+                        self.generateExpression(e)
+                }
 				Append(")")
 				Append(")")
 				return;				
 			}
 		}
 		Append("[")
-		for var e = 0; e < array.Elements.Count; e++ {
-			if e > 0 {
-				Append(", ")
-				generateLineBreak(e)
-			}
-			generateExpression(array.Elements[e])
-		}
+		helpGenerateCommaSeparatedList(array.Elements) { e in
+        	self.generateExpression(e)
+        }
 		Append("]")
 	}
 
@@ -598,13 +580,9 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append("()")
 		if expression.Elements.Count > 0 {
 			Append(" << ")
-			for var e = 0; e < expression.Elements.Count; e++ {
-				if e > 0 {
-					Append(", ")
-					generateLineBreak(e)
-				}
-				generateExpression(expression.Elements[e])
-			}
+			helpGenerateCommaSeparatedList(expression.Elements) { e in
+                    self.generateExpression(e)
+            }
 		}
 	}
 
@@ -614,7 +592,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		for var e = 0; e < dictionary.Keys.Count; e++ {
 			if e > 0 {
 				Append(", ")
-				generateLineBreak(e)
 			}
 			generateExpression(dictionary.Keys[e])
 			Append(": ")
@@ -835,14 +812,16 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 						}
 					}
 					if !processed{
-						for var p = 0; p < method.Parameters.Count; p++ {
+						helpGenerateCommaSeparatedList(method.Parameters) { p in
+								self.generateIdentifier(p.Name)
+						}
+/*						for var p = 0; p < method.Parameters.Count; p++ {
 							let param = method.Parameters[p]
 							if p > 0 {
 								Append(", ")
-								generateLineBreak(p)
 							}
 							generateIdentifier(param.Name)
-						}
+						}*/
 					}
 					Append(")")
 					decIndent()
@@ -968,7 +947,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		for var p: Int32 = 0; p < block.Parameters.Count; p++ {
 			if p > 0 {
 				Append(", ")
-				generateLineBreak(p)
 			}
 			if let type = block.Parameters[p].`Type` {
 				generateTypeReference(type)

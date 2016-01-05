@@ -199,6 +199,12 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 //		cppGenerateFields(type)
 		AppendLine()
+		if isCBuilder() {		
+			// generate empty "__published:"
+			decIndent();
+			cppHGenerateMemberVisibilityPrefix(CGMemberVisibilityKind.Published);
+			incIndent();
+		}
 	}
 	
 	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
