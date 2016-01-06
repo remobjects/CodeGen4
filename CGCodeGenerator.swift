@@ -1395,7 +1395,7 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	var lastStartLocation: Integer?
-	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Bool, callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Boolean, callback: (T) -> ()) {
 		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
 		lastStartLocation = nil
 		var count = 0
