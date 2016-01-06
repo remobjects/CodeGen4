@@ -804,7 +804,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
 					Append("(")
 					var processed = false;
-					for s in method.Statements {
+			        for s in method.Statements {
 						if let ctorCall = s as? CGConstructorCallStatement {
 							cppGenerateCallParameters(ctorCall.Parameters);
 							processed = true;

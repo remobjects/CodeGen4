@@ -1387,26 +1387,29 @@ public __abstract class CGCodeGenerator {
 	//
 	
 	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: splitLinesLongerThan, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 	
 	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: splitLinesLongerThan, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 	
-	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Integer, callback: (T) -> ()) {
-		let startLocation = currentLocation.virtualColumn
+	var lastStartLocation: Integer?
+	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Bool, callback: (T) -> ()) {
+		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
+		lastStartLocation = nil
 		var count = 0
 		for i in list {
 			if count++ > 0 {
 				separator()
-				if currentLocation.virtualColumn > wrapWhenItExceedsLineLength {
+				if wrapWhenItExceedsLineLength && currentLocation.virtualColumn > splitLinesLongerThan {
 					AppendLine()
 					AppendIndentToVirtualColumn(startLocation)
 				}
 			}
 			callback(i)
 		}
+		lastStartLocation = startLocation // keep this as possible indent for the next round
 	}
 
 	public static final func uppercaseFirstletter(name: String) -> String {
@@ -1503,6 +1506,7 @@ public __abstract class CGCodeGenerator {
 				}
 			}
 		}
+		lastStartLocation = nil
 		return currentCode
 	}
 	

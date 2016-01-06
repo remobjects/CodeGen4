@@ -28,10 +28,10 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		var lastGlobal: CGGlobalDefinition? = nil
 		for g in currentUnit.Globals {
 			var visibility: CGMemberVisibilityKind = .Unspecified;
- 			if let method = g as? CGGlobalFunctionDefinition {			
+			 if let method = g as? CGGlobalFunctionDefinition {			
 				visibility = method.Function.Visibility;
 			}
- 			if let variable = g as? CGGlobalVariableDefinition {			
+			 if let variable = g as? CGGlobalVariableDefinition {			
 				visibility = variable.Variable.Visibility;
 			}
 			// skip .Unit & .Private visibility - they will be put into .cpp
@@ -75,8 +75,8 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		if isCBuilder() {
 			generatePragma("delphiheader begin");
 			generatePragma("option push");
-			generatePragma("option -w-            // All warnings off");
-			generatePragma("option -Vx            // Zero-length empty class member functions");
+			generatePragma("option -w-			// All warnings off");
+			generatePragma("option -Vx			// Zero-length empty class member functions");
 			generatePragma("pack(push,8)");
 		}
 	}
@@ -143,9 +143,9 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 
 		//#pragma option push -b-
 		//enum TSex {
-		//                 TSex_sxMale,
-		//                 TSex_sxFemale
-		//                 };
+		//				 TSex_sxMale,
+		//				 TSex_sxFemale
+		//				 };
 		//#pragma option pop
 
 		if isCBuilder() {
@@ -365,10 +365,12 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 
 	func cppHGenerateMemberVisibilityPrefix(visibility: CGMemberVisibilityKind) {
 		switch visibility {
-			case .Private: 	AppendLine("private:");
-			case .Public:  	AppendLine("public:");
-			case .Protected:AppendLine("protected:");
- 			case .Published: if isCBuilder() {AppendLine("__published:")}
+			case .Private: AppendLine("private:");
+			case .Public: AppendLine("public:");
+			case .Protected: AppendLine("protected:");
+			case .Published: if isCBuilder() {
+				AppendLine("__published:")
+			}
 			default:
 		}
 	}
