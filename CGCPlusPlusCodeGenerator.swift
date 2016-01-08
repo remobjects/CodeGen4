@@ -407,7 +407,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		// not needed
 	}
 
-	func cppGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
+	func cppGenerateDefinitionParameters(parameters: List<CGParameterDefinition>, header: Boolean) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			if p > 0 {
@@ -426,7 +426,13 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				default: 
 			}
 			Append(" ")
-			generateIdentifier(param.Name)
+			generateIdentifier(param.Name)			
+			if header {
+				if let pv = param.DefaultValue where pv != nil {			
+					Append(" = ")
+					generateExpression(pv)
+				}
+			}
 		}
 	}
 
@@ -790,7 +796,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			generateIdentifier(method.Name)
 		}
 		Append("(")
-		cppGenerateDefinitionParameters(method.Parameters)
+		cppGenerateDefinitionParameters(method.Parameters, header: header)
 		Append(")")
 		if header && isInterface {		
 			Append(" = 0")

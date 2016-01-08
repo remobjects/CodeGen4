@@ -120,7 +120,12 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	}
 	
 	override func generateImport(imp: CGImport) {
-		AppendLine("#include <\(imp.Name)>")
+
+		if imp.StaticClass != nil {
+			AppendLine("#include <\(imp.Name)>")
+		} else {
+			AppendLine("#include \"\(imp.Name)\"")
+		}
 	}
 
 	//
@@ -309,7 +314,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		generateIdentifier(property.Name)
 		if let parameters = property.Parameters where parameters.Count > 0 {
 			Append("[")
-			cppGenerateDefinitionParameters(parameters)
+			cppGenerateDefinitionParameters(parameters, header: true)
 			Append("]")
 		}
 		Append(" = {")
