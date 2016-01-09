@@ -65,7 +65,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
 		Append("if (")
 		generateExpression(statement.Condition)
-		AppendLine(" )")
+		AppendLine(")")
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.IfStatement)
 		if let elseStatement = statement.ElseStatement {
 			AppendLine("else")
