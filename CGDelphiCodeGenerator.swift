@@ -460,42 +460,42 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 
-	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
-		Append("if ")
-		generateExpression(statement.Condition)
-		Append(" then")
-		var b = true;
-		if let statement1 = statement.IfStatement as? CGBeginEndBlockStatement { b = false }
-		if let elseStatement1 = statement.ElseStatement { b = false; }
-		if b {
-			/*generate code like
-				if Result then
-					System.Inc(fCurrentIndex)
-				instead of
-				if Result then begin
-					System.Inc(fCurrentIndex)
-				end;
-			works only if else statement isn't used
-			otherwise need to add global variable and handle it in "generateStatementTerminator"
-			*/
-			generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.IfStatement)
-		} else {
-			AppendLine(" begin")
-			incIndent()
-			generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
-			decIndent()
-			Append("end")
-			if let elseStatement = statement.ElseStatement {
-				AppendLine()
-				AppendLine("else begin")
-				incIndent()
-				generateStatementSkippingOuterBeginEndBlock(elseStatement)
-				decIndent()
-				Append("end")
-			}
-			generateStatementTerminator()
-		}
-	}
+//	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+//		Append("if ")
+//		generateExpression(statement.Condition)
+//		Append(" then")
+//		var b = true;
+//		if let statement1 = statement.IfStatement as? CGBeginEndBlockStatement { b = false }
+//		if let elseStatement1 = statement.ElseStatement { b = false; }
+//		if b {
+//			/*generate code like
+//				if Result then
+//					System.Inc(fCurrentIndex)
+//				instead of
+//				if Result then begin
+//					System.Inc(fCurrentIndex)
+//				end;
+//			works only if else statement isn't used
+//			otherwise need to add global variable and handle it in "generateStatementTerminator"
+//			*/
+//			generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.IfStatement)
+//		} else {
+//			AppendLine(" begin")
+//			incIndent()
+//			generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
+//			decIndent()
+//			Append("end")
+//			if let elseStatement = statement.ElseStatement {
+//				AppendLine()
+//				AppendLine("else begin")
+//				incIndent()
+//				generateStatementSkippingOuterBeginEndBlock(elseStatement)
+//				decIndent()
+//				Append("end")
+//			}
+//			generateStatementTerminator()
+//		}
+//	}
 
 	override func generateSwitchStatement(statement: CGSwitchStatement) {
 		Append("case ")
