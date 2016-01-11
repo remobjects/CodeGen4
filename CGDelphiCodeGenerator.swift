@@ -506,7 +506,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			generateExpression(c.CaseExpression)
 			Append(": ")
 			var b = false;
-			if (c.Statements.Count == 1) && !(c.Statements[0] is CGBeginEndBlockStatement) { b = true}
+//			if (c.Statements.Count == 1) && !(c.Statements[0] is CGBeginEndBlockStatement) { b = true}
 			if b {
 				/*optimization: generate code like
 					case x of
@@ -574,7 +574,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 					generateTypeReference(type)
 					Append(" do ")
 					var b1 = false;
-					if (b.Statements.Count == 1) && !(b.Statements[0] is CGBeginEndBlockStatement) { b1 = true}
+//					if (b.Statements.Count == 1) && !(b.Statements[0] is CGBeginEndBlockStatement) { b1 = true}
 					if b1 {
 						//optimization
 						AppendLine()
