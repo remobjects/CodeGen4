@@ -672,29 +672,25 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
-		for var p = 0; p < parameters.Count; p++ {
-			let param = parameters[p]
-			if p > 0 {
-				Append("; ")
-			}
+		helpGenerateCommaSeparatedList(parameters, separator: { self.Append("; ") }) { param in	
 			if let exp = param.`Type` as? CGConstantTypeReference {			
-				Append("const ")
+				self.Append("const ")
 			}
 			else {
 				switch param.Modifier {
-					case .Var: Append("var ")
-					case .Const: Append("const ")
-					case .Out: Append("out ")
-					case .Params: Append("params ") //todo: Oxygene ony?
+					case .Var: self.Append("var ")
+					case .Const: self.Append("const ")
+					case .Out: self.Append("out ")
+					case .Params: self.Append("params ") //todo: Oxygene ony?
 					default:
 				}
 			}
-			generateIdentifier(param.Name)
-			Append(": ")
-			generateTypeReference(param.`Type`)
+			self.generateIdentifier(param.Name)
+			self.Append(": ")
+			self.generateTypeReference(param.`Type`)
 			if let defaultValue = param.DefaultValue {
-				Append(" = ")
-				generateExpression(defaultValue)
+				self.Append(" = ")
+				self.generateExpression(defaultValue)
 			}
 		}
 	}
@@ -917,18 +913,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("enum (")
-		for var m: Int32 = 0; m < type.Members.Count; m++ {
-			if let member = type.Members[m] as? CGEnumValueDefinition {
-				if m > 0 {
-					Append(", ")
-				}
-				generateIdentifier(member.Name)
+		
+		helpGenerateCommaSeparatedList(type.Members) { m in
+			if let member = m as? CGEnumValueDefinition {
+				self.generateIdentifier(member.Name)
 				if let value = member.Value {
-					Append(" = ")
-					generateExpression(value)
+					self.Append(" = ")
+					self.generateExpression(value)
 				}
 			}
 		}
+		
 		Append(")")
 		if let baseType = type.BaseType {
 			Append(" of ")

@@ -30,6 +30,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	public init() {
+		super.init()
 		// from http://en.cppreference.com/w/cpp/keyword
 		keywords = ["alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", 
 		"case", "catch", "char", "char16_t", "char32_t", "class", "compl", "concept", "const", 
@@ -408,31 +409,28 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cppGenerateDefinitionParameters(parameters: List<CGParameterDefinition>, header: Boolean) {
-		for var p = 0; p < parameters.Count; p++ {
-			let param = parameters[p]
-			if p > 0 {
-				Append(", ")
-			}
+		helpGenerateCommaSeparatedList(parameters) {	param in
 			switch param.Modifier {
-				case .Const: Append("const ")
-				case .Var:   Append("/* var */ ")
-				case .Out:   Append("/* out */ ")				
+				case .Const: self.Append("const ")
+				case .Var:   self.Append("/* var */ ")
+				case .Out:   self.Append("/* out */ ")				
 				default:
 			}
-			generateTypeReference(param.`Type`)
+			self.generateTypeReference(param.`Type`)
 			switch param.Modifier {
-				case .Var: Append(" &")
-				case .Out: Append(" &")
+				case .Var: self.Append(" &")
+				case .Out: self.Append(" &")
 				default: 
 			}
-			Append(" ")
-			generateIdentifier(param.Name)			
+			self.Append(" ")
+			self.generateIdentifier(param.Name)			
 			if header {
 				if let pv = param.DefaultValue where pv != nil {			
-					Append(" = ")
-					generateExpression(pv)
+					self.Append(" = ")
+					self.generateExpression(pv)
 				}
 			}
+
 		}
 	}
 

@@ -343,18 +343,16 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		generateIdentifier(type.Name)
 		Append(" = ")
 		Append("(")
-		for var m: Int32 = 0; m < type.Members.Count; m++ {
-			if let member = type.Members[m] as? CGEnumValueDefinition {
-				if m > 0 {
-					Append(", ")
-				}
-				generateIdentifier(member.Name)
+		helpGenerateCommaSeparatedList(type.Members) { m in
+			if let member = m as? CGEnumValueDefinition {
+				self.generateIdentifier(member.Name)
 				if let value = member.Value {
-					Append(" = ")
-					generateExpression(value)
+					self.Append(" = ")
+					self.generateExpression(value)
 				}
 			}
 		}
+
 		Append(")")
 		if let baseType = type.BaseType {
 			Append(" of ")
