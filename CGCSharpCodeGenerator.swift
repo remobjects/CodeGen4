@@ -798,19 +798,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		
-		for var m = 0; m < type.Members.Count; m++ {
-			if let member = type.Members[m] as? CGEnumValueDefinition {
-				if m > 0 {
-					AppendLine(",")
-				}
-				generateIdentifier(member.Name)
+		helpGenerateCommaSeparatedList(type.Members) {m in
+			if let member = m as? CGEnumValueDefinition {
+				self.generateIdentifier(member.Name)
 				if let value = member.Value {
-					Append(" = ")
-					generateExpression(value)
+					self.Append(" = ")
+					self.generateExpression(value)
 				}
 			}
 		}
+
 		AppendLine()
 		
 		decIndent()
