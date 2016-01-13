@@ -731,7 +731,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		let isCtor = (method as? CGConstructorDefinition) != nil;
 		let isDtor = (method as? CGDestructorDefinition) != nil;
 		let isInterface = (type as? CGInterfaceTypeDefinition) != nil;
-		let isGlobal = type == CGGlobalTypeDefinition.GlobalType;
+		let isGlobal = type == CGGlobalTypeDefinition.GlobalType;		
 		if header {
 			if method.Static {
 				if isCBuilder()	{			
@@ -768,10 +768,14 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 		}
 		if let conversion = method.CallingConvention {
-
-			cppGenerateCallingConversion(conversion)		}
-		if isCtor {			
+			cppGenerateCallingConversion(conversion)		
+		}
+		if isCtor {		
 			if !header {
+				if let namespace = currentUnit.Namespace {
+					generateIdentifier(namespace.Name)
+					Append("::")
+				}
 				generateIdentifier(type.Name)
 				Append("::")
 			}
@@ -783,9 +787,25 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		} else if isDtor {
 			Append("~")
-			generateIdentifier(uppercaseFirstletter(type.Name));
-		} else {
 			if !header {
+				if let namespace = currentUnit.Namespace {
+					generateIdentifier(namespace.Name)
+					Append("::")
+				}
+			}
+			if let namespace = currentUnit.Namespace {
+				generateIdentifier(namespace.Name)
+				Append("::")
+			}
+			generateIdentifier(uppercaseFirstletter(type.Name));
+		} else {	
+			if !header {
+				if !(isGlobal && (method.Visibility == .Private)) {
+					if let namespace = currentUnit.Namespace {
+						generateIdentifier(namespace.Name)
+						Append("::")
+					}
+				}
 				if !isGlobal {			
 					generateIdentifier(type.Name)
 					Append("::")

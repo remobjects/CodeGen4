@@ -23,7 +23,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		for g in currentUnit.Globals {
 			var visibility: CGMemberVisibilityKind = .Unspecified;
  			if let method = g as? CGGlobalFunctionDefinition {			
-				visibility = method.Function.Visibility;
+				visibility = .Unit;
 			}
  			if let variable = g as? CGGlobalVariableDefinition {			
 				visibility = variable.Variable.Visibility;
