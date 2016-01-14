@@ -480,4 +480,7 @@ public class CGAttribute: CGEntity {
 		`Type` = type
 		Parameters = parameters
 	}
+	public convenience init(_ type: CGTypeReference,_ parameters: CGCallParameter...) {
+		init(type, parameters.ToList())
+	}
 }
