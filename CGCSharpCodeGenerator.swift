@@ -650,9 +650,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
 		if ch <= 0xffff {
-			return "\\u\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4))"
+			return "\\u\(Sugar.Convert.ToHexString(Integer(ch), 4))"
 		} else {
-			return "\\U\(Sugar.Cryptography.Utils.ToHexString(Integer(ch), 8))"
+			return "\\U\(Sugar.Convert.ToHexString(Integer(ch), 8))"
 		}
 	}
 

@@ -277,7 +277,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	}
 	
 	internal func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
-		return "\\U"+Sugar.Cryptography.Utils.ToHexString(Integer(ch), 8) // plain C: always use 8 hex digits with "\U"
+		return "\\U"+Sugar.Convert.ToHexString(Integer(ch), 8) // plain C: always use 8 hex digits with "\U"
 	}
 
 	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
