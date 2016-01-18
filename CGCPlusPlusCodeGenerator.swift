@@ -786,17 +786,13 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				generateIdentifier(uppercaseFirstletter(type.Name))
 			}
 		} else if isDtor {
-			Append("~")
 			if !header {
 				if let namespace = currentUnit.Namespace {
 					generateIdentifier(namespace.Name)
 					Append("::")
 				}
 			}
-			if let namespace = currentUnit.Namespace {
-				generateIdentifier(namespace.Name)
-				Append("::")
-			}
+			Append("~")
 			generateIdentifier(uppercaseFirstletter(type.Name));
 		} else {	
 			if !header {

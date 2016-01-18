@@ -54,10 +54,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	}
 		
 	override func generateFooter(){
-		var lnamespace = "";
-		if let namespace = currentUnit.Namespace {
-			lnamespace = namespace.Name;
-		}
+		var lnamespace = currentUnit.FileName;
 		if isCBuilder() {
 			// c++Builder part
 			if let initialization = currentUnit.Initialization {
