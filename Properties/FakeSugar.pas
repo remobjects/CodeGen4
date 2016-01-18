@@ -9,7 +9,7 @@ type
   Sugar.Linq.Dummy = class;
 
   // These classes exist so that on .NET, CodeGen4 can be build w/o dependency on Sugar, by adding
-  // System.Collections.Generic,System.IO,System.Linq to the project's default uses.
+  // "System.Collections.Generic,System.IO,System.Linq,System.Text" to the project's default uses.
 
   Sugar.Convert = public static class
   public

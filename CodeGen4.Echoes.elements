@@ -13,11 +13,12 @@
         <AllowUnsafeCode>False</AllowUnsafeCode>
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+        <DefineConstants>FAKESUGAR</DefineConstants>
+        <DefaultUses>System.Collections.Generic,System.IO,System.Linq,System.Text</DefaultUses>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>false</Optimize>
         <OutputPath>.\bin\Debug</OutputPath>
-        <DefineConstants>DEBUG;TRACE;</DefineConstants>
         <GeneratePDB>True</GeneratePDB>
         <GenerateMDB>True</GenerateMDB>
         <EnableAsserts>True</EnableAsserts>
@@ -64,9 +65,6 @@
             <RequiredTargetFramework>3.5</RequiredTargetFramework>
         </Reference>
         <Reference Include="RemObjects.Elements.Dynamic">
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="Sugar">
             <Private>True</Private>
         </Reference>
     </ItemGroup>
