@@ -304,7 +304,7 @@ public __abstract class CGCodeGenerator {
 		
 		if omitNamespacePrefixes && !alwaysEmitNamespace {
 			if name.Contains(".") {
-				if let parts = name.Split(".") where parts.count() > 0 {
+				if let parts = name.Split(".") where length(parts) > 0 {
 					generateIdentifier(parts[length(parts)-1], escaped: escaped)
 					return
 				}
