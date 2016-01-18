@@ -11,14 +11,14 @@ type
   // These classes exist so that on .NET, CodeGen4 can be build w/o dependency on Sugar, by adding
   // System.Collections.Generic,System.IO,System.Linq to the project's default uses.
 
-  Sugar.Cryptography.Utils = public static class
+  Sugar.Convert = public static class
   public
     method ToHexString(Value: Int32; Width: Integer := 0): String;
   end;
 
 implementation
 
-method Sugar.Cryptography.Utils.ToHexString(Value: Int32; Width: Integer): String;
+method Sugar.Convert.ToHexString(Value: Int32; Width: Integer): String;
 begin
   if Width mod 2 ≠ 0 then Width := Width+1;
 
