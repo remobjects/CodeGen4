@@ -128,23 +128,20 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	}
 
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
-//		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
-//			Append("@synthesize ")
-//			generateIdentifier(property.Name)
-//			// 32-bit OS X Objective-C needs properies explicitly synthesized
-//			Append(" = __p_")
-//			generateIdentifier(property.Name, escaped: false)
-//			AppendLine(";")
-//		} else {
-//			if let method = property.GetterMethodDefinition() {
-//				method.Name = property.Name
-//				generateMethodDefinition(method, type: type)
-//			}
-//			if let method = property.SetterMethodDefinition() {
-//				method.Name = "set"+uppercaseFirstletter(property.Name)
-//				generateMethodDefinition(method, type: type)
-//			}
-//		}
+		if let getStatements = property.GetStatements, method = property.GetterMethodDefinition() {
+			method.Name = "get__" + property.Name
+			if isCBuilder() {			
+				method.CallingConvention = .Register
+			}
+			generateMethodDefinition(method, type: type)
+		}
+		if let setStatements = property.SetStatements,  method = property.SetterMethodDefinition() {
+			method.Name = "set__" + uppercaseFirstletter(property.Name)
+			if isCBuilder() {			
+				method.CallingConvention = .Register
+			}
+			generateMethodDefinition(method, type: type)
+		}
 	}
 	
 	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {

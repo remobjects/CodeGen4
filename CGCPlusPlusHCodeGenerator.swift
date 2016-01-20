@@ -260,17 +260,17 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	
 	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(method, type: type, header: true)
-		Append(";")
+		AppendLine(";")
 	}
 
 	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(ctor, type: type, header: true)
-		Append(";")
+		AppendLine(";")
 	}
 
 	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(dtor, type: type, header: true)
-		Append(";")
+		AppendLine(";")
 	}
 	
 	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -348,7 +348,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 				generateExpression(setExpression)
 			}
 		}
-		Append("};")
+		AppendLine("};")
 	}
 
 	internal final func cppHGenerateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition, lastVisibility: CGMemberVisibilityKind) {
@@ -386,17 +386,73 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			super.generateTypeMembers(type);
 		}
 		else {
-			var lastMember: CGMemberDefinition? = nil
-			var lastVisibility: CGMemberVisibilityKind = CGMemberVisibilityKind.Unspecified;
-			for m in type.Members {
-				if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
-					AppendLine()
+//			var lastMember: CGMemberDefinition? = nil
+//			var lastVisibility: CGMemberVisibilityKind = CGMemberVisibilityKind.Unspecified;
+//			for m in type.Members {
+//				if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
+//					AppendLine()
+//				}
+//				cppHGenerateTypeMember(m, type: type, lastVisibility: lastVisibility);
+//				lastMember = m;
+//				lastVisibility = m.Visibility;
+//			}
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unspecified)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
+			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
+		}
+	}
+
+	func cppGeneratePropertyAccessorDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+		if !definitionOnly {
+			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+				if isCBuilder() {			
+					getterMethod.CallingConvention = .Register					
 				}
-				cppHGenerateTypeMember(m, type: type, lastVisibility: lastVisibility);
-				lastMember = m;
-				lastVisibility = m.Visibility;
+				getterMethod.Visibility = .Private
+				generateMethodDefinition(getterMethod, type: type)
+			}
+			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+				if isCBuilder() {			
+					setterMethod.CallingConvention = .Register
+				}
+				setterMethod.Visibility = .Private
+				generateMethodDefinition(setterMethod!, type: type)
 			}
 		}
 	}
+
+    final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
+        var first = true
+        for m in type.Members {
+            if visibility == CGMemberVisibilityKind.Private {
+                if let m = m as? CGPropertyDefinition {
+                    cppGeneratePropertyAccessorDefinition(m, type: type)
+                }
+            }
+            if let visibility = visibility {
+				if m.Visibility == visibility {
+					if first {
+						decIndent()
+						if visibility != CGMemberVisibilityKind.Unspecified {
+							cppHGenerateMemberVisibilityPrefix(visibility)							
+						}
+						first = false
+						incIndent()
+					}
+					generateTypeMember(m, type: type)
+				}
+            } else {
+                generateTypeMember(m, type: type)
+            }			
+        }
+    }
 
 }
