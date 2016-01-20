@@ -160,7 +160,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateContinueStatement(statement: CGContinueStatement) {
-		Append("continue;")
+		Append("continue")
 		generateStatementTerminator()
 	}
 

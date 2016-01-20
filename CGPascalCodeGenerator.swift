@@ -391,7 +391,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateBreakStatement(statement: CGBreakStatement) {
-		AppendLine("break:")
+		Append("break")
+		generateStatementTerminator()
 	}
 
 	override func generateContinueStatement(statement: CGContinueStatement) {
