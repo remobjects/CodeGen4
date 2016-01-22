@@ -1181,7 +1181,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	func cSharpGenerateSuffixForNullability(type: CGTypeReference) {
-		if type.DefaultNullability == CGTypeNullabilityKind.NotNullable {
+		if type.DefaultNullability == CGTypeNullabilityKind.NotNullable || (type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped && Dialect == CGCSharpCodeGeneratorDialect.Hydrogene) {
 			//Append("/*default not null*/")
 			if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
 				Append("?")

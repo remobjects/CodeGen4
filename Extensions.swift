@@ -7,8 +7,8 @@ public extension Sugar.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
-		return CGNamedTypeReference(self, defaultNullability: defaultNullability)
+	public func AsTypeReference(nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
 	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
@@ -47,8 +47,8 @@ public extension RemObjects.Elements.System.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(defaultNullability: CGTypeNullabilityKind) -> CGTypeReference {
-		return CGNamedTypeReference(self, defaultNullability: defaultNullability)
+	public func AsTypeReference(nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
 	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
