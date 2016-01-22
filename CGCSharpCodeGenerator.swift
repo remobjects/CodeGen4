@@ -1053,14 +1053,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} 
 
 		func appendGet() {
-			self.Append(" ")
 			if let v = property.GetterVisibility {
 				self.cSharpGenerateMemberTypeVisibilityPrefix(v)
 			}
 			self.Append("get")
 		}
 		func appendSet() {
-			self.Append(" ")
 			if let v = property.SetterVisibility {
 				self.cSharpGenerateMemberTypeVisibilityPrefix(v)
 			} 
@@ -1097,9 +1095,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				Append("{ ")
 				if property.GetStatements != nil || property.GetExpression != nil {
 					appendGet()
+					Append("; ")
 				}
 				if property.SetStatements != nil || property.SetExpression != nil {
 					appendSet()
+					Append("; ")
 				}
 				Append("}")
 				AppendLine()
@@ -1112,6 +1112,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			
 			if let getStatements = property.GetStatements {
 				appendGet()
+				AppendLine()
 				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(getStatements)
@@ -1119,6 +1120,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				AppendLine("}")
 			} else if let getExpresssion = property.GetExpression {
 				appendGet()
+				AppendLine()
 				AppendLine("{")
 				incIndent()
 				generateStatement(CGReturnStatement(getExpresssion))
@@ -1128,6 +1130,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			
 			if let setStatements = property.SetStatements {
 				appendSet()
+				AppendLine()
 				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(setStatements)
@@ -1135,6 +1138,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				AppendLine("}")
 			} else if let setExpression = property.SetExpression {
 				appendSet()
+				AppendLine()
 				AppendLine("{")
 				incIndent()
 				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
