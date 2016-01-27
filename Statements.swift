@@ -241,7 +241,15 @@ public class CGReturnStatement: CGStatement {
 	
 	public init() {
 	}
-	public init(_ value: CGExpression?) {
+	public init(_ value: CGExpression) {
+		Value = value
+	}
+}
+
+public class CGYieldStatement: CGStatement {
+	public var Value: CGExpression
+	
+	public init(_ value: CGExpression) {
 		Value = value
 	}
 }

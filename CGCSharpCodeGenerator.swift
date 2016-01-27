@@ -227,6 +227,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	override func generateYieldStatement(statement: CGYieldStatement) {
+		Append("yield ")
+		generateExpression(statement.Value)
+		generateStatementTerminator()
+	}
+
 	override func generateThrowStatement(statement: CGThrowStatement) {
 		if let value = statement.Exception {
 			Append("throw ")

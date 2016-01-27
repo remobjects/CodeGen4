@@ -448,6 +448,8 @@ public __abstract class CGCodeGenerator {
 			generateTryFinallyCatchStatement(statement)
 		} else if let statement = statement as? CGReturnStatement {
 			generateReturnStatement(statement)
+		} else if let statement = statement as? CGYieldStatement {
+			generateYieldStatement(statement)
 		} else if let statement = statement as? CGThrowStatement {
 			generateThrowStatement(statement)
 		} else if let statement = statement as? CGBreakStatement {
@@ -595,6 +597,11 @@ public __abstract class CGCodeGenerator {
 	internal func generateReturnStatement(statement: CGReturnStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateReturnStatement not implemented")
+	}
+
+	internal func generateYieldStatement(statement: CGYieldStatement) {
+		// descendant must override this or generateImports()
+		assert(false, "generateYieldStatement not implemented")
 	}
 
 	internal func generateThrowStatement(statement: CGThrowStatement) {

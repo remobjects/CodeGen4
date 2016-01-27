@@ -248,6 +248,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	override func generateYieldStatement(statement: CGYieldStatement) {
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+			Append("__yield ")
+			generateExpression(statement.Value)
+			AppendLine()
+		} else {
+			assert(false, "generateTryFinallyCatchStatement is not supported in Swift, except in Silver")
+		}
+	}
+
 	override func generateThrowStatement(statement: CGThrowStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			if let value = statement.Exception {

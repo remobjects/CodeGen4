@@ -97,6 +97,12 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
+	override func generateYieldStatement(statement: CGYieldStatement) {
+		Append("yield ")
+		generateExpression(statement.Value)
+		AppendLine(";")
+	}
+
 	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
 		Append("var ")
 		generateIdentifier(statement.Name)
