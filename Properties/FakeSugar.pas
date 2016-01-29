@@ -14,6 +14,7 @@ type
   Sugar.Convert = public static class
   public
     method ToHexString(Value: Int32; Width: Integer := 0): String;
+    method ToString(Value: Int32; Base: Integer := 10): String;
   end;
 
 implementation
@@ -43,6 +44,11 @@ begin
     result := result + chr(55 + Num + (((Num - 10) shr 31) and -7));
     
   end;
+end;
+
+method Sugar.Convert.ToString(Value: Int32; Base: Integer): String;
+begin
+  result := System.Convert.ToString(Value, Base);
 end;
 
 end.

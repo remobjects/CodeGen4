@@ -90,6 +90,10 @@ public extension Integer {
 	public func AsLiteralExpression() -> CGIntegerLiteralExpression {
 		return CGIntegerLiteralExpression(self)
 	}
+	//74375: Can't overload extension method, compiler claims signatures are same.
+	/*public func AsLiteralExpression(# base: Int32) -> CGIntegerLiteralExpression {
+		return CGIntegerLiteralExpression(self, base: base)
+	}*/
 }
 
 public extension Single {

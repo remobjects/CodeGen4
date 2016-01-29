@@ -674,6 +674,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
+	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("new[] ")
 		Append("{")

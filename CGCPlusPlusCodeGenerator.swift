@@ -547,6 +547,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
+	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		if isCBuilder() {	
 			if array.ArrayKind == .Dynamic {				
@@ -563,8 +569,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					Append("ARRAYOFCONST((")
 				}
 				helpGenerateCommaSeparatedList(array.Elements) { e in
-                        self.generateExpression(e)
-                }
+						self.generateExpression(e)
+				}
 				Append(")")
 				Append(")")
 				return;				
@@ -572,8 +578,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append("[")
 		helpGenerateCommaSeparatedList(array.Elements) { e in
-        	self.generateExpression(e)
-        }
+			self.generateExpression(e)
+		}
 		Append("]")
 	}
 
@@ -585,8 +591,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if expression.Elements.Count > 0 {
 			Append(" << ")
 			helpGenerateCommaSeparatedList(expression.Elements) { e in
-                    self.generateExpression(e)
-            }
+					self.generateExpression(e)
+			}
 		}
 	}
 
@@ -824,7 +830,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					generateTypeReference(classtype.Ancestors[0],ignoreNullability: true)
 					Append("(")
 					var processed = false;
-			        for s in method.Statements {
+					for s in method.Statements {
 						if let ctorCall = s as? CGConstructorCallStatement {
 							cppGenerateCallParameters(ctorCall.Parameters);
 							processed = true;

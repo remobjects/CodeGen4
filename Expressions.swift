@@ -379,8 +379,9 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 	}	
 }
 
-public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
+public class CGIntegerLiteralExpression: CGLiteralExpression {
 	public var Value: Int64 = 0
+	public var Base = 10 
 
 	public static lazy let Zero: CGIntegerLiteralExpression = 0.AsLiteralExpression()
 
@@ -389,9 +390,13 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public init(_ value: Int64) {
 		Value = value
 	}
+	public init(_ value: Int64, # base: Int32) {
+		Value = value
+		Base = base
+	}
 
-	override var StringRepresentation: String {
-		return Value.ToString() 
+	internal func StringRepresentation(# base: Int32) -> String {
+		return Sugar.Convert.ToString(Value, base)
 	}
 }
 

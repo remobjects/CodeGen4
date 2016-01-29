@@ -288,6 +288,14 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("'\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))'")
 	}
 
+	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
+		switch expression.Base {
+			case 16: Append("0x"+expression.StringRepresentation(base:16))
+			case 8: Append("0"+expression.StringRepresentation(base:16))
+			default: Append(expression.StringRepresentation(base:10))
+		}
+	}
+
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {
 		generateTypeReference(type.`Type`)
 		Append("*")
