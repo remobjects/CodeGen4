@@ -130,9 +130,11 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine("{")
 		incIndent()
 		for c in statement.Cases {
-			Append("case ")
-			generateExpression(c.CaseExpression)
-			AppendLine(":")
+			for e in c.CaseExpressions {
+				Append("case ")
+				generateExpression(e)
+				AppendLine(":")
+			}
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
 		}
 		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {

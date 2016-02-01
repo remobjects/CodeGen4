@@ -1426,7 +1426,7 @@ public __abstract class CGCodeGenerator {
 		lastStartLocation = startLocation // keep this as possible indent for the next round
 	}
 
-	public static final func uppercaseFirstletter(name: String) -> String {
+	public static final func uppercaseFirstLetter(name: String) -> String {
 		var name = name
 		if length(name) >= 1 {
 			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
@@ -1434,11 +1434,13 @@ public __abstract class CGCodeGenerator {
 		return name
 	}
 	
-	public static final func lowercasecaseFirstletter(name: String) -> String {
+	public static final func lowercaseFirstLetter(name: String) -> String {
 		//todo: maybe  not lowercase if second letter is also uppercase?
 		var name = name
 		if length(name) >= 1 {
-			name = name.Substring(0, 1).ToLower()+name.Substring(1)
+			//if length(name) < 2 || String(name[2]) != String(name[2]).ToUpper() {
+				name = name.Substring(0, 1).ToLower()+name.Substring(1)
+			//}
 		}
 		return name
 	}

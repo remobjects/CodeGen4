@@ -123,9 +123,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine()
 		incIndent()
 		for c in statement.Cases {
-			//Ranhge wous use "Case 1 To 5"
+			//Range would use "Case 1 To 5"
 			Append("Case ")
-			generateExpression(c.CaseExpression)
+			helpGenerateCommaSeparatedList(c.CaseExpressions) {
+				self.generateExpression($0)
+			}
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
 			decIndent()

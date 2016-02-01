@@ -786,10 +786,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				Append("::")
 			}
 			if let lname = method.Name where lname != "" {
-				generateIdentifier(uppercaseFirstletter(lname))
+				generateIdentifier(uppercaseFirstLetter(lname))
 			}
 			else {
-				generateIdentifier(uppercaseFirstletter(type.Name))
+				generateIdentifier(uppercaseFirstLetter(type.Name))
 			}
 		} else if isDtor {
 			if !header {
@@ -799,7 +799,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				}
 			}
 			Append("~")
-			generateIdentifier(uppercaseFirstletter(type.Name));
+			generateIdentifier(uppercaseFirstLetter(type.Name));
 		} else {	
 			if !header {
 				if !(isGlobal && (method.Visibility == .Private)) {

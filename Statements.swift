@@ -183,15 +183,23 @@ public class CGSwitchStatement: CGStatement {
 }
 
 public class CGSwitchStatementCase : CGEntity {
-	public var CaseExpression: CGExpression
+	public var CaseExpressions: List<CGExpression>
 	public var Statements: List<CGStatement>
 
 	public init(_ caseExpression: CGExpression, _ statements: List<CGStatement>) {
-		CaseExpression = caseExpression
+		CaseExpressions = List<CGExpression>()
+		CaseExpressions.Add(caseExpression)
+		Statements = statements
+	}
+	public init(_ caseExpressions: List<CGExpression>, _ statements: List<CGStatement>) {
+		CaseExpressions = caseExpressions
 		Statements = statements
 	}
 	public convenience init(_ caseExpression: CGExpression, _ statements: CGStatement...) {
 		init(caseExpression, statements.ToList())
+	}
+	public convenience init(_ caseExpressions: List<CGExpression>, _ statements: CGStatement...) {
+		init(caseExpressions, statements.ToList())
 	}
 }
 

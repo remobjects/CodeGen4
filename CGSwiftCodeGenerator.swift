@@ -147,7 +147,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		incIndent()
 		for c in statement.Cases {
 			Append("case ")
-			generateExpression(c.CaseExpression)
+			helpGenerateCommaSeparatedList(c.CaseExpressions) {
+				self.generateExpression($0)
+			}
 			AppendLine(":")
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
 		}
@@ -1461,6 +1463,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if name.ToLower().StartsWith("with") {
 			name = name.Substring(4)
 		}
-		return lowercasecaseFirstletter(name)
+		return lowercaseFirstLetter(name)
 	}
 }

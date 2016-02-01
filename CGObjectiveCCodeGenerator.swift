@@ -192,7 +192,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(" init")
 		if let name = statement.ConstructorName {
-			generateIdentifier(uppercaseFirstletter(name))
+			generateIdentifier(uppercaseFirstLetter(name))
 		}
 		objcGenerateCallParameters(statement.Parameters)
 		Append("]")
@@ -444,7 +444,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		generateExpression(expression.`Type`, ignoreNullability:true)
 		Append(" alloc] init")
 		if let name = expression.ConstructorName {
-			generateIdentifier(uppercaseFirstletter(name))
+			generateIdentifier(uppercaseFirstLetter(name))
 		}
 		objcGenerateCallParameters(expression.Parameters)
 		Append("]")
@@ -640,7 +640,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		
 		if let ctor = method as? CGConstructorDefinition {
 			Append("(instancetype)init")
-			generateIdentifier(uppercaseFirstletter(ctor.Name))
+			generateIdentifier(uppercaseFirstLetter(ctor.Name))
 		} else {
 			Append("(")
 			if let returnType = method.ReturnType {

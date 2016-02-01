@@ -22,10 +22,10 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		var lastGlobal: CGGlobalDefinition? = nil
 		for g in currentUnit.Globals {
 			var visibility: CGMemberVisibilityKind = .Unspecified;
- 			if let method = g as? CGGlobalFunctionDefinition {			
+			 if let method = g as? CGGlobalFunctionDefinition {			
 				visibility = .Unit;
 			}
- 			if let variable = g as? CGGlobalVariableDefinition {			
+			 if let variable = g as? CGGlobalVariableDefinition {			
 				visibility = variable.Variable.Visibility;
 			}
 			// generate only .Unit & .Private visibility
@@ -136,7 +136,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 			generateMethodDefinition(method, type: type)
 		}
 		if let setStatements = property.SetStatements,  method = property.SetterMethodDefinition() {
-			method.Name = "set__" + uppercaseFirstletter(property.Name)
+			method.Name = "set__" + uppercaseFirstLetter(property.Name)
 			if isCBuilder() {			
 				method.CallingConvention = .Register
 			}

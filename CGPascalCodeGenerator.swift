@@ -289,7 +289,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine(" of")
 		incIndent()
 		for c in statement.Cases {
-			generateExpression(c.CaseExpression)
+			helpGenerateCommaSeparatedList(c.CaseExpressions) {
+				self.generateExpression($0)
+			}
 			AppendLine(": begin")
 			incIndent()
 			incIndent()
