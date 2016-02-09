@@ -1478,7 +1478,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
@@ -1487,24 +1487,24 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateTypeReference(type.`Type`)
 	}
 
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateKindOfTypeReference is not supported in base Pascal, only Oxygene")
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateSetTypeReference(setType: CGSetTypeReference) {
+	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		Append("set of ")
 		generateTypeReference(setType.`Type`, ignoreNullability: true)
 	}
 
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateArrayTypeReference(array: CGArrayTypeReference) {
+	override func generateArrayTypeReference(array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		Append("array")
 		if let bounds = array.Bounds where bounds.Count > 0 {
 			Append("[")
@@ -1525,7 +1525,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateTypeReference(array.`Type`)
 	}
 
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateDictionaryTypeReference is not supported in Pascal")
 	}
 }

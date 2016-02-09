@@ -451,11 +451,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 	*/
 	
-	override func generateSetTypeReference(type: CGSetTypeReference) {
+	override func generateSetTypeReference(type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateSequenceTypeReference(type: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
@@ -938,7 +938,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
@@ -946,19 +946,19 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 	
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
+	override func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 }

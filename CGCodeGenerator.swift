@@ -1268,23 +1268,23 @@ public __abstract class CGCodeGenerator {
 		} else if let type = type as? CGPredefinedTypeReference {
 			generatePredefinedTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGInlineBlockTypeReference {
-			generateInlineBlockTypeReference(type)
+			generateInlineBlockTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPointerTypeReference {
 			generatePointerTypeReference(type)
 		} else if let type = type as? CGConstantTypeReference {
-			generateConstantTypeReference(type)
+			generateConstantTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGKindOfTypeReference {
-			generateKindOfTypeReference(type)
+			generateKindOfTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGTupleTypeReference {
-			generateTupleTypeReference(type)
+			generateTupleTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSetTypeReference {
-			generateSetTypeReference(type)
+			generateSetTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSequenceTypeReference {
-			generateSequenceTypeReference(type)
+			generateSequenceTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGArrayTypeReference {
-			generateArrayTypeReference(type)
+			generateArrayTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGDictionaryTypeReference {
-			generateDictionaryTypeReference(type)
+			generateDictionaryTypeReference(type, ignoreNullability: ignoreNullability)
 		}
 		
 		else {
@@ -1359,7 +1359,7 @@ public __abstract class CGCodeGenerator {
 		}		
 	}
 	
-	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference not implemented")
 	}
 	
@@ -1367,32 +1367,32 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generatPointerTypeReference not implemented")
 	}
 	
-	internal func generateConstantTypeReference(type: CGConstantTypeReference) {
+	internal func generateConstantTypeReference(type: CGConstantTypeReference, ignoreNullability: Boolean = false) {
 		// override if the language supports const types
 		generateTypeReference(type.`Type`)
 	}
 	
-	internal func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	internal func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generatKindOfTypeReference not implemented")
 	}
 	
-	internal func generateTupleTypeReference(type: CGTupleTypeReference) {
+	internal func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateTupleTypeReference not implemented")
 	}
 	
-	internal func generateSetTypeReference(type: CGSetTypeReference) {
+	internal func generateSetTypeReference(type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference not implemented")
 	}
 	
-	internal func generateSequenceTypeReference(type: CGSequenceTypeReference) {
+	internal func generateSequenceTypeReference(type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference not implemented")
 	}
 	
-	internal func generateArrayTypeReference(type: CGArrayTypeReference) {
+	internal func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateArrayTypeReference not implemented")
 	}
 	
-	internal func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	internal func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateDictionaryTypeReference not implemented")
 	}
 	

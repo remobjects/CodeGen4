@@ -521,11 +521,11 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateSetTypeReference(setType: CGSetTypeReference) {
+	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Java")
 	}
 
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in Javar")
 	}
 
@@ -950,7 +950,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		Append("delegate ")
 		if let returnType = type.Block.ReturnType {
 			Append(" ")
@@ -969,16 +969,16 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
-	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
+	override func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		generateTypeReference(type.`Type`)
 		Append("[]")
 	}
 
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 }
