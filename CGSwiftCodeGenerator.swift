@@ -650,7 +650,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				//todo: 72081: Silver: NRE in "if let"
 				//if let constraints = param.Constraints, filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint}).ToList() where filteredConstraints.Count > 0 {
 				if let constraints = param.Constraints where constraints.Count > 0 {
-					let filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint})
+					let filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint })
 					self.Append(": ")
 					self.helpGenerateCommaSeparatedList(filteredConstraints) { constraint in
 						if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
