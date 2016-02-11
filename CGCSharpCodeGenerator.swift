@@ -706,15 +706,18 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	override func generateSetTypeReference(setType: CGSetTypeReference) {
+	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in C#")
 	}
 	
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
 			Append("ISequence<")
 			generateTypeReference(sequence.`Type`)
 			Append(">")
+			if !ignoreNullability {
+				cSharpGenerateSuffixForNullability(sequence)
+			}
 		} else {
 			assert(false, "generateSequenceTypeReference is not supported in C#, except in Hydrogene")
 		}
@@ -1252,7 +1255,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		Append("delegate ")
 		if let returnType = type.Block.ReturnType {
 			Append(" ")
@@ -1273,21 +1276,24 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
 			Append("dynamic<")
 			generateTypeReference(type.`Type`)
 			Append(">")
+			if !ignoreNullability {
+				cSharpGenerateSuffixForNullability(type)
+			}
 		} else {
 			assert(false, "generateKindOfTypeReference is not supported in C#, except in Hydrogene")
 		}
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference) {
-
+	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
+		#hint todo
 	}
 	
-	override func generateArrayTypeReference(array: CGArrayTypeReference) {
+	override func generateArrayTypeReference(array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		generateTypeReference(array.`Type`)
 		var bounds = array.Bounds.Count
 		if bounds == 0 {
@@ -1296,11 +1302,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		for var b: Int32 = 0; b < bounds; b++ {
 			Append("[]")
 		}
+		if !ignoreNullability {
+			cSharpGenerateSuffixForNullability(array)
+		}
 			
 		// bounds are not supported in C#
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 }

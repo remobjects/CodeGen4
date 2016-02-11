@@ -1371,8 +1371,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
-		swiftGenerateInlineBlockType(type.Block)
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
+		let suffix = !ignoreNullability ? swiftSuffixForNullabilityForCollectionType(type) : ""
+		if length(suffix) > 0 {
+			Append("(")
+			swiftGenerateInlineBlockType(type.Block)
+			Append(")")
+			Append(suffix)
+		} else {
+			swiftGenerateInlineBlockType(type.Block)
+		}		
 	}
 	
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {
@@ -1381,42 +1389,51 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(">")
 	}
 	
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			Append("dynamic<")
 			generateTypeReference(type.`Type`)
 			Append(">")
+			if !ignoreNullability {
+				Append(swiftSuffixForNullability(type.Nullability, defaultNullability: .NullableUnwrapped))
+			}
 		} else {
 			assert(false, "generateKindOfTypeReference is not supported in Swift, except in Silver")
 		}
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 		Append("(")
 		for var m: Int32 = 0; m < type.Members.Count; m++ {
 			if m > 0 {
 				Append(", ")
 			}
 			generateTypeReference(type.Members[m])
+			if !ignoreNullability {
+				Append(swiftSuffixForNullability(type.Nullability, defaultNullability: .NotNullable))
+			}
 		}
 		Append(")")
 	}
 	
-	override func generateSetTypeReference(setType: CGSetTypeReference) {
+	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Swift")
 	}
 	
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			Append("ISequence<")
 			generateTypeReference(sequence.`Type`)
 			Append(">")
+			if !ignoreNullability {
+				Append(swiftSuffixForNullability(sequence.Nullability, defaultNullability: .NullableUnwrapped))
+			}
 		} else {
 			assert(false, "generateSequenceTypeReference is not supported in Swift except in Silver")
 		}
 	}
 	
-	override func generateArrayTypeReference(array: CGArrayTypeReference) {
+	override func generateArrayTypeReference(array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		
 		var bounds = array.Bounds.Count
 		if bounds == 0 {
@@ -1431,6 +1448,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				for var b: Int32 = 0; b < bounds; b++ {
 					Append("[]")
 				}
+				if !ignoreNullability {
+					Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NotNullable))
+				}
 			case .HighLevel:
 				for var b: Int32 = 0; b < bounds; b++ {
 					Append("[")
@@ -1440,18 +1460,22 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				for var b: Int32 = 0; b < bounds; b++ {
 					Append("]")
 				}
+				if !ignoreNullability {
+					Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NullableUnwrapped))
+				}
 		}
-		Append(swiftSuffixForNullabilityForCollectionType(array))
 		// bounds are not supported in Swift
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 		Append("[")
 		generateTypeReference(type.KeyType)
 		Append(":")
 		generateTypeReference(type.ValueType)
 		Append("]")
-		Append(swiftSuffixForNullabilityForCollectionType(type))
+		if !ignoreNullability {
+			Append(swiftSuffixForNullabilityForCollectionType(type))
+		}
 	}
 	
 	//

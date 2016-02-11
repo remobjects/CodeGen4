@@ -960,7 +960,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}		
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		
 		let block = type.Block
 		
@@ -983,7 +983,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
-	override func generateConstantTypeReference(type: CGConstantTypeReference) {		
+	override func generateConstantTypeReference(type: CGConstantTypeReference, ignoreNullability: Boolean = false) {		
 		generateTypeReference(type.`Type`)
 		Append(" const")
 	}
@@ -993,7 +993,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 //		generateTypeReference(type.`Type`)
 //	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
+	override func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		if isCBuilder() {	
 			if type.ArrayKind == .Dynamic {		
 				Append("DynamicArray<")
@@ -1012,7 +1012,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	

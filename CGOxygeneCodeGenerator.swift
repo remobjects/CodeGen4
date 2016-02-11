@@ -528,17 +528,26 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}		
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(type)
+		}
 		pascalGenerateInlineBlockType(type.Block)
 	}
 
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(type)
+		}
 		Append("dynamic<")
 		generateTypeReference(type.`Type`)
 		Append(">")
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference) {
+	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(type)
+		}
 		Append("tuple of (")
 		for var m: Int32 = 0; m < type.Members.Count; m++ {
 			if m > 0 {
@@ -549,7 +558,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append(")")
 	}
 
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(sequence)
+		}
 		Append("sequence of ")
 		generateTypeReference(sequence.`Type`)
 	}

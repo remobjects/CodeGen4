@@ -34,9 +34,9 @@
         <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="Foundation.fx"/>
-        <Reference Include="rtl.fx"/>
-        <Reference Include="libNougat.fx"/>
+        <Reference Include="Foundation"/>
+        <Reference Include="rtl"/>
+        <Reference Include="libNougat"/>
         <Reference Include="libSugar">
             <HintPath>..\..\Xcode\DerivedData\Fire-gudanmcdbkoejsaanfhrydpjbude\Build\Products\Debug\libSugar.fx</HintPath>
         </Reference>

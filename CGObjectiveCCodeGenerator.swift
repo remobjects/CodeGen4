@@ -518,11 +518,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	override func generateSetTypeReference(setType: CGSetTypeReference) {
+	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Objective-C")
 	}
 	
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in Objective-C")
 	}
 	
@@ -735,7 +735,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}		
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference) {
+	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		
 		let block = type.Block
 		
@@ -758,16 +758,16 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference) {
+	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		Append("__kindof ")
 		generateTypeReference(type.`Type`)
 	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference) {
+	override func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference) {
+	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 }

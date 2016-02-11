@@ -44,11 +44,11 @@
         <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="rt.jar"/>
-        <Reference Include="com.remobjects.elements.rtl.jar">
+        <Reference Include="rt"/>
+        <Reference Include="cooper">
             <Private>True</Private>
         </Reference>
-        <Reference Include="sugar.jar">
+        <Reference Include="sugar">
             <Private>True</Private>
         </Reference>
     </ItemGroup>
