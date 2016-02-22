@@ -265,7 +265,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
-		Append("repeat ")
+		AppendLine("repeat")
 		incIndent()
 		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
 		decIndent()
