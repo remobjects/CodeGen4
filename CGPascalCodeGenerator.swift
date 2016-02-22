@@ -242,6 +242,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.EndValue)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		generateStatementTerminator()
 	}
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
@@ -255,6 +256,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.Collection)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		generateStatementTerminator()
 	}
 
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
@@ -262,6 +264,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.Condition)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		generateStatementTerminator()
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
@@ -275,6 +278,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		} else {
 			generateExpression(CGUnaryOperatorExpression.NotExpression(statement.Condition))
 		}
+		generateStatementTerminator()
 	}
 
 	/*
