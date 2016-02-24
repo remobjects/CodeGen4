@@ -53,6 +53,6 @@
         </Reference>
     </ItemGroup>
     <ItemGroup/>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Cooper.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.targets"/>
     <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
 </Project>
