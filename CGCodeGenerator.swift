@@ -288,15 +288,15 @@ public __abstract class CGCodeGenerator {
 	// Indentifiers
 	//
 
-	internal final __inline func generateIdentifier(name: String) {
+	@inline(__always) internal final func generateIdentifier(name: String) {
 		generateIdentifier(name, escaped: true)
 	}
 	
-	internal final __inline func generateIdentifier(name: String, escaped: Boolean) {
+	@inline(__always) internal final func generateIdentifier(name: String, escaped: Boolean) {
 		generateIdentifier(name, escaped: escaped, alwaysEmitNamespace: false)
 	}
 	
-	internal final __inline func generateIdentifier(name: String, alwaysEmitNamespace: Boolean) {
+	@inline(__always) internal final func generateIdentifier(name: String, alwaysEmitNamespace: Boolean) {
 		generateIdentifier(name, escaped: true, alwaysEmitNamespace: alwaysEmitNamespace)
 	}
 	
@@ -1400,11 +1400,11 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
-	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 	
-	__inline func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 	
