@@ -758,11 +758,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	/*
 	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
-		// handled in base
+		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+		// no suffixes in Swift
 	}
-	*/
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("[")
