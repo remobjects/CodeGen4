@@ -433,6 +433,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	/*
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
 
 	}

@@ -496,6 +496,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("{")
 		for var e = 0; e < array.Elements.Count; e++ {

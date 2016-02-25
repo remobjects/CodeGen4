@@ -254,6 +254,10 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
+	override func generateFloatLiteralExpression(expression: CGFloatLiteralExpression) {
+
+	}
+
 	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
 
 	}

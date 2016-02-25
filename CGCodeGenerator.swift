@@ -717,14 +717,16 @@ public __abstract class CGCodeGenerator {
 			generatePropertyAccessExpression(expression)
 		} else if let expression = expression as? CGEnumValueAccessExpression {
 			generateEnumValueAccessExpression(expression)
-		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
-			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 		} else if let expression = expression as? CGStringLiteralExpression {
 			generateStringLiteralExpression(expression)
 		} else if let expression = expression as? CGCharacterLiteralExpression {
 			generateCharacterLiteralExpression(expression)
 		} else if let expression = expression as? CGIntegerLiteralExpression {
 			generateIntegerLiteralExpression(expression)
+		} else if let expression = expression as? CGFloatLiteralExpression {
+			generateFloatLiteralExpression(expression)
+		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
+			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 		} else if let expression = expression as? CGArrayLiteralExpression {
 			generateArrayLiteralExpression(expression)
 		} else if let expression = expression as? CGSetLiteralExpression {
@@ -927,9 +929,14 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generateCharacterLiteralExpression not implemented")
 	}
 
-	internal func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		// descendant must override
-		assert(false, "generateIntegerLiteralExpression not implemented")
+	internal func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		// descendant should override
+		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+	}
+
+	internal func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// descendant should override
+		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 	}
 
 	internal func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
@@ -971,7 +978,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren't happy with the default
-		return expression.StringRepresentation
+		return expression.StringRepresentation()
 	}
 	
 	//

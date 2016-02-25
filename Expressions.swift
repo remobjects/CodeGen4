@@ -346,11 +346,8 @@ public class CGPropertyValueExpression: CGExpression { /* "value" or "newValue" 
 public class CGLiteralExpression: CGExpression {
 }
 
-public class CGLanguageAgnosticLiteralExpression: CGExpression {
-	internal var StringRepresentation: String {
-		assert(false, "StringRepresentation not implemented")
-		return "###"
-	}
+public __abstract class CGLanguageAgnosticLiteralExpression: CGExpression {
+	internal __abstract func StringRepresentation() -> String
 }
 
 public class CGStringLiteralExpression: CGLiteralExpression {
@@ -379,9 +376,10 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 	}	
 }
 
-public class CGIntegerLiteralExpression: CGLiteralExpression {
+public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public var Value: Int64 = 0
 	public var Base = 10 
+	public var NumberKind: CGNumberKind?
 
 	public static lazy let Zero: CGIntegerLiteralExpression = 0.AsLiteralExpression()
 
@@ -395,15 +393,20 @@ public class CGIntegerLiteralExpression: CGLiteralExpression {
 		Base = base
 	}
 
+	override func StringRepresentation() -> String {
+		return Sugar.Convert.ToString(Value, 10)
+	}
+	
 	internal func StringRepresentation(# base: Int32) -> String {
 		return Sugar.Convert.ToString(Value, base)
 	}
 }
 
 public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	public var DoubleValue: Double?
-	public var IntegerValue: Integer?
-	public var StringValue: String?
+	public private(set) var DoubleValue: Double?
+	public private(set) var IntegerValue: Integer?
+	public private(set) var StringValue: String?
+	public var NumberKind: CGNumberKind?
 	
 	public static lazy let Zero: CGFloatLiteralExpression = CGFloatLiteralExpression(0)
 	
@@ -419,17 +422,25 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 		StringValue = value
 	}
 
-	override var StringRepresentation: String {
+	override func StringRepresentation() -> String {
 		if let value = DoubleValue {
 			return value.ToString() // todo: force dot into float literal?
 		} else if let value = IntegerValue {
 			return value.ToString()+".0"
 		} else if let value = StringValue {
-			return value
+			if value.IndexOf(".") > -1 {
+				return value
+			} else {
+				return value+".0"
+			}
 		} else {
 			return "0.0"
 		}
 	}
+}
+
+public enum CGNumberKind {
+	case Unsigned, Long, UnsignedLong, Float, Double, Decimal
 }
 
 public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
@@ -445,7 +456,7 @@ public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 		Value = bool
 	}
 
-	override var StringRepresentation: String {
+	override func StringRepresentation() -> String {
 		if Value {
 			return "true"
 		} else {
