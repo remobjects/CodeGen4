@@ -428,7 +428,7 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 		} else if let value = IntegerValue {
 			return value.ToString()+".0"
 		} else if let value = StringValue {
-			if value.IndexOf(".") > -1 {
+			if value.IndexOf(".") > -1 || value.ToLower().IndexOf("e") > -1 {
 				return value
 			} else {
 				return value+".0"
