@@ -14,10 +14,25 @@ type
   Sugar.Convert = public static class
   public
     method ToHexString(Value: Int32; Width: Integer := 0): String;
-    method ToString(Value: Int32; Base: Integer := 10): String;
+    method ToString(aValue: Byte; aBase: Integer := 10): String;
+    method ToString(aValue: Int32; aBase: Integer := 10): String;
+    method ToString(aValue: Int64; aBase: Integer := 10): String;
   end;
 
+extension method System.String.EqualsIgnoreCase(Value: String): Boolean;assembly;
+extension method System.Xml.XmlNode.ChildCount: Integer;assembly;
+
 implementation
+
+extension method System.Xml.XmlNode.ChildCount: Integer;
+begin
+  exit self.ChildNodes:Count;
+end;
+
+extension method System.String.EqualsIgnoreCase(Value: String): Boolean;
+begin
+  exit String.Equals(Self, Value, StringComparison.OrdinalIgnoreCase);
+end;
 
 method Sugar.Convert.ToHexString(Value: Int32; Width: Integer): String;
 begin
@@ -46,9 +61,19 @@ begin
   end;
 end;
 
-method Sugar.Convert.ToString(Value: Int32; Base: Integer): String;
+method Sugar.Convert.ToString(aValue: Byte; aBase: Integer := 10): String;
 begin
-  result := System.Convert.ToString(Value, Base);
+  result := System.Convert.ToString(aValue, aBase);
+end;
+
+method Sugar.Convert.ToString(aValue: Int32; aBase: Integer := 10): String;
+begin
+  result := System.Convert.ToString(aValue, aBase);
+end;
+
+method Sugar.Convert.ToString(aValue: Int64; aBase: Integer := 10): String;
+begin
+  result := System.Convert.ToString(aValue, aBase);
 end;
 
 end.
