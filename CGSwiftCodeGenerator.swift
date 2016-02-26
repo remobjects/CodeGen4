@@ -752,11 +752,15 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))\"")
 	}
 
-	/*
-	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		// handled in base
+	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		switch literalExpression.Base {
+			case 16: Append("0x"+literalExpression.StringRepresentation(base:16))
+			case 8:  Append("0o"+literalExpression.StringRepresentation(base:8))
+			case 1:  Append("0b"+literalExpression.StringRepresentation(base:1))
+			default: Append(literalExpression.StringRepresentation(base:10))
+		}
+		cStyleAppendNumberKind(literalExpression.NumberKind)
 	}
-	*/
 
 	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
 		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
