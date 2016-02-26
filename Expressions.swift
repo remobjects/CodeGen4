@@ -443,7 +443,7 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 		switch base {
 			case 10:
 				return StringRepresentation()
-			case 8:
+			case 16:
 				if DoubleValue != nil {
 					throw Exception("base 16 (Hex) float literals with double value are not currently supported.")
 				} else if let value = IntegerValue {
