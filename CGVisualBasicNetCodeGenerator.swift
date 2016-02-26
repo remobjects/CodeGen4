@@ -429,7 +429,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
 		switch expression.Base {
 			case 16: Append("&H"+expression.StringRepresentation(base:16))
-			default: Append(expression.StringRepresentation(base:10))
+			case 10: Append(expression.StringRepresentation(base:10))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Visual Basic.")
 		}
 	}
 

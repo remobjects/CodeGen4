@@ -407,6 +407,7 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public private(set) var IntegerValue: Integer?
 	public private(set) var StringValue: String?
 	public var NumberKind: CGNumberKind?
+	public var Base = 10 // Swift only
 	
 	public static lazy let Zero: CGFloatLiteralExpression = CGFloatLiteralExpression(0)
 	
@@ -435,6 +436,29 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 			}
 		} else {
 			return "0.0"
+		}
+	}
+
+	internal func StringRepresentation(# base: Int32) -> String {
+		switch base {
+			case 10:
+				return StringRepresentation()
+			case 8:
+				if DoubleValue != nil {
+					throw Exception("base 16 (Hex) float literals with double value are not currently supported.")
+				} else if let value = IntegerValue {
+					return Sugar.Convert.ToString(value, base)+".0"
+				} else if let value = StringValue {
+					if value.IndexOf(".") > -1 || value.ToLower().IndexOf("p") > -1 {
+						return value
+					} else {
+						return value+".0"
+					}
+				} else {
+					return "0.0"
+				}
+			default:
+				throw Exception("Base \(base) float literals are not currently supported.")
 		}
 	}
 }

@@ -306,14 +306,18 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
 		switch literalExpression.Base {
 			case 16: Append("0x"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation(base:10))
 			case 8: Append("0"+literalExpression.StringRepresentation(base:8))
-			default: Append(literalExpression.StringRepresentation(base:10))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for C-Style languages.")
 		}
 		cStyleAppendNumberKind(literalExpression.NumberKind)
 	}
 
 	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
-		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+		switch literalExpression.Base {
+			case 10: Append(literalExpression.StringRepresentation())
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for C-Style languages.")
+		}
 		cStyleAppendNumberKind(literalExpression.NumberKind)
 	}
 

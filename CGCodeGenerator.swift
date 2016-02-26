@@ -931,12 +931,18 @@ public __abstract class CGCodeGenerator {
 
 	internal func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
 		// descendant should override
-		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+		switch literalExpression.Base {
+			case 10: Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for this languages.")
+		}
 	}
 
 	internal func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
 		// descendant should override
-		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+		switch literalExpression.Base {
+			case 10: Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for this languages.")
+		}
 	}
 
 	internal func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {

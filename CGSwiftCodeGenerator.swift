@@ -755,16 +755,21 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
 		switch literalExpression.Base {
 			case 16: Append("0x"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation(base:10))
 			case 8:  Append("0o"+literalExpression.StringRepresentation(base:8))
 			case 1:  Append("0b"+literalExpression.StringRepresentation(base:1))
-			default: Append(literalExpression.StringRepresentation(base:10))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Swift.")
 		}
-		cStyleAppendNumberKind(literalExpression.NumberKind)
+		// no C-style suffixes in Swift
 	}
 
 	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
-		Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
-		// no suffixes in Swift
+		switch literalExpression.Base {
+			case 16: Append("0x"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation())
+			default: throw Exception("Base \(literalExpression.Base) float literals are not currently supported for Swift.")
+		}
+		// no C-style suffixes in Swift
 	}
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
