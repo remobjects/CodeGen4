@@ -833,10 +833,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("#\(expression.Value as! UInt32)")
 	}
 
-	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		switch expression.Base {
-			case 16: Append("$"+expression.StringRepresentation(base:16))
-			case 10: Append(expression.StringRepresentation(base:10))
+	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		switch literalExpression.Base {
+			case 16: Append("$"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation(base:10))
 			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Pascal.")
 		}
 	}
