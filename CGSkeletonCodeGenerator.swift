@@ -413,6 +413,12 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
+	override func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+		Append(type.Start.ToString())
+		Append("..")
+		Append(type.End.ToString())
+	}
+		
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 
 	}

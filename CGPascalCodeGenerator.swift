@@ -1486,6 +1486,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
+	override func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+		Append(type.Start.ToString())
+		Append("..")
+		Append(type.End.ToString())
+	}
+		
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference is not supported in base Pascal, only Oxygene")
 	}

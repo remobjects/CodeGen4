@@ -238,6 +238,22 @@ public enum CGPredefinedTypeKind {
 	case Class
 }
 
+public class CGIntegerRangeTypeReference : CGTypeReference {
+	public var Start: Integer
+	public var End: Integer
+	
+	init(_ start: Integer, _ end: Integer) {
+		Start = start
+		End = end
+	}
+
+	override func copyWithNullability(nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		let result = CGIntegerRangeTypeReference(Start, End)
+		result.Nullability = nullability
+		return result
+	}
+}
+
 public class CGInlineBlockTypeReference : CGTypeReference {
 	public var Block: CGBlockTypeDefinition
 

@@ -1280,6 +1280,8 @@ public __abstract class CGCodeGenerator {
 			generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPredefinedTypeReference {
 			generatePredefinedTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGIntegerRangeTypeReference {
+			generateIntegerRangeTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGInlineBlockTypeReference {
 			generateInlineBlockTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPointerTypeReference {
@@ -1372,6 +1374,10 @@ public __abstract class CGCodeGenerator {
 		}		
 	}
 	
+	internal func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateIntegerRangeTypeReference not implemented")
+	}
+		
 	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference not implemented")
 	}
