@@ -27,6 +27,14 @@ public class CGRawStatement : CGBaseMultilineStatement { // not language-agnosti
 public class CGCommentStatement : CGBaseMultilineStatement {
 }
 
+public class CGSingleLineCommentStatement : CGStatement {
+	public let Comment: String
+
+	public init(_ comment: String) {
+		Comment = comment
+	}
+}
+
 public class CGUnsupportedStatement : CGCommentStatement {
 	init() {
 		super.init("Unsupported statement.")

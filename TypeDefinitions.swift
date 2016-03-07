@@ -472,6 +472,7 @@ public enum CGGenericConstraintTypeKind {
 public class CGAttribute: CGEntity {
 	public var `Type`: CGTypeReference
 	public var Parameters: List<CGCallParameter>?
+	public var Comment: CGSingleLineCommentStatement?
 	
 	public init(_ type: CGTypeReference) {
 		`Type` = type

@@ -826,7 +826,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			swiftGenerateAttributeParameters(parameters)
 			Append(")")
 		}   
-		AppendLine()	 
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 	
 	func swiftGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {

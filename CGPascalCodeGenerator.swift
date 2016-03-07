@@ -876,7 +876,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateAttributeParameters(parameters)
 			Append(")")
 		}
-		AppendLine("]")
+		Append("]")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 
 	func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {

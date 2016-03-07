@@ -414,6 +414,8 @@ public __abstract class CGCodeGenerator {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
 			generateCommentStatement(commentStatement)
+		} else if let commentStatement = statement as? CGSingleLineCommentStatement {
+			generateSingleLineCommentStatement(commentStatement)
 		} else if let commentStatement = statement as? CGCodeCommentStatement {
 			generateCodeCommentStatement(commentStatement)
 		} else if let rawStatement = statement as? CGRawStatement {
@@ -484,6 +486,13 @@ public __abstract class CGCodeGenerator {
 				generateSingleLineCommentPrefix()
 				AppendLine(line)
 			}
+		}
+	}
+	
+	internal func generateSingleLineCommentStatement(commentStatement: CGSingleLineCommentStatement?) {
+		if let commentStatement = commentStatement {
+			generateSingleLineCommentPrefix()
+			AppendLine(commentStatement.Comment)
 		}
 	}
 	

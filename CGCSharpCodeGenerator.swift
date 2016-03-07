@@ -741,7 +741,13 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			cSharpGenerateAttributeParameters(parameters)
 			Append(")")
 		}		
-		AppendLine("]")
+		Append("]")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 	
 	func cSharpGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {

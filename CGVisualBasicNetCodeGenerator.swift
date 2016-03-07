@@ -229,6 +229,20 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	func vbGenerateAttributeParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(" = ")
+			}
+			generateExpression(param.Value)
+		}
+	}
+	
 	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
 
 	}
@@ -471,7 +485,20 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateAttribute(attribute: CGAttribute) {
-
+		Append("<")
+		generateTypeReference(attribute.`Type`)
+		if let parameters = attribute.Parameters where parameters.Count > 0 {
+			Append("(")
+			vbGenerateAttributeParameters(parameters)
+			Append(")")
+		}		
+		Append(">")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 	
 	func vbGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {

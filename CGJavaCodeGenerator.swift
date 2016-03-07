@@ -547,7 +547,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			javaGenerateAttributeParameters(parameters)
 			Append(")")
 		}
-		AppendLine("")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 
 	func javaGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
