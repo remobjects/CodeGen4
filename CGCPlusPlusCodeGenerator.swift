@@ -409,7 +409,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cppGenerateDefinitionParameters(parameters: List<CGParameterDefinition>, header: Boolean) {
-		helpGenerateCommaSeparatedList(parameters) {	param in
+		helpGenerateCommaSeparatedList(parameters) { param in
 			switch param.Modifier {
 				case .Const: self.Append("const ")
 				case .Var:   self.Append("/* var */ ")

@@ -376,7 +376,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
 		Append("(")
-		helpGenerateCommaSeparatedList(method.Parameters) {param in 
+		helpGenerateCommaSeparatedList(method.Parameters) { param in 
 			self.generateIdentifier(param.Name)
 		}
 		AppendLine(") => {")

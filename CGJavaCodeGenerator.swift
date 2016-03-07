@@ -630,7 +630,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members){	m in
+		helpGenerateCommaSeparatedList(type.Members) { m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
