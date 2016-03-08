@@ -31,7 +31,7 @@ public class CGSingleLineCommentStatement : CGStatement {
 	public let Comment: String
 
 	public init(_ comment: String) {
-		Comment = comment
+		Comment = comment.Trim()
 	}
 }
 
