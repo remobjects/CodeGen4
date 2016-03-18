@@ -229,6 +229,20 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	func vbGenerateAttributeParameters(parameters: List<CGCallParameter>) {
+		for var p = 0; p < parameters.Count; p++ {
+			let param = parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			if let name = param.Name {
+				generateIdentifier(name)
+				Append(" = ")
+			}
+			generateExpression(param.Value)
+		}
+	}
+	
 	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
 
 	}
@@ -426,12 +440,19 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		switch expression.Base {
-			case 16: Append("&H"+expression.StringRepresentation(base:16))
-			default: Append(expression.StringRepresentation(base:10))
+	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		switch literalExpression.Base {
+			case 16: Append("&H"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation(base:10))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Visual Basic.")
 		}
 	}
+
+	/*
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// handled in base
+	}
+	*/
 
 	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
 
@@ -464,7 +485,20 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//
 	
 	override func generateAttribute(attribute: CGAttribute) {
-
+		Append("<")
+		generateTypeReference(attribute.`Type`)
+		if let parameters = attribute.Parameters where parameters.Count > 0 {
+			Append("(")
+			vbGenerateAttributeParameters(parameters)
+			Append(")")
+		}		
+		Append(">")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 	
 	func vbGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {

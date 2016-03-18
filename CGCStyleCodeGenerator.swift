@@ -289,13 +289,36 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
 		Append("'\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))'")
 	}
-
-	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		switch expression.Base {
-			case 16: Append("0x"+expression.StringRepresentation(base:16))
-			case 8: Append("0"+expression.StringRepresentation(base:16))
-			default: Append(expression.StringRepresentation(base:10))
+	
+	private func cStyleAppendNumberKind(numberKind: CGNumberKind?) {
+		if let numberKind = numberKind {
+			switch numberKind {
+				case .Unsigned: Append("U")
+				case .Long: Append("L")
+				case .UnsignedLong: Append("UL")
+				case .Float: Append("F")
+				case .Double: Append("D")
+				case .Decimal: Append("M")
+			}
 		}
+	}
+
+	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		switch literalExpression.Base {
+			case 16: Append("0x"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation(base:10))
+			case 8: Append("0"+literalExpression.StringRepresentation(base:8))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for C-Style languages.")
+		}
+		cStyleAppendNumberKind(literalExpression.NumberKind)
+	}
+
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		switch literalExpression.Base {
+			case 10: Append(literalExpression.StringRepresentation())
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for C-Style languages.")
+		}
+		cStyleAppendNumberKind(literalExpression.NumberKind)
 	}
 
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {

@@ -376,7 +376,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAnonymousMethodExpression(method: CGAnonymousMethodExpression) {
 		Append("(")
-		helpGenerateCommaSeparatedList(method.Parameters) {param in 
+		helpGenerateCommaSeparatedList(method.Parameters) { param in 
 			self.generateIdentifier(param.Name)
 		}
 		AppendLine(") => {")
@@ -680,6 +680,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("new[] ")
 		Append("{")
@@ -735,7 +741,13 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			cSharpGenerateAttributeParameters(parameters)
 			Append(")")
 		}		
-		AppendLine("]")
+		Append("]")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 	
 	func cSharpGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {

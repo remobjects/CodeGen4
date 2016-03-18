@@ -37,12 +37,8 @@
         <Reference Include="Foundation"/>
         <Reference Include="rtl"/>
         <Reference Include="libNougat"/>
-        <Reference Include="libSugar">
-            <HintPath>..\..\Xcode\DerivedData\Fire-gudanmcdbkoejsaanfhrydpjbude\Build\Products\Debug\libSugar.fx</HintPath>
-        </Reference>
-        <Reference Include="libxml2">
-            <HintPath>..\..\Xcode\DerivedData\Fire-gudanmcdbkoejsaanfhrydpjbude\Build\Products\Debug\libxml2.fx</HintPath>
-        </Reference>
+        <Reference Include="libSugar"/>
+        <Reference Include="libxml2"/>
     </ItemGroup>
     <ItemGroup/>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>

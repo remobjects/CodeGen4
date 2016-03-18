@@ -242,7 +242,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.EndValue)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
-		generateStatementTerminator()
 	}
 
 	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
@@ -256,7 +255,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.Collection)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
-		generateStatementTerminator()
 	}
 
 	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
@@ -264,7 +262,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateExpression(statement.Condition)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
-		generateStatementTerminator()
 	}
 
 	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
@@ -833,12 +830,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("#\(expression.Value as! UInt32)")
 	}
 
-	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		switch expression.Base {
-			case 16: Append("$"+expression.StringRepresentation(base:16))
-			default: Append(expression.StringRepresentation(base:10))
+	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		switch literalExpression.Base {
+			case 16: Append("$"+literalExpression.StringRepresentation(base:16))
+			case 10: Append(literalExpression.StringRepresentation(base:10))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Pascal.")
 		}
 	}
+
+	/*
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// handled in base
+	}
+	*/
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("[")
@@ -872,7 +876,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateAttributeParameters(parameters)
 			Append(")")
 		}
-		AppendLine("]")
+		Append("]")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 
 	func pascalGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
@@ -1482,6 +1492,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
+	override func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+		Append(type.Start.ToString())
+		Append("..")
+		Append(type.End.ToString())
+	}
+		
 	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference is not supported in base Pascal, only Oxygene")
 	}

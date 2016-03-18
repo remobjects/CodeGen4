@@ -414,6 +414,8 @@ public __abstract class CGCodeGenerator {
 		// descendant should not override
 		if let commentStatement = statement as? CGCommentStatement {
 			generateCommentStatement(commentStatement)
+		} else if let commentStatement = statement as? CGSingleLineCommentStatement {
+			generateSingleLineCommentStatement(commentStatement)
 		} else if let commentStatement = statement as? CGCodeCommentStatement {
 			generateCodeCommentStatement(commentStatement)
 		} else if let rawStatement = statement as? CGRawStatement {
@@ -484,6 +486,13 @@ public __abstract class CGCodeGenerator {
 				generateSingleLineCommentPrefix()
 				AppendLine(line)
 			}
+		}
+	}
+	
+	internal func generateSingleLineCommentStatement(commentStatement: CGSingleLineCommentStatement?) {
+		if let commentStatement = commentStatement {
+			generateSingleLineCommentPrefix()
+			AppendLine(commentStatement.Comment)
 		}
 	}
 	
@@ -717,14 +726,16 @@ public __abstract class CGCodeGenerator {
 			generatePropertyAccessExpression(expression)
 		} else if let expression = expression as? CGEnumValueAccessExpression {
 			generateEnumValueAccessExpression(expression)
-		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
-			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 		} else if let expression = expression as? CGStringLiteralExpression {
 			generateStringLiteralExpression(expression)
 		} else if let expression = expression as? CGCharacterLiteralExpression {
 			generateCharacterLiteralExpression(expression)
 		} else if let expression = expression as? CGIntegerLiteralExpression {
 			generateIntegerLiteralExpression(expression)
+		} else if let expression = expression as? CGFloatLiteralExpression {
+			generateFloatLiteralExpression(expression)
+		} else if let literalExpression = expression as? CGLanguageAgnosticLiteralExpression {
+			Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
 		} else if let expression = expression as? CGArrayLiteralExpression {
 			generateArrayLiteralExpression(expression)
 		} else if let expression = expression as? CGSetLiteralExpression {
@@ -927,9 +938,20 @@ public __abstract class CGCodeGenerator {
 		assert(false, "generateCharacterLiteralExpression not implemented")
 	}
 
-	internal func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
-		// descendant must override
-		assert(false, "generateIntegerLiteralExpression not implemented")
+	internal func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+		// descendant should override
+		switch literalExpression.Base {
+			case 10: Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for this languages.")
+		}
+	}
+
+	internal func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// descendant should override
+		switch literalExpression.Base {
+			case 10: Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
+			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for this languages.")
+		}
 	}
 
 	internal func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
@@ -971,7 +993,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren't happy with the default
-		return expression.StringRepresentation
+		return expression.StringRepresentation()
 	}
 	
 	//
@@ -1267,6 +1289,8 @@ public __abstract class CGCodeGenerator {
 			generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPredefinedTypeReference {
 			generatePredefinedTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGIntegerRangeTypeReference {
+			generateIntegerRangeTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGInlineBlockTypeReference {
 			generateInlineBlockTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPointerTypeReference {
@@ -1359,6 +1383,10 @@ public __abstract class CGCodeGenerator {
 		}		
 	}
 	
+	internal func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateIntegerRangeTypeReference not implemented")
+	}
+		
 	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference not implemented")
 	}

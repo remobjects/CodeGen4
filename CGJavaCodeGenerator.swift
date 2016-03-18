@@ -496,6 +496,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
+	/*
+	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+		// handled in base
+	}
+	*/
+
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("{")
 		for var e = 0; e < array.Elements.Count; e++ {
@@ -541,7 +547,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			javaGenerateAttributeParameters(parameters)
 			Append(")")
 		}
-		AppendLine("")
+		if let comment = attribute.Comment {
+			Append(" ")
+			generateSingleLineCommentStatement(comment)
+		} else {
+			AppendLine()
+		}
 	}
 
 	func javaGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
@@ -619,7 +630,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members){	m in
+		helpGenerateCommaSeparatedList(type.Members) { m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
