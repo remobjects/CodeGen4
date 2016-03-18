@@ -72,6 +72,6 @@
         <Compile Include="Properties\AssemblyInfo.swift"/>
         <Compile Include="Properties\FakeSugar.pas"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Echoes.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets"/>
     <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
 </Project>
