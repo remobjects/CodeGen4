@@ -1503,8 +1503,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generatePointerTypeReference(type: CGPointerTypeReference) {
-		Append("^")
-		generateTypeReference(type.`Type`)
+		//74809: Silver: compiler doesn't see enum member when using shortcut syntax
+		if (type.`Type` as? CGPredefinedTypeReference)?.Kind == CGPredefinedTypeKind.Void {
+			Append("Pointer")
+		} else {
+			Append("^")
+			generateTypeReference(type.`Type`)
+		}
 	}
 
 	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {

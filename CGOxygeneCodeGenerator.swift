@@ -535,6 +535,16 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateInlineBlockType(type.Block)
 	}
 
+	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+		//74809: Silver: compiler doesn't see enum member when using shortcut syntax
+		if (type.`Type` as? CGPredefinedTypeReference)?.Kind == CGPredefinedTypeKind.Void {
+			Append("^Void")
+		} else {
+			Append("^")
+			generateTypeReference(type.`Type`)
+		}
+	}
+
 	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		if !ignoreNullability {
 			pascalGeneratePrefixForNullability(type)
