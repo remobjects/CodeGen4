@@ -1287,7 +1287,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			swiftGenerateMemberTypeVisibilityPrefix(event.Visibility)
 			swiftGenerateStaticPrefix(event.Static && !type.Static)
-			Append("__event")
+			Append("__event ")
 			generateIdentifier(event.Name)
 			if let type = event.`Type` {
 				Append(": ")
