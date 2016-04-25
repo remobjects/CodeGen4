@@ -468,10 +468,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				self.Append("(")
 				self.swiftGenerateDefinitionParameters(member.Parameters)
 				self.Append(")")
-				if let returnType = member.ReturnType {
+				if let returnType = member.ReturnType where !returnType.IsVoid {
 					self.Append(" -> ")
 					self.generateTypeReference(returnType)
-					self.Append(" ")
 				}
 				self.AppendLine(" {")
 				self.incIndent()
@@ -923,7 +922,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		Append(") -> ")
-		if let returnType = block.ReturnType {
+		if let returnType = block.ReturnType where !returnType.IsVoid {
 			generateTypeReference(returnType)
 		} else {
 			Append("()")
@@ -1049,7 +1048,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(" throws")
 		}
 		
-		if let returnType = method.ReturnType {
+		if let returnType = method.ReturnType where !returnType.IsVoid {
 			Append(" -> ")
 			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
