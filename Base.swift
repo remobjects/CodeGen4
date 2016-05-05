@@ -27,6 +27,7 @@ public class CGCodeUnit {
 	public var HeaderComment = CGCommentStatement()
 	public var Directives = List<CGCompilerDirective>() /* will not be language agnostic */
 	public var Imports = List<CGImport>()
+	public var FileImports = List<CGImport>()
 	public var Types = List<CGTypeDefinition>()
 	public var Globals = List<CGGlobalDefinition>()
 	

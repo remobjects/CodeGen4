@@ -23,6 +23,10 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine("#import <\(imp.Name)/\(imp.Name).h>")
 	}
 
+	override func generateFileImport(imp: CGImport) {
+		AppendLine("#import \"\(imp.Name).h\"")
+	}
+
 	//
 	// Types
 	//

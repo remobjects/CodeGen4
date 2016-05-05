@@ -193,8 +193,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append(" init")
 		if let name = statement.ConstructorName {
 			generateIdentifier(uppercaseFirstLetter(name))
+			objcGenerateCallParameters(statement.Parameters, skipFirstName: true)
+		} else {
+			objcGenerateCallParameters(statement.Parameters)
 		}
-		objcGenerateCallParameters(statement.Parameters)
 		Append("]")
 		AppendLine(";")
 	}
@@ -329,7 +331,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func objcGenerateCallParameters(parameters: List<CGCallParameter>) {
+	func objcGenerateCallParameters(parameters: List<CGCallParameter>, skipFirstName: Boolean = false) {
 		for var p = 0; p < parameters.Count; p++ {
 			let param = parameters[p]
 			
@@ -343,7 +345,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				if p > 0 {
 					Append(" ")
 				}
-				if let name = param.Name {
+				if let name = param.Name where p > 0 || !skipFirstName {
 					generateIdentifier(name)
 				} 
 				Append(":")
@@ -399,6 +401,8 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 					generateTypeReference(ancestor, ignoreNullability: true)
 				}
 			}
+		} else if type is CGClassTypeDefinition {
+			Append(" : NSObject")
 		}
 		if type.ImplementedInterfaces.Count > 0 {
 			Append(" <")
@@ -415,9 +419,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
-		if expression.CallSite != nil {
-			objcGenerateCallSiteForExpression(expression, forceSelf: true)
-			Append("->")
+		if let callSite = expression.CallSite {
+			if expression.CallSiteKind != .Static || !(callSite is CGSelfExpression) {
+				objcGenerateCallSiteForExpression(expression, forceSelf: true)
+				Append("->")
+			}
 		}
 		generateIdentifier(expression.Name)
 	}
@@ -445,8 +451,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append(" alloc] init")
 		if let name = expression.ConstructorName {
 			generateIdentifier(uppercaseFirstLetter(name))
+			objcGenerateCallParameters(expression.Parameters, skipFirstName: true)
+		} else {
+			objcGenerateCallParameters(expression.Parameters)
 		}
-		objcGenerateCallParameters(expression.Parameters)
 		Append("]")
 	}
 

@@ -203,6 +203,12 @@ public __abstract class CGCodeGenerator {
 			}
 			AppendLine()
 		}
+		if currentUnit.FileImports.Count > 0 {
+			for i in currentUnit.FileImports {
+				generateFileImport(i)
+			}
+			AppendLine()
+		}
 	}
 
 	internal func generateTypeDefinitions() {
@@ -253,6 +259,10 @@ public __abstract class CGCodeGenerator {
 	internal func generateImport(`import`: CGImport) {
 		// descendant must override this or generateImports()
 		assert(false, "generateImport not implemented")
+	}
+	
+	internal func generateFileImport(`import`: CGImport) {
+		// descendant should override if it supports file imports 
 	}
 	
 	//
