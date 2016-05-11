@@ -6,7 +6,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	public init() {
 		super.init()
-		
+		/*
 		// current as of — which version? need to check. XE7?
 		keywords = ["abstract", "and", "add", "async", "as", "begin", "break", "case", "class", "const", "constructor", "continue",
 		"delegate", "default", "div", "do", "downto", "each", "else", "empty", "end", "enum", "ensure", "event", "except",
@@ -17,6 +17,22 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		"protected", "public", "reintroduce", "raise", "read", /*"readonly",*/ "remove", "repeat", "require", "result", "sealed",
 		"self", "sequence", "set", "shl", "shr", "static", "step", "then", "to", "true", "try", "type", "typeof", "until",
 		"unsafe", "uses", "using", "var", "virtual", "where", "while", "with", "write", "xor", "yield"].ToList() as! List<String>
+		*/
+		// Delphi Seattle + FPC reserved list
+		// http://docwiki.embarcadero.com/RADStudio/Seattle/en/Fundamental_Syntactic_Elements#Reserved_Words
+		// http://www.freepascal.org/docs-html/ref/refse3.html
+		keywords = ["absolute", "abstract", "alias", "and", "array", "as", "asm", "assembler", "at", "automated", "begin", 
+		"bitpacked", "break", "case", "cdecl", "class", "const", "constructor", "continue", "cppdecl", "cvar", "default", 
+		"deprecated", "destructor", "dispinterface", "dispose", "div", "do", "downto", "dynamic", "else", "end", "enumerator",
+		"except", "exit", "experimental", "export", "exports", "external", "false", "far", "far16", "file", "finalization", 
+		"finally", "for", "forward", "function", "generic", "goto", "helper", "if", "implementation", "implements", "in", 
+		"index", "inherited", "initialization", "inline", "interface", "interrupt", "iochecks", "is", "label", "library", 
+		"local", "message", "mod", "name", "near", "new", "nil", "nodefault", "noreturn", "nostackframe", "not", "object", 
+		"of", "oldfpccall", "on", "operator", "or", "otherwise", "out", "overload", "override", "packed", "pascal", "platform", 
+		"private", "procedure", "program", "property", "protected", "public", "published", "raise", "read", "record", "register", 
+		"reintroduce", "repeat", "resourcestring", "result", "safecall", "saveregisters", "self", "set", "shl", "shr", "softfloat", 
+		"specialize", "static", "stdcall", "stored", "strict", "string", "then", "threadvar", "to", "true", "try", "type", "unaligned", 
+		"unimplemented", "unit", "until", "uses", "var", "varargs", "virtual", "while", "with", "write", "xor"].ToList() as! List<String>
 	}
 	
 	public var Version: Integer = 7
