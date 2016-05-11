@@ -18,6 +18,7 @@ type
     method ToString(aValue: Byte; aBase: Integer := 10): String;
     method ToString(aValue: Int32; aBase: Integer := 10): String;
     method ToString(aValue: Int64; aBase: Integer := 10): String;
+    method ToStringInvariant(aValue: Double): String;
   end;
 
 extension method System.String.EqualsIgnoreCase(Value: String): Boolean;assembly;
@@ -56,6 +57,11 @@ end;
 method Sugar.Convert.ToString(aValue: Int64; aBase: Integer := 10): String;
 begin
   result := System.Convert.ToString(aValue, aBase);
+end;
+
+method Sugar.Convert.ToStringInvariant(aValue: Double): String;
+begin
+  result := System.Convert.ToString(aValue, System.Globalization.CultureInfo.InvariantCulture);
 end;
 {$ENDIF}
 

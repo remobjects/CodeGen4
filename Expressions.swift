@@ -425,7 +425,7 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 
 	override func StringRepresentation() -> String {
 		if let value = DoubleValue {
-			return value.ToString() // todo: force dot into float literal?
+			return Convert.ToStringInvariant(value) // todo: force dot into float literal?
 		} else if let value = IntegerValue {
 			return value.ToString()+".0"
 		} else if let value = StringValue {
