@@ -556,7 +556,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func swiftGenerateCallParameters(parameters: List<CGCallParameter>, firstParamName: String? = nil) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -581,7 +581,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func swiftGenerateAttributeParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -629,7 +629,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func swiftGenerateDefinitionParameters(parameters: List<CGParameterDefinition>, firstExternalName: String? = nil) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -773,7 +773,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("[")
-		for var e = 0; e < array.Elements.Count; e++ {
+		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
 				Append(", ")
 			}
@@ -784,7 +784,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
 		Append("Set([")
-		for var e = 0; e < expression.Elements.Count; e++ {
+		for e in 0 ..< expression.Elements.Count {
 			if e > 0 {
 				Append(", ")
 			}
@@ -796,7 +796,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("[")
-		for var e = 0; e < dictionary.Keys.Count; e++ {
+		for e in 0 ..< dictionary.Keys.Count {
 			if e > 0 {
 				Append(", ")
 			}
@@ -911,7 +911,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	func swiftGenerateInlineBlockType(block: CGBlockTypeDefinition) {
 		Append("(")
-		for var p: Int32 = 0; p < block.Parameters.Count; p++ {
+		for p in 0 ..< block.Parameters.Count {
 			if p > 0 {
 				Append(", ")
 			}
@@ -1422,7 +1422,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 		Append("(")
-		for var m: Int32 = 0; m < type.Members.Count; m++ {
+		for m in 0 ..< type.Members.Count {
 			if m > 0 {
 				Append(", ")
 			}
@@ -1463,19 +1463,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Dynamic:
 				generateTypeReference(array.`Type`)
 				Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
-				for var b: Int32 = 0; b < bounds; b++ {
+				for b in 0 ..< bounds {
 					Append("[]")
 				}
 				if !ignoreNullability {
 					Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NotNullable))
 				}
 			case .HighLevel:
-				for var b: Int32 = 0; b < bounds; b++ {
+				for b in 0 ..< bounds {
 					Append("[")
 				}
 				generateTypeReference(array.`Type`)
 				Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
-				for var b: Int32 = 0; b < bounds; b++ {
+				for b in 0 ..< bounds {
 					Append("]")
 				}
 				if !ignoreNullability {

@@ -472,7 +472,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cSharpGenerateCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = param.Name {
@@ -488,7 +488,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cSharpGenerateAttributeParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -519,7 +519,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cSharpGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let externalName = param.ExternalName {
@@ -689,7 +689,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("new[] ")
 		Append("{")
-		for var e = 0; e < array.Elements.Count; e++ {
+		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
 				Append(", ")
 			}
@@ -1311,7 +1311,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if bounds == 0 {
 			bounds = 1
 		}
-		for var b: Int32 = 0; b < bounds; b++ {
+		for b in 0 ..< bounds {
 			Append("[]")
 		}
 		if !ignoreNullability {

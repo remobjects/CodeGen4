@@ -332,7 +332,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func objcGenerateCallParameters(parameters: List<CGCallParameter>, skipFirstName: Boolean = false) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			
 			if param.EllipsisParameter {
@@ -355,7 +355,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func objcGenerateFunctionCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			
 			if p > 0 {
@@ -370,7 +370,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func objcGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(" ")
@@ -393,7 +393,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	func objcGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
 		if type.Ancestors.Count > 0 {
 			Append(" : ")
-			for var a: Int32 = 0; a < type.Ancestors.Count; a++ {
+			for a in 0 ..< type.Ancestors.Count {
 				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
 						Append(", ")
@@ -406,7 +406,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 		if type.ImplementedInterfaces.Count > 0 {
 			Append(" <")
-			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
+			for a in 0 ..< type.ImplementedInterfaces.Count {
 				if let interface = type.ImplementedInterfaces[a] {
 					if a > 0 {
 						Append(", ")
@@ -499,7 +499,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("@[")
-		for var e = 0; e < array.Elements.Count; e++ {
+		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
 				Append(", ")
 			}
@@ -515,7 +515,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("@{")
-		for var e = 0; e < dictionary.Keys.Count; e++ {
+		for e in 0 ..< dictionary.Keys.Count {
 			if e > 0 {
 				Append(", ")
 			}
@@ -759,7 +759,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			Append("void")
 		}	   
 		Append("(^)(") 
-		for var p: Int32 = 0; p < block.Parameters.Count; p++ {
+		for p in 0 ..< block.Parameters.Count {
 			if p > 0 {
 				Append(", ")
 			}

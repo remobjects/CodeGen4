@@ -251,7 +251,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	internal func cStyleEscapeCharactersInStringLiteral(string: String) -> String {
 		let result = StringBuilder()
 		let len = string.Length
-		for var i: Integer = 0; i < len; i++ {
+		for i in 0 ..< len {
 			let ch = string[i]
 			switch ch {
 				case "\0": result.Append("\\0")

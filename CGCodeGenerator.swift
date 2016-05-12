@@ -901,7 +901,7 @@ public __abstract class CGCodeGenerator {
 		// descendant may override, but this will work for most languages.
 		generateExpression(expression.Array)
 		Append("[")
-		for var p = 0; p < expression.Parameters.Count; p++ {
+		for p in 0 ..< expression.Parameters.Count {
 			let param = expression.Parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -982,7 +982,7 @@ public __abstract class CGCodeGenerator {
 	internal func generateTupleExpression(expression: CGTupleLiteralExpression) {
 		// descendant may override, but this will work for most languages.
 		Append("(")
-		for var m: Int32 = 0; m < expression.Members.Count; m++ {
+		for m in 0 ..< expression.Members.Count {
 			if m > 0 {
 				Append(", ")
 			}
@@ -1338,7 +1338,7 @@ public __abstract class CGCodeGenerator {
 		if let genericArguments = genericArguments where genericArguments.Count > 0 {
 			// descendant may override, but this will work for most languages.
 			Append("<")
-			for var p = 0; p < genericArguments.Count; p++ {
+			for p in 0 ..< genericArguments.Count {
 				let param = genericArguments[p]
 				if p > 0 {
 					Append(",")
@@ -1450,14 +1450,16 @@ public __abstract class CGCodeGenerator {
 	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Boolean, callback: (T) -> ()) {
 		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
 		lastStartLocation = nil
-		var count = 0
+		var first = true
 		for i in list {
-			if count++ > 0 {
+			if !first {
 				separator()
 				if wrapWhenItExceedsLineLength && currentLocation.virtualColumn > splitLinesLongerThan {
 					AppendLine()
 					AppendIndentToVirtualColumn(startLocation)
 				}
+			} else {
+				first = false
 			}
 			callback(i)
 		}
@@ -1542,7 +1544,7 @@ public __abstract class CGCodeGenerator {
 				currentLocation.offset += indent
 				//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
 				//currentCode.Append(String(count: indent, repeatingValue:"\t"))
-				for var i: Int32 = 0; i < indent; i++ {
+				for i in 0 ..< indent {
 					currentCode.Append("\t")
 				}
 			} else {
@@ -1551,7 +1553,7 @@ public __abstract class CGCodeGenerator {
 				currentLocation.offset += indent*tabSize
 				//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
 				//currentCode.Append(String(count: indent*tabSize, repeatedValue:" "))
-				for var i: Int32 = 0; i < indent*tabSize; i++ {
+				for i in 0 ..< indent*tabSize {
 					currentCode.Append(" ")
 				}
 			}
@@ -1569,10 +1571,10 @@ public __abstract class CGCodeGenerator {
 			//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
 			//currentCode.Append(String(count: targetColumn/tabSize, repeatedValue:"\t"))
 			//currentCode.Append(String(count: targetColumn%tabSize, repeatedValue:" "))
-			for var i: Int32 = 0; i < targetColumn/tabSize; i++ {
+			for i in 0 ..< targetColumn/tabSize {
 				currentCode.Append("\t")
 			}
-			for var i: Int32 = 0; i < targetColumn%tabSize; i++ {
+			for i in 0 ..< targetColumn%tabSize {
 				currentCode.Append(" ")
 			}
 		} else {
@@ -1581,7 +1583,7 @@ public __abstract class CGCodeGenerator {
 			currentLocation.offset += targetColumn
 			//74141: Compiler doesn't see .ctor from extension (and badly shows $New in error message)
 			//currentCode.Append(String(count: targetColumn, repeatedValue:" "))
-			for var i: Int32 = 0; i < targetColumn; i++ {
+			for i in 0 ..< targetColumn {
 				currentCode.Append(" ")
 			}
 		}

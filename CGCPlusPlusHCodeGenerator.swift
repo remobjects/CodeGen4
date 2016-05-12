@@ -190,7 +190,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		incIndent();
 		if isCBuilder() {
 			if type.Ancestors.Count > 0 {				
-				for var a: Int32 = 0; a < type.Ancestors.Count; a++ {
+				for a in 0 ..< type.Ancestors.Count {
 					if let ancestor = type.Ancestors[a] {
 						Append("typedef ");
 						generateTypeReference(ancestor, ignoreNullability: true);
@@ -429,15 +429,15 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 
-    final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
-        var first = true
-        for m in type.Members {
-            if visibility == CGMemberVisibilityKind.Private {
-                if let m = m as? CGPropertyDefinition {
-                    cppGeneratePropertyAccessorDefinition(m, type: type)
-                }
-            }
-            if let visibility = visibility {
+	final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
+		var first = true
+		for m in type.Members {
+			if visibility == CGMemberVisibilityKind.Private {
+				if let m = m as? CGPropertyDefinition {
+					cppGeneratePropertyAccessorDefinition(m, type: type)
+				}
+			}
+			if let visibility = visibility {
 				if m.Visibility == visibility {
 					if first {
 						decIndent()
@@ -449,10 +449,10 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 					}
 					generateTypeMember(m, type: type)
 				}
-            } else {
-                generateTypeMember(m, type: type)
-            }			
-        }
-    }
+			} else {
+				generateTypeMember(m, type: type)
+			}			
+		}
+	}
 
 }

@@ -162,7 +162,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if imports.Count > 0 {
 			AppendLine("uses")
 			incIndent()
-			for var i: Int32 = 0; i < imports.Count; i++ {
+			for i in 0 ..< imports.Count {
 				generateIdentifier(imports[i].Name, alwaysEmitNamespace: true)
 				if i < imports.Count-1 {
 					AppendLine(",")
@@ -652,7 +652,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -662,7 +662,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateAttributeParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -1533,7 +1533,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("array")
 		if let bounds = array.Bounds where bounds.Count > 0 {
 			Append("[")
-			for var b: Int32 = 0; b < array.Bounds.Count; b++ {
+			for b in 0 ..< array.Bounds.Count {
 				let bound = array.Bounds[b]
 				if b > 0 {
 					Append(", ")

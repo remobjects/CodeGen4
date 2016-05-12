@@ -225,7 +225,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func pascalGenerateCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				if let name = param.Name {
@@ -263,7 +263,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func pascalGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				if let name = param.ExternalName {
@@ -559,7 +559,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			pascalGeneratePrefixForNullability(type)
 		}
 		Append("tuple of (")
-		for var m: Int32 = 0; m < type.Members.Count; m++ {
+		for m in 0 ..< type.Members.Count {
 			if m > 0 {
 				Append(", ")
 			}

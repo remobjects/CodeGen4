@@ -379,7 +379,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func javaGenerateCallParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -389,7 +389,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func javaGenerateAttributeParameters(parameters: List<CGCallParameter>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -403,7 +403,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func javaGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
-		for var p = 0; p < parameters.Count; p++ {
+		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
@@ -424,7 +424,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	func javaGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
 		if type.Ancestors.Count > 0 {
 			Append(" extends ")
-			for var a: Int32 = 0; a < type.Ancestors.Count; a++ {
+			for a in 0 ..< type.Ancestors.Count {
 				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
 						Append(", ")
@@ -435,7 +435,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 		if type.ImplementedInterfaces.Count > 0 {
 			Append(" implements ")
-			for var a: Int32 = 0; a < type.ImplementedInterfaces.Count; a++ {
+			for a in 0 ..< type.ImplementedInterfaces.Count {
 				if let interface = type.ImplementedInterfaces[a] {
 					if a > 0 {
 						Append(", ")
@@ -504,7 +504,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
 		Append("{")
-		for var e = 0; e < array.Elements.Count; e++ {
+		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
 				Append(", ")
 			}
