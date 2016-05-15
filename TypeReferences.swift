@@ -409,7 +409,7 @@ public class CGArrayTypeReference : CGTypeReference {
 	public var Bounds = List<CGArrayBounds>()
 	public var ArrayKind: CGArrayKind = .Dynamic
 
-	public init(_ type: CGTypeReference, _ bounds: List<CGArrayBounds>? = default) {
+	public init(_ type: CGTypeReference, _ bounds: List<CGArrayBounds>? = nil) {
 		`Type` = type
 		if let bounds = bounds {
 			Bounds = bounds
