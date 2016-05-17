@@ -91,9 +91,9 @@ public extension Integer {
 		return CGIntegerLiteralExpression(self)
 	}
 	//74375: Can't overload extension method, compiler claims signatures are same.
-	/*public func AsLiteralExpression(# base: Int32) -> CGIntegerLiteralExpression {
+	public func AsLiteralExpression(# base: Int32) -> CGIntegerLiteralExpression {
 		return CGIntegerLiteralExpression(self, base: base)
-	}*/
+	}
 }
 
 public extension Single {
@@ -148,3 +148,42 @@ public extension CGMethodDefinition {
 		return CGGlobalFunctionDefinition(self)
 	}
 }
+
+
+#if FAKESUGAR
+public extension Int32 {
+    public func ..< (a: Int32, b: Int32) -> HalfOpenInterval/*<Int32>*/ {
+		return HalfOpenInterval/*<Int64>*//*<Int32>*/(a, b)
+	}
+}
+
+public class HalfOpenInterval{
+
+	typealias Bound = Int64 
+
+	init(_ x: HalfOpenInterval) {
+		self.start = x.start
+		self.end = x.end
+	}
+	
+	init(_ start: Bound, _ end: Bound) {
+		self.start = start
+		self.end = end
+	}
+		
+	public let end: Bound
+	public let start: Bound
+
+	public var isEmpty: Boolean {
+		return end <= start
+	}
+	
+	public func GetSequence() -> ISequence<Bound> {
+		var i = start
+		while i < end {
+			__yield i
+			i += 1
+		}
+	}
+}
+#endif
