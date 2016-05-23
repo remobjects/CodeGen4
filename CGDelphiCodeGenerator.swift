@@ -647,6 +647,11 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
-		Append("'"+expression.Value+"'")
+		var x = expression.Value as! UInt32;
+		if (x >= 32) && (x < 127) {
+			Append("'"+expression.Value+"'");
+		} else {
+			super.generateCharacterLiteralExpression(expression);
+		}
 	}
 }
