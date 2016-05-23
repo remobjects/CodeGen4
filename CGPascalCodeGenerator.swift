@@ -807,7 +807,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateDestroyInstanceExpression(expression: CGDestroyInstanceExpression) {
 		generateExpression(expression.Instance);
-		Append(".Free");
+		Append(".Free()");
 	}
 
 	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {

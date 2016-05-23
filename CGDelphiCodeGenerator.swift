@@ -645,4 +645,8 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			case .Class: Append("")
 		}
 	}
+
+	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+		Append("'"+expression.Value+"'")
+	}
 }
