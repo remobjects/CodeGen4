@@ -42,7 +42,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		Version = version
 	}	
 
-	override func escapeIdentifier(name: String) -> String {
+	override func escapeIdentifier(_ name: String) -> String {
 		if Version > 9 {
 			return super.escapeIdentifier(name)
 		} else {
@@ -103,7 +103,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		super.generateFooter()
 	}
 
-	override func pascalGenerateMemberVisibilityKeyword(visibility: CGMemberVisibilityKind) {
+	override func pascalGenerateMemberVisibilityKeyword(_ visibility: CGMemberVisibilityKind) {
 		if Version > 11 {
 			switch visibility {
 				case .Unspecified: break /* no-op */
@@ -135,18 +135,18 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func pascalGenerateCallingConversion(callingConvention: CGCallingConventionKind){
+	override func pascalGenerateCallingConversion(_ callingConvention: CGCallingConventionKind){
 		switch callingConvention {	
-			case .Register:		 break				   //default case
-			case .Pascal:		 Append(" pascal;")	   //backward compatibility
-			case .CDecl:		 Append(" cdecl;")
-			case .SafeCall:		 Append(" safecall;")
-			case .StdCall:		 Append(" stdcall;")
+			case .Register: break				   //default case
+			case .Pascal: Append(" pascal;")	   //backward compatibility
+			case .CDecl: Append(" cdecl;")
+			case .SafeCall: Append(" safecall;")
+			case .StdCall: Append(" stdcall;")
 			default:
 		}
 	}	
 
-	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+	override func generateEnumValueAccessExpression(_ expression: CGEnumValueAccessExpression) {
 		// don't prefix with typename in Delphi (but do in base Pascal/Oxygene)
 		generateIdentifier(expression.ValueName)
 	}
@@ -155,7 +155,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	// Type Definitions
 	//
 	
-	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		generateIdentifier(type.Name)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
@@ -306,7 +306,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
 		Append("for ")
 		generateIdentifier(statement.LoopVariableName)
 		Append(" := ")
@@ -321,11 +321,11 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
-	override func generateSelfExpression(expression: CGSelfExpression) {
+	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("Self")
 	}
 
-	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
 		// base class generates statements like
 		// if aIndex < 0 or aIndex >= Self.Count then begin
 		// which will be treated by Pascal/Delphi compiler as
@@ -355,7 +355,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func generateEnumType(type: CGEnumTypeDefinition) {
+	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		generateIdentifier(type.Name)
 		Append(" = ")
 		Append("(")
@@ -377,7 +377,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		generateStatementTerminator()
 	}
 
-	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		generateIdentifier(type.Name)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
@@ -393,7 +393,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		incIndent()
 	}
 
-	override func generateFieldDefinition(variable: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ variable: CGFieldDefinition, type: CGTypeDefinition) {
 		if variable.Static {
 			Append("class ")
 		}
@@ -424,7 +424,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		generateStatementTerminator()
 	}
 
-	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 		if let type = type.`Type` as? CGPredefinedTypeReference {
 			if type.Kind == CGPredefinedTypeKind.Void {
 				// generate "Pointer" instead of "^Pointer"
@@ -440,7 +440,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	// Statements
 	//
 
-	override func generateConditionStart(condition: CGConditionalDefine) {
+	override func generateConditionStart(_ condition: CGConditionalDefine) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			Append("{$IFDEF ")
 			Append(name.Name)
@@ -459,7 +459,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		AppendLine("}")
 	}
 	
-	override func generateConditionEnd(condition: CGConditionalDefine) {
+	override func generateConditionEnd(_ condition: CGConditionalDefine) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			AppendLine("{$ENDIF}")
 		} else {
@@ -474,7 +474,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 
-//	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+//	override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
 //		Append("if ")
 //		generateExpression(statement.Condition)
 //		Append(" then")
@@ -511,7 +511,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 //		}
 //	}
 
-	override func generateSwitchStatement(statement: CGSwitchStatement) {
+	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
 		Append("case ")
 		generateExpression(statement.Expression)
 		AppendLine(" of")
@@ -559,7 +559,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		generateStatementTerminator()
 	}
 
-	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
 			AppendLine("try")
 			incIndent()
@@ -617,7 +617,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
+	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int: Append("Integer")
 			case .UInt: Append("")
@@ -646,7 +646,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		var x = expression.Value as! UInt32;
 		if (x >= 32) && (x < 127) {
 			Append("'"+expression.Value+"'");

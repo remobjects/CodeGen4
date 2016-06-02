@@ -82,7 +82,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 
 	}
 
-	override func generateImport(imp: CGImport) {
+	override func generateImport(_ imp: CGImport) {
 		// ignore imports, they are in the .h
 	}
 
@@ -99,11 +99,11 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	// Types
 	//
 	
-	override func generateStructType(type: CGStructTypeDefinition) {
+	override func generateStructType(_ type: CGStructTypeDefinition) {
 		// structs don't appear in .m
 	}
 	
-	override func generateInterfaceType(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceType(_ type: CGInterfaceTypeDefinition) {
 		// protocols don't appear in .m
 	}
 	
@@ -111,7 +111,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(method, type: type, header: false)
 		AppendLine()
 		AppendLine("{")
@@ -127,7 +127,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if let getStatements = property.GetStatements, method = property.GetterMethodDefinition() {
 			method.Name = "get__" + property.Name
 			if isCBuilder() {			
@@ -150,7 +150,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		}
 	}	
 
-	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(ctor, type: type, header: false)
 		AppendLine()
 		AppendLine("{")

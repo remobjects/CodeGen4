@@ -19,11 +19,11 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		}
 	}
 	
-	override func generateImport(imp: CGImport) {
+	override func generateImport(_ imp: CGImport) {
 		AppendLine("#import <\(imp.Name)/\(imp.Name).h>")
 	}
 
-	override func generateFileImport(imp: CGImport) {
+	override func generateFileImport(_ imp: CGImport) {
 		AppendLine("#import \"\(imp.Name).h\"")
 	}
 
@@ -31,15 +31,15 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	// Types
 	//
 	
-	override func generateAliasType(type: CGTypeAliasDefinition) {
+	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
 	
-	override func generateBlockType(type: CGBlockTypeDefinition) {
+	override func generateBlockType(_ type: CGBlockTypeDefinition) {
 		
 	}
 	
-	override func generateEnumType(type: CGEnumTypeDefinition) {
+	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		Append("typedef NS_ENUM(")
 		if let baseType = type.BaseType {
 			generateTypeReference(baseType, ignoreNullability: true)
@@ -65,7 +65,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine("};")
 	}
 	
-	override func generateClassTypeStart(type: CGClassTypeDefinition) {
+	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		Append("@interface ")
 		generateIdentifier(type.Name)
 		objcGenerateAncestorList(type)
@@ -75,20 +75,20 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine()
 	}
 	
-	/*override func generateClassTypeEnd(type: CGClassTypeDefinition) {
+	/*override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine(@"end")
 	}*/
 	
-	override func generateStructTypeStart(type: CGStructTypeDefinition) {
+	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 
 	}
 	
-	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
+	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 
 	}	
 	
-	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		Append("@protocol ")
 		generateIdentifier(type.Name)
 		objcGenerateAncestorList(type)
@@ -96,7 +96,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine()
 	}
 	
-	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		AppendLine()
 		AppendLine("@end")
 	}	
@@ -105,17 +105,17 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		generateMethodDefinitionHeader(method, type: type)
 		AppendLine(";")
 	}
 	
-	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		generateMethodDefinitionHeader(ctor, type: type)
 		AppendLine(";")
 	}
 	
-	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		
 		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
 			Append("// overriden ") // we don't need to re-emit overriden properties in header?

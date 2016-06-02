@@ -247,7 +247,7 @@ public class CGUnaryOperatorExpression: CGExpression {
 		OperatorString = operatorString
 	}
 	
-	public static func NotExpression(value: CGExpression) -> CGUnaryOperatorExpression {
+	public static func NotExpression(_ value: CGExpression) -> CGUnaryOperatorExpression {
 		return CGUnaryOperatorExpression(value, CGUnaryOperatorKind.Not)
 	}
 }

@@ -12,7 +12,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		tabSize = 4
 	}
 
-	override func memberIsSingleLine(member: CGMemberDefinition) -> Boolean {
+	override func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
 		if member is CGFieldDefinition {
 			return true
 		}
@@ -27,7 +27,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("/* \(comment) */")
 	}
 	
-	override func generateConditionStart(condition: CGConditionalDefine) {
+	override func generateConditionStart(_ condition: CGConditionalDefine) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			Append("#ifdef ")
 			Append(name.Name)
@@ -50,11 +50,11 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine("#else")
 	}
 	
-	override func generateConditionEnd(condition: CGConditionalDefine) {
+	override func generateConditionEnd(_ condition: CGConditionalDefine) {
 		AppendLine("#endif")
 	}
 
-	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
 		AppendLine("{")
 		incIndent()
 		generateStatements(statement.Statements)
@@ -62,7 +62,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+	override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
 		Append("if (")
 		generateExpression(statement.Condition)
 		AppendLine(")")
@@ -73,7 +73,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
 		Append("for (")
 		if let type = statement.LoopVariableType {
 			generateTypeReference(type)
@@ -104,14 +104,14 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 	}
 
-	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+	override func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
 		Append("while (")
 		generateExpression(statement.Condition)
 		AppendLine(")")
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
 	}
 
-	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
 		AppendLine("do")
 		AppendLine("{")
 		incIndent()
@@ -123,7 +123,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine(")")
 	}
 
-	override func generateSwitchStatement(statement: CGSwitchStatement) {
+	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
 		Append("switch (")
 		generateExpression(statement.Expression)
 		AppendLine(")")
@@ -145,7 +145,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateReturnStatement(statement: CGReturnStatement) {
+	override func generateReturnStatement(_ statement: CGReturnStatement) {
 		if let value = statement.Value {
 			Append("return ")
 			generateExpression(value)
@@ -156,17 +156,17 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateBreakStatement(statement: CGBreakStatement) {
+	override func generateBreakStatement(_ statement: CGBreakStatement) {
 		Append("break")
 		generateStatementTerminator()
 	}
 
-	override func generateContinueStatement(statement: CGContinueStatement) {
+	override func generateContinueStatement(_ statement: CGContinueStatement) {
 		Append("continue")
 		generateStatementTerminator()
 	}
 
-	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 		generateExpression(statement.Target)
 		Append(" = ")
 		generateExpression(statement.Value)
@@ -177,19 +177,19 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	// Expressions
 	//
 	
-	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+	override func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
 		Append("sizeof(")
 		generateExpression(expression.Expression)
 		Append(")")
 	}
 	
-	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
 		Append("*(")
 		generateExpression(expression.PointerExpression)
 		Append(")")
 	}
 
-	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
 			case .Plus: Append("+")
 			case .Minus: Append("-")
@@ -199,7 +199,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Concat: fallthrough
 			case .Addition: Append("+")
@@ -236,7 +236,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(_ expression: CGIfThenElseExpression) {
 		Append("(")
 		generateExpression(expression.Condition)
 		Append(" ? ")
@@ -248,7 +248,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append(")")
 	}
 
-	internal func cStyleEscapeCharactersInStringLiteral(string: String) -> String {
+	internal func cStyleEscapeCharactersInStringLiteral(_ string: String) -> String {
 		let result = StringBuilder()
 		let len = string.Length
 		for i in 0 ..< len {
@@ -278,19 +278,19 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		return result.ToString()
 	}
 	
-	internal func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+	internal func cStyleEscapeSequenceForCharacter(_ ch: Char) -> String {
 		return "\\U"+Sugar.Convert.ToHexString(Integer(ch), 8) // plain C: always use 8 hex digits with "\U"
 	}
 
-	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 		Append("\"\(cStyleEscapeCharactersInStringLiteral(expression.Value))\"")
 	}
 
-	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		Append("'\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))'")
 	}
 	
-	private func cStyleAppendNumberKind(numberKind: CGNumberKind?) {
+	private func cStyleAppendNumberKind(_ numberKind: CGNumberKind?) {
 		if let numberKind = numberKind {
 			switch numberKind {
 				case .Unsigned: Append("U")
@@ -303,7 +303,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+	override func generateIntegerLiteralExpression(_ literalExpression: CGIntegerLiteralExpression) {
 		switch literalExpression.Base {
 			case 16: Append("0x"+literalExpression.StringRepresentation(base:16))
 			case 10: Append(literalExpression.StringRepresentation(base:10))
@@ -313,7 +313,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		cStyleAppendNumberKind(literalExpression.NumberKind)
 	}
 
-	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+	override func generateFloatLiteralExpression(_ literalExpression: CGFloatLiteralExpression) {
 		switch literalExpression.Base {
 			case 10: Append(literalExpression.StringRepresentation())
 			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for C-Style languages.")
@@ -321,7 +321,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		cStyleAppendNumberKind(literalExpression.NumberKind)
 	}
 
-	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 		generateTypeReference(type.`Type`)
 		Append("*")
 	}	

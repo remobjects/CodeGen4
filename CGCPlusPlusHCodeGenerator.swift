@@ -119,7 +119,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 	
-	override func generateImport(imp: CGImport) {
+	override func generateImport(_ imp: CGImport) {
 
 		if imp.StaticClass != nil {
 			AppendLine("#include <\(imp.Name)>")
@@ -132,7 +132,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	// Types
 	//
 	
-	override func generateAliasType(type: CGTypeAliasDefinition) {
+	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		Append("typedef ")
 		generateTypeReference(type.ActualType)
 		Append(" ")
@@ -140,11 +140,11 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine(";")
 	}
 	
-	override func generateBlockType(type: CGBlockTypeDefinition) {
+	override func generateBlockType(_ type: CGBlockTypeDefinition) {
 		
 	}
 	
-	override func generateEnumType(type: CGEnumTypeDefinition) {
+	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 
 		//#pragma option push -b-
 		//enum TSex {
@@ -178,7 +178,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 	
-	override func generateClassTypeStart(type: CGClassTypeDefinition) {
+	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 //		if isCBuilder() {
 //			AppendLine("class DELPHICLASS \(type.Name);");
 //		}
@@ -210,13 +210,13 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 	
-	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
+	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine()
 		AppendLine("};")
 	}
 	
-	override func generateStructTypeStart(type: CGStructTypeDefinition) {
+	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		Append("struct ");
 		generateIdentifier(type.Name)
 		cppGenerateAncestorList(type)
@@ -225,13 +225,13 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		incIndent();
 	}
 	
-	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
+	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		decIndent();
 		AppendLine()
 		AppendLine("}")
 	}	
 	
-	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 //		Append("__interface ")
 //		generateIdentifier(type.Name)
 //		AppendLine(";");
@@ -248,7 +248,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		incIndent()
 	}
 	
-	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {		
+	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {		
 		decIndent()
 		AppendLine()
 		AppendLine("};")
@@ -258,12 +258,12 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(method, type: type, header: true)
 		AppendLine(";")
 	}
 
-	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(ctor, type: type, header: true)
 		AppendLine(";")
 	}
@@ -273,7 +273,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine(";")
 	}
 	
-	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		
 		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
 			Append("// overriden ") // we don't need to re-emit overriden properties in header?
@@ -351,7 +351,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine("};")
 	}
 
-	internal final func cppHGenerateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition, lastVisibility: CGMemberVisibilityKind) {
+	internal final func cppHGenerateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition, lastVisibility: CGMemberVisibilityKind) {
 		if let type = type as? CGInterfaceTypeDefinition {
 		}
 		else {
@@ -366,7 +366,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		generateTypeMember(member, type: type);
 	}
 
-	func cppHGenerateMemberVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+	func cppHGenerateMemberVisibilityPrefix(_ visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Private: AppendLine("private:");
 			case .Public: AppendLine("public:");
@@ -378,7 +378,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 
-	override func generateTypeMembers(type: CGTypeDefinition) {
+	override func generateTypeMembers(_ type: CGTypeDefinition) {
 		if let type = type as? CGInterfaceTypeDefinition {
 			decIndent();
 			cppHGenerateMemberVisibilityPrefix(CGMemberVisibilityKind.Public);
@@ -410,7 +410,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 
-	func cppGeneratePropertyAccessorDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+	func cppGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if !definitionOnly {
 			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
 				if isCBuilder() {			
@@ -429,7 +429,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		}
 	}
 
-	final func generateTypeMembers(type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
+	final func generateTypeMembers(_ type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
 		var first = true
 		for m in type.Members {
 			if visibility == CGMemberVisibilityKind.Private {

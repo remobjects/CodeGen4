@@ -7,7 +7,7 @@ public extension Sugar.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(nullability: CGTypeNullabilityKind) -> CGTypeReference {
+	public func AsTypeReference(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
@@ -47,7 +47,7 @@ public extension RemObjects.Elements.System.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(nullability: CGTypeNullabilityKind) -> CGTypeReference {
+	public func AsTypeReference(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
@@ -121,7 +121,7 @@ public extension CGExpression {
 	public func AsCallParameter() -> CGCallParameter {
 		return CGCallParameter(self)
 	}
-	public func AsCallParameter(name: String) -> CGCallParameter {
+	public func AsCallParameter(_ name: String) -> CGCallParameter {
 		return CGCallParameter(self, name)
 	}
 	public func AsEllipsisCallParameter() -> CGCallParameter {

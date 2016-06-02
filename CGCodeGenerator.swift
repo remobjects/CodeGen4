@@ -39,7 +39,7 @@ public __abstract class CGCodeGenerator {
 	// Additional public APIs used by IDE Smarts & Co
 	//
 
-	public final func GenerateUnitForSingleType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
+	public final func GenerateUnitForSingleType(_ type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -58,7 +58,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 	
-	public final func GenerateType(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
+	public final func GenerateType(_ type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -72,7 +72,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 	
-	public final func GenerateTypeDefinitionOnly(type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
+	public final func GenerateTypeDefinitionOnly(_ type: CGTypeDefinition, unit: CGCodeUnit? = nil) -> String {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -86,15 +86,15 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
-	public final func GenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
+	public final func GenerateMember(_ member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
 		return doGenerateMember(member, type: type, unit: unit, definitionOnly: false)
 	}
 	
-	public final func GenerateMemberDefinition(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
+	public final func GenerateMemberDefinition(_ member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String {
 		return doGenerateMember(member, type: type, unit: unit, definitionOnly: true)
 	}
 	
-	internal final func doGenerateMember(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil, definitionOnly: Boolean) -> String {
+	internal final func doGenerateMember(_ member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil, definitionOnly: Boolean) -> String {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -108,7 +108,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
-	public final func GenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String? {
+	public final func GenerateMemberImplementation(_ member: CGMemberDefinition, type: CGTypeDefinition?, unit: CGCodeUnit? = nil) -> String? {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -122,7 +122,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
-	public final func GenerateParameterDefinition(parameter: CGParameterDefinition, unit: CGCodeUnit? = nil) -> String {
+	public final func GenerateParameterDefinition(_ parameter: CGParameterDefinition, unit: CGCodeUnit? = nil) -> String {
 		currentUnit = unit
 		currentCode = StringBuilder()
 		self.definitionOnly = definitionOnly
@@ -131,7 +131,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 	
-	public final func GenerateStatement(statement: CGStatement, unit: CGCodeUnit? = nil) -> String? {
+	public final func GenerateStatement(_ statement: CGStatement, unit: CGCodeUnit? = nil) -> String? {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -141,7 +141,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode.ToString()
 	}
 
-	public func doGenerateMemberImplementation(member: CGMemberDefinition, type: CGTypeDefinition) {
+	public func doGenerateMemberImplementation(_ member: CGMemberDefinition, type: CGTypeDefinition) {
 		// no-op for most languages, except Pascal
 	}
 
@@ -239,7 +239,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	internal final func generateDirective(directive: CGCompilerDirective) {
+	internal final func generateDirective(_ directive: CGCompilerDirective) {
 		if let condition = directive.Condition {
 			generateConditionStart(condition)
 			incIndent()
@@ -256,12 +256,12 @@ public __abstract class CGCodeGenerator {
 		Append("// ")
 	}
 	
-	internal func generateImport(`import`: CGImport) {
+	internal func generateImport(_ `import`: CGImport) {
 		// descendant must override this or generateImports()
 		assert(false, "generateImport not implemented")
 	}
 	
-	internal func generateFileImport(`import`: CGImport) {
+	internal func generateFileImport(_ `import`: CGImport) {
 		// descendant should override if it supports file imports 
 	}
 	
@@ -269,25 +269,25 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 
-	internal func memberNeedsSpace(member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+	internal func memberNeedsSpace(_ member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
 		if memberIsSingleLine(member) && memberIsSingleLine(lastMember) {
 			return false;
 		}
 		return true
 	}
 	
-	internal func globalNeedsSpace(global: CGGlobalDefinition, afterGlobal lastGlobal: CGGlobalDefinition) -> Boolean {
+	internal func globalNeedsSpace(_ global: CGGlobalDefinition, afterGlobal lastGlobal: CGGlobalDefinition) -> Boolean {
 		if globalIsSingleLine(global) && globalIsSingleLine(lastGlobal) {
 			return false;
 		}
 		return true
 	}
 	
-	internal func memberIsSingleLine(member: CGMemberDefinition) -> Boolean {
+	internal func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
 		return false
 	}
 
-	internal func globalIsSingleLine(global: CGGlobalDefinition) -> Boolean {
+	internal func globalIsSingleLine(_ global: CGGlobalDefinition) -> Boolean {
 		if global is CGGlobalVariableDefinition {
 			return true
 		}
@@ -298,19 +298,19 @@ public __abstract class CGCodeGenerator {
 	// Indentifiers
 	//
 
-	@inline(__always) internal final func generateIdentifier(name: String) {
+	@inline(__always) internal final func generateIdentifier(_ name: String) {
 		generateIdentifier(name, escaped: true)
 	}
 	
-	@inline(__always) internal final func generateIdentifier(name: String, escaped: Boolean) {
+	@inline(__always) internal final func generateIdentifier(_ name: String, escaped: Boolean) {
 		generateIdentifier(name, escaped: escaped, alwaysEmitNamespace: false)
 	}
 	
-	@inline(__always) internal final func generateIdentifier(name: String, alwaysEmitNamespace: Boolean) {
+	@inline(__always) internal final func generateIdentifier(_ name: String, alwaysEmitNamespace: Boolean) {
 		generateIdentifier(name, escaped: true, alwaysEmitNamespace: alwaysEmitNamespace)
 	}
 	
-	internal final func generateIdentifier(name: String, escaped: Boolean, alwaysEmitNamespace: Boolean) {
+	internal final func generateIdentifier(_ name: String, escaped: Boolean, alwaysEmitNamespace: Boolean) {
 		
 		if omitNamespacePrefixes && !alwaysEmitNamespace {
 			if name.Contains(".") {
@@ -341,7 +341,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	internal func escapeIdentifier(name: String) -> String {
+	internal func escapeIdentifier(_ name: String) -> String {
 		// descendant must override this
 		assert(false, "escapeIdentifier not implemented")
 		return name
@@ -351,14 +351,14 @@ public __abstract class CGCodeGenerator {
 	// Statements
 	//
 
-	internal final func generateStatements(statements: List<CGStatement>) {
+	internal final func generateStatements(_ statements: List<CGStatement>) {
 		// descendant should not override
 		for g in statements {
 			generateStatement(g)
 		}
 	}
 	
-	internal final func generateStatements(statements: List<CGVariableDeclarationStatement>?) {
+	internal final func generateStatements(_ statements: List<CGVariableDeclarationStatement>?) {
 		// descendant should not override
 		if let statements = statements {
 			for g in statements {
@@ -367,7 +367,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal final func generateStatementsSkippingOuterBeginEndBlock(statements: List<CGStatement>) {
+	internal final func generateStatementsSkippingOuterBeginEndBlock(_ statements: List<CGStatement>) {
 		//if statements.Count == 1, let block = statements[0] as? CGBeginEndBlockStatement {
 		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
 			//generateStatements(block.Statements)
@@ -377,7 +377,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal final func generateStatementSkippingOuterBeginEndBlock(statement: CGStatement) {
+	internal final func generateStatementSkippingOuterBeginEndBlock(_ statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
 			generateStatements(block.Statements)
 		} else {
@@ -385,7 +385,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateStatementIndentedUnlessItsABeginEndBlock(statement: CGStatement) {
+	internal func generateStatementIndentedUnlessItsABeginEndBlock(_ statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
 			generateStatement(block)
 		} else {
@@ -395,7 +395,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateStatementsIndentedUnlessItsASingleBeginEndBlock(statements: List<CGStatement>) {
+	internal func generateStatementsIndentedUnlessItsASingleBeginEndBlock(_ statements: List<CGStatement>) {
 		if statements.Count == 1 && statements[0] is CGBeginEndBlockStatement {
 			generateStatement(statements[0])
 		} else {
@@ -405,7 +405,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement: CGStatement) {
+	internal func generateStatementIndentedOrTrailingIfItsABeginEndBlock(_ statement: CGStatement) {
 		if let block = statement as? CGBeginEndBlockStatement {
 			Append(" ")
 			generateStatement(block)
@@ -417,7 +417,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	internal final func generateStatement(statement: CGStatement) {
+	internal final func generateStatement(_ statement: CGStatement) {
 
 		statement.startLocation = currentLocation;
 
@@ -490,7 +490,7 @@ public __abstract class CGCodeGenerator {
 
 	}
 	
-	internal func generateCommentStatement(commentStatement: CGCommentStatement?) {
+	internal func generateCommentStatement(_ commentStatement: CGCommentStatement?) {
 		if let commentStatement = commentStatement {
 			for line in commentStatement.Lines {
 				generateSingleLineCommentPrefix()
@@ -499,7 +499,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateSingleLineCommentStatement(commentStatement: CGSingleLineCommentStatement?) {
+	internal func generateSingleLineCommentStatement(_ commentStatement: CGSingleLineCommentStatement?) {
 		if let commentStatement = commentStatement {
 			generateSingleLineCommentPrefix()
 			AppendLine(commentStatement.Comment)
@@ -508,7 +508,7 @@ public __abstract class CGCodeGenerator {
 	
 	private var inCodeCommentStatement = false
 	
-	internal func generateCodeCommentStatement(commentStatement: CGCodeCommentStatement) {
+	internal func generateCodeCommentStatement(_ commentStatement: CGCodeCommentStatement) {
 		
 		assert(!inCodeCommentStatement, "Cannot nest CGCodeCommentStatements")
 		
@@ -520,13 +520,13 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateConditionalDefine(condition: CGConditionalDefine) {
+	internal func generateConditionalDefine(_ condition: CGConditionalDefine) {
 		inConditionExpression = true
 		defer { inConditionExpression = false }
 		generateExpression(condition.Expression)
 	}
 
-	internal func generateConditionStart(condition: CGConditionalDefine) {
+	internal func generateConditionStart(_ condition: CGConditionalDefine) {
 		// descendant must override this
 		assert(false, "generateConditionStart not implemented")
 	}
@@ -534,12 +534,12 @@ public __abstract class CGCodeGenerator {
 		// descendant must override this
 		assert(false, "generateConditionElse not implemented")
 	}
-	internal func generateConditionEnd(condition: CGConditionalDefine) {
+	internal func generateConditionEnd(_ condition: CGConditionalDefine) {
 		// descendant must override this
 		assert(false, "generateConditionEnd not implemented")
 	}
 
-	internal func generateConditionalBlockStatement(statement: CGConditionalBlockStatement) {
+	internal func generateConditionalBlockStatement(_ statement: CGConditionalBlockStatement) {
 		generateConditionStart(statement.Condition)
 		incIndent()
 		generateStatements(statement.Statements)
@@ -553,102 +553,102 @@ public __abstract class CGCodeGenerator {
 		generateConditionEnd(statement.Condition)
 	}
 
-	internal func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+	internal func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateBeginEndStatement not implemented")
 	}
 
-	internal func generateIfElseStatement(statement: CGIfThenElseStatement) {
+	internal func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateIfElseStatement not implemented")
 	}
 
-	internal func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	internal func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateForToLoopStatement not implemented")
 	}
 
-	internal func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
+	internal func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateForEachLoopStatement not implemented")
 	}
 
-	internal func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+	internal func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generagenerateWhileDoLoopStatementteImport not implemented")
 	}
 
-	internal func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+	internal func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateDoWhileLoopStatement not implemented")
 	}
 
-	internal func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+	internal func generateInfiniteLoopStatement(_ statement: CGInfiniteLoopStatement) {
 		// descendant may override, but this will work for all languages.
 		generateWhileDoLoopStatement(CGWhileDoLoopStatement(CGBooleanLiteralExpression(true), statement.NestedStatement))
 	}
 
-	internal func generateSwitchStatement(statement: CGSwitchStatement) {
+	internal func generateSwitchStatement(_ statement: CGSwitchStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateSwitchStatement not implemented")
 	}
 
-	internal func generateLockingStatement(statement: CGLockingStatement) {
+	internal func generateLockingStatement(_ statement: CGLockingStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateLockingStatement not implemented")
 	}
 
-	internal func generateUsingStatement(statement: CGUsingStatement) {
+	internal func generateUsingStatement(_ statement: CGUsingStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateUsingStatement not implemented")
 	}
 
-	internal func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+	internal func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateAutoReleasePoolStatement not implemented")
 	}
 
-	internal func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+	internal func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateTryFinallyCatchStatement not implemented")
 	}
 
-	internal func generateReturnStatement(statement: CGReturnStatement) {
+	internal func generateReturnStatement(_ statement: CGReturnStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateReturnStatement not implemented")
 	}
 
-	internal func generateYieldStatement(statement: CGYieldStatement) {
+	internal func generateYieldStatement(_ statement: CGYieldStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateYieldStatement not implemented")
 	}
 
-	internal func generateThrowStatement(statement: CGThrowStatement) {
+	internal func generateThrowStatement(_ statement: CGThrowStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateThrowStatement not implemented")
 	}
 
-	internal func generateBreakStatement(statement: CGBreakStatement) {
+	internal func generateBreakStatement(_ statement: CGBreakStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateBreakStatement not implemented")
 	}
 
-	internal func generateContinueStatement(statement: CGContinueStatement) {
+	internal func generateContinueStatement(_ statement: CGContinueStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateContinueStatement not implemented")
 	}
 
-	internal func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+	internal func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateVariableDeclarationStatement not implemented")
 	}
 
-	internal func generateAssignmentStatement(statement: CGAssignmentStatement) {
+	internal func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateAssignmentStatement not implemented")
 	}
 
-	internal func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+	internal func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateConstructorCallStatement not implemented")
 	}
@@ -657,7 +657,7 @@ public __abstract class CGCodeGenerator {
 		AppendLine(";")
 	}
 
-	internal func generateExpressionStatement(expression: CGExpression) {
+	internal func generateExpressionStatement(_ expression: CGExpression) {
 		generateExpression(expression)
 		generateStatementTerminator()
 	}
@@ -666,14 +666,14 @@ public __abstract class CGCodeGenerator {
 	// Expressions
 	//
 	
-	internal final func generateExpression(expression: CGExpression, ignoreNullability: Boolean) {
+	internal final func generateExpression(_ expression: CGExpression, ignoreNullability: Boolean) {
 		if let expression = expression as? CGTypeReferenceExpression {
 			generateTypeReferenceExpression(expression, ignoreNullability: ignoreNullability)
 		} else {
 			generateExpression(expression)
 		}
 	}
-	internal final func generateExpression(expression: CGExpression) {
+	internal final func generateExpression(_ expression: CGExpression) {
 		// descendant should not override
 
 		expression.startLocation = currentLocation;
@@ -768,88 +768,88 @@ public __abstract class CGCodeGenerator {
 		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 	
-	internal func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+	internal func generateNamedIdentifierExpression(_ expression: CGNamedIdentifierExpression) {
 		// descendant may override, but this will work for all languages.
 		generateIdentifier(expression.Name)
 	}
 
-	internal func generateAssignedExpression(expression: CGAssignedExpression) {
+	internal func generateAssignedExpression(_ expression: CGAssignedExpression) {
 		// descendant may override, but this will work for all languages.
 		generateExpression(CGBinaryOperatorExpression(expression.Value, CGNilExpression.Nil, expression.Inverted ? CGBinaryOperatorKind.Equals : CGBinaryOperatorKind.NotEquals))
 	}
 
-	internal func generateSizeOfExpression(expression: CGSizeOfExpression) {
+	internal func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
 		// descendant must override
 		assert(false, "generateSizeOfExpression not implemented")
 	}
 
-	internal func generateTypeOfExpression(expression: CGTypeOfExpression) {
+	internal func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 		// descendant must override
 		assert(false, "generateTypeOfExpression not implemented")
 	}
 
-	internal func generateDefaultExpression(expression: CGDefaultExpression) {
+	internal func generateDefaultExpression(_ expression: CGDefaultExpression) {
 		// descendant must override
 		assert(false, "generateDefaultExpression not implemented")
 	}
 
-	internal func generateSelectorExpression(expression: CGSelectorExpression) {
+	internal func generateSelectorExpression(_ expression: CGSelectorExpression) {
 		// descendant must override
 		assert(false, "generateSelectorExpression not implemented")
 	}
 
-	internal func generateTypeCastExpression(expression: CGTypeCastExpression) {
+	internal func generateTypeCastExpression(_ expression: CGTypeCastExpression) {
 		// descendant must override
 		assert(false, "generateTypeCastExpression not implemented")
 	}
 
-	internal func generateInheritedExpression(expression: CGInheritedExpression) {
+	internal func generateInheritedExpression(_ expression: CGInheritedExpression) {
 		// descendant must override
 		assert(false, "generateInheritedExpression not implemented")
 	}
 
-	internal func generateSelfExpression(expression: CGSelfExpression) {
+	internal func generateSelfExpression(_ expression: CGSelfExpression) {
 		// descendant must override
 		assert(false, "generateSelfExpression not implemented")
 	}
 
-	internal func generateNilExpression(expression: CGNilExpression) {
+	internal func generateNilExpression(_ expression: CGNilExpression) {
 		// descendant must override
 		assert(false, "generateNilExpression not implemented")
 	}
 
-	internal func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+	internal func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
 		// descendant must override
 		assert(false, "generatePropertyValueExpression not implemented")
 	}
 
-	internal func generateAwaitExpression(expression: CGAwaitExpression) {
+	internal func generateAwaitExpression(_ expression: CGAwaitExpression) {
 		// descendant must override
 		assert(false, "generateAwaitExpression not implemented")
 	}
 
-	internal func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+	internal func generateAnonymousMethodExpression(_ expression: CGAnonymousMethodExpression) {
 		// descendant must override
 		assert(false, "generateAnonymousMethodExpression not implemented")
 	}
 
-	internal func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
+	internal func generateAnonymousTypeExpression(_ expression: CGAnonymousTypeExpression) {
 		// descendant must override
 		assert(false, "generateAnonymousTypeExpression not implemented")
 	}
 
-	internal func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+	internal func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
 		// descendant must override
 		assert(false, "generatePointerDereferenceExpression not implemented")
 	}
 
-	internal func generateParenthesesExpression(expression: CGParenthesesExpression) {
+	internal func generateParenthesesExpression(_ expression: CGParenthesesExpression) {
 		Append("(")
 		generateExpression(expression.Value)
 		Append(")")
 	}
 	
-	internal func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+	internal func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 		// descendant may override, but this will work for most languages.
 		if let operatorString = expression.OperatorString {
 			Append(operatorString)
@@ -859,7 +859,7 @@ public __abstract class CGCodeGenerator {
 		generateExpression(expression.Value)
 	}
 
-	internal func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+	internal func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
 		// descendant may override, but this will work for most languages.
 		generateExpression(expression.LefthandValue)
 		Append(" ")
@@ -872,32 +872,32 @@ public __abstract class CGCodeGenerator {
 		generateExpression(expression.RighthandValue)
 	}
 
-	internal func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+	internal func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 		// descendant must override
 		assert(false, "generateUnaryOperator not implemented")
 	}
 	
-	internal func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+	internal func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		// descendant must override
 		assert(false, "generateBinaryOperator not implemented")
 	}
 
-	internal func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
+	internal func generateIfThenElseExpression(_ expression: CGIfThenElseExpression) {
 		// descendant must override
 		assert(false, "generateIfThenElseExpression not implemented")
 	}
 
-	internal func generateLocalVariableAccessExpression(expression: CGLocalVariableAccessExpression) {
+	internal func generateLocalVariableAccessExpression(_ expression: CGLocalVariableAccessExpression) {
 		// descendant may override, but this will work for all languages.
 		generateIdentifier(expression.Name)
 	}
 
-	internal func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+	internal func generateFieldAccessExpression(_ expression: CGFieldAccessExpression) {
 		// descendant must override
 		assert(false, "generateFieldAccessExpression not implemented")
 	}
 
-	internal func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+	internal func generateArrayElementAccessExpression(_ expression: CGArrayElementAccessExpression) {
 		// descendant may override, but this will work for most languages.
 		generateExpression(expression.Array)
 		Append("[")
@@ -911,44 +911,44 @@ public __abstract class CGCodeGenerator {
 		Append("]")
 	}
 
-	internal func generateMethodCallExpression(expression: CGMethodCallExpression) {
+	internal func generateMethodCallExpression(_ expression: CGMethodCallExpression) {
 		// descendant must override
 		assert(false, "generateMethodCallExpression not implemented")
 	}
 
-	internal func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+	internal func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		// descendant must override
 		assert(false, "generateNewInstanceExpression not implemented")
 	}
 
-	internal func generateDestroyInstanceExpression(expression: CGDestroyInstanceExpression) {
+	internal func generateDestroyInstanceExpression(_ expression: CGDestroyInstanceExpression) {
 		// descendant must override, if they support this
 		assert(false, "generateDestroyInstanceExpression not implemented")
 	}
 
-	internal func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
+	internal func generatePropertyAccessExpression(_ expression: CGPropertyAccessExpression) {
 		// descendant must override
 		assert(false, "generatePropertyAccessExpression not implemented")
 	}
 
-	internal func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+	internal func generateEnumValueAccessExpression(_ expression: CGEnumValueAccessExpression) {
 		// descendant may override, but this will work for most languages.
 		generateTypeReference(expression.`Type`, ignoreNullability: true)
 		Append(".")
 		generateIdentifier(expression.ValueName)
 	}
 
-	internal func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+	internal func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 		// descendant must override
 		assert(false, "generateStringLiteralExpression not implemented")
 	}
 
-	internal func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+	internal func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		// descendant must override
 		assert(false, "generateCharacterLiteralExpression not implemented")
 	}
 
-	internal func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+	internal func generateIntegerLiteralExpression(_ literalExpression: CGIntegerLiteralExpression) {
 		// descendant should override
 		switch literalExpression.Base {
 			case 10: Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
@@ -956,7 +956,7 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	internal func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+	internal func generateFloatLiteralExpression(_ literalExpression: CGFloatLiteralExpression) {
 		// descendant should override
 		switch literalExpression.Base {
 			case 10: Append(valueForLanguageAgnosticLiteralExpression(literalExpression))
@@ -964,22 +964,22 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	internal func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+	internal func generateArrayLiteralExpression(_ expression: CGArrayLiteralExpression) {
 		// descendant must override
 		assert(false, "generateArrayLiteralExpression not implemented")
 	}
 
-	internal func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+	internal func generateSetLiteralExpression(_ expression: CGSetLiteralExpression) {
 		// descendant must override
 		assert(false, "generateSetLiteralExpression not implemented")
 	}
 
-	internal func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+	internal func generateDictionaryExpression(_ expression: CGDictionaryLiteralExpression) {
 		// descendant must override
 		assert(false, "generateDictionaryExpression not implemented")
 	}
 	
-	internal func generateTupleExpression(expression: CGTupleLiteralExpression) {
+	internal func generateTupleExpression(_ expression: CGTupleLiteralExpression) {
 		// descendant may override, but this will work for most languages.
 		Append("(")
 		for m in 0 ..< expression.Members.Count {
@@ -991,17 +991,17 @@ public __abstract class CGCodeGenerator {
 		Append(")")
 	}
 	
-	internal func generateTypeReferenceExpression(expression: CGTypeReferenceExpression, ignoreNullability: Boolean) {
+	internal func generateTypeReferenceExpression(_ expression: CGTypeReferenceExpression, ignoreNullability: Boolean) {
 		// descendant may override, but this will work for most languages.
 		generateTypeReference(expression.`Type`, ignoreNullability: ignoreNullability)
 	}
 
-	internal func generateTypeReferenceExpression(expression: CGTypeReferenceExpression) {
+	internal func generateTypeReferenceExpression(_ expression: CGTypeReferenceExpression) {
 		// descendant may override, but this will work for most languages.
 		generateTypeReference(expression.`Type`)
 	}
 	
-	internal func valueForLanguageAgnosticLiteralExpression(expression: CGLanguageAgnosticLiteralExpression) -> String {
+	internal func valueForLanguageAgnosticLiteralExpression(_ expression: CGLanguageAgnosticLiteralExpression) -> String {
 		// descendant may override if they aren't happy with the default
 		return expression.StringRepresentation()
 	}
@@ -1010,7 +1010,7 @@ public __abstract class CGCodeGenerator {
 	// Globals
 	//
 
-	internal func generateGlobal(global: CGGlobalDefinition) {
+	internal func generateGlobal(_ global: CGGlobalDefinition) {
 		if let global = global as? CGGlobalFunctionDefinition {
 			generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 		} else if let global = global as? CGGlobalVariableDefinition {
@@ -1026,7 +1026,7 @@ public __abstract class CGCodeGenerator {
 	// Type Definitions
 	//
 	
-	func generateAttributes(attributes: List<CGAttribute>?) {
+	func generateAttributes(_ attributes: List<CGAttribute>?) {
 		if let attributes = attributes where attributes.Count > 0 {
 			for a in attributes{
 				generateAttribute(a)
@@ -1034,12 +1034,12 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 
-	func generateAttribute(attribute: CGAttribute) {
+	func generateAttribute(_ attribute: CGAttribute) {
 		// descendant must override
 		assert(false, "generateAttribute not implemented")
 	}
 	
-	internal final func generateTypeDefinition(type: CGTypeDefinition) {
+	internal final func generateTypeDefinition(_ type: CGTypeDefinition) {
 		
 		if let condition = type.Condition {
 			generateConditionStart(condition)
@@ -1079,55 +1079,55 @@ public __abstract class CGCodeGenerator {
 
 	}
 	
-	internal func generateInlineComment(comment: String) {
+	internal func generateInlineComment(_ comment: String) {
 		// descendant must override
 		assert(false, "generateInlineComment not implemented")
 	}
 	
-	internal func generateAliasType(type: CGTypeAliasDefinition) {
+	internal func generateAliasType(_ type: CGTypeAliasDefinition) {
 		// descendant must override
 		assert(false, "generateAliasType not implemented")
 	}
 	
-	internal func generateBlockType(type: CGBlockTypeDefinition) {
+	internal func generateBlockType(_ type: CGBlockTypeDefinition) {
 		// descendant must override
 		assert(false, "generateBlockType not implemented")
 	}
 	
-	internal func generateEnumType(type: CGEnumTypeDefinition) {
+	internal func generateEnumType(_ type: CGEnumTypeDefinition) {
 		// descendant must override
 		assert(false, "generateEnumType not implemented")
 	}
 	
-	internal func generateClassType(type: CGClassTypeDefinition) {
+	internal func generateClassType(_ type: CGClassTypeDefinition) {
 		// descendant should not usually override
 		generateClassTypeStart(type)
 		generateTypeMembers(type)
 		generateClassTypeEnd(type)
 	}
 	
-	internal func generateStructType(type: CGStructTypeDefinition) {
+	internal func generateStructType(_ type: CGStructTypeDefinition) {
 		// descendant should not usually override
 		generateStructTypeStart(type)
 		generateTypeMembers(type)
 		generateStructTypeEnd(type)
 	}
 	
-	internal func generateInterfaceType(type: CGInterfaceTypeDefinition) {
+	internal func generateInterfaceType(_ type: CGInterfaceTypeDefinition) {
 		// descendant should not usually override
 		generateInterfaceTypeStart(type)
 		generateTypeMembers(type)
 		generateInterfaceTypeEnd(type)
 	}
 	
-	internal func generateExtensionType(type: CGExtensionTypeDefinition) {
+	internal func generateExtensionType(_ type: CGExtensionTypeDefinition) {
 		// descendant should not usually override
 		generateExtensionTypeStart(type)
 		generateTypeMembers(type)
 		generateExtensionTypeEnd(type)
 	}
 	
-	internal func generateTypeMembers(type: CGTypeDefinition) {
+	internal func generateTypeMembers(_ type: CGTypeDefinition) {
 
 		var lastMember: CGMemberDefinition? = nil
 		for m in type.Members {
@@ -1139,42 +1139,42 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateClassTypeStart(type: CGClassTypeDefinition) {
+	internal func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		// descendant must override
 		assert(false, "generateClassTypeStart not implemented")
 	}
 	
-	internal func generateClassTypeEnd(type: CGClassTypeDefinition) {
+	internal func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		// descendant must override
 		assert(false, "generateClassTypeEnd not implemented")
 	}
 	
-	internal func generateStructTypeStart(type: CGStructTypeDefinition) {
+	internal func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		// descendant must override
 		assert(false, "generateStructTypeStart not implemented")
 	}
 	
-	internal func generateStructTypeEnd(type: CGStructTypeDefinition) {
+	internal func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		// descendant must override
 		assert(false, "generateStructTypeEnd not implemented")
 	}	
 	
-	internal func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+	internal func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		// descendant must override
 		assert(false, "generateInterfaceTypeStart not implemented")
 	}
 	
-	internal func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+	internal func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		// descendant must override
 		assert(false, "generateInterfaceTypeEnd not implemented")
 	}	
 	
-	internal func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+	internal func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		// descendant must override
 		assert(false, "generateExtensionTypeStart not implemented")
 	}
 	
-	internal func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+	internal func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 		// descendant must override
 		assert(false, "generateExtensionTypeEnd not implemented")
 	}	
@@ -1183,7 +1183,7 @@ public __abstract class CGCodeGenerator {
 	// Type members
 	//
 	
-	internal final func generateTypeMember(member: CGMemberDefinition, type: CGTypeDefinition) {
+	internal final func generateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition) {
 
 		if let condition = type.Condition {
 			generateConditionStart(condition)
@@ -1231,52 +1231,52 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 				
-	internal func generateConstructorDefinition(member: CGConstructorDefinition, type: CGTypeDefinition) {
+	internal func generateConstructorDefinition(_ member: CGConstructorDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateConstructorDefinition not implemented")
 	}
 
-	internal func generateDestructorDefinition(member: CGDestructorDefinition, type: CGTypeDefinition) {
+	internal func generateDestructorDefinition(_ member: CGDestructorDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateDestructorDefinition not implemented")
 	}
 
-	internal func generateFinalizerDefinition(member: CGFinalizerDefinition, type: CGTypeDefinition) {
+	internal func generateFinalizerDefinition(_ member: CGFinalizerDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateFinalizerDefinition not implemented")
 	}
 
-	internal func generateMethodDefinition(member: CGMethodDefinition, type: CGTypeDefinition) {
+	internal func generateMethodDefinition(_ member: CGMethodDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateMethodDefinition not implemented")
 	}
 
-	internal func generateFieldDefinition(member: CGFieldDefinition, type: CGTypeDefinition) {
+	internal func generateFieldDefinition(_ member: CGFieldDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateFieldDefinition not implemented")
 	}
 
-	internal func generatePropertyDefinition(member: CGPropertyDefinition, type: CGTypeDefinition) {
+	internal func generatePropertyDefinition(_ member: CGPropertyDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generatePropertyDefinition not implemented")
 	}
 
-	internal func generateEventDefinition(member: CGEventDefinition, type: CGTypeDefinition) {
+	internal func generateEventDefinition(_ member: CGEventDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateEventDefinition not implemented")
 	}
 
-	internal func generateCustomOperatorDefinition(member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+	internal func generateCustomOperatorDefinition(_ member: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateCustomOperatorDefinition not implemented")
 	}
 
-	internal func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+	internal func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateNestedTypeDefinition not implemented")
 	}
 
-	internal func generateParameterDefinition(parameter: CGParameterDefinition) {
+	internal func generateParameterDefinition(_ parameter: CGParameterDefinition) {
 		// descendant must override omnly if they use this, or to support GenerateParameterDefinition()
 		assert(false, "generateParameterDefinition not implemented")
 	}
@@ -1285,11 +1285,11 @@ public __abstract class CGCodeGenerator {
 	// Type References
 	//
 
-	internal final func generateTypeReference(type: CGTypeReference) {
+	internal final func generateTypeReference(_ type: CGTypeReference) {
 		generateTypeReference(type, ignoreNullability: false)
 	}
 	
-	internal final func generateTypeReference(type: CGTypeReference, ignoreNullability: Boolean) {
+	internal final func generateTypeReference(_ type: CGTypeReference, ignoreNullability: Boolean) {
 		
 		type.startLocation = currentLocation;
 		//Append("["+type+"|"+Int32(type.ActualNullability).description+"]")
@@ -1330,11 +1330,11 @@ public __abstract class CGCodeGenerator {
 		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 	
-	internal func generateNamedTypeReference(type: CGNamedTypeReference) {
+	internal func generateNamedTypeReference(_ type: CGNamedTypeReference) {
 		generateNamedTypeReference(type, ignoreNamespace: false, ignoreNullability: false)
 	}
 	
-	internal func generateGenericArguments(genericArguments: List<CGTypeReference>?) {
+	internal func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
 		if let genericArguments = genericArguments where genericArguments.Count > 0 {
 			// descendant may override, but this will work for most languages.
 			Append("<")
@@ -1349,11 +1349,11 @@ public __abstract class CGCodeGenerator {
 		}
 	}
 	
-	internal func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNullability: Boolean) {
+	internal func generateNamedTypeReference(_ type: CGNamedTypeReference, ignoreNullability: Boolean) {
 		generateNamedTypeReference(type, ignoreNamespace: false, ignoreNullability: ignoreNullability)
 	}
 	
-	internal func generateNamedTypeReference(type: CGNamedTypeReference, ignoreNamespace: Boolean, ignoreNullability: Boolean) {
+	internal func generateNamedTypeReference(_ type: CGNamedTypeReference, ignoreNamespace: Boolean, ignoreNullability: Boolean) {
 		// descendant may override, but this will work for most languages.
 		if ignoreNamespace {
 			generateIdentifier(type.Name)
@@ -1363,7 +1363,7 @@ public __abstract class CGCodeGenerator {
 		generateGenericArguments(type.GenericArguments)
 	}
 	
-	internal func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
+	internal func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		// most languages will want to override this
 		switch (type.Kind) {
 			case .Int: generateIdentifier("Int")
@@ -1393,44 +1393,44 @@ public __abstract class CGCodeGenerator {
 		}		
 	}
 	
-	internal func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateIntegerRangeTypeReference(_ type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateIntegerRangeTypeReference not implemented")
 	}
 		
-	internal func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateInlineBlockTypeReference not implemented")
 	}
 	
-	internal func generatePointerTypeReference(type: CGPointerTypeReference) {
+	internal func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 		assert(false, "generatPointerTypeReference not implemented")
 	}
 	
-	internal func generateConstantTypeReference(type: CGConstantTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateConstantTypeReference(_ type: CGConstantTypeReference, ignoreNullability: Boolean = false) {
 		// override if the language supports const types
 		generateTypeReference(type.`Type`)
 	}
 	
-	internal func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generatKindOfTypeReference not implemented")
 	}
 	
-	internal func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateTupleTypeReference not implemented")
 	}
 	
-	internal func generateSetTypeReference(type: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference not implemented")
 	}
 	
-	internal func generateSequenceTypeReference(type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference not implemented")
 	}
 	
-	internal func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateArrayTypeReference not implemented")
 	}
 	
-	internal func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
+	internal func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateDictionaryTypeReference not implemented")
 	}
 	
@@ -1438,16 +1438,16 @@ public __abstract class CGCodeGenerator {
 	// Helpers
 	//
 	
-	@inline(__always) func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, callback: (T) -> ()) {
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 	
-	@inline(__always) func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 	
 	var lastStartLocation: Integer?
-	func helpGenerateCommaSeparatedList<T>(list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Boolean, callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Boolean, callback: (T) -> ()) {
 		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
 		lastStartLocation = nil
 		var first = true
@@ -1466,7 +1466,7 @@ public __abstract class CGCodeGenerator {
 		lastStartLocation = startLocation // keep this as possible indent for the next round
 	}
 
-	public static final func uppercaseFirstLetter(name: String) -> String {
+	public static final func uppercaseFirstLetter(_ name: String) -> String {
 		var name = name
 		if length(name) >= 1 {
 			name = name.Substring(0, 1).ToUpper()+name.Substring(1)
@@ -1474,7 +1474,7 @@ public __abstract class CGCodeGenerator {
 		return name
 	}
 	
-	public static final func lowercaseFirstLetter(name: String) -> String {
+	public static final func lowercaseFirstLetter(_ name: String) -> String {
 		//todo: maybe  not lowercase if second letter is also uppercase?
 		var name = name
 		if length(name) >= 1 {
@@ -1502,7 +1502,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal private(set) var currentLocation = CGLocation()
 	
-	internal final func Append(line: String) -> StringBuilder {
+	internal final func Append(_ line: String) -> StringBuilder {
 		if length(line) > 0 {			
 			if atStart {
 				AppendIndent()
@@ -1522,7 +1522,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode
 	}
 	
-	internal final func AppendLine(line: String? = nil) -> StringBuilder {
+	internal final func AppendLine(_ line: String? = nil) -> StringBuilder {
 		if let line = line {
 			Append(line)
 		}
@@ -1562,7 +1562,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode
 	}
 	
-	private final func AppendIndentToVirtualColumn(targetColumn: Integer) {
+	private final func AppendIndentToVirtualColumn(_ targetColumn: Integer) {
 		atStart = false
 		if useTabs {
 			currentLocation.column += targetColumn/tabSize+targetColumn%tabSize

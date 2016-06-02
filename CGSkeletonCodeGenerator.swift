@@ -15,7 +15,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	public override var defaultFileExtension: String { return "" }
 
-	override func escapeIdentifier(name: String) -> String {
+	override func escapeIdentifier(_ name: String) -> String {
 		return name
 	}
 
@@ -30,7 +30,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	/*override func generateImports() {
 	}*/
 	
-	override func generateImport(imp: CGImport) {
+	override func generateImport(_ imp: CGImport) {
 
 	}
 
@@ -42,7 +42,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Statements
 	//
 	
-	override func generateConditionStart(condition: CGConditionalDefine) {
+	override func generateConditionStart(_ condition: CGConditionalDefine) {
 
 	}
 
@@ -50,87 +50,87 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateConditionEnd(condition: CGConditionalDefine) {
+	override func generateConditionEnd(_ condition: CGConditionalDefine) {
 
 	}
 
-	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
 
 	}
 
-	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+	override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
 
 	}
 
-	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
 
 	}
 
-	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
+	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
 
 	}
 
-	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+	override func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
 
 	}
 
-	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
 
 	}
 
 	/*
-	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+	override func generateInfiniteLoopStatement(_ statement: CGInfiniteLoopStatement) {
 	}
 	*/
 
-	override func generateSwitchStatement(statement: CGSwitchStatement) {
+	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
 
 	}
 
-	override func generateLockingStatement(statement: CGLockingStatement) {
+	override func generateLockingStatement(_ statement: CGLockingStatement) {
 	}
 
-	override func generateUsingStatement(statement: CGUsingStatement) {
-
-	}
-
-	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+	override func generateUsingStatement(_ statement: CGUsingStatement) {
 
 	}
 
-	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+	override func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
 
 	}
 
-	override func generateReturnStatement(statement: CGReturnStatement) {
+	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 
 	}
 
-	override func generateYieldStatement(statement: CGYieldStatement) {
+	override func generateReturnStatement(_ statement: CGReturnStatement) {
 
 	}
 
-	override func generateThrowStatement(statement: CGThrowStatement) {
+	override func generateYieldStatement(_ statement: CGYieldStatement) {
 
 	}
 
-	override func generateBreakStatement(statement: CGBreakStatement) {
+	override func generateThrowStatement(_ statement: CGThrowStatement) {
 
 	}
 
-	override func generateContinueStatement(statement: CGContinueStatement) {
+	override func generateBreakStatement(_ statement: CGBreakStatement) {
 
 	}
 
-	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+	override func generateContinueStatement(_ statement: CGContinueStatement) {
 
 	}
 
-	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+	override func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
+
+	}
+
+	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 
 	}	
 	
-	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 
 	}
 
@@ -138,149 +138,149 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Expressions
 	//
 
-	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+	override func generateNamedIdentifierExpression(_ expression: CGNamedIdentifierExpression) {
 
 	}
 
-	override func generateAssignedExpression(expression: CGAssignedExpression) {
+	override func generateAssignedExpression(_ expression: CGAssignedExpression) {
 
 	}
 
-	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+	override func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
 
 	}
 
-	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
+	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 
 	}
 
-	override func generateDefaultExpression(expression: CGDefaultExpression) {
+	override func generateDefaultExpression(_ expression: CGDefaultExpression) {
 
 	}
 
-	override func generateSelectorExpression(expression: CGSelectorExpression) {
+	override func generateSelectorExpression(_ expression: CGSelectorExpression) {
 
 	}
 
-	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ expression: CGTypeCastExpression) {
 
 	}
 
-	override func generateInheritedExpression(expression: CGInheritedExpression) {
+	override func generateInheritedExpression(_ expression: CGInheritedExpression) {
 
 	}
 
-	override func generateSelfExpression(expression: CGSelfExpression) {
+	override func generateSelfExpression(_ expression: CGSelfExpression) {
 
 	}
 
-	override func generateNilExpression(expression: CGNilExpression) {
+	override func generateNilExpression(_ expression: CGNilExpression) {
 
 	}
 
-	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
 
 	}
 
-	override func generateAwaitExpression(expression: CGAwaitExpression) {
+	override func generateAwaitExpression(_ expression: CGAwaitExpression) {
 
 	}
 
-	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+	override func generateAnonymousMethodExpression(_ expression: CGAnonymousMethodExpression) {
 
 	}
 
-	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
+	override func generateAnonymousTypeExpression(_ expression: CGAnonymousTypeExpression) {
 
 	}
 
-	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
 
 	}
 
-	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 
 	}
 
-	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
 
 	}
 
-	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 
 	}
 	
-	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 
 	}
 
-	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(_ expression: CGIfThenElseExpression) {
 
 	}
 
-	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+	override func generateFieldAccessExpression(_ expression: CGFieldAccessExpression) {
 
 	}
 
-	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+	override func generateArrayElementAccessExpression(_ expression: CGArrayElementAccessExpression) {
 
 	}
 
-	override func generateMethodCallExpression(expression: CGMethodCallExpression) {
+	override func generateMethodCallExpression(_ expression: CGMethodCallExpression) {
 
 	}
 
-	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 
 	}
 
-	override func generatePropertyAccessExpression(expression: CGPropertyAccessExpression) {
+	override func generatePropertyAccessExpression(_ expression: CGPropertyAccessExpression) {
 
 	}
 
-	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+	override func generateEnumValueAccessExpression(_ expression: CGEnumValueAccessExpression) {
 
 	}
 
-	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 
 	}
 
-	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 
 	}
 
-	override func generateIntegerLiteralExpression(expression: CGIntegerLiteralExpression) {
+	override func generateIntegerLiteralExpression(_ expression: CGIntegerLiteralExpression) {
 
 	}
 
-	override func generateFloatLiteralExpression(expression: CGFloatLiteralExpression) {
+	override func generateFloatLiteralExpression(_ expression: CGFloatLiteralExpression) {
 
 	}
 
-	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ expression: CGArrayLiteralExpression) {
 
 	}
 
-	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+	override func generateSetLiteralExpression(_ expression: CGSetLiteralExpression) {
 
 	}
 
-	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ expression: CGDictionaryLiteralExpression) {
 
 	}
 
 	/*
-	override func generateTupleExpression(expression: CGTupleLiteralExpression) {
+	override func generateTupleExpression(_ expression: CGTupleLiteralExpression) {
 		// default handled in base
 	}
 	*/
 	
-	override func generateSetTypeReference(type: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateSequenceTypeReference(type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
@@ -292,47 +292,47 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 	
-	override func generateAliasType(type: CGTypeAliasDefinition) {
+	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
 	
-	override func generateBlockType(type: CGBlockTypeDefinition) {
+	override func generateBlockType(_ type: CGBlockTypeDefinition) {
 		
 	}
 	
-	override func generateEnumType(type: CGEnumTypeDefinition) {
+	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		
 	}
 	
-	override func generateClassTypeStart(type: CGClassTypeDefinition) {
+	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 
 	}
 	
-	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
+	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 
 	}
 	
-	override func generateStructTypeStart(type: CGStructTypeDefinition) {
+	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 
 	}
 	
-	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
+	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 
 	}	
 	
-	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 
 	}
 	
-	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 
 	}	
 	
-	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 
 	}
 	
-	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 
 	}	
 
@@ -340,11 +340,11 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 
 	}
 	
-	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 
 	}
 
@@ -360,19 +360,19 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+	override func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
 
 	}
 
@@ -380,11 +380,11 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Type References
 	//
 
-	override func generateNamedTypeReference(type: CGNamedTypeReference) {
+	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
 
 	}
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
+	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int: Append("")
 			case .UInt: Append("")
@@ -413,33 +413,33 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
-	override func generateIntegerRangeTypeReference(type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+	override func generateIntegerRangeTypeReference(_ type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
 		Append(type.Start.ToString())
 		Append("..")
 		Append(type.End.ToString())
 	}
 		
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
+	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 
 	}
 	
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
+	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
+	override func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
+	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 }

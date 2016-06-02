@@ -5,7 +5,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	public override var defaultFileExtension: String { return "vb" }
 
-	override func escapeIdentifier(name: String) -> String {
+	override func escapeIdentifier(_ name: String) -> String {
 		return name
 	}
 
@@ -24,7 +24,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	override func generateImport(imp: CGImport) {
+	override func generateImport(_ imp: CGImport) {
 		if imp.StaticClass != nil {
 			//todo
 		} else {
@@ -46,11 +46,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Statements
 	//
 	
-	override func generateBeginEndStatement(statement: CGBeginEndBlockStatement) {
+	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
 
 	}
 
-	override func generateIfElseStatement(statement: CGIfThenElseStatement) {
+	override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
 		Append("If ")
 		generateExpression(statement.Condition)
 		AppendLine(" Then")
@@ -67,7 +67,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("End If")
 	}
 
-	override func generateForToLoopStatement(statement: CGForToLoopStatement) {
+	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
 		Append("For ")
 		generateIdentifier(statement.LoopVariableName)
 		if let type = statement.LoopVariableType {
@@ -86,11 +86,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("Next")
 	}
 
-	override func generateForEachLoopStatement(statement: CGForEachLoopStatement) {
+	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
 
 	}
 
-	override func generateWhileDoLoopStatement(statement: CGWhileDoLoopStatement) {
+	override func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
 		Append("Do While ")
 		generateExpression(statement.Condition)
 		AppendLine()
@@ -98,7 +98,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("Loop")
 	}
 
-	override func generateDoWhileLoopStatement(statement: CGDoWhileLoopStatement) {
+	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
 		Append("Do Until ")
 		if let notCondition = statement.Condition as? CGUnaryOperatorExpression where notCondition.Operator == CGUnaryOperatorKind.Not {
 			generateExpression(notCondition.Value)
@@ -113,11 +113,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	/*
-	override func generateInfiniteLoopStatement(statement: CGInfiniteLoopStatement) {
+	override func generateInfiniteLoopStatement(_ statement: CGInfiniteLoopStatement) {
 	}
 	*/
 
-	override func generateSwitchStatement(statement: CGSwitchStatement) {
+	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
 		Append("Select Case ")
 		generateExpression(statement.Expression)
 		AppendLine()
@@ -142,22 +142,22 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("End Select")
 	}
 
-	override func generateLockingStatement(statement: CGLockingStatement) {
+	override func generateLockingStatement(_ statement: CGLockingStatement) {
 	}
 
-	override func generateUsingStatement(statement: CGUsingStatement) {
-
-	}
-
-	override func generateAutoReleasePoolStatement(statement: CGAutoReleasePoolStatement) {
+	override func generateUsingStatement(_ statement: CGUsingStatement) {
 
 	}
 
-	override func generateTryFinallyCatchStatement(statement: CGTryFinallyCatchStatement) {
+	override func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
 
 	}
 
-	override func generateReturnStatement(statement: CGReturnStatement) {
+	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
+
+	}
+
+	override func generateReturnStatement(_ statement: CGReturnStatement) {
 		if let value = statement.Value {
 			Append("Return ")
 			generateExpression(value)
@@ -167,19 +167,19 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateThrowStatement(statement: CGThrowStatement) {
+	override func generateThrowStatement(_ statement: CGThrowStatement) {
 
 	}
 
-	override func generateBreakStatement(statement: CGBreakStatement) {
+	override func generateBreakStatement(_ statement: CGBreakStatement) {
 
 	}
 
-	override func generateContinueStatement(statement: CGContinueStatement) {
+	override func generateContinueStatement(_ statement: CGContinueStatement) {
 
 	}
 
-	override func generateVariableDeclarationStatement(statement: CGVariableDeclarationStatement) {
+	override func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
 		Append("Dim ")
 		generateIdentifier(statement.Name)
 		if let type = statement.`Type` {
@@ -193,14 +193,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine()
 	}
 
-	override func generateAssignmentStatement(statement: CGAssignmentStatement) {
+	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 		generateExpression(statement.Target)
 		Append(" = ")
 		generateExpression(statement.Value)
 		AppendLine()
 	}	
 	
-	override func generateConstructorCallStatement(statement: CGConstructorCallStatement) {
+	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 
 	}
 
@@ -212,14 +212,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Expressions
 	//
 
-	internal func vbGenerateCallSiteForExpression(expression: CGMemberAccessExpression) {
+	internal func vbGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
 			Append(".")
 		}
 	}
 
-	func vbGenerateCallParameters(parameters: List<CGCallParameter>) {
+	func vbGenerateCallParameters(_ parameters: List<CGCallParameter>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -229,7 +229,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func vbGenerateAttributeParameters(parameters: List<CGCallParameter>) {
+	func vbGenerateAttributeParameters(_ parameters: List<CGCallParameter>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -243,11 +243,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	override func generateNamedIdentifierExpression(expression: CGNamedIdentifierExpression) {
+	override func generateNamedIdentifierExpression(_ expression: CGNamedIdentifierExpression) {
 
 	}
 
-	override func generateAssignedExpression(expression: CGAssignedExpression) {
+	override func generateAssignedExpression(_ expression: CGAssignedExpression) {
 		if !expression.Inverted {
 			Append("Not ")
 		}
@@ -255,75 +255,75 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append("Is Nothong")
 	}
 
-	override func generateSizeOfExpression(expression: CGSizeOfExpression) {
+	override func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
 
 	}
 
-	override func generateTypeOfExpression(expression: CGTypeOfExpression) {
+	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 
 	}
 
-	override func generateDefaultExpression(expression: CGDefaultExpression) {
+	override func generateDefaultExpression(_ expression: CGDefaultExpression) {
 
 	}
 
-	override func generateSelectorExpression(expression: CGSelectorExpression) {
+	override func generateSelectorExpression(_ expression: CGSelectorExpression) {
 
 	}
 
-	override func generateTypeCastExpression(expression: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ expression: CGTypeCastExpression) {
 
 	}
 
-	override func generateInheritedExpression(expression: CGInheritedExpression) {
+	override func generateInheritedExpression(_ expression: CGInheritedExpression) {
 		Append("MyBase")
 	}
 
-	override func generateSelfExpression(expression: CGSelfExpression) {
+	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("Me")
 	}
 
-	override func generateNilExpression(expression: CGNilExpression) {
+	override func generateNilExpression(_ expression: CGNilExpression) {
 		Append("Nothing")
 	}
 
-	override func generatePropertyValueExpression(expression: CGPropertyValueExpression) {
+	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
 
 	}
 
-	override func generateAwaitExpression(expression: CGAwaitExpression) {
+	override func generateAwaitExpression(_ expression: CGAwaitExpression) {
 
 	}
 
-	override func generateAnonymousMethodExpression(expression: CGAnonymousMethodExpression) {
+	override func generateAnonymousMethodExpression(_ expression: CGAnonymousMethodExpression) {
 
 	}
 
-	override func generateAnonymousTypeExpression(expression: CGAnonymousTypeExpression) {
+	override func generateAnonymousTypeExpression(_ expression: CGAnonymousTypeExpression) {
 
 	}
 
-	override func generatePointerDereferenceExpression(expression: CGPointerDereferenceExpression) {
+	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
 
 	}
 
 	/*
-	override func generateUnaryOperatorExpression(expression: CGUnaryOperatorExpression) {
+	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 		// handled in base
 	}
 	*/
 
 	/*
-	override func generateBinaryOperatorExpression(expression: CGBinaryOperatorExpression) {
+	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
 		// handled in base
 	}
 	*/
 
-	override func generateUnaryOperator(`operator`: CGUnaryOperatorKind) {
+	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 
 	}
 	
-	override func generateBinaryOperator(`operator`: CGBinaryOperatorKind) {
+	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Concat: Append("&")
 			case .Addition: Append("+")
@@ -362,22 +362,22 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateIfThenElseExpression(expression: CGIfThenElseExpression) {
+	override func generateIfThenElseExpression(_ expression: CGIfThenElseExpression) {
 
 	}
 
-	override func generateFieldAccessExpression(expression: CGFieldAccessExpression) {
+	override func generateFieldAccessExpression(_ expression: CGFieldAccessExpression) {
 		vbGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
 	}
 
 	/*
-	override func generateArrayElementAccessExpression(expression: CGArrayElementAccessExpression) {
+	override func generateArrayElementAccessExpression(_ expression: CGArrayElementAccessExpression) {
 		// handled in base
 	}
 	*/
 
-	override func generateMethodCallExpression(method: CGMethodCallExpression) {
+	override func generateMethodCallExpression(_ method: CGMethodCallExpression) {
 		//Append("Call ")
 		vbGenerateCallSiteForExpression(method)
 		generateIdentifier(method.Name)
@@ -387,7 +387,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append(")")
 	}
 
-	override func generateNewInstanceExpression(expression: CGNewInstanceExpression) {
+	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("New ")
 		generateExpression(expression.`Type`)
 		/*if let bounds = expression.ArrayBounds where bounds.Count > 0 {
@@ -403,7 +403,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		//}
 	}
 
-	override func generatePropertyAccessExpression(property: CGPropertyAccessExpression) {
+	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		vbGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
 		if let params = property.Parameters where params.Count > 0 {
@@ -414,12 +414,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	/*
-	override func generateEnumValueAccessExpression(expression: CGEnumValueAccessExpression) {
+	override func generateEnumValueAccessExpression(_ expression: CGEnumValueAccessExpression) {
 		// handled in base
 	}
 	*/
 	
-	internal func vbEscapeCharactersInStringLiteral(string: String) -> String {
+	internal func vbEscapeCharactersInStringLiteral(_ string: String) -> String {
 		let result = StringBuilder()
 		let len = string.Length
 		for i in 0 ..< len {
@@ -432,15 +432,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		return result.ToString()
 	}
 
-	override func generateStringLiteralExpression(expression: CGStringLiteralExpression) {
+	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 		Append("\"\(vbEscapeCharactersInStringLiteral(expression.Value))\"")
 	}
 
-	override func generateCharacterLiteralExpression(expression: CGCharacterLiteralExpression) {
+	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 
 	}
 
-	override func generateIntegerLiteralExpression(literalExpression: CGIntegerLiteralExpression) {
+	override func generateIntegerLiteralExpression(_ literalExpression: CGIntegerLiteralExpression) {
 		switch literalExpression.Base {
 			case 16: Append("&H"+literalExpression.StringRepresentation(base:16))
 			case 10: Append(literalExpression.StringRepresentation(base:10))
@@ -449,34 +449,34 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	/*
-	override func generateFloatLiteralExpression(literalExpression: CGFloatLiteralExpression) {
+	override func generateFloatLiteralExpression(_ literalExpression: CGFloatLiteralExpression) {
 		// handled in base
 	}
 	*/
 
-	override func generateArrayLiteralExpression(expression: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ expression: CGArrayLiteralExpression) {
 
 	}
 
-	override func generateSetLiteralExpression(expression: CGSetLiteralExpression) {
+	override func generateSetLiteralExpression(_ expression: CGSetLiteralExpression) {
 
 	}
 
-	override func generateDictionaryExpression(expression: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ expression: CGDictionaryLiteralExpression) {
 
 	}
 
 	/*
-	override func generateTupleExpression(expression: CGTupleLiteralExpression) {
+	override func generateTupleExpression(_ expression: CGTupleLiteralExpression) {
 		// default handled in base
 	}
 	*/
 	
-	override func generateSetTypeReference(type: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateSequenceTypeReference(type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
@@ -501,7 +501,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	func vbGenerateTypeVisibilityPrefix(visibility: CGTypeVisibilityKind) {
+	func vbGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
 			case .Unit: Append("Private ")
@@ -510,7 +510,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	func vbGenerateMemberTypeVisibilityPrefix(visibility: CGMemberVisibilityKind) {
+	func vbGenerateMemberTypeVisibilityPrefix(_ visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
 			case .Private: Append("Private ")
@@ -526,25 +526,25 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	func vbGenerateStaticPrefix(isStatic: Boolean) {
+	func vbGenerateStaticPrefix(_ isStatic: Boolean) {
 		if isStatic {
 			Append("Shared ")
 		}
 	}
 	
-	func vbGenerateAbstractPrefix(isAbstract: Boolean) {
+	func vbGenerateAbstractPrefix(_ isAbstract: Boolean) {
 		if isAbstract {
 			Append("Abstract ")
 		}
 	}
 
-	func vbGenerateSealedPrefix(isSealed: Boolean) {
+	func vbGenerateSealedPrefix(_ isSealed: Boolean) {
 		if isSealed {
 			Append("Final ")
 		}
 	}
 
-	func vbGenerateVirtualityPrefix(member: CGMemberDefinition) {
+	func vbGenerateVirtualityPrefix(_ member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
 			case .Virtual: Append("Virtual ")
@@ -556,7 +556,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateParameterDefinition(param: CGParameterDefinition) {
+	override func generateParameterDefinition(_ param: CGParameterDefinition) {
 		switch param.Modifier {
 			case .Var: Append("ref ")
 			case .Const: Append("const ") //todo: Oxygene ony?
@@ -573,7 +573,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func vbGenerateDefinitionParameters(parameters: List<CGParameterDefinition>) {
+	func vbGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -587,7 +587,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func vbGenerateGenericParameters(parameters: List<CGGenericParameterDefinition>?) {
+	func vbGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
 		if let parameters = parameters where parameters.Count > 0 {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
@@ -604,7 +604,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func vbGenerateGenericConstraints(parameters: List<CGGenericParameterDefinition>?) {
+	func vbGenerateGenericConstraints(_ parameters: List<CGGenericParameterDefinition>?) {
 		if let parameters = parameters where parameters.Count > 0 {
 			var needsWhere = true
 			for param in parameters {
@@ -636,7 +636,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 	
-	func vbGenerateAncestorList(type: CGClassOrStructTypeDefinition) {
+	func vbGenerateAncestorList(_ type: CGClassOrStructTypeDefinition) {
 		if type.Ancestors.Count > 0 {
 			Append(" Of ")
 			for a in 0 ..< type.Ancestors.Count {
@@ -664,19 +664,19 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateAliasType(type: CGTypeAliasDefinition) {
+	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
 	
-	override func generateBlockType(type: CGBlockTypeDefinition) {
+	override func generateBlockType(_ type: CGBlockTypeDefinition) {
 		
 	}
 	
-	override func generateEnumType(type: CGEnumTypeDefinition) {
+	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		
 	}
 	
-	override func generateClassTypeStart(type: CGClassTypeDefinition) {
+	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateStaticPrefix(type.Static)
 		vbGenerateAbstractPrefix(type.Abstract)
@@ -690,12 +690,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		incIndent()
 	}
 	
-	override func generateClassTypeEnd(type: CGClassTypeDefinition) {
+	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine("End Class")
 	}
 	
-	override func generateStructTypeStart(type: CGStructTypeDefinition) {
+	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateStaticPrefix(type.Static)
 		vbGenerateAbstractPrefix(type.Abstract)
@@ -709,12 +709,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		incIndent()
 	}
 	
-	override func generateStructTypeEnd(type: CGStructTypeDefinition) {
+	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		decIndent()
 		AppendLine("End Structure")
 	}		
 	
-	override func generateInterfaceTypeStart(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateSealedPrefix(type.Sealed)
 		Append("Interface ")
@@ -727,16 +727,16 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		incIndent()
 	}
 	
-	override func generateInterfaceTypeEnd(type: CGInterfaceTypeDefinition) {
+	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		decIndent()
 		AppendLine("End Interface")
 	}
 		
-	override func generateExtensionTypeStart(type: CGExtensionTypeDefinition) {
+	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 
 	}
 	
-	override func generateExtensionTypeEnd(type: CGExtensionTypeDefinition) {
+	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 
 	}	
 
@@ -744,7 +744,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Type Members
 	//
 	
-	override func generateMethodDefinition(method: CGMethodDefinition, type: CGTypeDefinition) {
+	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 			vbGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
@@ -784,7 +784,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("End Sub")
 	}
 	
-	override func generateConstructorDefinition(ctor: CGConstructorDefinition, type: CGTypeDefinition) {
+	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 
 	}
 
@@ -817,7 +817,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generatePropertyDefinition(property: CGPropertyDefinition, type: CGTypeDefinition) {
+	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
 		vbGenerateStaticPrefix(property.Static && !type.Static)
 		vbGenerateVirtualityPrefix(property)
@@ -923,15 +923,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	override func generateEventDefinition(event: CGEventDefinition, type: CGTypeDefinition) {
+	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateCustomOperatorDefinition(customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
+	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateNestedTypeDefinition(member: CGNestedTypeDefinition, type: CGTypeDefinition) {
+	override func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
 
 	}
 
@@ -939,11 +939,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Type References
 	//
 
-	override func generateNamedTypeReference(type: CGNamedTypeReference) {
+	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
 
 	}
 	
-	override func generatePredefinedTypeReference(type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
+	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int: Append("")
 			case .UInt: Append("")
@@ -972,27 +972,27 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}		
 	}
 
-	override func generateInlineBlockTypeReference(type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
+	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generatePointerTypeReference(type: CGPointerTypeReference) {
+	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 
 	}
 	
-	override func generateKindOfTypeReference(type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
+	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateTupleTypeReference(type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
+	override func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateArrayTypeReference(type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 	
-	override func generateDictionaryTypeReference(type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
+	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
 }
