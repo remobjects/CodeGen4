@@ -7,11 +7,12 @@ public extension Sugar.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+	public func AsTypeReference(nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
-	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
+	//75394: Swift: Oxygene can't call with method with external name
+	public func AsTypeReference(_ isClassType: Boolean) -> CGTypeReference {
 		return CGNamedTypeReference(self, isClassType: isClassType)
 	}
 
@@ -47,11 +48,12 @@ public extension RemObjects.Elements.System.String {
 		return CGNamedTypeReference(self)
 	}
 
-	public func AsTypeReference(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+	public func AsTypeReference(nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
-	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
+	//75394: Swift: Oxygene can't call with method with external name
+	public func AsTypeReference(_ isClassType: Boolean) -> CGTypeReference {
 		return CGNamedTypeReference(self, isClassType: isClassType)
 	}
 
@@ -118,12 +120,15 @@ public extension CGExpression {
 	public func AsReturnStatement() -> CGReturnStatement {
 		return CGReturnStatement(self)
 	}
+	
 	public func AsCallParameter() -> CGCallParameter {
 		return CGCallParameter(self)
 	}
+	
 	public func AsCallParameter(_ name: String) -> CGCallParameter {
 		return CGCallParameter(self, name)
 	}
+	
 	public func AsEllipsisCallParameter() -> CGCallParameter {
 		let result = CGCallParameter(self)
 		result.EllipsisParameter = true
