@@ -38,7 +38,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append("' ")
 	}
 
-	override func generateInlineComment(comment: String) {
+	override func generateInlineComment(_ comment: String) {
 
 	}
 	
@@ -484,7 +484,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 	
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("<")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
@@ -788,15 +788,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		vbGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		vbGenerateStaticPrefix(field.Static && !type.Static)
 		if field.Constant {

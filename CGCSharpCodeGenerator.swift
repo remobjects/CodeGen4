@@ -89,7 +89,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*
-	override func generateInlineComment(comment: String) {
+	override func generateInlineComment(_ comment: String) {
 		// handled in base
 	}
 	*/
@@ -337,7 +337,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		if cast.ThrowsException {
 			Append("((")
 			generateTypeReference(cast.TargetType)
@@ -388,7 +388,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAnonymousTypeExpression(_ type: CGAnonymousTypeExpression) {
-		Append("new { ")
+		Append("new ")
+		if let ancestor = type.Ancestor {
+			//75413: C#: syntax for ancestors in anonymous types?
+			Append("/* ")
+			generateTypeReference(ancestor, ignoreNullability: true)
+			Append(" */ ")
+		}
+		AppendLine("{")
 		incIndent()
 		helpGenerateCommaSeparatedList(type.Members) { m in
 			
@@ -403,6 +410,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				self.generateStatement(CGUnsupportedStatement("methods are not supported in anonymous classes in C#."))
 			}
 		}
+		decIndent()
 		Append(" }")
 	}
 
@@ -654,7 +662,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+	override func cStyleEscapeSequenceForCharacter(_ ch: Char) -> String {
 		if ch <= 0xffff {
 			return "\\u\(Sugar.Convert.ToHexString(Integer(ch), 4))"
 		} else {
@@ -686,7 +694,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		Append("new[] ")
 		Append("{")
 		for e in 0 ..< array.Elements.Count {
@@ -702,7 +710,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		assert(false, "Sets are not supported in C#")
 	}
 
-	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ dictionary: CGDictionaryLiteralExpression) {
 
 	}
 
@@ -712,11 +720,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in C#")
 	}
 	
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
 			Append("ISequence<")
 			generateTypeReference(sequence.`Type`)
@@ -733,7 +741,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 	
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
@@ -1003,7 +1011,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(dtor.Visibility)
@@ -1029,11 +1037,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		cSharpGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		cSharpGenerateStaticPrefix(field.Static && !type.Static)
 		if field.Constant {
@@ -1305,7 +1313,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		#hint todo
 	}
 	
-	override func generateArrayTypeReference(array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		generateTypeReference(array.`Type`)
 		var bounds = array.Bounds.Count
 		if bounds == 0 {

@@ -268,7 +268,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine(";")
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(dtor, type: type, header: true)
 		AppendLine(";")
 	}

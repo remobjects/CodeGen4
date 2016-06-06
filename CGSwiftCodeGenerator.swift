@@ -381,7 +381,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("\"\(expression.Name)\"")
 	}
 
-	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		Append("(")
 		generateExpression(cast.Expression)
 		Append(" as")
@@ -736,7 +736,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	override func cStyleEscapeSequenceForCharacter(ch: Char) -> String {
+	override func cStyleEscapeSequenceForCharacter(_ ch: Char) -> String {
 		return "\\u{"+Sugar.Convert.ToString(Integer(ch), 16)
 	}
 
@@ -771,7 +771,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		// no C-style suffixes in Swift
 	}
 
-	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		Append("[")
 		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
@@ -793,7 +793,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("])")
 	}
 
-	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("[")
 		for e in 0 ..< dictionary.Keys.Count {
@@ -817,7 +817,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 	
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("@")
 		generateTypeReference(attribute.`Type`, ignoreNullability: true)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
@@ -1101,7 +1101,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		Append("deinit")
 
 		if type is CGInterfaceTypeDefinition || definitionOnly {
@@ -1117,7 +1117,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
 		} else {
@@ -1143,7 +1143,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")	
 	}
 
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		swiftGenerateStaticPrefix(field.Static && !type.Static)
 		swiftGenerateStorageModifierPrefix(field.`Type`)
@@ -1434,11 +1434,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 	
-	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Swift")
 	}
 	
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			Append("ISequence<")
 			generateTypeReference(sequence.`Type`)
@@ -1451,7 +1451,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	override func generateArrayTypeReference(array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		
 		var bounds = array.Bounds.Count
 		if bounds == 0 {

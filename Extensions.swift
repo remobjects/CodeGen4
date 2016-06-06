@@ -11,8 +11,7 @@ public extension Sugar.String {
 		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
-	//75394: Swift: Oxygene can't call with method with external name
-	public func AsTypeReference(_ isClassType: Boolean) -> CGTypeReference {
+	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
 		return CGNamedTypeReference(self, isClassType: isClassType)
 	}
 
@@ -52,8 +51,7 @@ public extension RemObjects.Elements.System.String {
 		return CGNamedTypeReference(self, defaultNullability: CGTypeNullabilityKind.Unknown, nullability: nullability)
 	}
 
-	//75394: Swift: Oxygene can't call with method with external name
-	public func AsTypeReference(_ isClassType: Boolean) -> CGTypeReference {
+	public func AsTypeReference(isClassType: Boolean) -> CGTypeReference {
 		return CGNamedTypeReference(self, isClassType: isClassType)
 	}
 

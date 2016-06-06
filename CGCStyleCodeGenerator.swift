@@ -22,7 +22,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		return false
 	}
 
-	override func generateInlineComment(comment: String) {
+	override func generateInlineComment(_ comment: String) {
 		var comment = comment.Replace("*/", "* /")
 		Append("/* \(comment) */")
 	}

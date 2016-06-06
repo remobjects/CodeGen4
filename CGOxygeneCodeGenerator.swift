@@ -413,19 +413,19 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		assert(false, "generateDestructorDefinition is not supported in Oxygene")
 	}
 
-	override func pascalGenerateDestructorImplementation(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func pascalGenerateDestructorImplementation(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		assert(false, "pascalGenerateDestructorImplementation is not supported in Oxygene")
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: false)
 	}
 
-	override func pascalGenerateFinalizerImplementation(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func pascalGenerateFinalizerImplementation(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: true)
 		pascalGenerateMethodBody(finalizer, type: type)
 	}
@@ -568,7 +568,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append(")")
 	}
 
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		if !ignoreNullability {
 			pascalGeneratePrefixForNullability(sequence)
 		}
