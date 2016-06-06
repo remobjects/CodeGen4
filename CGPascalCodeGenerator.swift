@@ -476,7 +476,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateSelectorExpression is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		if cast.ThrowsException {
 			Append("(")
 			generateExpression(cast.Expression)
@@ -844,7 +844,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	*/
 
-	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		Append("[")
 		helpGenerateCommaSeparatedList(array.Elements) { e in
 			self.generateExpression(e)
@@ -868,7 +868,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
@@ -1520,16 +1520,16 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateTupleTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		Append("set of ")
 		generateTypeReference(setType.`Type`, ignoreNullability: true)
 	}
 
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in base Pascal, only Oxygene")
 	}
 
-	override func generateArrayTypeReference(array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		Append("array")
 		if let bounds = array.Bounds where bounds.Count > 0 {
 			Append("[")

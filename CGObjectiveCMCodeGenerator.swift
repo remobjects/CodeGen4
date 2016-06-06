@@ -84,7 +84,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		}
 	}
 	
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		if field.Static {
 			Append("static ")
 			if let type = field.`Type` {

@@ -284,7 +284,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append("@selector(\(expression.Name))")
 	}
 
-	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		if cast.ThrowsException {
 			//dynamic_cast<MyClass *>(ptr)
 			Append("dynamic_cast<")
@@ -559,7 +559,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		if isCBuilder() {	
 			if array.ArrayKind == .Dynamic {				
 				var isOpenArray = false
@@ -602,7 +602,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("{")
 		for e in 0 ..< dictionary.Keys.Count {
@@ -622,11 +622,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-//	override func generateSetTypeReference(setType: CGSetTypeReference) {
+//	override func generateSetTypeReference(_ setType: CGSetTypeReference) {
 //		assert(false, "generateSetTypeReference is not supported in C++")
 //	}
 //	
-//	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference) {
+//	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference) {
 //		assert(false, "generateSequenceTypeReference is not supported in C++")
 //	}
 	
@@ -634,7 +634,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 	
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		// no-op, we dont support attribtes in Objective-C
 	}
 	
@@ -870,16 +870,16 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	  // overriden in H & CPP
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(dtor, type: type, header: true)
 		AppendLine(";")
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		// use field as is 
 		if let type = field.`Type` {	
 			if field.Constant {

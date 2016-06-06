@@ -241,7 +241,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append("@selector(\(expression.Name))")
 	}
 
-	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		Append("((")
 		generateTypeReference(cast.TargetType)//, ignoreNullability: true)
 		Append(")(")
@@ -497,7 +497,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		Append("@[")
 		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
@@ -512,7 +512,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			assert(false, "Sets are not supported in Objective-C")
 	}
 
-	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ dictionary: CGDictionaryLiteralExpression) {
 		assert(dictionary.Keys.Count == dictionary.Values.Count, "Number of keys and values in Dictionary doesn't match.")
 		Append("@{")
 		for e in 0 ..< dictionary.Keys.Count {
@@ -532,11 +532,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 	
-	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Objective-C")
 	}
 	
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in Objective-C")
 	}
 	
@@ -544,7 +544,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 	
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		// no-op, we dont support attribtes in Objective-C
 	}
 	
@@ -676,15 +676,15 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		// overriden in H
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 
 	}
 
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		// overriden in M
 	}
 

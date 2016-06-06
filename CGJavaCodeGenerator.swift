@@ -59,7 +59,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	/*
-	override func generateInlineComment(comment: String) {
+	override func generateInlineComment(_ comment: String) {
 		// handled in base
 	}
 	*/
@@ -286,7 +286,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		assert(false, "generateSelectorExpression is not supported in C#, except in Hydrogene")
 	}
 
-	override func generateTypeCastExpression(cast: CGTypeCastExpression) {
+	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		if cast.ThrowsException {
 			Append("((")
 			generateTypeReference(cast.TargetType)
@@ -502,7 +502,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateArrayLiteralExpression(array: CGArrayLiteralExpression) {
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		Append("{")
 		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
@@ -517,7 +517,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		assert(false, "Sets are not supported in Java")
 	}
 
-	override func generateDictionaryExpression(dictionary: CGDictionaryLiteralExpression) {
+	override func generateDictionaryExpression(_ dictionary: CGDictionaryLiteralExpression) {
 
 	}
 
@@ -527,11 +527,11 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateSetTypeReference(setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Java")
 	}
 
-	override func generateSequenceTypeReference(sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in Javar")
 	}
 
@@ -539,7 +539,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 
-	override func generateAttribute(attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("@")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters where parameters.Count > 0 {
@@ -785,13 +785,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateDestructorDefinition(dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 	}
 
-	override func generateFinalizerDefinition(finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 	}
 
-	override func generateFieldDefinition(field: CGFieldDefinition, type: CGTypeDefinition) {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		javaGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		javaGenerateStaticPrefix(field.Static && !type.Static)
 		if field.Constant {
