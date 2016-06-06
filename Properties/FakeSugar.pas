@@ -21,7 +21,7 @@ type
     method ToStringInvariant(aValue: Double): String;
   end;
 
-extension method System.Xml.XmlElement.GetFirstElementWithName(aName: String): XmlElement; assembly;
+extension method System.Xml.XmlElement.GetFirstElementWithName(aName: String): System.Xml.XmlElement; assembly;
 extension method System.String.EqualsIgnoreCase(Value: String): Boolean;assembly;
 extension method System.Xml.XmlNode.ChildCount: Integer;assembly;
 {$ENDIF}
@@ -29,10 +29,10 @@ extension method System.Xml.XmlNode.ChildCount: Integer;assembly;
 implementation
 
 {$IF ECHOES}
-extension method System.Xml.XmlElement.GetFirstElementWithName(aName: String): XmlElement;
+extension method System.Xml.XmlElement.GetFirstElementWithName(aName: String): System.Xml.XmlElement;
 begin
   for item in ChildNodes do
-    if (item is XmlElement) and XmlElement(item).Name.EqualsIgnoreCase(aName) then exit XmlElement(item);
+    if (item is System.Xml.XmlElement) and System.Xml.XmlElement(item).Name.EqualsIgnoreCase(aName) then exit System.Xml.XmlElement(item);
   exit nil;
 end;
 
