@@ -13,12 +13,12 @@ public enum CGTypeNullabilityKind {
 }
 
 public __abstract class CGTypeReference : CGEntity {
-	public private(set) var Nullability: CGTypeNullabilityKind = .Default
-	public private(set) var DefaultNullability: CGTypeNullabilityKind = .NotNullable
-	public private(set) var DefaultValue: CGExpression?
+	public /*fileprivate*/internal(set) var Nullability: CGTypeNullabilityKind = .Default
+	public /*fileprivate*/internal(set) var DefaultNullability: CGTypeNullabilityKind = .NotNullable
+	public /*fileprivate*/internal(set) var DefaultValue: CGExpression?
 	#hint StorageModifier shouldn't really be on the type? refactor!
-	public private(set) var StorageModifier: CGStorageModifierKind = .Strong
-	public private(set) var IsClassType = false
+	public /*fileprivate*/internal(set) var StorageModifier: CGStorageModifierKind = .Strong
+	public /*fileprivate*/internal(set) var IsClassType = false
 	
 	public lazy var NullableUnwrapped: CGTypeReference	= ActualNullability == CGTypeNullabilityKind.NullableUnwrapped	? self : self.copyWithNullability(CGTypeNullabilityKind.NullableUnwrapped)
 	public lazy var NullableNotUnwrapped: CGTypeReference = ActualNullability == CGTypeNullabilityKind.NullableNotUnwrapped ? self : self.copyWithNullability(CGTypeNullabilityKind.NullableNotUnwrapped)
