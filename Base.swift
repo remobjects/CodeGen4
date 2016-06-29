@@ -4,8 +4,9 @@ import Sugar.Collections
 public enum CGPlatform {
 	case Echoes
 	case Cooper
-	case Nougat
+	case Toffee
 	case Gotham
+	case Island
 }
 
 public struct CGLocation {
