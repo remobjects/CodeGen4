@@ -552,7 +552,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	
-	override func generateBlockType(_ type: CGBlockTypeDefinition) {
+	override func generateBlockType(_ block: CGBlockTypeDefinition) {
 		
 	}
 	

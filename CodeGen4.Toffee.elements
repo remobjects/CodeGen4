@@ -13,6 +13,7 @@
         <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
         <SDK>OS X</SDK>
         <CreateHeaderFile>True</CreateHeaderFile>
+        <Name>CodegGen4 (Cocoa)</Name>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>false</Optimize>
@@ -36,12 +37,12 @@
     <ItemGroup>
         <Reference Include="Foundation"/>
         <Reference Include="rtl"/>
-        <Reference Include="libNougat"/>
+        <Reference Include="libToffee"/>
         <Reference Include="libSugar"/>
         <Reference Include="libxml2"/>
     </ItemGroup>
     <ItemGroup/>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets"/>
     <ItemGroup/>
     <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
 </Project>

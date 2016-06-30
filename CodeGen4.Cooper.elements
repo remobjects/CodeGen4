@@ -9,6 +9,8 @@
         <AllowLegacyOutParams>False</AllowLegacyOutParams>
         <CrossPlatform>True</CrossPlatform>
         <SuppressWarnings>JW0</SuppressWarnings>
+        <AssemblyName>codegen4</AssemblyName>
+        <Name>CodegGen4 (Java)</Name>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>false</Optimize>
