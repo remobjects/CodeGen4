@@ -900,16 +900,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 	}
 	
-	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+	override func generateBlockType(_ block: CGBlockTypeDefinition) {
+		swiftGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("typealias ")
-		generateIdentifier(type.Name)
+		generateIdentifier(block.Name)
 		Append(" = ")
-		swiftGenerateInlineBlockType(type)
+		swiftGenerateInlineBlockType(block)
 		AppendLine()
 	}
 	
 	func swiftGenerateInlineBlockType(_ block: CGBlockTypeDefinition) {
+		if block.IsPlainFunctionPointer {
+			Append("@FunctionPointer ")
+		}
 		Append("(")
 		for p in 0 ..< block.Parameters.Count {
 			if p > 0 {

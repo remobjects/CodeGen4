@@ -817,10 +817,42 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 	
-	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		
+	override func generateBlockType(_ block: CGBlockTypeDefinition) {
+		if block.IsPlainFunctionPointer {
+			Append("[FunctionPointer ]")
+		}
+		Append("delegate ")
+		if let returnType = block.ReturnType {
+			generateTypeReference(returnType)
+		} else {
+			Append("void")
+		}
+		Append(" ")
+		generateIdentifier(block.Name)
+		Append(" (")
+		if let parameters = block.Parameters where parameters.Count > 0 {
+			cSharpGenerateDefinitionParameters(parameters)
+		}
+		AppendLine(");")
 	}
 	
+	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
+		if block.IsPlainFunctionPointer {
+			Append("[FunctionPointer ]")
+		}
+		Append("delegate ")
+		if let returnType = type.Block.ReturnType {
+			generateTypeReference(returnType)
+		} else {
+			Append("void")
+		}
+		Append(" (")
+		if let parameters = type.Block.Parameters where parameters.Count > 0 {
+			cSharpGenerateDefinitionParameters(parameters)
+		}
+		Append(")")
+	}
+		
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("enum ")
@@ -1273,21 +1305,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if !ignoreNullability {
 			cSharpGenerateSuffixForNullability(type)
 		}
-	}
-
-	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-		Append("delegate ")
-		if let returnType = type.Block.ReturnType {
-			Append(" ")
-			generateTypeReference(returnType)
-		} else {
-			Append("void ")
-		}
-		Append("(")
-		if let parameters = type.Block.Parameters where parameters.Count > 0 {
-			cSharpGenerateDefinitionParameters(parameters)
-		}
-		Append(")")
 	}
 
 	/*

@@ -343,7 +343,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	func pascalGenerateInlineBlockType(_ block: CGBlockTypeDefinition) {
-		Append("block(")
+		if block.IsPlainFunctionPointer {
+			Append("method(")
+		} else {
+			Append("block(")
+		}
 		if let parameters = block.Parameters where parameters.Count > 0 {
 			pascalGenerateDefinitionParameters(parameters)
 		}

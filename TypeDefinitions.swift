@@ -49,6 +49,7 @@ public class CGTypeAliasDefinition : CGTypeDefinition {
 public class CGBlockTypeDefinition : CGTypeDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
+	public var IsPlainFunctionPointer = false
 }
 
 public class CGEnumTypeDefinition : CGTypeDefinition {
