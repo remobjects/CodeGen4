@@ -837,7 +837,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-		if block.IsPlainFunctionPointer {
+		if type.Block.IsPlainFunctionPointer {
 			Append("[FunctionPointer ]")
 		}
 		Append("delegate ")
