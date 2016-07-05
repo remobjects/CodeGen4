@@ -819,7 +819,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
 		if block.IsPlainFunctionPointer {
-			Append("[FunctionPointer ]")
+			Append("[FunctionPointer] ")
 		}
 		Append("delegate ")
 		if let returnType = block.ReturnType {
@@ -838,7 +838,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 		if type.Block.IsPlainFunctionPointer {
-			Append("[FunctionPointer ]")
+			Append("[FunctionPointer] ")
 		}
 		Append("delegate ")
 		if let returnType = type.Block.ReturnType {
