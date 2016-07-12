@@ -2,6 +2,11 @@
 import Sugar.Collections
 import Sugar.Linq
 
+public enum CGJavaCodeGeneratorDialect {
+	case Standard
+	case Iodine
+}
+
 public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	public init() {
@@ -13,6 +18,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 					"enum", "instanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char", "final", "interface", "static",
 					"void", "class", "finally", "long", "strictfp", "volatile", "const", "float", "native", "super", "while"].ToList() as! List<String>
 	}
+
+	public var Dialect: CGJavaCodeGeneratorDialect = .Standard
+
+	public convenience init(dialect: CGJavaCodeGeneratorDialect) {
+		init()
+		Dialect = dialect
+	}	
 
 	public override var defaultFileExtension: String { return "java" }
 

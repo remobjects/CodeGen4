@@ -2,6 +2,11 @@
 import Sugar.Collections
 import Sugar.Linq
 
+public enum CGOxygeneCodeGeneratorStyle {
+	case Standard
+	case Unified
+}
+
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	public init() {
@@ -32,6 +37,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 					"xor", 
 					"yield"].ToList() as! List<String>
 	}
+
+	public var Style: CGOxygeneCodeGeneratorStyle = .Standard
+
+	public convenience init(style: CGOxygeneCodeGeneratorStyle) {
+		init()
+		Style = style
+	}	
 
 	override func generateHeader() {
 		
