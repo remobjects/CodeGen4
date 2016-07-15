@@ -13,7 +13,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		super.init()
 		
 		// current as of Elements 8.1 and C# 6.0
-		keywords = ["__arglist", "__aspect", "__autoreleasepool", "__block", "__inline", "__makeref", "__mapped", 
+		keywords = ["__arglist", "__aspect", "__autoreleasepool", "__block", "__inline", "__extension", "__makeref", "__mapped", 
 					"__reftype", "__refvalue", "__selector", "__strong", "__unretained", "__weak", 
 					"abstract", "add", "as", "ascending", "assembly", "async", "await", "base", "bool", "break", "by", "byte", 
 					"case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "descending", "do", "double", "dynamic", 
