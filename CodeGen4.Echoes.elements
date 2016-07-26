@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
     <PropertyGroup>
         <ProductVersion>3.5</ProductVersion>
@@ -72,6 +72,7 @@
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.swift"/>
         <Compile Include="Properties\FakeSugar.pas"/>
+        <Compile Include="CodeDomToCG4.swift"/>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets"/>
     <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
