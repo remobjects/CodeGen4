@@ -595,10 +595,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateParameterDefinition(_ param: CGParameterDefinition) {
-		swiftGenerateParameterDefinition(param, emitExternal: false, first: true, firstExternalName: nil) // never emit the _
+		swiftGenerateParameterDefinition(param, emitExternal: false) // never emit the _
 	}
 	
-	private func swiftGenerateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, first: Boolean, firstExternalName: String? = nil) {
+	private func swiftGenerateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
 		switch param.Modifier {
 			case .Out: 
 				if Dialect == CGSwiftCodeGeneratorDialect.Silver {
@@ -610,13 +610,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("inout ")
 			default: 
 		}
-		if emitExternal, let externalName = param.ExternalName {
-			generateIdentifier(externalName)
-			Append(" ")
-		} else if first, let externalName = firstExternalName {
-			generateIdentifier(externalName)
-			Append(" ")
-		} else if emitExternal && !first {
+		if emitExternal, let externalName = param.ExternalName ?? externalName {
+			if externalName != param.Name {
+				generateIdentifier(externalName)
+				Append(" ")
+			}
+		} else if emitExternal {
 			Append("_ ")
 		}
 		generateIdentifier(param.Name)
@@ -635,7 +634,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append(", ")
 			} 
 			param.startLocation = currentLocation
-			swiftGenerateParameterDefinition(param, emitExternal: true, first: p == 0, firstExternalName: firstExternalName)
+			swiftGenerateParameterDefinition(param, emitExternal: true, externalName: p == 0 ? firstExternalName : nil)
 			param.endLocation = currentLocation
 		}
 	}
@@ -1087,7 +1086,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if length(ctor.Name) > 0 {
 			swiftGenerateDefinitionParameters(ctor.Parameters, firstExternalName: removeWithPrefix(ctor.Name))
 		} else {
-			swiftGenerateDefinitionParameters(ctor.Parameters, firstExternalName: "_")
+			swiftGenerateDefinitionParameters(ctor.Parameters)
 		}
 		Append(")")
 
