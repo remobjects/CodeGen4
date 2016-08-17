@@ -1502,7 +1502,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal private(set) var currentLocation = CGLocation()
 	
-	internal final func Append(_ line: String) -> StringBuilder {
+	@discardableResult internal final func Append(_ line: String) -> StringBuilder {
 		if length(line) > 0 {			
 			if atStart {
 				AppendIndent()
@@ -1522,7 +1522,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode
 	}
 	
-	internal final func AppendLine(_ line: String? = nil) -> StringBuilder {
+	@discardableResult internal final func AppendLine(_ line: String? = nil) -> StringBuilder {
 		if let line = line {
 			Append(line)
 		}
@@ -1536,7 +1536,7 @@ public __abstract class CGCodeGenerator {
 		return currentCode
 	}
 	
-	private final func AppendIndent() -> StringBuilder {
+	@discardableResult private final func AppendIndent() -> StringBuilder {
 		if !codeCompletionMode {
 			if useTabs {
 				currentLocation.column += indent
