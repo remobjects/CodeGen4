@@ -22,7 +22,8 @@ type
   end;
 
 extension method System.Xml.XmlElement.GetFirstElementWithName(aName: String): System.Xml.XmlElement; assembly;
-extension method System.String.EqualsIgnoreCase(Value: String): Boolean;assembly;
+extension method System.String.EqualsIgnoringCase(Value: String): Boolean;assembly;
+extension method System.String.EqualsIgnoringCaseInvariant(Value: String): Boolean;assembly;
 extension method System.Xml.XmlNode.ChildCount: Integer;assembly;
 {$ENDIF}
 
@@ -32,7 +33,7 @@ implementation
 extension method System.Xml.XmlElement.GetFirstElementWithName(aName: String): System.Xml.XmlElement;
 begin
   for item in ChildNodes do
-    if (item is System.Xml.XmlElement) and System.Xml.XmlElement(item).Name.EqualsIgnoreCase(aName) then exit System.Xml.XmlElement(item);
+    if (item is System.Xml.XmlElement) and System.Xml.XmlElement(item).Name.EqualsIgnoringCase(aName) then exit System.Xml.XmlElement(item);
   exit nil;
 end;
 
@@ -41,9 +42,14 @@ begin
   exit self.ChildNodes:Count;
 end;
 
-extension method System.String.EqualsIgnoreCase(Value: String): Boolean;
+extension method System.String.EqualsIgnoringCase(Value: String): Boolean;
 begin
   exit String.Equals(Self, Value, StringComparison.OrdinalIgnoreCase);
+end;
+
+extension method System.String.EqualsIgnoringCaseInvariant(Value: String): Boolean;
+begin
+  exit String.Equals(Self, Value, StringComparison.InvariantCultureIgnoreCase);
 end;
 
 method Sugar.Convert.ToHexString(aValue: Int64; aWidth: Integer): String;
