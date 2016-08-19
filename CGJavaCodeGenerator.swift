@@ -762,7 +762,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 
-		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External {
+		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
 			AppendLine(";")
 			return
 		}
@@ -788,7 +788,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if ctor.Parameters.Count > 0 {
 			javaGenerateDefinitionParameters(ctor.Parameters)
 		}
-			AppendLine(")")
+		AppendLine(")")
+
+		if definitionOnly {
+			AppendLine(";")
+			return
+		}
+
 		AppendLine("{")
 		incIndent()
 		generateStatements(ctor.LocalVariables)
@@ -827,6 +833,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
 		javaGenerateStaticPrefix(property.Static && !type.Static)
 
+		Append("/* property */ ")
 		if let type = property.`Type` {
 			generateTypeReference(type)
 			Append(" ")
@@ -839,7 +846,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			generateIdentifier(property.Name)
 		}
-		if let params = property.Parameters where params.Count > 0 {
+		AppendLine(";")
+		
+		/*if let params = property.Parameters where params.Count > 0 {
 
 			Append("[")
 			javaGenerateDefinitionParameters(params)
@@ -897,7 +906,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				generateExpression(value)
 			}
 			AppendLine("")
-		}
+		}*/
 	}
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
