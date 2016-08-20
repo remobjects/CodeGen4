@@ -814,7 +814,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-
+		Append("using ")
+		generateIdentifier(type.Name)
+		Append(" = ")
+		generateTypeReference(type.ActualType)
+		AppendLine(";")
 	}
 	
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
@@ -865,7 +869,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members) {m in
+		helpGenerateCommaSeparatedList(type.Members, separator: { self.AppendLine(",") } ) {m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {

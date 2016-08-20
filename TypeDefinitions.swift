@@ -53,7 +53,6 @@ public class CGBlockTypeDefinition : CGTypeDefinition {
 }
 
 public class CGEnumTypeDefinition : CGTypeDefinition {
-	public var Values = Dictionary<String, CGExpression>()
 	public var BaseType: CGTypeReference?
 }
 
