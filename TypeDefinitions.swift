@@ -140,6 +140,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var Comment: CGCommentStatement?
 	public var Attributes = List<CGAttribute>()
 	public var Condition: CGConditionalDefine?
+	public var ThrownExceptions: List<CGTypeReference>? // nil means unknown; empty list means known to not throw.
 	
 	public init(_ name: String) {
 		Name = name
