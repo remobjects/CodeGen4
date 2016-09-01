@@ -25,7 +25,11 @@ public __abstract class CGCodeGenerator {
 	public var omitNamespacePrefixes: Boolean = false
 	public var splitLinesLongerThan: Integer = 2048
 
-	public final func GenerateUnit(_ unit: CGCodeUnit, definitionOnly: Boolean = false) -> String {
+	public final func GenerateUnit(_ unit: CGCodeUnit) -> String { // overload for VC# compastibility
+		return GenerateUnit(unit, definitionOnly: false)
+	}
+
+	public final func GenerateUnit(_ unit: CGCodeUnit, definitionOnly: Boolean /*= false*/) -> String {
 		
 		currentUnit = unit
 		currentCode = StringBuilder()
