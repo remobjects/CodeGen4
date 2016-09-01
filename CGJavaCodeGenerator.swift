@@ -761,6 +761,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		javaGenerateDefinitionParameters(method.Parameters)
 		Append(")")
+		
+		if let `throws` = method.ThrownExceptions where `throws`.Count > 0 {
+			Append(" throws ")
+			helpGenerateCommaSeparatedList(`throws`) { t in
+				self.generateTypeReference(t, ignoreNullability: true)
+			}
+		}
 
 		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
 			AppendLine(";")

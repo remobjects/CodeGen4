@@ -1124,8 +1124,22 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			returnType.endLocation = currentLocation
 		}
 		Append(";")
-
+		
 		if !implementation {
+
+			if self is CGOxygeneCodeGenerator {
+				if let `throws` = method.ThrownExceptions {
+					Append(" raises ")
+					if `throws`.Count > 0 {
+						helpGenerateCommaSeparatedList(`throws`) { t in
+							self.generateTypeReference(t, ignoreNullability: true)
+						}
+					} else {
+						Append("none")
+					}
+					Append(";")
+				}
+			}
 
 			if let method = method as? CGMethodDefinition {
 				pascalGenerateGenericConstraints(method.GenericParameters, needSemicolon: true)
