@@ -30,7 +30,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 			}
 			// generate only .Unit & .Private visibility
 			if ((visibility == .Unit)||(visibility == .Private)){			
-				if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
+				if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
 					AppendLine()
 				}
 				generateGlobal(g)
@@ -117,7 +117,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		AppendLine("{")
 		incIndent()
 		// process local variables
-		if let localVariables = method.LocalVariables where localVariables.Count > 0 {		
+		if let localVariables = method.LocalVariables, localVariables.Count > 0 {		
 			for v in localVariables {
 				generateVariableDeclarationStatement(v);
 			}
@@ -128,14 +128,14 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		if let getStatements = property.GetStatements, method = property.GetterMethodDefinition() {
+		if let getStatements = property.GetStatements, let method = property.GetterMethodDefinition() {
 			method.Name = "get__" + property.Name
 			if isCBuilder() {			
 				method.CallingConvention = .Register
 			}
 			generateMethodDefinition(method, type: type)
 		}
-		if let setStatements = property.SetStatements,  method = property.SetterMethodDefinition() {
+		if let setStatements = property.SetStatements, let method = property.SetterMethodDefinition() {
 			method.Name = "set__" + uppercaseFirstLetter(property.Name)
 			if isCBuilder() {			
 				method.CallingConvention = .Register
@@ -156,7 +156,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		AppendLine("{")
 		incIndent()
 		// process local variables
-		if let localVariables = ctor.LocalVariables where localVariables.Count > 0 {		
+		if let localVariables = ctor.LocalVariables, localVariables.Count > 0 {		
 			for v in localVariables {
 				generateVariableDeclarationStatement(v);
 			}
@@ -172,7 +172,7 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 		AppendLine("{")
 		incIndent()
 		// process local variables
-		if let localVariables = dtor.LocalVariables where localVariables.Count > 0 {		
+		if let localVariables = dtor.LocalVariables, localVariables.Count > 0 {		
 			for v in localVariables {
 				generateVariableDeclarationStatement(v);
 			}

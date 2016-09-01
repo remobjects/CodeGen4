@@ -270,7 +270,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
 		decIndent()
 		Append("until ")
-		if let notCondition = statement.Condition as? CGUnaryOperatorExpression where notCondition.Operator == CGUnaryOperatorKind.Not {
+		if let notCondition = statement.Condition as? CGUnaryOperatorExpression, notCondition.Operator == CGUnaryOperatorKind.Not {
 			generateExpression(notCondition.Value)
 		} else {
 			generateExpression(CGUnaryOperatorExpression.NotExpression(statement.Condition))
@@ -302,7 +302,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateStatementTerminator()
 			decIndent()
 		}
-		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			AppendLine("else begin")
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
@@ -329,16 +329,16 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 		//todo: override for Oxygene to get rid of the double try, once tested
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("try")
 			incIndent()
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			AppendLine("try")
 			incIndent()
 		}
 		generateStatements(statement.Statements)
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			decIndent()
 			AppendLine("finally")
 			incIndent()
@@ -347,7 +347,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("end")
 			generateStatementTerminator()
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			decIndent()
 			AppendLine("except")
 			incIndent()
@@ -700,7 +700,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let variance = param.Variance {
@@ -716,12 +716,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateGenericConstraints(_ parameters: List<CGGenericParameterDefinition>?, needSemicolon: Boolean = false) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			var needsWhere = true
 			helpGenerateCommaSeparatedList(parameters) { param in
-				if let constraints = param.Constraints where constraints.Count > 0 {
+				if let constraints = param.Constraints, constraints.Count > 0 {
 					if needsWhere {
-						self.Append(" where ")
+						self.Append(", ")
 						needsWhere = false
 					} else {
 						self.Append(", ")
@@ -813,7 +813,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		let needsEscape = pascalGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name, escaped: needsEscape)
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			pascalGenerateCallParameters(property.Parameters)
 			Append("]")
@@ -871,7 +871,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
-		if let parameters = attribute.Parameters where parameters.Count > 0 {
+		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")
 			pascalGenerateAttributeParameters(parameters)
 			Append(")")
@@ -1089,7 +1089,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func pascalKeywordForMethod(_ method: CGMethodDefinition) -> String {
-		if let returnType = method.ReturnType where !returnType.IsVoid {
+		if let returnType = method.ReturnType, !returnType.IsVoid {
 			return "function"
 		}
 		return "procedure"
@@ -1112,12 +1112,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func pascalGenerateSecondHalfOfMethodHeader(_ method: CGMethodLikeMemberDefinition, implementation: Boolean) {
-		if let parameters = method.Parameters where parameters.Count > 0 {
+		if let parameters = method.Parameters, parameters.Count > 0 {
 			Append("(")
 			pascalGenerateDefinitionParameters(parameters)
 			Append(")")
 		}
-		if let returnType = method.ReturnType where !returnType.IsVoid {
+		if let returnType = method.ReturnType, !returnType.IsVoid {
 			Append(": ")
 			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
@@ -1190,7 +1190,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(".")
 		}
 		generateIdentifier(method.Name)
-		if let realMethod = method as? CGMethodDefinition, genericParameter = realMethod.GenericParameters {
+		if let realMethod = method as? CGMethodDefinition, let genericParameter = realMethod.GenericParameters {
 			pascalGenerateGenericParameters(genericParameter)
 		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
@@ -1216,7 +1216,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func pascalGenerateMethodBody(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition) {
-		if let localVariables = method.LocalVariables where localVariables.Count > 0 {
+		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
 			AppendLine("var")
 			incIndent()
 			for v in localVariables {
@@ -1231,7 +1231,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		AppendLine("begin")
 		incIndent()
-		if let localVariables = method.LocalVariables where localVariables.Count > 0 {
+		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
 			for v in localVariables {
 				if let val = v.Value {
 					generateIdentifier(v.Name)
@@ -1339,7 +1339,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append("property ")
 		generateIdentifier(property.Name)
-		if let parameters = property.Parameters where parameters.Count > 0 {
+		if let parameters = property.Parameters, parameters.Count > 0 {
 			Append("[")
 			pascalGenerateDefinitionParameters(parameters)
 			Append("]")
@@ -1398,7 +1398,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			
 		} else {
 			
-			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
 				appendRead()
 				if !definitionOnly {
 					Append(" ")
@@ -1412,7 +1412,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 			}
 	
-			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+			if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
 				appendWrite()
 				if !definitionOnly {
 					Append(" ")
@@ -1437,10 +1437,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if !definitionOnly {
-			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
 				generateMethodDefinition(getterMethod, type: type)
 			}
-			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+			if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
 				generateMethodDefinition(setterMethod!, type: type)
 			}
 		}
@@ -1545,7 +1545,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		Append("array")
-		if let bounds = array.Bounds where bounds.Count > 0 {
+		if let bounds = array.Bounds, bounds.Count > 0 {
 			Append("[")
 			for b in 0 ..< array.Bounds.Count {
 				let bound = array.Bounds[b]

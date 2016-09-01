@@ -36,7 +36,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			}
 			// skip .Unit & .Private visibility - they will be put into .cpp
 			if !((visibility == .Unit)||(visibility == .Private)){			
-				if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
+				if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
 					AppendLine()
 				}
 				generateGlobal(g)
@@ -310,14 +310,14 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			//			Append("id ")
 		}
 		generateIdentifier(property.Name)
-		if let parameters = property.Parameters where parameters.Count > 0 {
+		if let parameters = property.Parameters, parameters.Count > 0 {
 			Append("[")
 			cppGenerateDefinitionParameters(parameters, header: true)
 			Append("]")
 		}
 		Append(" = {")
 		var readerExist = false;
-		if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+		if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
 			readerExist = true;
 			Append("read=")
 			if !definitionOnly {
@@ -331,7 +331,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			}
 		}
 	
-		if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+		if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
 			if readerExist {
 				Append(", ")
 			} 
@@ -389,7 +389,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 //			var lastMember: CGMemberDefinition? = nil
 //			var lastVisibility: CGMemberVisibilityKind = CGMemberVisibilityKind.Unspecified;
 //			for m in type.Members {
-//				if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
+//				if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
 //					AppendLine()
 //				}
 //				cppHGenerateTypeMember(m, type: type, lastVisibility: lastVisibility);
@@ -412,14 +412,14 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 
 	func cppGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if !definitionOnly {
-			if let getStatements = property.GetStatements, getterMethod = property.GetterMethodDefinition() {
+			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
 				if isCBuilder() {			
 					getterMethod.CallingConvention = .Register					
 				}
 				getterMethod.Visibility = .Private
 				generateMethodDefinition(getterMethod, type: type)
 			}
-			if let setStatements = property.SetStatements, setterMethod = property.SetterMethodDefinition() {
+			if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
 				if isCBuilder() {			
 					setterMethod.CallingConvention = .Register
 				}

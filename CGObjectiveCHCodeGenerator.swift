@@ -53,7 +53,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		incIndent()
 		helpGenerateCommaSeparatedList(type.Members) { m in
 			if let member = m as? CGEnumValueDefinition {
-				self.generateIdentifier(member.Name)
+				self.generateIdentifier(type.Name+"_"+member.Name) // Obj-C enums must be unique
 				if let value = member.Value {
 					self.Append(" = ")
 					self.generateExpression(value)

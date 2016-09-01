@@ -32,8 +32,8 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			Append("#ifdef ")
 			Append(name.Name)
 		} else {
-			//if let not = statement.Condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
-			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			//if let not = statement.Condition.Expression as? CGUnaryOperatorExpression, not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == CGUnaryOperatorKind.Not,
 			   let name = not.Value as? CGNamedIdentifierExpression {
 				Append("#ifndef ")
 				Append(name.Name)
@@ -137,7 +137,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			}
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
 		}
-		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			AppendLine("default:")
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(defaultStatements)
 		}

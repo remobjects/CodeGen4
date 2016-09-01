@@ -100,7 +100,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
 		Append("Do Until ")
-		if let notCondition = statement.Condition as? CGUnaryOperatorExpression where notCondition.Operator == CGUnaryOperatorKind.Not {
+		if let notCondition = statement.Condition as? CGUnaryOperatorExpression, notCondition.Operator == CGUnaryOperatorKind.Not {
 			generateExpression(notCondition.Value)
 		} else {
 			generateExpression(CGUnaryOperatorExpression.NotExpression(statement.Condition))
@@ -132,7 +132,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
 			decIndent()
 		}
-		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			AppendLine("Case Else")
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
@@ -390,7 +390,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("New ")
 		generateExpression(expression.`Type`)
-		/*if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+		/*if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("[")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
 				self.generateExpression(boundExpression)
@@ -406,7 +406,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		vbGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			vbGenerateCallParameters(property.Parameters)
 			Append("]")
@@ -487,7 +487,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("<")
 		generateTypeReference(attribute.`Type`)
-		if let parameters = attribute.Parameters where parameters.Count > 0 {
+		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")
 			vbGenerateAttributeParameters(parameters)
 			Append(")")
@@ -588,7 +588,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	func vbGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let variance = param.Variance {
@@ -605,12 +605,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	func vbGenerateGenericConstraints(_ parameters: List<CGGenericParameterDefinition>?) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			var needsWhere = true
 			for param in parameters {
-				if let constraints = param.Constraints where constraints.Count > 0 {
+				if let constraints = param.Constraints, constraints.Count > 0 {
 					if needsWhere {
-						self.Append(" where ")
+						self.Append(", ")
 						needsWhere = false
 					} else {
 						self.Append(", ")
@@ -842,7 +842,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			generateTypeReference(type)
 		}
 
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			vbGenerateDefinitionParameters(params)
 			Append("]")

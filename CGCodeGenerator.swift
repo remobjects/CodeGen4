@@ -173,7 +173,7 @@ public __abstract class CGCodeGenerator {
 	
 	internal func generateHeader() {
 		// descendant can override, if needed
-		if let comment = currentUnit.HeaderComment where comment.Lines.Count > 0 {
+		if let comment = currentUnit.HeaderComment, comment.Lines.Count > 0 {
 			generateStatement(comment)
 			AppendLine()
 		}
@@ -228,7 +228,7 @@ public __abstract class CGCodeGenerator {
 
 		var lastGlobal: CGGlobalDefinition? = nil
 		for g in currentUnit.Globals {
-			if let lastGlobal = lastGlobal where globalNeedsSpace(g, afterGlobal: lastGlobal) {
+			if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
 				AppendLine()
 			}
 			generateGlobal(g)
@@ -314,7 +314,7 @@ public __abstract class CGCodeGenerator {
 		
 		if omitNamespacePrefixes && !alwaysEmitNamespace {
 			if name.Contains(".") {
-				if let parts = name.Split(".") where length(parts) > 0 {
+				if let parts = name.Split("."), length(parts) > 0 {
 					generateIdentifier(parts[length(parts)-1], escaped: escaped)
 					return
 				}
@@ -1027,7 +1027,7 @@ public __abstract class CGCodeGenerator {
 	//
 	
 	func generateAttributes(_ attributes: List<CGAttribute>?) {
-		if let attributes = attributes where attributes.Count > 0 {
+		if let attributes = attributes, attributes.Count > 0 {
 			for a in attributes{
 				generateAttribute(a)
 			}
@@ -1131,7 +1131,7 @@ public __abstract class CGCodeGenerator {
 
 		var lastMember: CGMemberDefinition? = nil
 		for m in type.Members {
-			if let lastMember = lastMember where memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
+			if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
 				AppendLine()
 			}
 			generateTypeMember(m, type: type)
@@ -1335,7 +1335,7 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
-		if let genericArguments = genericArguments where genericArguments.Count > 0 {
+		if let genericArguments = genericArguments, genericArguments.Count > 0 {
 			// descendant may override, but this will work for most languages.
 			Append("<")
 			for p in 0 ..< genericArguments.Count {

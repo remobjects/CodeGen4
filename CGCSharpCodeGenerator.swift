@@ -77,7 +77,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateGlobals() {
-		if let globals = currentUnit.Globals where globals.Count > 0{
+		if let globals = currentUnit.Globals, globals.Count > 0{
 			AppendLine("public static class __Globals")
 			AppendLine("{")
 			incIndent()
@@ -192,7 +192,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(statement.Statements)
 		decIndent()
 		AppendLine("}")
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("finally")
 			AppendLine("{")
 			incIndent()
@@ -200,7 +200,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			decIndent()
 			AppendLine("}")
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
 				if let type = b.`Type` {
 					Append("catch (")
@@ -283,7 +283,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	private func cSharpGenerateInlineConstructorCallStatement(_ statement: CGConstructorCallStatement) {
-		if let callSite = statement.CallSite where callSite is CGInheritedExpression {
+		if let callSite = statement.CallSite, callSite is CGInheritedExpression {
 			generateExpression(callSite)
 		} else {
 			Append("this")
@@ -421,7 +421,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
-		if let `operator` = expression.Operator where `operator` == .ForceUnwrapNullable && Dialect == .Hydrogene {
+		if let `operator` = expression.Operator, `operator` == .ForceUnwrapNullable && Dialect == .Hydrogene {
 			generateExpression(expression.Value)
 			Append("!")
 		} else {
@@ -549,7 +549,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cSharpGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let variance = param.Variance {
@@ -566,12 +566,12 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cSharpGenerateGenericConstraints(_ parameters: List<CGGenericParameterDefinition>?) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			var needsWhere = true
 			for param in parameters {
-				if let constraints = param.Constraints where constraints.Count > 0 {
+				if let constraints = param.Constraints, constraints.Count > 0 {
 					if needsWhere {
-						self.Append(" where ")
+						self.Append(", ")
 						needsWhere = false
 					} else {
 						self.Append(", ")
@@ -635,7 +635,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateExpression(expression.`Type`, ignoreNullability: true)
-		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+		if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("[")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
 				self.generateExpression(boundExpression)
@@ -655,7 +655,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		cSharpGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			cSharpGenerateCallParameters(property.Parameters)
 			Append("]")
@@ -744,7 +744,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
-		if let parameters = attribute.Parameters where parameters.Count > 0 {
+		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")
 			cSharpGenerateAttributeParameters(parameters)
 			Append(")")
@@ -834,7 +834,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append(" ")
 		generateIdentifier(block.Name)
 		Append(" (")
-		if let parameters = block.Parameters where parameters.Count > 0 {
+		if let parameters = block.Parameters, parameters.Count > 0 {
 			cSharpGenerateDefinitionParameters(parameters)
 		}
 		AppendLine(");")
@@ -851,7 +851,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("void")
 		}
 		Append(" (")
-		if let parameters = type.Block.Parameters where parameters.Count > 0 {
+		if let parameters = type.Block.Parameters, parameters.Count > 0 {
 			cSharpGenerateDefinitionParameters(parameters)
 		}
 		Append(")")
@@ -1117,7 +1117,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			generateIdentifier(property.Name)
 		}
 
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			cSharpGenerateDefinitionParameters(params)
 			Append("]")

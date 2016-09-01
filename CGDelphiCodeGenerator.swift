@@ -445,8 +445,8 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			Append("{$IFDEF ")
 			Append(name.Name)
 		} else {
-			//if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
-			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			//if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == CGUnaryOperatorKind.Not,
 			   let name = not.Value as? CGNamedIdentifierExpression {
 				Append("{$IFNDEF ")
 				Append(name.Name)
@@ -463,8 +463,8 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			AppendLine("{$ENDIF}")
 		} else {
-			//if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == .Not,
-			if let not = condition.Expression as? CGUnaryOperatorExpression where not.Operator == CGUnaryOperatorKind.Not,
+			//if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == .Not,
+			if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == CGUnaryOperatorKind.Not,
 			   let name = not.Value as? CGNamedIdentifierExpression {
 				AppendLine("{$ENDIF}")
 			} else {
@@ -546,7 +546,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 				decIndent()
 			}
 		}
-		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			AppendLine("else begin")
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
@@ -560,16 +560,16 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("try")
 			incIndent()
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			AppendLine("try")
 			incIndent()
 		}
 		generateStatements(statement.Statements)
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			decIndent()
 			AppendLine("finally")
 			incIndent()
@@ -578,7 +578,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			Append("end")
 			generateStatementTerminator()
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			decIndent()
 			AppendLine("except")
 			incIndent()

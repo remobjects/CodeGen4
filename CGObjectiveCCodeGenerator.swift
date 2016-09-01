@@ -102,7 +102,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(statement.Statements)
 		decIndent()
 		AppendLine("}")
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("@finally")
 			AppendLine("{")
 			incIndent()
@@ -110,7 +110,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			decIndent()
 			AppendLine("}")
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
 				if let type = b.`Type` {
 					Append("@catch (")
@@ -345,7 +345,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				if p > 0 {
 					Append(" ")
 				}
-				if let name = param.Name where p > 0 || !skipFirstName {
+				if let name = param.Name, p > 0 || !skipFirstName {
 					generateIdentifier(name)
 				} 
 				Append(":")
@@ -463,7 +463,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		Append(".")
 		Append(property.Name)
 
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			assert(false, "Index properties are not supported in Objective-C")
 		}
 	}

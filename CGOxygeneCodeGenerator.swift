@@ -58,7 +58,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 	
 	override func generateGlobals() {
-		if let globals = currentUnit.Globals where globals.Count > 0{
+		if let globals = currentUnit.Globals, globals.Count > 0{
 			AppendLine("{$GLOBALS ON}")
 			AppendLine()
 		}
@@ -200,7 +200,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
-		if let `operator` = expression.Operator where `operator` == .ForceUnwrapNullable {
+		if let `operator` = expression.Operator, `operator` == .ForceUnwrapNullable {
 			generateExpression(expression.Value)
 			Append(" as not nullable")
 		} else {
@@ -299,7 +299,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateExpression(expression.`Type`, ignoreNullability: true)
-		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+		if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("[")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
 				self.generateExpression(boundExpression)
@@ -360,11 +360,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		} else {
 			Append("block(")
 		}
-		if let parameters = block.Parameters where parameters.Count > 0 {
+		if let parameters = block.Parameters, parameters.Count > 0 {
 			pascalGenerateDefinitionParameters(parameters)
 		}
 		Append(")")
-		if let returnType = block.ReturnType where !returnType.IsVoid {
+		if let returnType = block.ReturnType, !returnType.IsVoid {
 			Append(": ")
 			generateTypeReference(returnType)
 		}

@@ -138,7 +138,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 
 		if isStandard() {
-			if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+			if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 				assert(false, "FinallyStatements in generateTryFinallyCatchStatement is not supported in Standard, except in CPlusPlusBuilder and VCPlusPlus");
 			}
 		}
@@ -148,10 +148,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		//		catch {}
 		//	}
 		// __finally {}
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("__try")
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			AppendLine("try")
 		}
 		AppendLine("{")
@@ -159,7 +159,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(statement.Statements)
 		decIndent()
 		AppendLine("}")
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
 				if let type = b.`Type` {
 					Append("catch (")
@@ -177,7 +177,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				AppendLine("}")
 			}
 		}
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("__finally")
 			AppendLine("{")
 			incIndent()
@@ -425,7 +425,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			self.Append(" ")
 			self.generateIdentifier(param.Name)			
 			if header {
-				if let pv = param.DefaultValue where pv != nil {			
+				if let pv = param.DefaultValue, pv != nil {			
 					self.Append(" = ")
 					self.generateExpression(pv)
 				}
@@ -523,7 +523,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		cppGenerateAddressing(property)
 		Append(property.Name)
 
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			cppGenerateCallParameters(property.Parameters)
 			Append("]")
@@ -791,7 +791,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				generateIdentifier(type.Name)
 				Append("::")
 			}
-			if let lname = method.Name where lname != "" {
+			if let lname = method.Name, lname != "" {
 				generateIdentifier(uppercaseFirstLetter(lname))
 			}
 			else {
@@ -925,7 +925,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if ignoreNamespace {
 			generateIdentifier(type.Name)
 		} else {
-			if let namespace = type.Namespace where (namespace.Name != "") {
+			if let namespace = type.Namespace, (namespace.Name != "") {
 				generateIdentifier(namespace.Name)
 				Append("::")
 			}

@@ -59,7 +59,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateGlobals() {
-		if let globals = currentUnit.Globals where globals.Count > 0{
+		if let globals = currentUnit.Globals, globals.Count > 0{
 			AppendLine("public static class __Globals")
 			AppendLine("{")
 			incIndent()
@@ -169,7 +169,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		generateStatements(statement.Statements)
 		decIndent()
 		AppendLine("}")
-		if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("finally")
 			AppendLine("{")
 			incIndent()
@@ -177,7 +177,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			decIndent()
 			AppendLine("}")
 		}
-		if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
 				if let type = b.`Type` {
 					Append("catch (")
@@ -249,7 +249,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
-		if let callSite = statement.CallSite where callSite is CGInheritedExpression {
+		if let callSite = statement.CallSite, callSite is CGInheritedExpression {
 			generateExpression(callSite)
 		} else {
 			Append("this")
@@ -483,7 +483,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		javaGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			javaGenerateCallParameters(property.Parameters)
 			Append("]")
@@ -554,7 +554,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("@")
 		generateTypeReference(attribute.`Type`)
-		if let parameters = attribute.Parameters where parameters.Count > 0 {
+		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")
 			javaGenerateAttributeParameters(parameters)
 			Append(")")
@@ -762,7 +762,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateDefinitionParameters(method.Parameters)
 		Append(")")
 		
-		if let `throws` = method.ThrownExceptions where `throws`.Count > 0 {
+		if let `throws` = method.ThrownExceptions, `throws`.Count > 0 {
 			Append(" throws ")
 			helpGenerateCommaSeparatedList(`throws`) { t in
 				self.generateTypeReference(t, ignoreNullability: true)
@@ -855,7 +855,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 		AppendLine(";")
 		
-		/*if let params = property.Parameters where params.Count > 0 {
+		/*if let params = property.Parameters, params.Count > 0 {
 
 			Append("[")
 			javaGenerateDefinitionParameters(params)
@@ -998,7 +998,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append("void ")
 		}
 		Append("(")
-		if let parameters = type.Block.Parameters where parameters.Count > 0 {
+		if let parameters = type.Block.Parameters, parameters.Count > 0 {
 			javaGenerateDefinitionParameters(parameters)
 		}
 		Append(")")

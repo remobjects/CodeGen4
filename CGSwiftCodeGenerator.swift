@@ -153,7 +153,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine(":")
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(c.Statements)
 		}
-		if let defaultStatements = statement.DefaultCase where defaultStatements.Count > 0 {
+		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			AppendLine("default:")
 			generateStatementsIndentedUnlessItsASingleBeginEndBlock(defaultStatements)
 		}
@@ -214,14 +214,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateStatements(statement.Statements)
 			decIndent()
 			AppendLine("}")
-			if let finallyStatements = statement.FinallyStatements where finallyStatements.Count > 0 {
+			if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 				AppendLine("__finally {")
 				incIndent()
 				generateStatements(finallyStatements)
 				decIndent()
 				AppendLine("}")
 			}
-			if let catchBlocks = statement.CatchBlocks where catchBlocks.Count > 0 {
+			if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 				for b in catchBlocks {
 					if let type = b.`Type` {
 						Append("__catch ")
@@ -468,7 +468,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				self.Append("(")
 				self.swiftGenerateDefinitionParameters(member.Parameters)
 				self.Append(")")
-				if let returnType = member.ReturnType where !returnType.IsVoid {
+				if let returnType = member.ReturnType, !returnType.IsVoid {
 					self.Append(" -> ")
 					self.generateTypeReference(returnType)
 				}
@@ -488,7 +488,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
-		if let `operator` = expression.Operator where `operator` == .ForceUnwrapNullable {
+		if let `operator` = expression.Operator, `operator` == .ForceUnwrapNullable {
 			generateExpression(expression.Value)
 			Append("!")
 		} else {
@@ -640,14 +640,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func swiftGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
-		if let parameters = parameters where parameters.Count > 0 {
+		if let parameters = parameters, parameters.Count > 0 {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
 				self.generateIdentifier(param.Name)
 				// variance isn't supported in swift
 				//todo: 72081: Silver: NRE in "if let"
-				//if let constraints = param.Constraints, filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint}).ToList() where filteredConstraints.Count > 0 {
-				if let constraints = param.Constraints where constraints.Count > 0 {
+				//if let constraints = param.Constraints, filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint}).ToList(), filteredConstraints.Count > 0 {
+				if let constraints = param.Constraints, constraints.Count > 0 {
 					let filteredConstraints = constraints.Where({ return $0 is CGGenericIsSpecificTypeConstraint })
 					self.Append(": ")
 					self.helpGenerateCommaSeparatedList(filteredConstraints) { constraint in
@@ -708,7 +708,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		generateExpression(expression.`Type`, ignoreNullability: true)
-		if let bounds = expression.ArrayBounds where bounds.Count > 0 {
+		if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("[](count: ")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
 				self.generateExpression(boundExpression)
@@ -728,7 +728,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		swiftGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			Append("[")
 			swiftGenerateCallParameters(property.Parameters)
 			Append("]")
@@ -819,7 +819,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAttribute(_ attribute: CGAttribute) {
 		Append("@")
 		generateTypeReference(attribute.`Type`, ignoreNullability: true)
-		if let parameters = attribute.Parameters where parameters.Count > 0 {
+		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")
 			swiftGenerateAttributeParameters(parameters)
 			Append(")")
@@ -924,7 +924,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		Append(") -> ")
-		if let returnType = block.ReturnType where !returnType.IsVoid {
+		if let returnType = block.ReturnType, !returnType.IsVoid {
 			generateTypeReference(returnType)
 		} else {
 			Append("()")
@@ -1050,7 +1050,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(" throws")
 		}
 		
-		if let returnType = method.ReturnType where !returnType.IsVoid {
+		if let returnType = method.ReturnType, !returnType.IsVoid {
 			Append(" -> ")
 			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
@@ -1196,7 +1196,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		swiftGenerateStorageModifierPrefix(property.`Type`)
 		
-		if let params = property.Parameters where params.Count > 0 {
+		if let params = property.Parameters, params.Count > 0 {
 			
 			Append("subscript ")
 			generateIdentifier(property.Name)
