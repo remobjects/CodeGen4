@@ -935,15 +935,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
-		if let genericArguments = genericArguments where genericArguments.Count > 0 {
-			// descendant may override, but this will work for most languages.
+		if let genericArguments = genericArguments, genericArguments.Count > 0 {
 			Append("<")
 			for p in 0 ..< genericArguments.Count {
 				let param = genericArguments[p]
 				if p > 0 {
 					Append(",")
 				}
-				generateTypeReference(param)
+				generateTypeReference(param) // overriden from base to not omit nullability on Java
 			}
 			Append(">")
 		}
