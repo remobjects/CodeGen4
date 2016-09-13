@@ -832,16 +832,27 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 	
-	func swiftGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind) {
+	func swiftGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind, sealed: Boolean = false) {
 		switch visibility {
-			case .Unspecified: break /* no-op */
-			case .Unit: Append("internal ")
-			case .Assembly: Append("internal ")
-			case .Public: Append("public ")
+			case .Unspecified:
+				if sealed {
+					Append("final ")
+				}
+			case .Unit, .Assembly:
+				Append("internal ") // non-sealed for internal use is implied
+				if sealed {
+					Append("final ")
+				}
+			case .Public:
+				if sealed {
+					Append("public final ")
+				} else {
+					Append("open ")
+				}
 		}
 	}
 	
-	func swiftGenerateMemberTypeVisibilityPrefix(_ visibility: CGMemberVisibilityKind, appendSpace: Boolean = true) {
+	func swiftGenerateMemberTypeVisibilityPrefix(_ visibility: CGMemberVisibilityKind, virtuality: CGMemberVirtualityKind, appendSpace: Boolean = true) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
 			case .Private: Append("private")
@@ -853,8 +864,21 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .AssemblyOrProtected: fallthrough
 			case .Protected: fallthrough
 			case .Published: fallthrough
-			case .Public: Append("public")
+			case .Public:
+				if virtuality == .Virtual {
+					Append("open")
+				} else {
+					Append("public")
+				}
 		}
+		switch virtuality {
+			case .None: break;
+			case .Virtual: break; // handled above, and implied for non-pubic
+			case .Abstract: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append(" __abstract") }
+			case .Override: Append(" override")
+			case .Final: Append(" final")
+			case .Reintroduce: break;
+		}		
 		if appendSpace {
 			Append(" ")
 		}
@@ -869,24 +893,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	func swiftGenerateAbstractPrefix(_ isAbstract: Boolean) {
 		if isAbstract && Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			Append("__abstract ")
-		}
-	}
-
-	func swiftGenerateSealedPrefix(_ isSealed: Boolean) {
-		if isSealed {
-			Append("final ")
-		}
-	}
-
-	func swiftGenerateVirtualityPrefix(_ member: CGMemberDefinition) {
-		switch member.Virtuality {
-			//case .None
-			//case .Virtual
-			case .Abstract: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("__abstract ") }
-			case .Override: Append("override ")
-			case .Final: Append("final ")
-			//case Reintroduce
-			default:
 		}
 	}
 
@@ -958,10 +964,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed)
 		swiftGenerateStaticPrefix(type.Static)
 		swiftGenerateAbstractPrefix(type.Abstract)
-		swiftGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
@@ -976,10 +981,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed)
 		swiftGenerateStaticPrefix(type.Static)
 		swiftGenerateAbstractPrefix(type.Abstract)
-		swiftGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
@@ -994,8 +998,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}		
 	
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility)
-		swiftGenerateSealedPrefix(type.Sealed)
+		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed)
 		Append("protocol ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
@@ -1032,9 +1035,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if type is CGInterfaceTypeDefinition {
 			swiftGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(method.Visibility)
+			swiftGenerateMemberTypeVisibilityPrefix(method.Visibility, virtuality: method.Virtuality)
 			swiftGenerateStaticPrefix(method.Static && !type.Static)
-			swiftGenerateVirtualityPrefix(method)
 			if method.External && Dialect == CGSwiftCodeGeneratorDialect.Silver {
 				Append("__extern ")
 			}
@@ -1073,8 +1075,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility)
-			swiftGenerateVirtualityPrefix(ctor)
+			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility, virtuality: ctor.Virtuality)
 		}
 		Append("init")
 		switch ctor.Nullability {
@@ -1123,9 +1124,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if type is CGInterfaceTypeDefinition {
 			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(finalizer.Visibility)
+			swiftGenerateMemberTypeVisibilityPrefix(finalizer.Visibility, virtuality: finalizer.Virtuality)
 			swiftGenerateStaticPrefix(finalizer.Static && !type.Static)
-			swiftGenerateVirtualityPrefix(finalizer)
 			if finalizer.External && Dialect == CGSwiftCodeGeneratorDialect.Silver {
 				Append("__extern ")
 			}
@@ -1146,7 +1146,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
-		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility)
+		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility, virtuality: field.Virtuality)
 		swiftGenerateStaticPrefix(field.Static && !type.Static)
 		swiftGenerateStorageModifierPrefix(field.`Type`)
 		if field.Constant {
@@ -1172,25 +1172,24 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 		if property.GetterVisibility != nil || property.SetterVisibility != nil {
 			if let v = property.GetterVisibility {
-				swiftGenerateMemberTypeVisibilityPrefix(v, appendSpace: false)
+				swiftGenerateMemberTypeVisibilityPrefix(v, virtuality: property.Virtuality, appendSpace: false)
 				Append("(get) ")
 			} else {
-				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
 			}
 					
 			if let v = property.SetterVisibility {
-				swiftGenerateMemberTypeVisibilityPrefix(v, appendSpace: false)
+				swiftGenerateMemberTypeVisibilityPrefix(v, virtuality: property.Virtuality, appendSpace: false)
 				Append("(set) ")
 			} else {
-				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, appendSpace: false)
+				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality, appendSpace: false)
 				Append("(set) ")
 			}
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(property.Visibility)
+			swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
 		}
 		
 		swiftGenerateStaticPrefix(property.Static && !type.Static)
-		swiftGenerateVirtualityPrefix(property)
 		if property.Lazy {
 			Append("lazy ")
 		}
@@ -1286,7 +1285,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-			swiftGenerateMemberTypeVisibilityPrefix(event.Visibility)
+			swiftGenerateMemberTypeVisibilityPrefix(event.Visibility, virtuality: event.Virtuality)
 			swiftGenerateStaticPrefix(event.Static && !type.Static)
 			Append("__event ")
 			generateIdentifier(event.Name)
