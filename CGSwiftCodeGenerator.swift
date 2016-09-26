@@ -17,7 +17,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 					"as", "associativity", "autoreleasepool", "break", "case", "catch", "class", "continue", "convenience", "default", "defer", "deinit", "didSet", "do", "dynamicType",
 					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "guard", "if", "import", "in", "infix", "init", "inout", "internal", "is",
 					"lazy", "left", "let", "mutating", "nil", "none", "nonmutating", "open", "operator", "optional", "override", "postfix", "precedence", "prefix", "private", "protocol", "public",
-					"repeat", "required", "rethrows", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "Type", "typealias",
+					"repeat", "required", "rethrows", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "typealias",
 					"unowned", "var", "weak", "where", "while", "willSet"].ToList() as! List<String>
 	}
 
@@ -361,13 +361,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 		if let typeReferenceExpression = expression.Expression as? CGTypeReferenceExpression {
 			generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
-		} else {
-			generateExpression(expression.Expression)
-		}
-		if expression.Expression is CGTypeReferenceExpression {
 			Append(".self")
 		} else {
-			Append(".dynamicType")
+			Append("dynamicType(")
+			generateExpression(expression.Expression)
+			Append(")")
 		}
 	}
 
