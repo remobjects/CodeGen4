@@ -72,33 +72,38 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
-		Append("for var ")
-		generateIdentifier(statement.LoopVariableName)
-		if let type = statement.LoopVariableType {
-			Append(": ")
-			generateTypeReference(type)
-		}
-		Append(" = ")
-		generateExpression(statement.StartValue)
-		Append("; ")
+		if statement.Direction == CGLoopDirectionKind.Forward {
+			Append("for ")
+			generateIdentifier(statement.LoopVariableName)
+			Append(" in ")
+			generateExpression(statement.StartValue)
+			Append(" ... ")
+			generateExpression(statement.EndValue)
+		} else {
+			Append("for var ")
+			generateIdentifier(statement.LoopVariableName)
+			if let type = statement.LoopVariableType {
+				Append(": ")
+				generateTypeReference(type)
+			}
+			Append(" = ")
+			generateExpression(statement.StartValue)
+			Append("; ")
 		
-		generateIdentifier(statement.LoopVariableName)
-		if statement.Direction == CGLoopDirectionKind.Forward {
-			Append(" <= ")
-		} else {
-			Append(" >= ")
-		}
-		generateExpression(statement.EndValue)
-		Append("; ")
+			generateIdentifier(statement.LoopVariableName)
+			if statement.Direction == CGLoopDirectionKind.Forward {
+				Append(" <= ")
+			} else {
+				Append(" >= ")
+			}
+			generateExpression(statement.EndValue)
+			Append("; ")
 
-		generateIdentifier(statement.LoopVariableName)
-		if statement.Direction == CGLoopDirectionKind.Forward {
-			Append("++ ")
-		} else {
-			Append("-- ")
+			generateIdentifier(statement.LoopVariableName)
+			Append("--")
 		}
 
-		AppendLine("{")
+		AppendLine(" {")
 		incIndent()
 		generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
 		decIndent()
