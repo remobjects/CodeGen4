@@ -85,6 +85,11 @@ public class CGTypeCastExpression: CGExpression {
 		Expression = expression
 		TargetType = targetType
 	}
+
+	public convenience init(_ expression: CGExpression, _ targetType: CGTypeReference, _ throwsException: Boolean) {
+		init(expression, targetType)
+		ThrowsException = throwsException
+	}
 }
 
 public enum CGTypeCastKind { // C++ only

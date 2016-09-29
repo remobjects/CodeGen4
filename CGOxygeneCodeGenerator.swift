@@ -496,9 +496,9 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	
 	
 	func pascalGeneratePrefixForNullability(_ type: CGTypeReference) {
-		if (type.Nullability == CGTypeNullabilityKind.NullableUnwrapped && type.DefaultNullability == CGTypeNullabilityKind.NotNullable) || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+		if (type.Nullability == CGTypeNullabilityKind.NullableUnwrapped && (type.DefaultNullability == CGTypeNullabilityKind.NotNullable || type.DefaultNullability == CGTypeNullabilityKind.Unknown)) || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
 			Append("nullable ")
-		} else if type.Nullability == CGTypeNullabilityKind.NotNullable && (type.DefaultNullability == CGTypeNullabilityKind.NullableUnwrapped || type.DefaultNullability == CGTypeNullabilityKind.NullableNotUnwrapped) {
+		} else if type.Nullability == CGTypeNullabilityKind.NotNullable && (type.DefaultNullability == CGTypeNullabilityKind.NullableUnwrapped || type.DefaultNullability == CGTypeNullabilityKind.NullableNotUnwrapped || type.DefaultNullability == CGTypeNullabilityKind.Unknown) {
 			Append("not nullable ")
 		}
 	}
