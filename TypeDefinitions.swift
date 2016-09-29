@@ -185,6 +185,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Async = false /* Oxygene only */
 	public var Awaitable = false /* C# only */
 	public var Throws = false /* Swift and Java only */
+	public var Optional = false /* Swift only */
 	public var CallingConvention: CGCallingConventionKind? /* Delphi and C++Builder only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.

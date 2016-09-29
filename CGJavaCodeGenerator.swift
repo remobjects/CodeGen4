@@ -737,6 +737,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 
 		if type is CGInterfaceTypeDefinition {
+			if method.Optional {
+				generateAttribute(CGAttribute("Optional".AsTypeReference()));
+			}
 			javaGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
 			if method.Virtuality == CGMemberVirtualityKind.Override {

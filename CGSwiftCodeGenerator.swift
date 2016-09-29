@@ -1036,6 +1036,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 
 		if type is CGInterfaceTypeDefinition {
+			if method.Optional {
+				Append("optional ")
+			}
 			swiftGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
 			swiftGenerateMemberTypeVisibilityPrefix(method.Visibility, virtuality: method.Virtuality)

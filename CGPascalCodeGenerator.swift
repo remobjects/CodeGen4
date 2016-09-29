@@ -1179,6 +1179,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func pascalGenerateMethodHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
+		if type is CGInterfaceTypeDefinition && method.Optional {
+			Append("[Optional] ")
+		}
 		if method.Static {
 			Append("class ")
 		}

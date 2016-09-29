@@ -967,6 +967,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 
 		if type is CGInterfaceTypeDefinition {
+			if method.Optional {
+				Append("[Optional] ")
+			}
 			cSharpGenerateStaticPrefix(method.Static && !type.Static)
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(method.Visibility)
