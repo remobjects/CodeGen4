@@ -1501,7 +1501,7 @@ public __abstract class CGCodeGenerator {
 	internal var inConditionExpression = false
 	
 	internal var positionedAfterPeriod: Boolean {
-		return currentCode.ToString().EndsWith(".")
+		return (currentCode.ToString() as! String).EndsWith(".")
 	}
 	
 	internal private(set) var currentLocation = CGLocation()
