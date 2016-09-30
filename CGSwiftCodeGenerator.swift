@@ -719,11 +719,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(")")
 		} else {
 			Append("(")
-			if let name = expression.ConstructorName {
-				generateIdentifier(removeWithPrefix(name))
-				Append(": ")
+			if let ctorName = expression.ConstructorName {
+				swiftGenerateCallParameters(expression.Parameters, firstParamName: removeWithPrefix(ctorName))
+			} else {
+				swiftGenerateCallParameters(expression.Parameters)
 			}
-			swiftGenerateCallParameters(expression.Parameters)
 			Append(")")
 		}
 	}
