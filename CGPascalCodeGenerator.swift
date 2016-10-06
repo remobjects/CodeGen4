@@ -820,10 +820,35 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	internal func pascalEscapeCharactersInStringLiteral(_ string: String, quoteChar: Char) -> String {
+		let result = StringBuilder()
+		let len = string.Length
+		var inQuotes = false
+		for i in 0 ..< len {
+			let ch = string[i]
+			switch ch as! UInt16 {
+				case 32...127:
+					if !inQuotes {
+						result.Append(quoteChar)
+						inQuotes = true
+					}
+					result.Append(ch)
+				default:
+					if inQuotes {
+						result.Append(quoteChar)
+						inQuotes = false
+					}
+					result.Append("#\(ch  as! UInt32)")
+			}
+		}
+		if inQuotes {
+			result.Append(quoteChar)
+		}
+		return result.ToString()
+	}
+	
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
-		let escapedString = expression.Value.Replace("'", "''")
-		//todo: this is incomplete, we need to escape any invalid chars
-		Append("'\(escapedString)'")
+		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: "'"))
 	}
 
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {

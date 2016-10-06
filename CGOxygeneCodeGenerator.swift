@@ -316,6 +316,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
+	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
+		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: "\""))
+	}
+
 	//
 	// Type Definitions
 	//
