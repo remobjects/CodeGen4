@@ -2,12 +2,19 @@
 import Sugar.Collections
 import Sugar.Linq
 
-public enum CGOxygeneCodeGeneratorStyle {
-	case Standard
-	case Unified
-}
-
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
+
+	public enum CGOxygeneCodeGeneratorStyle {
+		case Standard
+		case Unified
+	}
+	
+	public enum CGOxygeneStringQuoteStyle {
+		case Single
+		case Double
+		case SmartSingle
+		case SmartDouble
+	}
 
 	public init() {
 		super.init()
@@ -39,10 +46,17 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	public var Style: CGOxygeneCodeGeneratorStyle = .Standard
+	public var QuoteStyle: CGOxygeneStringQuoteStyle = .SmartSingle
 
 	public convenience init(style: CGOxygeneCodeGeneratorStyle) {
 		init()
 		Style = style
+	}	
+
+	public convenience init(style: CGOxygeneCodeGeneratorStyle, quoteStyle: CGOxygeneStringQuoteStyle) {
+		init()
+		Style = style
+		QuoteStyle = quoteStyle
 	}	
 
 	override func generateHeader() {
@@ -317,7 +331,16 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 	
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
-		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: "\""))
+		let SINGLE: Char = "'"
+		let DOUBLE: Char = "\""  
+		let quoteChar: Char
+		switch QuoteStyle {
+			case .Single: quoteChar = SINGLE
+			case .Double: quoteChar = DOUBLE
+			case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) ? DOUBLE : SINGLE
+			case .SmartDouble: quoteChar = expression.Value.Contains(DOUBLE) ? SINGLE : DOUBLE
+		}	
+		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: quoteChar))
 	}
 
 	//

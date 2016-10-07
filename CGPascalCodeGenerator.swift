@@ -828,6 +828,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			let ch = string[i]
 			switch ch as! UInt16 {
 				case 32...127:
+					if ch == quoteChar {
+						fallthrough
+					}
 					if !inQuotes {
 						result.Append(quoteChar)
 						inQuotes = true
