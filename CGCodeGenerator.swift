@@ -288,6 +288,13 @@ public __abstract class CGCodeGenerator {
 	}
 	
 	internal func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
+		// reasoablew default, works for al current languages
+		if member is CGFieldDefinition {
+			return true
+		}
+		if let property = member as? CGPropertyDefinition {
+			return property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil
+		}
 		return false
 	}
 

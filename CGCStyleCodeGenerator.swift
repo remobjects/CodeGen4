@@ -12,16 +12,6 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		tabSize = 4
 	}
 
-	override func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
-		if member is CGFieldDefinition {
-			return true
-		}
-		if let property = member as? CGPropertyDefinition {
-			return property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil
-		}
-		return false
-	}
-
 	override func generateInlineComment(_ comment: String) {
 		var comment = comment.Replace("*/", "* /")
 		Append("/* \(comment) */")

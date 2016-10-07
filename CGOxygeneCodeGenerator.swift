@@ -47,6 +47,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	public var Style: CGOxygeneCodeGeneratorStyle = .Standard
 	public var QuoteStyle: CGOxygeneStringQuoteStyle = .SmartSingle
+	
+	override var isUnified: Boolean { return Style == .Unified } 
 
 	public convenience init(style: CGOxygeneCodeGeneratorStyle) {
 		init()
@@ -430,7 +432,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 	
-	override func pascalGenerateConstructorHeader(_ ctor: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean) {
+	override func pascalGenerateConstructorHeader(_ ctor: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false) {
 		if ctor.Static {
 			Append("class ")
 		}
@@ -444,7 +446,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			Append(" ")
 			Append(ctor.Name)
 		}
-		pascalGenerateSecondHalfOfMethodHeader(ctor, implementation: implementation)
+		pascalGenerateSecondHalfOfMethodHeader(ctor, implementation: implementation, includeVisibility: includeVisibility)
 	}
 	
 	internal func pascalGenerateFinalizerHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, implementation: Boolean) {
@@ -466,6 +468,9 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: false)
+		if isUnified {
+			pascalGenerateMethodBody(finalizer, type: type)
+		}
 	}
 
 	override func pascalGenerateFinalizerImplementation(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
