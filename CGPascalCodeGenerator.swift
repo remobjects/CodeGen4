@@ -830,6 +830,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	internal func pascalEscapeCharactersInStringLiteral(_ string: String, quoteChar: Char) -> String {
 		let result = StringBuilder()
 		let len = string.Length
+		
+		if len == 0 {
+			return quoteChar+quoteChar
+		}
+		
 		var inQuotes = false
 		for i in 0 ..< len {
 			let ch = string[i]
