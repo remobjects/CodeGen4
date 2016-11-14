@@ -1314,7 +1314,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						generateIdentifier(v.Name)
 						Append(" := ")
 						generateExpressionStatement(val)
-						generateStatementTerminator()
+						//generateStatementTerminator()
 					}
 				}
 			}
