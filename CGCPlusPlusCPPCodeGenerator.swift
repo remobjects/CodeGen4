@@ -4,7 +4,7 @@ import Sugar.IO
 
 public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 	public override var defaultFileExtension: String { return "cpp" }
-  public var UseHdrStop: Boolean = true
+	public var UseHdrStop: Boolean = true
 
 	override func generateAll() {
 		generateHeader()
@@ -45,9 +45,9 @@ public class CGCPlusPlusCPPCodeGenerator : CGCPlusPlusCodeGenerator {
 
 	override func generateHeader() {
 		super.generateHeader()
-    if UseHdrStop {
-      AppendLine("#pragma hdrstop")
-    }
+		if UseHdrStop {
+			AppendLine("#pragma hdrstop")
+		}
 		var lnamespace = "";
 		if let namespace = currentUnit.Namespace {
 			lnamespace = namespace.Name;
