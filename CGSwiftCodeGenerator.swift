@@ -183,16 +183,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateExpression(statement.Value)
 			AppendLine(" {")
 			
-			Append("let ")
-			generateIdentifier(statement.Name)
-			if let type = statement.`Type` {
-				Append(": ")
-				generateTypeReference(type)
-			} 
-			Append(" = ")
-			generateExpression(statement.Value)
-			AppendLine()
-
 			generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
 
 			AppendLine("}")
