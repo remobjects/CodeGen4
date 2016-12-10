@@ -13,7 +13,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		super.init()
 		
 		// current as of Elements 8.1 and Swift 1.2
-		keywords = ["__abstract", "__await", "__catch", "__event", "__finally", "__mapped", "__out", "__partial", "__throw", "__try", "__yield", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", 
+		keywords = ["__abstract", "__await", "__catch", "__event", "__finally", "__mapped", "__out", "__partial", "__throw", "__try", "__using", "__yield", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", 
 					"as", "associativity", "autoreleasepool", "break", "case", "catch", "class", "continue", "convenience", "default", "defer", "deinit", "didSet", "do", "dynamicType",
 					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "guard", "if", "import", "in", "infix", "init", "inout", "internal", "is",
 					"lazy", "left", "let", "mutating", "nil", "none", "nonmutating", "open", "operator", "optional", "override", "postfix", "precedence", "prefix", "private", "protocol", "public",
@@ -226,9 +226,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 				for b in catchBlocks {
-					if let type = b.`Type` {
+					if let name = b.Name, let type = b.Type {
 						Append("__catch ")
-						generateIdentifier(b.Name)
+						generateIdentifier(name)
 						Append(": ")
 						generateTypeReference(type, ignoreNullability: true)
 						AppendLine(" {")
@@ -259,27 +259,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			generateExpression(statement.Value)
 			AppendLine()
 		} else {
-			assert(false, "generateTryFinallyCatchStatement is not supported in Swift, except in Silver")
+			assert(false, "generateYieldStatement is not supported in Swift, except in Silver")
 		}
 	}
 
 	override func generateThrowStatement(_ statement: CGThrowStatement) {
-		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-			if let value = statement.Exception {
-				Append("__throw ")
-				generateExpression(value)
-				AppendLine()
-			} else {
-				AppendLine("__throw")
-			}
+		if let value = statement.Exception {
+			Append("throw ")
+			generateExpression(value)
+			AppendLine()
 		} else {
-			if let value = statement.Exception {
-				Append("throw ")
-				generateExpression(value)
-				AppendLine()
-			} else {
-				AppendLine("throw")
-			}
+			AppendLine("throw")
 		}
 	}
 

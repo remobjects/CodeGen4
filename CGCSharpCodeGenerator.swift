@@ -202,11 +202,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
-				if let type = b.`Type` {
+				if let name = b.Name, let type = b.`Type` {
 					Append("catch (")
 					generateTypeReference(type)
 					Append(" ")
-					generateIdentifier(b.Name)
+					generateIdentifier(name)
 					AppendLine(")")
 					AppendLine("{")
 				} else {

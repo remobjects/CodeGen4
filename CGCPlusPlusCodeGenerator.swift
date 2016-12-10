@@ -161,11 +161,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
-				if let type = b.`Type` {
+				if let name = b.Name, let type = b.`Type` {
 					Append("catch (")
 					generateTypeReference(type)
 					Append(" ")
-					generateIdentifier(b.Name)
+					generateIdentifier(name)
 					AppendLine(")")
 				} else {
 					AppendLine("catch (...)")

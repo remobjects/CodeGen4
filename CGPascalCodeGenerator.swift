@@ -359,9 +359,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			AppendLine("except")
 			incIndent()
 			for b in catchBlocks {
-				if let type = b.`Type` {
+				if let name = b.Name, let type = b.`Type` {
 					Append("on ")
-					generateIdentifier(b.Name)
+					generateIdentifier(name)
 					Append(": ")
 					generateTypeReference(type)
 					AppendLine(" do begin")

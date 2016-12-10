@@ -240,10 +240,18 @@ public class CGTryFinallyCatchStatement: CGBlockStatement {
 }
 
 public class CGCatchBlockStatement: CGBlockStatement {
-	public var Name: String
-	public var `Type`: CGTypeReference
+	public let Name: String?
+	public let `Type`: CGTypeReference?
 	public var Filter: CGExpression?
 
+	public init() {
+		Name = nil
+		Type = nil
+	}
+	public init(_ name: String) {
+		Name = name
+		Type = nil
+	}
 	public init(_ name: String, _ type: CGTypeReference) {
 		Name = name
 		`Type` = type
