@@ -173,8 +173,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			
-			// using isn't really supported. But emit this helpful comment for the benefi of Oxidized code
-			Append("/* __using")
+			Append("__using")
 			generateIdentifier(statement.Name)
 			if let type = statement.`Type` {
 				Append(": ")
@@ -182,7 +181,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			} 
 			Append(" = ")
 			generateExpression(statement.Value)
-			AppendLine(" { */")
+			AppendLine(" {")
 			
 			Append("let ")
 			generateIdentifier(statement.Name)
@@ -196,8 +195,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 			generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
 
-			// using isn't really supported.
-			AppendLine("/* } */")
+			AppendLine("}")
 
 		} else {
 			assert(false, "generateUsingStatement is not supported in Swift")
