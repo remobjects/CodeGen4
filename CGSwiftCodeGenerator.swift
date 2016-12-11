@@ -173,7 +173,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			
-			Append("__using")
+			Append("__using let ")
 			generateIdentifier(statement.Name)
 			if let type = statement.`Type` {
 				Append(": ")
