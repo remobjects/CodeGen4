@@ -807,7 +807,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .Virtual: Append("virtual ")
 			case .Abstract: Append("abstract ")
 			case .Override: Append("override ")
-			case .Final: Append("final ")
+			case .Final: Append("sealed ")
 			case .Reintroduce: Append("new ")
 			default:
 		}
