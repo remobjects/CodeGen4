@@ -1,24 +1,20 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-//
+﻿//
 // Abstract base implementation for Objective-C. Inherited by specific .m and .h Generators
 //
 
 public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 
 	public init() {
-		keywords = ["__nonnull", "__null_unspecified", "__nullable", "__strong", "__unsafe_unretained", "__weak", 
-					"id", "in", "self", "super", "auto", "break", "case", "char", "const", "continue", "do", "double", "else", "enum", "extern", 
-					"float", "for", "goto", "if", "return", "int", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", 
+		keywords = ["__nonnull", "__null_unspecified", "__nullable", "__strong", "__unsafe_unretained", "__weak",
+					"id", "in", "self", "super", "auto", "break", "case", "char", "const", "continue", "do", "double", "else", "enum", "extern",
+					"float", "for", "goto", "if", "return", "int", "long", "register", "short", "signed", "sizeof", "static", "struct", "switch", "typedef",
 					"union", "unsigned", "void", "colatile", "while"].ToList() as! List<String>
 	}
 
 	//
 	// Statements
 	//
-	
+
 	// in C-styleCG Base class
 	/*
 	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
@@ -182,7 +178,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		// handled in base
 	}
 	*/
-	
+
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 		Append("self = [")
 		if let callSite = statement.CallSite {
@@ -262,7 +258,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
-		Append(CGPropertyDefinition.MAGIC_VALUE_PARAMETER_NAME) 
+		Append(CGPropertyDefinition.MAGIC_VALUE_PARAMETER_NAME)
 	}
 
 	override func generateAwaitExpression(_ expression: CGAwaitExpression) {
@@ -300,7 +296,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		// handled in base
 	}
 	*/
-	
+
 	/*
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		// handled in base
@@ -334,7 +330,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	func objcGenerateCallParameters(_ parameters: List<CGCallParameter>, skipFirstName: Boolean = false) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
-			
+
 			if param.EllipsisParameter {
 				if p > 0 {
 					Append(", ")
@@ -347,7 +343,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				}
 				if let name = param.Name, p > 0 || !skipFirstName {
 					generateIdentifier(name)
-				} 
+				}
 				Append(":")
 			}
 			generateExpression(param.Value)
@@ -357,10 +353,10 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	func objcGenerateFunctionCallParameters(_ parameters: List<CGCallParameter>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
-			
+
 			if p > 0 {
 				Append(", ")
-			} 
+			}
 			generateExpression(param.Value)
 		}
 	}
@@ -383,7 +379,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			switch param.Modifier {
 				case .Var: Append("*")
 				case .Out: Append("*")
-				default: 
+				default:
 			}
 			Append(")")
 			generateIdentifier(param.Name)
@@ -531,44 +527,44 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		// default handled in base
 	}
 	*/
-	
+
 	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Objective-C")
 	}
-	
+
 	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSequenceTypeReference is not supported in Objective-C")
 	}
-	
+
 	//
 	// Type Definitions
 	//
-	
+
 	override func generateAttribute(_ attribute: CGAttribute) {
 		// no-op, we dont support attribtes in Objective-C
 	}
-	
+
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
-	
+
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		// overriden in M and H
 	}
-	
+
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		AppendLine()
 		AppendLine("@end")
 	}
-	
+
 	func objcGenerateFields(_ type: CGTypeDefinition) {
 		var hasFields = false
 		for m in type.Members {
@@ -616,42 +612,42 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine("}")
 		}
 	}
-	
+
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		// overriden in H
-	}	
-	
+	}
+
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		// overriden in H
-	}	
-	
+	}
+
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		// overriden in M and H
 	}
-	
+
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 		AppendLine("@end")
-	}	
+	}
 
 	//
 	// Type Members
 	//
-	
+
 	func generateMethodDefinitionHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition) {
 		if method.Static {
 			Append("+ ")
 		} else {
 			Append("- ")
 		}
-		
+
 		if let ctor = method as? CGConstructorDefinition {
 			Append("(instancetype)init")
 			generateIdentifier(uppercaseFirstLetter(ctor.Name))
@@ -667,11 +663,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 		objcGenerateDefinitionParameters(method.Parameters)
 	}
-	
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		// overriden in H
 	}
@@ -703,7 +699,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Type References
 	//
-	
+
 	internal func objcTypeRefereneIsPointer(_ type: CGTypeReference) -> Boolean {
 		if let type = type as? CGNamedTypeReference {
 			return type.IsClassType
@@ -719,7 +715,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			Append(" *")
 		}
 	}
-	
+
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int: Append("NSInteger")
@@ -746,19 +742,19 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			case .Void: Append("void")
 			case .Object: if ignoreNullability { Append("NSObject")  } else { Append("NSObject *") }
 			case .Class: Append("Class")
-		}		
+		}
 	}
 
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-		
+
 		let block = type.Block
-		
+
 		if let returnType = block.ReturnType {
 			generateTypeReference(returnType)
 		} else {
 			Append("void")
-		}	   
-		Append("(^)(") 
+		}
+		Append("(^)(")
 		for p in 0 ..< block.Parameters.Count {
 			if p > 0 {
 				Append(", ")
@@ -771,16 +767,16 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(")")
 	}
-	
+
 	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 		Append("__kindof ")
 		generateTypeReference(type.`Type`)
 	}
-	
+
 	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}

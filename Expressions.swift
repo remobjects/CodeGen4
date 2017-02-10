@@ -1,8 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-/* Expressions */
+﻿/* Expressions */
 
 public __abstract class CGExpression: CGStatement {
 }
@@ -17,7 +13,7 @@ public class CGRawExpression : CGExpression { // not language-agnostic. obviosul
 		init(lines.ToList())
 	}*/
 	public init(_ lines: String) {
-		Lines = lines.Replace("\r", "").Split("\n").ToList()
+		Lines = lines.Replace("\r", "").Split("\n").ToList<String>()
 	}
 }
 
@@ -32,7 +28,7 @@ public class CGTypeReferenceExpression : CGExpression{
 public class CGAssignedExpression: CGExpression {
 	public var Value: CGExpression
 	public var Inverted: Boolean = false
-	
+
 	public init(_ value: CGExpression) {
 		Value = value
 	}
@@ -68,7 +64,7 @@ public class CGDefaultExpression: CGExpression {
 
 public class CGSelectorExpression: CGExpression { /* Cocoa only */
 	var Name: String
-	
+
 	public init(_ name: String) {
 		Name = name
 	}
@@ -145,14 +141,14 @@ public class CGAnonymousTypeExpression : CGExpression {
 	public var Kind: CGAnonymousTypeKind
 	public var Ancestor: CGTypeReference?
 	public var Members = List<CGAnonymousMemberDefinition>()
-	
+
 	public init(_ kind: CGAnonymousTypeKind) {
 		Kind = kind
 	}
 }
 
 public __abstract class CGAnonymousMemberDefinition : CGEntity{
-	public var Name: String	
+	public var Name: String
 
 	public init(_ name: String) {
 		Name = name
@@ -190,12 +186,12 @@ public class CGIfThenElseExpression: CGExpression { // aka Ternary operator
 	public var Condition: CGExpression
 	public var IfExpression: CGExpression
 	public var ElseExpression: CGExpression?
-	
+
 	public init(_ condition: CGExpression, _ ifExpression: CGExpression, _ elseExpression: CGExpression?) {
 		Condition = condition
 		IfExpression= ifExpression
 		ElseExpression = elseExpression
-	}	
+	}
 }
 
 /*
@@ -227,7 +223,7 @@ public class CGPointerDereferenceExpression: CGExpression {
 
 	public init(_ pointerExpression: CGExpression) {
 		PointerExpression = pointerExpression
-	}   
+	}
 }
 
 public class CGParenthesesExpression: CGExpression {
@@ -251,7 +247,7 @@ public class CGUnaryOperatorExpression: CGExpression {
 		Value = value
 		OperatorString = operatorString
 	}
-	
+
 	public static func NotExpression(_ value: CGExpression) -> CGUnaryOperatorExpression {
 		return CGUnaryOperatorExpression(value, CGUnaryOperatorKind.Not)
 	}
@@ -270,7 +266,7 @@ public class CGBinaryOperatorExpression: CGExpression {
 	public var RighthandValue: CGExpression
 	public var Operator: CGBinaryOperatorKind? // for standard operators
 	public var OperatorString: String? // for custom operators
-	
+
 	public init(_ lefthandValue: CGExpression, _ righthandValue: CGExpression, _ `operator`: CGBinaryOperatorKind) {
 		LefthandValue = lefthandValue
 		RighthandValue = righthandValue
@@ -328,9 +324,9 @@ public enum CGBinaryOperatorKind {
 
 /* Literal Expressions */
 
-public class CGNamedIdentifierExpression: CGExpression { 
+public class CGNamedIdentifierExpression: CGExpression {
 	public var Name: String
-	
+
 	public init(_ name: String) {
 		Name = name
 	}
@@ -357,7 +353,7 @@ public __abstract class CGLanguageAgnosticLiteralExpression: CGExpression {
 
 public class CGStringLiteralExpression: CGLiteralExpression {
 	public var Value: String = ""
-	
+
 	public static lazy let Empty: CGStringLiteralExpression = "".AsLiteralExpression()
 	public static lazy let Space: CGStringLiteralExpression = " ".AsLiteralExpression()
 
@@ -365,7 +361,7 @@ public class CGStringLiteralExpression: CGLiteralExpression {
 	}
 	public init(_ value: String) {
 		Value = value
-	}	
+	}
 }
 
 public class CGCharacterLiteralExpression: CGLiteralExpression {
@@ -378,12 +374,12 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 	}
 	public init(_ value: Char) {
 		Value = value
-	}	
+	}
 }
 
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public var Value: Int64 = 0
-	public var Base = 10 
+	public var Base = 10
 	public var NumberKind: CGNumberKind?
 
 	public static lazy let Zero: CGIntegerLiteralExpression = 0.AsLiteralExpression()
@@ -399,11 +395,11 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	}
 
 	override func StringRepresentation() -> String {
-		return Sugar.Convert.ToString(Value, 10)
+		return Convert.ToString(Value, 10)
 	}
-	
+
 	internal func StringRepresentation(# base: Int32) -> String {
-		return Sugar.Convert.ToString(Value, base)
+		return Convert.ToString(Value, base)
 	}
 }
 
@@ -413,9 +409,9 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public private(set) var StringValue: String?
 	public var NumberKind: CGNumberKind?
 	public var Base = 10 // Swift only
-	
+
 	public static lazy let Zero: CGFloatLiteralExpression = CGFloatLiteralExpression(0)
-	
+
 	public init() {
 	}
 	public init(_ value: Double) {
@@ -452,7 +448,7 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 				if DoubleValue != nil {
 					throw Exception("base 16 (Hex) float literals with double value are not currently supported.")
 				} else if let value = IntegerValue {
-					return Sugar.Convert.ToString(value, base)+".0"
+					return Convert.ToString(value, base)+".0"
 				} else if let value = StringValue {
 					if value.IndexOf(".") > -1 || value.ToLower().IndexOf("p") > -1 {
 						return value
@@ -474,10 +470,10 @@ public enum CGNumberKind {
 
 public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public let Value: Boolean
-	
+
 	public static lazy let True = CGBooleanLiteralExpression(true)
 	public static lazy let False = CGBooleanLiteralExpression(false)
-	
+
 	public convenience init() {
 		init(false)
 	}
@@ -495,10 +491,10 @@ public class CGBooleanLiteralExpression: CGLanguageAgnosticLiteralExpression {
 }
 
 public class CGArrayLiteralExpression: CGExpression {
-	public var Elements: List<CGExpression> 
-	public var ElementType: CGTypeReference?		//c++ only at this moment
+	public var Elements: List<CGExpression>
+	public var ElementType: CGTypeReference?        //c++ only at this moment
 	public var ArrayKind: CGArrayKind = .Dynamic
-	
+
 	public init() {
 		Elements = List<CGExpression>()
 	}
@@ -517,9 +513,9 @@ public class CGArrayLiteralExpression: CGExpression {
 }
 
 public class CGSetLiteralExpression: CGExpression {
-	public var Elements: List<CGExpression> 
+	public var Elements: List<CGExpression>
 	public var ElementType: CGTypeReference?
-	
+
 	public init() {
 		Elements = List<CGExpression>()
 	}
@@ -536,9 +532,9 @@ public class CGSetLiteralExpression: CGExpression {
 }
 
 public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, currently */
-	public var Keys: List<CGExpression> 
-	public var Values: List<CGExpression> 
-	
+	public var Keys: List<CGExpression>
+	public var Values: List<CGExpression>
+
 	public init() {
 		Keys = List<CGExpression>()
 		Values = List<CGExpression>()
@@ -554,7 +550,7 @@ public class CGDictionaryLiteralExpression: CGExpression { /* Swift only, curren
 
 public class CGTupleLiteralExpression : CGExpression {
 	public var Members: List<CGExpression>
-	
+
 	public init(_ members: List<CGExpression>) {
 		Members = members
 	}
@@ -597,7 +593,7 @@ public class CGNewInstanceExpression : CGExpression {
 public class CGDestroyInstanceExpression : CGExpression {
 
 	public var Instance: CGExpression;
- 
+
 	public init(_ instance: CGExpression) {
 		Instance = instance;
 	}
@@ -661,7 +657,7 @@ public class CGMethodCallExpression : CGMemberAccessExpression{
 			Parameters = parameters
 		} else {
 			Parameters = List<CGCallParameter>()
-		}   
+		}
 	}
 	public convenience init(_ callSite: CGExpression?, _ name: String, _ parameters: CGCallParameter...) {
 		init(callSite, name, List<CGCallParameter>(parameters))
@@ -677,7 +673,7 @@ public class CGPropertyAccessExpression: CGMemberAccessExpression {
 			Parameters = parameters
 		} else {
 			Parameters = List<CGCallParameter>()
-		}   
+		}
 	}
 	public convenience init(_ callSite: CGExpression?, _ name: String, _ parameters: CGCallParameter...) {
 		init(callSite, name, List<CGCallParameter>(parameters))
@@ -689,7 +685,7 @@ public class CGCallParameter: CGEntity {
 	public var Value: CGExpression
 	public var Modifier: CGParameterModifierKind = .In
 	public var EllipsisParameter: Boolean = false // used mainly for Objective-C, wioch needs a different syntax when passing elipsis paframs
-	
+
 	public init(_ value: CGExpression) {
 		Value = value
 	}

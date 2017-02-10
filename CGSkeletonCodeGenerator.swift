@@ -1,14 +1,11 @@
-﻿import Sugar
-import Sugar.Collections
-
-//
+﻿//
 // An Empty Code Generator with stubs for all methids that usually need implementing
 // Useful as a starting oint for creating a new codegen, or check for missing implementations via diff
 //
 // All concrete implementations should use the same sort order for methods as this class.
 //
 // All methods named "generate*" should be overrides. For language-specific generators, add a prefix
-// to the method name to indicate the language — see Swift of Pascal codegen implementations for reference. 
+// to the method name to indicate the language — see Swift of Pascal codegen implementations for reference.
 //
 
 public class CGSkeletonCodeGenerator : CGCodeGenerator {
@@ -20,16 +17,16 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateHeader() {
-		
+
 	}
 
 	override func generateFooter() {
 
 	}
-	
+
 	/*override func generateImports() {
 	}*/
-	
+
 	override func generateImport(_ imp: CGImport) {
 
 	}
@@ -37,11 +34,11 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateInlineComment(_ comment: String) {
 
 	}
-	
+
 	//
 	// Statements
 	//
-	
+
 	override func generateConditionStart(_ condition: CGConditionalDefine) {
 
 	}
@@ -128,8 +125,8 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 
-	}	
-	
+	}
+
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 
 	}
@@ -209,7 +206,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 
 	}
-	
+
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 
 	}
@@ -275,75 +272,75 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 		// default handled in base
 	}
 	*/
-	
+
 	override func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	override func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	//
 	// Type Definitions
 	//
-	
+
 	override func generateAttribute(_ attribute: CGAttribute) {
 
 	}
-	
+
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
-	
+
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 
 	}
-	
+
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 
 	}
-	
+
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 
 	}
-	
+
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 
-	}	
-	
+	}
+
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 
 	}
-	
+
 	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 
-	}	
-	
+	}
+
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 
 	}
-	
+
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 
-	}	
+	}
 
 	//
 	// Type Members
 	//
-	
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 
 	}
-	
+
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 
 	}
@@ -383,7 +380,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
 
 	}
-	
+
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int: Append("")
@@ -410,7 +407,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 			case .Void: Append("")
 			case .Object: Append("")
 			case .Class: Append("")
-		}		
+		}
 	}
 
 	override func generateIntegerRangeTypeReference(_ type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
@@ -418,27 +415,27 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 		Append("..")
 		Append(type.End.ToString())
 	}
-		
+
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 
 	}
-	
+
 	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	override func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}

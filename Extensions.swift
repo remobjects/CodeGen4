@@ -1,8 +1,6 @@
-﻿import Sugar
+﻿#if !FAKESUGAR
+public extension RemObjects.Elements.RTL.String {
 
-#if !FAKESUGAR
-public extension Sugar.String {
-	
 	public func AsTypeReference() -> CGTypeReference {
 		return CGNamedTypeReference(self)
 	}
@@ -18,15 +16,15 @@ public extension Sugar.String {
 	public func AsTypeReferenceExpression() -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
-	
+
 	public func AsTypeReferenceExpression(defaultNullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: defaultNullability))
 	}
-	
+
 	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
 		return CGNamedIdentifierExpression(self)
 	}
-	
+
 	public func AsLiteralExpression() -> CGStringLiteralExpression {
 		return CGStringLiteralExpression(self)
 	}
@@ -42,7 +40,7 @@ public extension Sugar.String {
 #endif
 
 public extension RemObjects.Elements.System.String {
-	
+
 	public func AsTypeReference() -> CGTypeReference {
 		return CGNamedTypeReference(self)
 	}
@@ -58,15 +56,15 @@ public extension RemObjects.Elements.System.String {
 	public func AsTypeReferenceExpression() -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self))
 	}
-	
+
 	public func AsTypeReferenceExpression(defaultNullability: CGTypeNullabilityKind) -> CGTypeReferenceExpression {
 		return CGTypeReferenceExpression(CGNamedTypeReference(self, defaultNullability: defaultNullability))
 	}
-	
+
 	public func AsNamedIdentifierExpression() -> CGNamedIdentifierExpression {
 		return CGNamedIdentifierExpression(self)
 	}
-	
+
 	public func AsLiteralExpression() -> CGStringLiteralExpression {
 		return CGStringLiteralExpression(self)
 	}
@@ -118,15 +116,15 @@ public extension CGExpression {
 	public func AsReturnStatement() -> CGReturnStatement {
 		return CGReturnStatement(self)
 	}
-	
+
 	public func AsCallParameter() -> CGCallParameter {
 		return CGCallParameter(self)
 	}
-	
+
 	public func AsCallParameter(_ name: String) -> CGCallParameter {
 		return CGCallParameter(self, name)
 	}
-	
+
 	public func AsEllipsisCallParameter() -> CGCallParameter {
 		let result = CGCallParameter(self)
 		result.EllipsisParameter = true

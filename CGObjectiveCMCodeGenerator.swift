@@ -1,18 +1,14 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.IO
-
-public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
+﻿public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 
 	public override var defaultFileExtension: String { return "m" }
 
 	override func generateHeader() {
-		
+
 		if let fileName = currentUnit.FileName {
 			Append("#import \"\(Path.ChangeExtension(fileName, ".h"))\"")
 		}
 	}
-	
+
 	override func generateImport(_ imp: CGImport) {
 		// ignore imports, they are in the .h
 	}
@@ -20,29 +16,29 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 	//
 	// Types
 	//
-	
+
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		Append("@implementation ")
 		generateIdentifier(type.Name)
 		AppendLine()
-		
+
 		//objcGenerateFields(type)
-		
+
 		AppendLine()
 	}
 
 	override func generateStructType(_ type: CGStructTypeDefinition) {
 		// structs don't appear in .m
 	}
-	
+
 	override func generateInterfaceType(_ type: CGInterfaceTypeDefinition) {
 		// protocols don't appear in .m
 	}
-	
+
 	//
 	// Type Members
 	//
-	
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		generateMethodDefinitionHeader(method, type: type)
 		AppendLine()
@@ -63,7 +59,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 		decIndent()
 		AppendLine("}")
 	}
-	
+
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
 			Append("@synthesize ")
@@ -83,7 +79,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 			}
 		}
 	}
-	
+
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		if field.Static {
 			Append("static ")
@@ -92,7 +88,7 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 					case .Strong: Append("__strong ")
 					case .Weak: Append("__weak ")
 					case .Unretained: Append("__unsafe_unretained")
-				}				
+				}
 				generateTypeReference(type)
 				if !objcTypeRefereneIsPointer(type) {
 					Append(" ")
@@ -104,5 +100,5 @@ public class CGObjectiveCMCodeGenerator : CGObjectiveCCodeGenerator {
 			AppendLine(";")
 		}
 		// instance fields are generated in TypeStart
-	}	
+	}
 }

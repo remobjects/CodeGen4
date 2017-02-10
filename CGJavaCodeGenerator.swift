@@ -1,8 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-public enum CGJavaCodeGeneratorDialect {
+﻿public enum CGJavaCodeGeneratorDialect {
 	case Standard
 	case Iodine
 }
@@ -24,7 +20,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	public convenience init(dialect: CGJavaCodeGeneratorDialect) {
 		init()
 		Dialect = dialect
-	}	
+	}
 
 	public override var defaultFileExtension: String { return "java" }
 
@@ -285,7 +281,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {		
+	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 		generateExpression(expression.Expression)
 		Append(".class")
 	}
@@ -745,7 +741,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			if method.Virtuality == CGMemberVirtualityKind.Override {
 				generateAttribute(CGAttribute("Override".AsTypeReference()));
 			}
-			
+
 			javaGenerateMemberTypeVisibilityPrefix(method.Visibility)
 			javaGenerateStaticPrefix(method.Static && !type.Static)
 			if method.External {
@@ -764,7 +760,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		javaGenerateDefinitionParameters(method.Parameters)
 		Append(")")
-		
+
 		if let `throws` = method.ThrownExceptions, `throws`.Count > 0 {
 			Append(" throws ")
 			helpGenerateCommaSeparatedList(`throws`) { t in
@@ -857,7 +853,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			generateIdentifier(property.Name)
 		}
 		AppendLine(";")
-		
+
 		/*if let params = property.Parameters, params.Count > 0 {
 
 			Append("[")
@@ -1038,4 +1034,3 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 }
-

@@ -1,11 +1,7 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-public enum CGCPlusPlusCodeGeneratorDialect {
+﻿public enum CGCPlusPlusCodeGeneratorDialect {
 	case Standard
-	case CPlusPlusBuilder	//C++Builder
-	case VCPlusPlus			//MS Visual C++
+	case CPlusPlusBuilder    //C++Builder
+	case VCPlusPlus            //MS Visual C++
 }
 
 //
@@ -20,7 +16,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	func isStandard() -> Boolean{
 		return Dialect == CGCPlusPlusCodeGeneratorDialect.Standard;
 	}
-	
+
 	func isCBuilder() -> Boolean{
 		return Dialect == CGCPlusPlusCodeGeneratorDialect.CPlusPlusBuilder;
 	}
@@ -32,42 +28,42 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	public init() {
 		super.init()
 		// from http://en.cppreference.com/w/cpp/keyword
-		keywords = ["alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", 
-		"case", "catch", "char", "char16_t", "char32_t", "class", "compl", "concept", "const", 
-		"const_cast", "constexpr", "continue", "decltype", "default", "define", "defined", "delete", 
+		keywords = ["alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break",
+		"case", "catch", "char", "char16_t", "char32_t", "class", "compl", "concept", "const",
+		"const_cast", "constexpr", "continue", "decltype", "default", "define", "defined", "delete",
 		"do", "double", "dynamic_cast", "elif", "else", "endif", "enum", "error", "explicit", "export",
 		"extern", "false", "final", "float", "for", "friend", "goto", "if", "ifdef", "ifndef", "include",
-		"inline", "int", "line", "long", "mutable", "namespace", "new", "noexcept", "not", "not_eq", 
+		"inline", "int", "line", "long", "mutable", "namespace", "new", "noexcept", "not", "not_eq",
 		"nullptr", "operator", "or", "or_eq", "override", "pragma", "private", "protected", "public",
 		"register", "reinterpret_cast", "requires", "return", "short", "signed", "sizeof", "static",
 		"static_assert", "static_cast", "struct", "switch", "template", "this", "thread_local", "throw",
 		"true", "try", "typedef", "typeid", "typename", "undef", "union", "unsigned", "using", "virtual",
 		"void", "volatile", "wchar_t", "while", "xor", "xor_eq"].ToList() as! List<String>;
-		//		// c++Builder keywords
-		//		keywords = ["__asm", "__automated", "__cdecl", "__classid", "__classmethod", "__closure", "__declspec", 
-		//		"__delphirtti", "__dispid", "__except", "__export", "__fastcall", "__finally", "__import", 
-		//		"__inline", "__int16", "__int32", "__int64", "__int8", "__msfastcall", "__msreturn", 
-		//		"__pascal", "__property", "__published", "__rtti", "__stdcall", "__thread", "__try", "_asm", 
-		//		"_Bool", "_cdecl", "_Complex", "_export", "_fastcall", "_Imaginary", "_import", "_pascal", 
-		//		"_stdcall", "alignas", "alignof", "and", "and_eq", "asm", "auto", "axiom", "bitand", "bitor", 
-		//		"bool", "break", "case", "catch", "cdecl", "char", "char16_t", "char32_t", "class", "compl", 
-		//		"concept", "concept_map", "const", "const_cast", "constexpr", "continue", "decltype", "default", 
-		//		"define", "defined", "delete", "deprecated", "do", "double", "Dynamic cast", "dynamic_cast", 
-		//		"elif", "else", "endif", "enum", "error", "explicit", "export", "extern", "false", "final", 
-		//		"float", "for", "friend", "goto", "if", "ifdef", "ifndef", "include", "inline", "int", 
-		//		"late_check", "line", "long", "mutable", "namespace", "new", "noexcept", "noreturn", 
-		//		"not", "not_eq", "nullptr", "operator", "or", "or_eq", "override", "pascal", "pragma", 
-		//		"private", "protected", "public", "register", "reinterpret_cast", "requires", "restrict", 
-		//		"return", "short", "signed", "sizeof", "static", "static_assert", "static_cast", "struct", 
-		//		"switch", "template", "this", "thread_local", "throw", "true", "try", "typedef", "typeid", 
-		//		"typename", "typeof", "undef", "union", "unsigned", "using", "uuidof", "virtual", "void", 
-		//		"volatile", "wchar_t", "while", "xor", "xor_eq"].ToList() as! List<String>;		
+		//        // c++Builder keywords
+		//        keywords = ["__asm", "__automated", "__cdecl", "__classid", "__classmethod", "__closure", "__declspec",
+		//        "__delphirtti", "__dispid", "__except", "__export", "__fastcall", "__finally", "__import",
+		//        "__inline", "__int16", "__int32", "__int64", "__int8", "__msfastcall", "__msreturn",
+		//        "__pascal", "__property", "__published", "__rtti", "__stdcall", "__thread", "__try", "_asm",
+		//        "_Bool", "_cdecl", "_Complex", "_export", "_fastcall", "_Imaginary", "_import", "_pascal",
+		//        "_stdcall", "alignas", "alignof", "and", "and_eq", "asm", "auto", "axiom", "bitand", "bitor",
+		//        "bool", "break", "case", "catch", "cdecl", "char", "char16_t", "char32_t", "class", "compl",
+		//        "concept", "concept_map", "const", "const_cast", "constexpr", "continue", "decltype", "default",
+		//        "define", "defined", "delete", "deprecated", "do", "double", "Dynamic cast", "dynamic_cast",
+		//        "elif", "else", "endif", "enum", "error", "explicit", "export", "extern", "false", "final",
+		//        "float", "for", "friend", "goto", "if", "ifdef", "ifndef", "include", "inline", "int",
+		//        "late_check", "line", "long", "mutable", "namespace", "new", "noexcept", "noreturn",
+		//        "not", "not_eq", "nullptr", "operator", "or", "or_eq", "override", "pascal", "pragma",
+		//        "private", "protected", "public", "register", "reinterpret_cast", "requires", "restrict",
+		//        "return", "short", "signed", "sizeof", "static", "static_assert", "static_cast", "struct",
+		//        "switch", "template", "this", "thread_local", "throw", "true", "try", "typedef", "typeid",
+		//        "typename", "typeof", "undef", "union", "unsigned", "using", "uuidof", "virtual", "void",
+		//        "volatile", "wchar_t", "while", "xor", "xor_eq"].ToList() as! List<String>;
 	}
 
 	public convenience init(dialect: CGCPlusPlusCodeGeneratorDialect) {
 		init()
 		Dialect = dialect
-	}	
+	}
 
 	override func generateAll() {
 		// overriden in .h and .cpp
@@ -75,7 +71,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Statements
 	//
-	
+
 	// in C-styleCG Base class
 	/*
 	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
@@ -122,14 +118,14 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	// handled in base
 	}
 	*/
-	
+
 	override func generateLockingStatement(_ statement: CGLockingStatement) {
 		assert(false, "generateLockingStatement is not supported in C++")
 	}
-	
+
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
 		assert(false, "generateUsingStatement is not supported in C++")
-	}	
+	}
 
 	override func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
 		assert(false, "generateAutoReleasePoolStatement is not supported in C++")
@@ -143,10 +139,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		// __try {
-		//		try {}
-		//			body
-		//		catch {}
-		//	}
+		//        try {}
+		//            body
+		//        catch {}
+		//    }
 		// __finally {}
 		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("__try")
@@ -223,7 +219,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(type)
 			Append(" ")
 		} else {
-//			Append("id ")
+//            Append("id ")
 		}
 		generateIdentifier(statement.Name)
 		if let value = statement.Value {
@@ -238,7 +234,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		// handled in base
 	}
 	*/
-	
+
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 		// empty
 		}
@@ -268,11 +264,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 		Append("[")
 		generateExpression(expression.Expression, ignoreNullability: true)
-//		if let typeReferenceExpression = expression.Expression as? CGTypeReferenceExpression {
-//			generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
-//		} else {
-//			generateExpression(expression.Expression)
-//		}
+//        if let typeReferenceExpression = expression.Expression as? CGTypeReferenceExpression {
+//            generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
+//        } else {
+//            generateExpression(expression.Expression)
+//        }
 		Append(" class]")
 	}
 
@@ -295,7 +291,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			// (MyClass *)ptr
 			Append("(")
-			generateTypeReference(cast.TargetType)		
+			generateTypeReference(cast.TargetType)
 			Append(")")
 			generateExpression(cast.Expression)
 		}
@@ -314,7 +310,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
-		Append(CGPropertyDefinition.MAGIC_VALUE_PARAMETER_NAME) 
+		Append(CGPropertyDefinition.MAGIC_VALUE_PARAMETER_NAME)
 	}
 
 	override func generateAwaitExpression(_ expression: CGAwaitExpression) {
@@ -357,7 +353,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		// handled in base
 	}
 	*/
-	
+
 	/*
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		// handled in base
@@ -394,12 +390,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			if p > 0 {
 				Append(", ")
 			}
-			
+
 			switch param.Modifier {
 				case .Var: Append(" &")
 				case .Out: Append(" &")
-				default: 
-			}		
+				default:
+			}
 			generateExpression(param.Value)
 		}
 	}
@@ -413,19 +409,19 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			switch param.Modifier {
 				case .Const: self.Append("const ")
 				case .Var:   self.Append("/* var */ ")
-				case .Out:   self.Append("/* out */ ")				
+				case .Out:   self.Append("/* out */ ")
 				default:
 			}
 			self.generateTypeReference(param.`Type`)
 			switch param.Modifier {
 				case .Var: self.Append(" &")
 				case .Out: self.Append(" &")
-				default: 
+				default:
 			}
 			self.Append(" ")
-			self.generateIdentifier(param.Name)			
+			self.generateIdentifier(param.Name)
 			if header {
-				if let pv = param.DefaultValue, pv != nil {			
+				if let pv = param.DefaultValue, pv != nil {
 					self.Append(" = ")
 					self.generateExpression(pv)
 				}
@@ -457,27 +453,27 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	
+
 	func cppGenerateAddressing(_ expression: CGMemberAccessExpression) {
-		if (expression.CallSite != nil) {			
-			switch expression.CallSiteKind{					
-				case .Instance: Append(".");					
-				case .Reference: Append("->");					
-				case .Static:	 Append("::");
-				case .Unspecified: 
+		if (expression.CallSite != nil) {
+			switch expression.CallSiteKind{
+				case .Instance: Append(".");
+				case .Reference: Append("->");
+				case .Static:     Append("::");
+				case .Unspecified:
 					if let typeref = expression.CallSite as? CGTypeReferenceExpression {
 						Append("::")
 					}
 					else if let typeref = expression.CallSite as? CGInheritedExpression {
 						Append("::")
-					}				
+					}
 					else if let typeref = expression.CallSite as? CGSelfExpression {
 						Append(".")
-					}	
-					else {  
+					}
+					else {
 						Append(".")
 					}
-			}			
+			}
 		}
 	}
 
@@ -515,7 +511,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		// int * a = new int[500];
 		// delete [] a;
 		Append("delete ");
-		generateExpression(expression.Instance);		
+		generateExpression(expression.Instance);
 	}
 
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
@@ -560,17 +556,17 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
-		if isCBuilder() {	
-			if array.ArrayKind == .Dynamic {				
+		if isCBuilder() {
+			if array.ArrayKind == .Dynamic {
 				var isOpenArray = false
-				if let ltype = array.ElementType {					
+				if let ltype = array.ElementType {
 					// open array
 					isOpenArray = true;
 					Append("OPENARRAY(")
 					generateTypeReference(ltype)
 					Append(", (")
 				}
-				else {					
+				else {
 					// array of const
 					Append("ARRAYOFCONST((")
 				}
@@ -579,7 +575,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				}
 				Append(")")
 				Append(")")
-				return;				
+				return;
 			}
 		}
 		Append("[")
@@ -621,156 +617,156 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		// default handled in base
 	}
 	*/
-	
-//	override func generateSetTypeReference(_ setType: CGSetTypeReference) {
-//		assert(false, "generateSetTypeReference is not supported in C++")
-//	}
-//	
-//	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference) {
-//		assert(false, "generateSequenceTypeReference is not supported in C++")
-//	}
-	
+
+//    override func generateSetTypeReference(_ setType: CGSetTypeReference) {
+//        assert(false, "generateSetTypeReference is not supported in C++")
+//    }
+//
+//    override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference) {
+//        assert(false, "generateSequenceTypeReference is not supported in C++")
+//    }
+
 	//
 	// Type Definitions
 	//
-	
+
 	override func generateAttribute(_ attribute: CGAttribute) {
 		// no-op, we dont support attribtes in Objective-C
 	}
-	
+
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
-	
+
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		// overriden and H
 	}
-	
+
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		AppendLine()
 	}
-	
-//	func cppGenerateFields(_ type: CGTypeDefinition) {
-//		for m in type.Members {
-//			if let property = m as? CGPropertyDefinition {
-//				if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
-//					if let type = property.`Type` {
-//						generateTypeReference(type)
-//						Append(" ")
-//					} else {
-//						Append("id ")
-//					}
-//					Append("__p_")
-//					generateIdentifier(property.Name, escaped: false)
-//					AppendLine(";")
-//				}
-//			} else if let field = m as? CGFieldDefinition {
-//				if let type = field.`Type` {
-//					generateTypeReference(type)
-//					Append(" ")
-//				} else {
-//					Append("id ")
-//				}
-//				generateIdentifier(field.Name)
-//				AppendLine(";")
-//			}
-//		}
-//	}
-	
+
+//    func cppGenerateFields(_ type: CGTypeDefinition) {
+//        for m in type.Members {
+//            if let property = m as? CGPropertyDefinition {
+//                if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+//                    if let type = property.`Type` {
+//                        generateTypeReference(type)
+//                        Append(" ")
+//                    } else {
+//                        Append("id ")
+//                    }
+//                    Append("__p_")
+//                    generateIdentifier(property.Name, escaped: false)
+//                    AppendLine(";")
+//                }
+//            } else if let field = m as? CGFieldDefinition {
+//                if let type = field.`Type` {
+//                    generateTypeReference(type)
+//                    Append(" ")
+//                } else {
+//                    Append("id ")
+//                }
+//                generateIdentifier(field.Name)
+//                AppendLine(";")
+//            }
+//        }
+//    }
+
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		// overriden in H
-	}	
-	
+	}
+
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		// overriden in H
-	}	
-	
+	}
+
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		// overriden in M and H
 	}
-	
+
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 		AppendLine("@end")
-	}	
+	}
 
 	//
 	// Type Members
 	//
-	func cppGenerateCallingConversion(_ callingConvention: CGCallingConventionKind){	
-		if isCBuilder() {	
-			switch callingConvention {		
-				case .CDecl:		 Append("__cdecl ")
-				case .Pascal:		 Append("__pascal ")
-				case .FastCall:		 Append("__msfastcall ")
-				case .StdCall:		 Append("__stdcall ")
-				case .Register:		 Append("__fastcall ")
+	func cppGenerateCallingConversion(_ callingConvention: CGCallingConventionKind){
+		if isCBuilder() {
+			switch callingConvention {
+				case .CDecl:         Append("__cdecl ")
+				case .Pascal:         Append("__pascal ")
+				case .FastCall:         Append("__msfastcall ")
+				case .StdCall:         Append("__stdcall ")
+				case .Register:         Append("__fastcall ")
 				default:
 			}
 		}
-		else if isVC(){		
-			switch callingConvention {		
-				case .CDecl:		 Append("__cdecl ")
-				case .ClrCall:		 Append("__clrcall ")
-				case .StdCall:		 Append("__stdcall ")
-				case .FastCall:		 Append("__fastcall ")
-				case .ThisCall:		 Append("__thiscall ")
-				case .VectorCall:	 Append("__vectorcall ")
+		else if isVC(){
+			switch callingConvention {
+				case .CDecl:         Append("__cdecl ")
+				case .ClrCall:         Append("__clrcall ")
+				case .StdCall:         Append("__stdcall ")
+				case .FastCall:         Append("__fastcall ")
+				case .ThisCall:         Append("__thiscall ")
+				case .VectorCall:     Append("__vectorcall ")
 				default:
 			}
 		}
-		else if isStandard() {		
+		else if isStandard() {
 			// only cdecl is used be default;
 		}
-	}	
+	}
 
 	func cppGenerateMethodDefinitionHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, header: Boolean) {
 		let isCtor = (method as? CGConstructorDefinition) != nil;
 		let isDtor = (method as? CGDestructorDefinition) != nil;
 		let isInterface = (type as? CGInterfaceTypeDefinition) != nil;
-		let isGlobal = type == CGGlobalTypeDefinition.GlobalType;		
+		let isGlobal = type == CGGlobalTypeDefinition.GlobalType;
 		if header {
 			if method.Static {
-				if isCBuilder()	{			
+				if isCBuilder()    {
 					Append("__classmethod ")
 				}
-				else 
+				else
 				{
 					Append("static ")
-				}				
+				}
 			}
 		}
 		if header {
-			if isInterface && isCBuilder(){		
+			if isInterface && isCBuilder(){
 				Append("virtual ");
 			}
 			else if !isGlobal {
 				// virtuality isn't supported for globals
 				switch (method.Virtuality) {
-					case .Virtual:	   Append("virtual ");
-					case .Override:	   Append("virtual ");
+					case .Virtual:       Append("virtual ");
+					case .Override:       Append("virtual ");
 					case .Reintroduce: if isCBuilder() { Append("HIDESBASE "); }
 					default: // ????
 				}
 			}
 		}
 
-		if !isCtor && !isDtor{		
+		if !isCtor && !isDtor{
 			// ctor&dtor have no result
 			if let returnType = method.ReturnType {
 				generateTypeReference(returnType)
@@ -780,9 +776,9 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 		}
 		if let conversion = method.CallingConvention {
-			cppGenerateCallingConversion(conversion)		
+			cppGenerateCallingConversion(conversion)
 		}
-		if isCtor {		
+		if isCtor {
 			if !header {
 				if let namespace = currentUnit.Namespace {
 					generateIdentifier(namespace.Name)
@@ -806,7 +802,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 			Append("~")
 			generateIdentifier(uppercaseFirstLetter(type.Name));
-		} else {	
+		} else {
 			if !header {
 				if !(isGlobal && (method.Visibility == .Private)) {
 					if let namespace = currentUnit.Namespace {
@@ -814,7 +810,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 						Append("::")
 					}
 				}
-				if !isGlobal {			
+				if !isGlobal {
 					generateIdentifier(type.Name)
 					Append("::")
 				}
@@ -824,12 +820,12 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		cppGenerateDefinitionParameters(method.Parameters, header: header)
 		Append(")")
-		if header && isInterface {		
+		if header && isInterface {
 			Append(" = 0")
 		}
 		if !header && isCtor {
-			if let classtype = type as? CGClassOrStructTypeDefinition {		
-				if classtype.Ancestors.Count > 0 {			
+			if let classtype = type as? CGClassOrStructTypeDefinition {
+				if classtype.Ancestors.Count > 0 {
 					AppendLine();
 					incIndent()
 					Append(": ")
@@ -847,7 +843,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 						helpGenerateCommaSeparatedList(method.Parameters) { p in
 								self.generateIdentifier(p.Name)
 						}
-/*						for var p = 0; p < method.Parameters.Count; p++ {
+/*                        for var p = 0; p < method.Parameters.Count; p++ {
 							let param = method.Parameters[p]
 							if p > 0 {
 								Append(", ")
@@ -861,11 +857,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 	}
-	
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		// overriden in H
 	}
-	
+
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 	  // overriden in H & CPP
 	}
@@ -880,8 +876,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
-		// use field as is 
-		if let type = field.`Type` {	
+		// use field as is
+		if let type = field.`Type` {
 			if field.Constant {
 				Append("const ")
 			}
@@ -895,14 +891,14 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine(";")
 		} else {
 		// without type, generate as define
-			Append("#define ");			
+			Append("#define ");
 			generateIdentifier(field.Name)
 			if let value = field.Initializer {
 				Append(" ")
 				generateExpression(value)
 			}
 			AppendLine();
-		}		
+		}
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -920,7 +916,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	//
 	// Type References
 	//
-	
+
 	override func generateNamedTypeReference(_ type: CGNamedTypeReference, ignoreNamespace: Boolean, ignoreNullability: Boolean) {
 		if ignoreNamespace {
 			generateIdentifier(type.Name)
@@ -936,46 +932,46 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			Append("*")
 		}
 	}
-	
+
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int: Append("int")					//+
-			case .UInt: Append("unsigned int")			//+
-			case .Int8: Append("char")					//+
-			case .UInt8: Append("unsigned char")		//+
-			case .Int16: Append("short int")			//+
-			case .UInt16: Append("unsigned short int")	//+
-			case .Int32: Append("int")					//+
-			case .UInt32: Append("unsigned int")		//+
-			case .Int64: if isCBuilder() {Append("__int64")} else {Append("long int")}				//+
-			case .UInt64: Append("unsigned long int")	//+
-			case .IntPtr: Append("IntPtr")				//???????
-			case .UIntPtr: Append("UIntPtr")			//???????
-			case .Single: Append("float")				 //+
-			case .Double: Append("double")				//+
-			case .Boolean: Append("bool")				//+
-			case .String: Append("string")				 //+
-			case .AnsiChar: Append("char")				//+
-			case .UTF16Char: Append("wchar_t")			//+
-			case .UTF32Char: Append("wchar_t")			//+
-			case .Dynamic: Append("{DYNAMIC}")					//??????
-			case .InstanceType: Append("{INSTANCETYPE}")	//??????
-			case .Void: Append("void")					//+
-			case .Object:  Append("{OBJECT}")			  //??????
-			case .Class: Append("{CLASS}")				//??????
-		}		
+			case .Int: Append("int")                    //+
+			case .UInt: Append("unsigned int")            //+
+			case .Int8: Append("char")                    //+
+			case .UInt8: Append("unsigned char")        //+
+			case .Int16: Append("short int")            //+
+			case .UInt16: Append("unsigned short int")    //+
+			case .Int32: Append("int")                    //+
+			case .UInt32: Append("unsigned int")        //+
+			case .Int64: if isCBuilder() {Append("__int64")} else {Append("long int")}                //+
+			case .UInt64: Append("unsigned long int")    //+
+			case .IntPtr: Append("IntPtr")                //???????
+			case .UIntPtr: Append("UIntPtr")            //???????
+			case .Single: Append("float")                 //+
+			case .Double: Append("double")                //+
+			case .Boolean: Append("bool")                //+
+			case .String: Append("string")                 //+
+			case .AnsiChar: Append("char")                //+
+			case .UTF16Char: Append("wchar_t")            //+
+			case .UTF32Char: Append("wchar_t")            //+
+			case .Dynamic: Append("{DYNAMIC}")                    //??????
+			case .InstanceType: Append("{INSTANCETYPE}")    //??????
+			case .Void: Append("void")                    //+
+			case .Object:  Append("{OBJECT}")              //??????
+			case .Class: Append("{CLASS}")                //??????
+		}
 	}
 
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-		
+
 		let block = type.Block
-		
+
 		if let returnType = block.ReturnType {
 			generateTypeReference(returnType)
 		} else {
 			Append("void")
-		}	   
-		Append("(^)(") 
+		}
+		Append("(^)(")
 		for p in 0 ..< block.Parameters.Count {
 			if p > 0 {
 				Append(", ")
@@ -988,20 +984,20 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		}
 		Append(")")
 	}
-	
-	override func generateConstantTypeReference(_ type: CGConstantTypeReference, ignoreNullability: Boolean = false) {		
+
+	override func generateConstantTypeReference(_ type: CGConstantTypeReference, ignoreNullability: Boolean = false) {
 		generateTypeReference(type.`Type`)
 		Append(" const")
 	}
 
-//	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference) {
-//		Append("__kindof ")
-//		generateTypeReference(type.`Type`)
-//	}
-	
+//    override func generateKindOfTypeReference(_ type: CGKindOfTypeReference) {
+//        Append("__kindof ")
+//        generateTypeReference(type.`Type`)
+//    }
+
 	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
-		if isCBuilder() {	
-			if type.ArrayKind == .Dynamic {		
+		if isCBuilder() {
+			if type.ArrayKind == .Dynamic {
 				Append("DynamicArray<")
 				generateTypeReference(type.`Type`)
 				Append(">")
@@ -1017,11 +1013,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			Append("[]")
 		}
 	}
-	
+
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
 
 	}
-	
+
 	func generatePragma(_ pragma: String){
 		Append("#pragma ");
 		AppendLine(pragma);
@@ -1032,7 +1028,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			case .Unspecified: break
 			case .Unit: break
 			case .Assembly: break
-			case .Public: Append("public ")		
+			case .Public: Append("public ")
 		}
 	}
 
@@ -1040,6 +1036,6 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		generateTypeReference(type.`Type`)
 		if type.Reference {
 			Append("&")
-		}		else {		
-			Append("*")		}	}	
+		}        else {
+			Append("*")        }    }
 }

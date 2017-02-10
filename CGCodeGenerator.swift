@@ -1,7 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-
-public __abstract class CGCodeGenerator {
+﻿public __abstract class CGCodeGenerator {
 
 	internal var currentUnit: CGCodeUnit!
 	internal var tabSize = 2

@@ -1,8 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-/* Types */
+﻿/* Types */
 
 public enum CGTypeVisibilityKind {
 	case Unspecified
@@ -15,14 +11,14 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGMemberDefinition>()
-	public var Visibility: CGTypeVisibilityKind = .Unspecified		//in delphi, types with .Unit will be put into implementation section
+	public var Visibility: CGTypeVisibilityKind = .Unspecified        //in delphi, types with .Unit will be put into implementation section
 	public var Static = false
 	public var Sealed = false
 	public var Abstract = false
 	public var Comment: CGCommentStatement?
 	public var Attributes = List<CGAttribute>()
 	public var Condition: CGConditionalDefine?
-	
+
 	public init(_ name: String) {
 		Name = name
 	}
@@ -33,13 +29,13 @@ public final class CGGlobalTypeDefinition : CGTypeDefinition {
 		super.init("<Globals>")
 		Static = true
 	}
-	
+
 	public static lazy let GlobalType = CGGlobalTypeDefinition()
 }
 
 public class CGTypeAliasDefinition : CGTypeDefinition {
 	public var ActualType: CGTypeReference
-	
+
 	public init(_ name: String, _ actualType: CGTypeReference) {
 		super.init(name)
 		ActualType = actualType
@@ -60,7 +56,7 @@ public __abstract class CGClassOrStructTypeDefinition : CGTypeDefinition {
 	public var Ancestors: List<CGTypeReference>
 	public var ImplementedInterfaces: List<CGTypeReference>
 	public var Partial = false
-	
+
 	public init(_ name: String) {
 		super.init(name)
 		Ancestors = List<CGTypeReference>()
@@ -97,7 +93,7 @@ public class CGStructTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
 public class CGInterfaceTypeDefinition : CGClassOrStructTypeDefinition {
-	public var InterfaceGuid: Guid?;// legacy delphi only. declaration is :  
+	public var InterfaceGuid: Guid?;// legacy delphi only. declaration is :
 									  // type interfaceName = interface (ancestorInterface) ['{GUID}'] memberList end;
 }
 
@@ -141,7 +137,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var Attributes = List<CGAttribute>()
 	public var Condition: CGConditionalDefine?
 	public var ThrownExceptions: List<CGTypeReference>? // nil means unknown; empty list means known to not throw.
-	
+
 	public init(_ name: String) {
 		Name = name
 	}
@@ -149,7 +145,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 
 public class CGEnumValueDefinition: CGMemberDefinition {
 	public var Value: CGExpression?
-	
+
 	public init(_ name: String) {
 		super.init(name)
 	}
@@ -172,15 +168,15 @@ public enum CGCallingConventionKind {
 	case ClrCall /* VC++ */
 	case ThisCall /* VC++ */
 	case VectorCall /* VC++ */
-	case Register	/* C++Builder and Delphi */
+	case Register    /* C++Builder and Delphi */
 }
 
 public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
-	public var External = false 
-	public var Empty = false 
+	public var External = false
+	public var Empty = false
 	public var Partial = false /* Oxygene only */
 	public var Async = false /* Oxygene only */
 	public var Awaitable = false /* C# only */
@@ -210,7 +206,7 @@ public class CGMethodDefinition: CGMethodLikeMemberDefinition {
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 	public var Nullability = CGTypeNullabilityKind.NotNullable /* Swift only. currently. */
-	
+
 	public init() {
 		super.init("")
 	}
@@ -282,7 +278,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 	public var SetExpression: CGExpression?
 	public var GetterVisibility: CGMemberVisibilityKind?
 	public var SetterVisibility: CGMemberVisibilityKind?
-	
+
 	public init(_ name: String) {
 		super.init(name)
 	}
@@ -301,8 +297,8 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		init(name, type)
 		GetExpression = getExpression
 		SetExpression = setExpression
-	} 
-	
+	}
+
 	internal func GetterMethodDefinition(`prefix`: String = "get__") -> CGMethodDefinition? {
 		if let getStatements = GetStatements, let type = `Type` {
 			let method = CGMethodDefinition(`prefix`+Name, getStatements)
@@ -320,25 +316,25 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		}
 		return nil
 	}
-	
+
 	public static let MAGIC_VALUE_PARAMETER_NAME = "___value___"
-	
+
 	internal func SetterMethodDefinition(`prefix`: String = "set__") -> CGMethodDefinition? {
 		if let setStatements = SetStatements, let type = `Type` {
 			let method = CGMethodDefinition(`prefix`+Name, setStatements)
-			method.Parameters.AddRange(Parameters)
+			method.Parameters.Add(Parameters)
 			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
 			return method
 		} else if let setExpression = SetExpression, let type = `Type` {
 			let method = CGMethodDefinition(`prefix`+Name)
-			method.Parameters.AddRange(Parameters)
+			method.Parameters.Add(Parameters)
 			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
 			method.Statements.Add(CGAssignmentStatement(setExpression, CGLocalVariableAccessExpression(MAGIC_VALUE_PARAMETER_NAME)))
 			return method
 		}
 		return nil
 	}
-	
+
 	public var IsShortcutProperty: Boolean { get { return GetStatements == nil && SetStatements == nil && GetExpression == nil && SetExpression == nil } }
 }
 
@@ -412,7 +408,7 @@ public class CGParameterDefinition : CGEntity {
 	public var `Type`: CGTypeReference
 	public var Modifier: CGParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
-	
+
 	public init(_ name: String, _ type: CGTypeReference) {
 		Name = name
 		`Type` = type
@@ -422,7 +418,7 @@ public class CGParameterDefinition : CGEntity {
 public class CGAnonymousMethodParameterDefinition : CGEntity {
 	public var Name: String
 	public var `Type`: CGTypeReference?
-	
+
 	public init(_ name: String) {
 		Name = name
 	}
@@ -432,11 +428,11 @@ public class CGGenericParameterDefinition : CGEntity {
 	public var Constraints = List<CGGenericConstraint>()
 	public var Name: String
 	public var Variance: CGGenericParameterVarianceKind?
-	
+
 	public init(_ name: String) {
 		Name = name
 	}
-}   
+}
 
 public enum CGGenericParameterVarianceKind {
 	case Covariant
@@ -451,7 +447,7 @@ public class CGGenericHasConstructorConstraint : CGGenericConstraint {
 
 public class CGGenericIsSpecificTypeConstraint : CGGenericConstraint {
 	public var `Type`: CGTypeReference
-	
+
 	public init(_ type: CGTypeReference) {
 		`Type` = type
 	}
@@ -459,7 +455,7 @@ public class CGGenericIsSpecificTypeConstraint : CGGenericConstraint {
 
 public class CGGenericIsSpecificTypeKindConstraint : CGGenericConstraint {
 	public var Kind: CGGenericConstraintTypeKind
-	
+
 	public init(_ kind: CGGenericConstraintTypeKind) {
 		Kind = kind
 	}
@@ -475,7 +471,7 @@ public class CGAttribute: CGEntity {
 	public var `Type`: CGTypeReference
 	public var Parameters: List<CGCallParameter>?
 	public var Comment: CGSingleLineCommentStatement?
-	
+
 	public init(_ type: CGTypeReference) {
 		`Type` = type
 	}

@@ -1,7 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-
-public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
+﻿public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 
 	public override var defaultFileExtension: String { return "h" }
 
@@ -18,7 +15,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 			}
 		}
 	}
-	
+
 	override func generateImport(_ imp: CGImport) {
 		AppendLine("#import <\(imp.Name)/\(imp.Name).h>")
 	}
@@ -30,15 +27,15 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 	//
 	// Types
 	//
-	
+
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 
 	}
-	
+
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		Append("typedef NS_ENUM(")
 		if let baseType = type.BaseType {
@@ -64,7 +61,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		decIndent()
 		AppendLine("};")
 	}
-	
+
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		Append("@interface ")
 		generateIdentifier(type.Name)
@@ -74,20 +71,20 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		objcGenerateFields(type)
 		AppendLine()
 	}
-	
+
 	/*override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine(@"end")
 	}*/
-	
+
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 
 	}
-	
+
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 
-	}	
-	
+	}
+
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		Append("@protocol ")
 		generateIdentifier(type.Name)
@@ -95,34 +92,34 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 		AppendLine()
 		AppendLine()
 	}
-	
+
 	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		AppendLine()
 		AppendLine("@end")
-	}	
+	}
 
 	//
 	// Type Members
 	//
-	
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		generateMethodDefinitionHeader(method, type: type)
 		AppendLine(";")
 	}
-	
+
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		generateMethodDefinitionHeader(ctor, type: type)
 		AppendLine(";")
 	}
-	
+
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		
+
 		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
 			Append("// overriden ") // we don't need to re-emit overriden properties in header?
 		}
-		
+
 		Append("@property ")
-		
+
 		Append("(")
 		if property.Atomic {
 			Append("atomic")
@@ -144,7 +141,7 @@ public class CGObjectiveCHCodeGenerator : CGObjectiveCCodeGenerator {
 			Append(", readonly")
 		}
 		Append(") ")
-		
+
 		if let type = property.`Type` {
 			generateTypeReference(type)
 			if !objcTypeRefereneIsPointer(type) {

@@ -1,7 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-
-public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
+﻿public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 
 	public override var defaultFileExtension: String { return "h" }
 
@@ -28,14 +25,14 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		var lastGlobal: CGGlobalDefinition? = nil
 		for g in currentUnit.Globals {
 			var visibility: CGMemberVisibilityKind = .Unspecified;
-			 if let method = g as? CGGlobalFunctionDefinition {			
+			 if let method = g as? CGGlobalFunctionDefinition {
 				visibility = method.Function.Visibility;
 			}
-			 if let variable = g as? CGGlobalVariableDefinition {			
+			 if let variable = g as? CGGlobalVariableDefinition {
 				visibility = variable.Variable.Visibility;
 			}
 			// skip .Unit & .Private visibility - they will be put into .cpp
-			if !((visibility == .Unit)||(visibility == .Private)){			
+			if !((visibility == .Unit)||(visibility == .Private)){
 				if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
 					AppendLine()
 				}
@@ -75,12 +72,12 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		if isCBuilder() {
 			generatePragma("delphiheader begin");
 			generatePragma("option push");
-			generatePragma("option -w-			// All warnings off");
-			generatePragma("option -Vx			// Zero-length empty class member functions");
+			generatePragma("option -w-            // All warnings off");
+			generatePragma("option -Vx            // Zero-length empty class member functions");
 			generatePragma("pack(push,8)");
 		}
 	}
-		
+
 	override func generateFooter(){
 		var lnamespace = currentUnit.FileName+"H";
 		if isCBuilder() {
@@ -118,7 +115,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			}
 		}
 	}
-	
+
 	override func generateImport(_ imp: CGImport) {
 
 		if imp.StaticClass != nil {
@@ -131,7 +128,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	//
 	// Types
 	//
-	
+
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		Append("typedef ")
 		generateTypeReference(type.ActualType)
@@ -139,18 +136,18 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		generateIdentifier(type.Name)
 		AppendLine(";")
 	}
-	
+
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		
+
 	}
-	
+
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 
 		//#pragma option push -b-
 		//enum TSex {
-		//				 TSex_sxMale,
-		//				 TSex_sxFemale
-		//				 };
+		//                 TSex_sxMale,
+		//                 TSex_sxFemale
+		//                 };
 		//#pragma option pop
 
 		if isCBuilder() {
@@ -177,11 +174,11 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 			generatePragma("option pop");
 		}
 	}
-	
+
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
-//		if isCBuilder() {
-//			AppendLine("class DELPHICLASS \(type.Name);");
-//		}
+//        if isCBuilder() {
+//            AppendLine("class DELPHICLASS \(type.Name);");
+//        }
 		Append("class ")
 		generateIdentifier(type.Name)
 		cppGenerateAncestorList(type)
@@ -189,33 +186,33 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine("{")
 		incIndent();
 		if isCBuilder() {
-			if type.Ancestors.Count > 0 {				
+			if type.Ancestors.Count > 0 {
 				for a in 0 ..< type.Ancestors.Count {
 					if let ancestor = type.Ancestors[a] {
 						Append("typedef ");
 						generateTypeReference(ancestor, ignoreNullability: true);
-						AppendLine(" inherited;")						
+						AppendLine(" inherited;")
 					}
 				}
-				
+
 			}
 		}
-//		cppGenerateFields(type)
+//        cppGenerateFields(type)
 		AppendLine()
-		if isCBuilder() {		
+		if isCBuilder() {
 			// generate empty "__published:"
 			decIndent();
 			cppHGenerateMemberVisibilityPrefix(CGMemberVisibilityKind.Published);
 			incIndent();
 		}
 	}
-	
+
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		decIndent()
 		AppendLine()
 		AppendLine("};")
 	}
-	
+
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		Append("struct ");
 		generateIdentifier(type.Name)
@@ -224,17 +221,17 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine("{")
 		incIndent();
 	}
-	
+
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		decIndent();
 		AppendLine()
 		AppendLine("}")
-	}	
-	
+	}
+
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
-//		Append("__interface ")
-//		generateIdentifier(type.Name)
-//		AppendLine(";");
+//        Append("__interface ")
+//        generateIdentifier(type.Name)
+//        AppendLine(";");
 		Append("__interface ")
 		if isCBuilder() {
 			if let k = type.InterfaceGuid {
@@ -247,17 +244,17 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		AppendLine("{")
 		incIndent()
 	}
-	
-	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {		
+
+	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		decIndent()
 		AppendLine()
 		AppendLine("};")
-	}	
+	}
 
 	//
 	// Type Members
 	//
-	
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		cppGenerateMethodDefinitionHeader(method, type: type, header: true)
 		AppendLine(";")
@@ -272,42 +269,42 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		cppGenerateMethodDefinitionHeader(dtor, type: type, header: true)
 		AppendLine(";")
 	}
-	
+
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		
+
 		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
 			Append("// overriden ") // we don't need to re-emit overriden properties in header?
 		}
-		
+
 		Append("__property ")
-		
-		//		Append("(")
-		//		if property.Atomic {
-		//			Append("atomic")
-		//		} else {
-		//			Append("nonatomic")
-		//		}
-		//		if let type = property.`Type` {
-		//			if type.IsClassType {
-		//				switch type.StorageModifier {
-		//					case .Strong: Append(", strong")
-		//					case .Weak: Append(", weak")
-		//					case .Unretained: Append(", unsafe_unretained")
-		//				}
-		//			} else {
-		//				//todo?
-		//			}
-		//		}
-		//		if property.ReadOnly {
-		//			Append(", readonly")
-		//		}
-		//		Append(") ")
-		
+
+		//        Append("(")
+		//        if property.Atomic {
+		//            Append("atomic")
+		//        } else {
+		//            Append("nonatomic")
+		//        }
+		//        if let type = property.`Type` {
+		//            if type.IsClassType {
+		//                switch type.StorageModifier {
+		//                    case .Strong: Append(", strong")
+		//                    case .Weak: Append(", weak")
+		//                    case .Unretained: Append(", unsafe_unretained")
+		//                }
+		//            } else {
+		//                //todo?
+		//            }
+		//        }
+		//        if property.ReadOnly {
+		//            Append(", readonly")
+		//        }
+		//        Append(") ")
+
 		if let type = property.`Type` {
 			generateTypeReference(type/*, ignoreNullability:true*/)
 			Append(" ")
 		} else {
-			//			Append("id ")
+			//            Append("id ")
 		}
 		generateIdentifier(property.Name)
 		if let parameters = property.Parameters, parameters.Count > 0 {
@@ -330,11 +327,11 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 				generateExpression(getExpression)
 			}
 		}
-	
+
 		if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
 			if readerExist {
 				Append(", ")
-			} 
+			}
 			Append("write=")
 			if !definitionOnly {
 				generateIdentifier(setterMethod.Name)
@@ -342,7 +339,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		} else if let setExpression = property.SetExpression {
 			if readerExist {
 				Append(", ")
-			} 
+			}
 			Append("write=")
 			if !definitionOnly {
 				generateExpression(setExpression)
@@ -360,7 +357,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 					decIndent();
 					cppHGenerateMemberVisibilityPrefix(mVisibility)
 					incIndent();
-				}		
+				}
 			}
 		}
 		generateTypeMember(member, type: type);
@@ -382,20 +379,20 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 		if let type = type as? CGInterfaceTypeDefinition {
 			decIndent();
 			cppHGenerateMemberVisibilityPrefix(CGMemberVisibilityKind.Public);
-			incIndent();			
+			incIndent();
 			super.generateTypeMembers(type);
 		}
 		else {
-//			var lastMember: CGMemberDefinition? = nil
-//			var lastVisibility: CGMemberVisibilityKind = CGMemberVisibilityKind.Unspecified;
-//			for m in type.Members {
-//				if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
-//					AppendLine()
-//				}
-//				cppHGenerateTypeMember(m, type: type, lastVisibility: lastVisibility);
-//				lastMember = m;
-//				lastVisibility = m.Visibility;
-//			}
+//            var lastMember: CGMemberDefinition? = nil
+//            var lastVisibility: CGMemberVisibilityKind = CGMemberVisibilityKind.Unspecified;
+//            for m in type.Members {
+//                if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
+//                    AppendLine()
+//                }
+//                cppHGenerateTypeMember(m, type: type, lastVisibility: lastVisibility);
+//                lastMember = m;
+//                lastVisibility = m.Visibility;
+//            }
 			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unspecified)
 			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
 			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
@@ -413,14 +410,14 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 	func cppGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if !definitionOnly {
 			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
-				if isCBuilder() {			
-					getterMethod.CallingConvention = .Register					
+				if isCBuilder() {
+					getterMethod.CallingConvention = .Register
 				}
 				getterMethod.Visibility = .Private
 				generateMethodDefinition(getterMethod, type: type)
 			}
 			if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
-				if isCBuilder() {			
+				if isCBuilder() {
 					setterMethod.CallingConvention = .Register
 				}
 				setterMethod.Visibility = .Private
@@ -442,7 +439,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 					if first {
 						decIndent()
 						if visibility != CGMemberVisibilityKind.Unspecified {
-							cppHGenerateMemberVisibilityPrefix(visibility)							
+							cppHGenerateMemberVisibilityPrefix(visibility)
 						}
 						first = false
 						incIndent()
@@ -451,7 +448,7 @@ public class CGCPlusPlusHCodeGenerator: CGCPlusPlusCodeGenerator {
 				}
 			} else {
 				generateTypeMember(m, type: type)
-			}			
+			}
 		}
 	}
 

@@ -1,8 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-/* Statements */
+﻿/* Statements */
 
 public __abstract class CGStatement: CGEntity {
 }
@@ -17,7 +13,7 @@ public __abstract class CGBaseMultilineStatement : CGStatement {
 		Lines = lines
 	}
 	public init(_ lines: String) {
-		Lines = lines.Replace("\r", "").Split("\n").ToList()
+		Lines = lines.Replace("\r", "").Split("\n").ToList<String>()
 	}
 }
 
@@ -106,12 +102,12 @@ public class CGIfThenElseStatement: CGStatement {
 	public var Condition: CGExpression
 	public var IfStatement: CGStatement
 	public var ElseStatement: CGStatement?
-	
+
 	public init(_ condition: CGExpression, _ ifStatement: CGStatement, _ elseStatement: CGStatement? = nil) {
 		Condition = condition
 		IfStatement = ifStatement
 		ElseStatement = elseStatement
-	}	
+	}
 }
 
 public enum CGLoopDirectionKind {
@@ -139,7 +135,7 @@ public class CGForEachLoopStatement: CGNestingStatement {
 	public var LoopVariableName: String
 	public var LoopVariableType: CGTypeReference //not all languages require this but some do, so we'll require it
 	public var Collection: CGExpression
-	
+
 	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ collection: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
@@ -213,7 +209,7 @@ public class CGSwitchStatementCase : CGEntity {
 
 public class CGLockingStatement: CGNestingStatement {
 	var Expression: CGExpression
-	
+
 	public init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
 		super.init(nestedStatement)
 		Expression = expression
@@ -224,7 +220,7 @@ public class CGUsingStatement: CGNestingStatement {
 	public var Name: String
 	public var `Type`: CGTypeReference?
 	public var Value: CGExpression
-	
+
 	public init(_ name: String, _ value: CGExpression, _ nestedStatement: CGStatement) {
 		super.init(nestedStatement)
 		Name = name
@@ -236,7 +232,7 @@ public class CGAutoReleasePoolStatement: CGNestingStatement {}
 
 public class CGTryFinallyCatchStatement: CGBlockStatement {
 	public var FinallyStatements = List<CGStatement>()
-	public var CatchBlocks = List<CGCatchBlockStatement>()	
+	public var CatchBlocks = List<CGCatchBlockStatement>()
 }
 
 public class CGCatchBlockStatement: CGBlockStatement {
@@ -262,7 +258,7 @@ public class CGCatchBlockStatement: CGBlockStatement {
 
 public class CGReturnStatement: CGStatement {
 	public var Value: CGExpression?
-	
+
 	public init() {
 	}
 	public init(_ value: CGExpression) {
@@ -272,7 +268,7 @@ public class CGReturnStatement: CGStatement {
 
 public class CGYieldStatement: CGStatement {
 	public var Value: CGExpression
-	
+
 	public init(_ value: CGExpression) {
 		Value = value
 	}
@@ -280,7 +276,7 @@ public class CGYieldStatement: CGStatement {
 
 public class CGThrowStatement: CGStatement {
 	var Exception: CGExpression?
-	
+
 	public init() {
 	}
 	public init(_ exception: CGExpression?) {
@@ -340,7 +336,7 @@ public class CGVariableDeclarationStatement: CGStatement {
 public class CGAssignmentStatement: CGStatement {
 	public var Target: CGExpression
 	public var Value: CGExpression
-	
+
 	public init(_ target: CGExpression, _ value: CGExpression) {
 		Target = target
 		Value = value

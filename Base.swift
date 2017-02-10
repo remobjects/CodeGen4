@@ -1,7 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-
-public enum CGPlatform {
+﻿public enum CGPlatform {
 	case Echoes
 	case Cooper
 	case Toffee
@@ -22,7 +19,7 @@ public __abstract class CGEntity {
 }
 
 public class CGCodeUnit {
-	
+
 	public var FileName: String?
 	public var Namespace: CGNamespaceReference?
 	public var HeaderComment = CGCommentStatement()
@@ -31,7 +28,7 @@ public class CGCodeUnit {
 	public var FileImports = List<CGImport>()
 	public var Types = List<CGTypeDefinition>()
 	public var Globals = List<CGGlobalDefinition>()
-	
+
 	public var ImplementationDirectives = List<CGCompilerDirective>() /* Pascal only */
 	public var ImplementationImports = List<CGImport>()  /* Pascal only */
 	public var Initialization: List<CGStatement>? /* Delphi only */
@@ -50,7 +47,7 @@ public class CGCodeUnit {
 public class CGCompilerDirective {
 	public var Directive: String /* will not be language agnostic */
 	public var Condition: CGConditionalDefine?
-	
+
 	public init(_ directive: String) {
 		Directive = directive
 	}
@@ -63,7 +60,7 @@ public class CGCompilerDirective {
 public class CGImport {
 	public var Namespace: CGNamespaceReference?
 	public var StaticClass: CGNamedTypeReference?
-	
+
 	public var Name: String! {
 		if let ns = Namespace {
 			return ns.Name
@@ -100,7 +97,7 @@ public class CGConditionalDefine {
 	}
 
 	public convenience init(_ define: String) {
-		init(CGNamedIdentifierExpression(define)) 
+		init(CGNamedIdentifierExpression(define))
 	}
 
 	public init(_ define: String, inverted: Boolean) {
@@ -125,7 +122,7 @@ public class CGGlobalFunctionDefinition : CGGlobalDefinition {
 
 public class CGGlobalVariableDefinition : CGGlobalDefinition {
 	public var Variable: CGFieldDefinition
-	
+
 	public init(_ variable: CGFieldDefinition) {
 		Variable = variable
 	}

@@ -1,8 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
+﻿public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 
 	public init() {
 		super.init()
@@ -21,26 +17,26 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		// Delphi Seattle + FPC reserved list
 		// http://docwiki.embarcadero.com/RADStudio/Seattle/en/Fundamental_Syntactic_Elements#Reserved_Words
 		// http://www.freepascal.org/docs-html/ref/refse3.html
-		keywords = ["absolute", "abstract", "alias", "and", "array", "as", "asm", "assembler", "at", "automated", "begin", 
-		"bitpacked", "break", "case", "cdecl", "class", "const", "constructor", "continue", "cppdecl", "cvar", "default", 
+		keywords = ["absolute", "abstract", "alias", "and", "array", "as", "asm", "assembler", "at", "automated", "begin",
+		"bitpacked", "break", "case", "cdecl", "class", "const", "constructor", "continue", "cppdecl", "cvar", "default",
 		"deprecated", "destructor", "dispinterface", "dispose", "div", "do", "downto", "dynamic", "else", "end", "enumerator",
-		"except", "exit", "experimental", "export", "exports", "external", "false", "far", "far16", "file", "finalization", 
-		"finally", "for", "forward", "function", "generic", "goto", "helper", "if", "implementation", "implements", "in", 
-		"index", "inherited", "initialization", "inline", "interface", "interrupt", "iochecks", "is", "label", "library", 
-		"local", "message", "mod", "name", "near", "new", "nil", "nodefault", "noreturn", "nostackframe", "not", "object", 
-		"of", "oldfpccall", "on", "operator", "or", "otherwise", "out", "overload", "override", "packed", "pascal", "platform", 
-		"private", "procedure", "program", "property", "protected", "public", "published", "raise", "read", "record", "register", 
-		"reintroduce", "repeat", "resourcestring", "result", "safecall", "saveregisters", "self", "set", "shl", "shr", "softfloat", 
-		"specialize", "static", "stdcall", "stored", "strict", "string", "then", "threadvar", "to", "true", "try", "type", "unaligned", 
+		"except", "exit", "experimental", "export", "exports", "external", "false", "far", "far16", "file", "finalization",
+		"finally", "for", "forward", "function", "generic", "goto", "helper", "if", "implementation", "implements", "in",
+		"index", "inherited", "initialization", "inline", "interface", "interrupt", "iochecks", "is", "label", "library",
+		"local", "message", "mod", "name", "near", "new", "nil", "nodefault", "noreturn", "nostackframe", "not", "object",
+		"of", "oldfpccall", "on", "operator", "or", "otherwise", "out", "overload", "override", "packed", "pascal", "platform",
+		"private", "procedure", "program", "property", "protected", "public", "published", "raise", "read", "record", "register",
+		"reintroduce", "repeat", "resourcestring", "result", "safecall", "saveregisters", "self", "set", "shl", "shr", "softfloat",
+		"specialize", "static", "stdcall", "stored", "strict", "string", "then", "threadvar", "to", "true", "try", "type", "unaligned",
 		"unimplemented", "unit", "until", "uses", "var", "varargs", "virtual", "while", "with", "write", "xor"].ToList() as! List<String>
 	}
-	
+
 	public var Version: Integer = 7
 
 	public convenience init(version: Integer) {
 		init()
 		Version = version
-	}	
+	}
 
 	override func escapeIdentifier(_ name: String) -> String {
 		if Version > 9 {
@@ -63,24 +59,24 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		AppendLine()
 		super.generateHeader()
 	}
-	
+
 	internal func generateForwards(_ Types : List<CGTypeDefinition>) {
 		if Types.Count > 0 {
 			AppendLine("{ Forward declarations }")
 			var t = List<CGTypeDefinition>()
-			t.AddRange(Types)
+			t.Add(Types)
 			if AlphaSortImplementationMembers {
 				t.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
 			}
 			for type in t {
 				if let type = type as? CGInterfaceTypeDefinition {
-					AppendLine(type.Name + " = interface;") 
+					AppendLine(type.Name + " = interface;")
 				}
 			}
-			
+
 			for type in t {
 				if let type = type as? CGClassTypeDefinition {
-					AppendLine(type.Name + " = class;") 
+					AppendLine(type.Name + " = class;")
 				}
 			}
 			AppendLine()
@@ -136,15 +132,15 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func pascalGenerateCallingConversion(_ callingConvention: CGCallingConventionKind){
-		switch callingConvention {	
-			case .Register: break				   //default case
-			case .Pascal: Append(" pascal;")	   //backward compatibility
+		switch callingConvention {
+			case .Register: break                   //default case
+			case .Pascal: Append(" pascal;")       //backward compatibility
 			case .CDecl: Append(" cdecl;")
 			case .SafeCall: Append(" safecall;")
 			case .StdCall: Append(" stdcall;")
 			default:
 		}
-	}	
+	}
 
 	override func generateEnumValueAccessExpression(_ expression: CGEnumValueAccessExpression) {
 		// don't prefix with typename in Delphi (but do in base Pascal/Oxygene)
@@ -154,7 +150,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	//
 	// Type Definitions
 	//
-	
+
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		generateIdentifier(type.Name)
 		pascalGenerateGenericParameters(type.GenericParameters)
@@ -168,7 +164,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		AppendLine()
 		incIndent()
 	}
-	
+
 	override func generateAll() {
 		if !definitionOnly {
 			generateHeader()
@@ -184,10 +180,10 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			AppendLine("implementation")
 			AppendLine()
 			delphiGenerateImplementationDirectives()
-			pascalGenerateImports(currentUnit.ImplementationImports)		
+			pascalGenerateImports(currentUnit.ImplementationImports)
 			delphiGenerateGlobalImplementations()
 			delphiGenerateImplementationTypeDefinition()
-			pascalGenerateTypeImplementations()			
+			pascalGenerateTypeImplementations()
 			generateFooter()
 		}
 	}
@@ -201,7 +197,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	var needCR: Boolean = false;	
+	var needCR: Boolean = false;
 	final func delphiGenerateGlobalImplementations() {
 		// step1: generate global consts and vars
 		needCR = false;
@@ -214,12 +210,12 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			}
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed at step2
-			}	
+			}
 			   else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
-			}	
+			}
 		}
-		if needCR {	AppendLine();}
+		if needCR {    AppendLine();}
 		// step2: generate global methods
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
@@ -227,11 +223,11 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			}
 			else if let global = g as? CGGlobalFunctionDefinition {
 				pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
-			}	
+			}
 			else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
-			}	
-		}	
+			}
+		}
 	}
 
 	final func delphiGenerateGlobalInterfaceVariables() {
@@ -246,10 +242,10 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			}
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed in delphiGenerateGlobalInterfaceMethods
-			}	
+			}
 			   else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
-			}	
+			}
 		}
 	}
 
@@ -263,12 +259,12 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 				if global.Function.Visibility != CGMemberVisibilityKind.Private {
 					generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 				}
-			}	
+			}
 			else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
-			}	
+			}
 		}
-		
+
 	}
 
 
@@ -435,7 +431,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 		Append("^")
 		generateTypeReference(type.`Type`)
 	}
-	
+
 	//
 	// Statements
 	//
@@ -455,10 +451,10 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 				generateExpression(condition.Expression)
 			}
 		}
-//		generateConditionalDefine(condition)
+//        generateConditionalDefine(condition)
 		AppendLine("}")
 	}
-	
+
 	override func generateConditionEnd(_ condition: CGConditionalDefine) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			AppendLine("{$ENDIF}")
@@ -474,42 +470,42 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 	}
 
 
-//	override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
-//		Append("if ")
-//		generateExpression(statement.Condition)
-//		Append(" then")
-//		var b = true;
-//		if let statement1 = statement.IfStatement as? CGBeginEndBlockStatement { b = false }
-//		if let elseStatement1 = statement.ElseStatement { b = false; }
-//		if b {
-//			/*generate code like
-//				if Result then
-//					System.Inc(fCurrentIndex)
-//				instead of
-//				if Result then begin
-//					System.Inc(fCurrentIndex)
-//				end;
-//			works only if else statement isn't used
-//			otherwise need to add global variable and handle it in "generateStatementTerminator"
-//			*/
-//			generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.IfStatement)
-//		} else {
-//			AppendLine(" begin")
-//			incIndent()
-//			generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
-//			decIndent()
-//			Append("end")
-//			if let elseStatement = statement.ElseStatement {
-//				AppendLine()
-//				AppendLine("else begin")
-//				incIndent()
-//				generateStatementSkippingOuterBeginEndBlock(elseStatement)
-//				decIndent()
-//				Append("end")
-//			}
-//			generateStatementTerminator()
-//		}
-//	}
+//    override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
+//        Append("if ")
+//        generateExpression(statement.Condition)
+//        Append(" then")
+//        var b = true;
+//        if let statement1 = statement.IfStatement as? CGBeginEndBlockStatement { b = false }
+//        if let elseStatement1 = statement.ElseStatement { b = false; }
+//        if b {
+//            /*generate code like
+//                if Result then
+//                    System.Inc(fCurrentIndex)
+//                instead of
+//                if Result then begin
+//                    System.Inc(fCurrentIndex)
+//                end;
+//            works only if else statement isn't used
+//            otherwise need to add global variable and handle it in "generateStatementTerminator"
+//            */
+//            generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.IfStatement)
+//        } else {
+//            AppendLine(" begin")
+//            incIndent()
+//            generateStatementSkippingOuterBeginEndBlock(statement.IfStatement)
+//            decIndent()
+//            Append("end")
+//            if let elseStatement = statement.ElseStatement {
+//                AppendLine()
+//                AppendLine("else begin")
+//                incIndent()
+//                generateStatementSkippingOuterBeginEndBlock(elseStatement)
+//                decIndent()
+//                Append("end")
+//            }
+//            generateStatementTerminator()
+//        }
+//    }
 
 	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
 		Append("case ")
@@ -522,7 +518,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 			}
 			Append(": ")
 			var b = false;
-//			if (c.Statements.Count == 1) && !(c.Statements[0] is CGBeginEndBlockStatement) { b = true}
+//            if (c.Statements.Count == 1) && !(c.Statements[0] is CGBeginEndBlockStatement) { b = true}
 			if b {
 				/*optimization: generate code like
 					case x of
@@ -590,7 +586,7 @@ public class CGDelphiCodeGenerator : CGPascalCodeGenerator {
 					generateTypeReference(type)
 					Append(" do ")
 					var b1 = false;
-//					if (b.Statements.Count == 1) && !(b.Statements[0] is CGBeginEndBlockStatement) { b1 = true}
+//                    if (b.Statements.Count == 1) && !(b.Statements[0] is CGBeginEndBlockStatement) { b1 = true}
 					if b1 {
 						//optimization
 						AppendLine()

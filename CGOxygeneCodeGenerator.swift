@@ -1,14 +1,10 @@
-﻿import Sugar
-import Sugar.Collections
-import Sugar.Linq
-
-public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
+﻿public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	public enum CGOxygeneCodeGeneratorStyle {
 		case Standard
 		case Unified
 	}
-	
+
 	public enum CGOxygeneStringQuoteStyle {
 		case Single
 		case Double
@@ -20,49 +16,49 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		super.init()
 
 		// current as of Elements 8.1
-		keywords = ["abstract", "add", "and", "array", "as", "asc", "aspect", "assembly", "async", "autoreleasepool", "await", 
-					"begin", "block", "break", "by", 
-					"case", "class", "const", "constructor", "continue", 
-					"default", "delegate", "deprecated", "desc", "distinct", "div", "do", "downto", "dynamic", 
-					"each", "else", "empty", "end", "ensure", "enum", "equals", "event", "except", "exit", "extension", "external", 
-					"false", "finalizer", "finally", "flags", "for", "from", "function", 
-					"global", "goto", "group", 
-					"has", 
-					"if", "implementation", "implements", "implies", "in", "index", "inherited", "inline", "interface", "invariants", "is", "iterator", 
-					"join", 
-					"lazy", "locked", "locking", "loop", 
-					"mapped", "matching", "method", "mod", "module", "namespace", 
-					"nested", "new", "nil", "not", "notify", "nullable", 
-					"of", "old", "on", "operator", "optional", "or", "order", "out", "override", 
-					"parallel", "param", "params", "partial", "pinned", "private", "procedure", "property", "protected", "public", 
-					"queryable", "raise", "raises", "read", "readonly", "record", "reintroduce", "remove", "repeat", "require", "result", "reverse", "sealed", 
-					"select", "selector -", "self", "sequence", "set", "shl", "shr", "skip", "soft", "static", "step", "strong", 
-					"take", "then", "to", "true", "try", "type", 
-					"union", "unit", "unretained", "unsafe", "until", "uses", "using", 
-					"var", "virtual", 
-					"weak", "where", "while", "with", "write", 
-					"xor", 
+		keywords = ["abstract", "add", "and", "array", "as", "asc", "aspect", "assembly", "async", "autoreleasepool", "await",
+					"begin", "block", "break", "by",
+					"case", "class", "const", "constructor", "continue",
+					"default", "delegate", "deprecated", "desc", "distinct", "div", "do", "downto", "dynamic",
+					"each", "else", "empty", "end", "ensure", "enum", "equals", "event", "except", "exit", "extension", "external",
+					"false", "finalizer", "finally", "flags", "for", "from", "function",
+					"global", "goto", "group",
+					"has",
+					"if", "implementation", "implements", "implies", "in", "index", "inherited", "inline", "interface", "invariants", "is", "iterator",
+					"join",
+					"lazy", "locked", "locking", "loop",
+					"mapped", "matching", "method", "mod", "module", "namespace",
+					"nested", "new", "nil", "not", "notify", "nullable",
+					"of", "old", "on", "operator", "optional", "or", "order", "out", "override",
+					"parallel", "param", "params", "partial", "pinned", "private", "procedure", "property", "protected", "public",
+					"queryable", "raise", "raises", "read", "readonly", "record", "reintroduce", "remove", "repeat", "require", "result", "reverse", "sealed",
+					"select", "selector -", "self", "sequence", "set", "shl", "shr", "skip", "soft", "static", "step", "strong",
+					"take", "then", "to", "true", "try", "type",
+					"union", "unit", "unretained", "unsafe", "until", "uses", "using",
+					"var", "virtual",
+					"weak", "where", "while", "with", "write",
+					"xor",
 					"yield"].ToList() as! List<String>
 	}
 
 	public var Style: CGOxygeneCodeGeneratorStyle = .Standard
 	public var QuoteStyle: CGOxygeneStringQuoteStyle = .SmartSingle
-	
-	override var isUnified: Boolean { return Style == .Unified } 
+
+	override var isUnified: Boolean { return Style == .Unified }
 
 	public convenience init(style: CGOxygeneCodeGeneratorStyle) {
 		init()
 		Style = style
-	}	
+	}
 
 	public convenience init(style: CGOxygeneCodeGeneratorStyle, quoteStyle: CGOxygeneStringQuoteStyle) {
 		init()
 		Style = style
 		QuoteStyle = quoteStyle
-	}	
+	}
 
 	override func generateHeader() {
-		
+
 		Append("namespace")
 		if let namespace = currentUnit.Namespace {
 			Append(" ")
@@ -72,7 +68,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		AppendLine()
 		super.generateHeader()
 	}
-	
+
 	override func generateGlobals() {
 		if let globals = currentUnit.Globals, globals.Count > 0{
 			AppendLine("{$GLOBALS ON}")
@@ -124,7 +120,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			AppendLine("exit;")
 		}
 	}
-	
+
 	override func generateYieldStatement(_ statement: CGYieldStatement) {
 		Append("yield ")
 		generateExpression(statement.Value)
@@ -158,7 +154,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		if let name = statement.ConstructorName {
 			Append(" ")
 			Append(name)
-		} 
+		}
 		Append("(")
 		pascalGenerateCallParameters(statement.Parameters)
 		AppendLine(");")
@@ -185,13 +181,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		Append("(")
 		helpGenerateCommaSeparatedList(type.Members) { m in
-			
+
 			self.generateIdentifier(m.Name)
 			self.Append(" := ")
 			if let member = m as? CGAnonymousPropertyMemberDefinition {
-				
+
 				self.generateExpression(member.Value)
-				
+
 			} else if let member = m as? CGAnonymousMethodMemberDefinition {
 
 				self.Append("method ")
@@ -210,7 +206,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 				self.decIndent()
 				self.Append("end")
 			}
-			
+
 		}
 		Append(")")
 	}
@@ -267,7 +263,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			switch parameters[p].Modifier {
 				case .Out: Append("out ")
 				case .Var: Append("var ")
-				default: 
+				default:
 			}
 			generateExpression(param.Value)
 		}
@@ -279,7 +275,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Const: Append("const ")
 			case .Out: Append("out ")
 			case .Params: Append("params ")
-			default: 
+			default:
 		}
 		generateIdentifier(param.Name)
 		Append(": ")
@@ -306,7 +302,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			} else {
 				param.startLocation = currentLocation
 			}
-			
+
 			generateParameterDefinition(param)
 			param.endLocation = currentLocation
 		}
@@ -317,11 +313,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		generateExpression(expression.`Type`, ignoreNullability: true)
 		if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("[")
-			helpGenerateCommaSeparatedList(bounds) { boundExpression in 
+			helpGenerateCommaSeparatedList(bounds) { boundExpression in
 				self.generateExpression(boundExpression)
 			}
 			Append("]")
-		} else {		
+		} else {
 			if let name = expression.ConstructorName {
 				Append(" ")
 				generateIdentifier(name)
@@ -331,17 +327,17 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			Append(")")
 		}
 	}
-	
+
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 		let SINGLE: Char = "'"
-		let DOUBLE: Char = "\""  
+		let DOUBLE: Char = "\""
 		let quoteChar: Char
 		switch QuoteStyle {
 			case .Single: quoteChar = SINGLE
 			case .Double: quoteChar = DOUBLE
 			case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
 			case .SmartDouble: quoteChar = expression.Value.Contains(DOUBLE) && !expression.Value.Contains(SINGLE) ? SINGLE : DOUBLE
-		}	
+		}
 		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: quoteChar))
 	}
 
@@ -357,7 +353,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Public: Append("public ")
 		}
 	}
-	
+
 	override func pascalGenerateMemberVisibilityKeyword(_ visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
@@ -373,7 +369,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Public: Append("public")
 		}
 	}
-	
+
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
 		generateIdentifier(block.Name)
 		pascalGenerateGenericParameters(block.GenericParameters)
@@ -411,15 +407,15 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		AppendLine()
 		incIndent()
 	}
-	
+
 	//
 	// Type Members
 	//
-	
+
 	override func pascalKeywordForMethod(_ method: CGMethodDefinition) -> String {
-		return "method"	
+		return "method"
 	}
-	
+
 	override func pascalGenerateVirtualityModifiders(_ member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
@@ -431,12 +427,12 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			default:
 		}
 	}
-	
+
 	override func pascalGenerateConstructorHeader(_ ctor: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false) {
 		if ctor.Static {
 			Append("class ")
 		}
-		
+
 		Append("constructor")
 		if implementation {
 			Append(" ")
@@ -448,7 +444,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		pascalGenerateSecondHalfOfMethodHeader(ctor, implementation: implementation, includeVisibility: includeVisibility)
 	}
-	
+
 	internal func pascalGenerateFinalizerHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, implementation: Boolean) {
 		Append("finalizer")
 		if implementation {
@@ -509,7 +505,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			generateMethodDefinition(event.RaiseMethodDefinition, type: ttpe)
 		}*/
 	}
-	
+
 	override func pascalGenerateEventImplementation(_ event: CGEventDefinition, type: CGTypeDefinition) {
 		if let addStatements = event.AddStatements {
 			pascalGenerateMethodImplementation(event.AddMethodDefinition()!, type: type)
@@ -525,8 +521,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	//
 	// Type References
 	//
-	
-	
+
+
 	func pascalGeneratePrefixForNullability(_ type: CGTypeReference) {
 		if (type.Nullability == CGTypeNullabilityKind.NullableUnwrapped && (type.DefaultNullability == CGTypeNullabilityKind.NotNullable || type.DefaultNullability == CGTypeNullabilityKind.Unknown)) || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
 			Append("nullable ")
@@ -534,20 +530,20 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			Append("not nullable ")
 		}
 	}
-	
+
 	override func generateNamedTypeReference(_ type: CGNamedTypeReference, ignoreNullability: Boolean = false) {
 		if !ignoreNullability {
 			pascalGeneratePrefixForNullability(type)
 		}
 		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
 	}
-	
+
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
-		
+
 		if !ignoreNullability {
 			pascalGeneratePrefixForNullability(type)
 		}
-		
+
 		switch (type.Kind) {
 			case .Int: Append("NativeInt")
 			case .UInt: Append("NativeUInt")
@@ -573,7 +569,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Void: Append("{VOID}")
 			case .Object: Append("Object")
 			case .Class: generateIdentifier("Class") // todo: make platform-specific
-		}		
+		}
 	}
 
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
@@ -601,7 +597,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		generateTypeReference(type.`Type`)
 		Append(">")
 	}
-	
+
 	override func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
 		if !ignoreNullability {
 			pascalGeneratePrefixForNullability(type)
@@ -623,5 +619,5 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append("sequence of ")
 		generateTypeReference(sequence.`Type`)
 	}
-	
+
 }

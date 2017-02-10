@@ -1,7 +1,4 @@
-﻿import Sugar
-import Sugar.Collections
-
-//
+﻿//
 // Abstract base implementation for all C-style languages (C#, Obj-C, Swift, Java, C++)
 //
 
@@ -16,7 +13,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		var comment = comment.Replace("*/", "* /")
 		Append("/* \(comment) */")
 	}
-	
+
 	override func generateConditionStart(_ condition: CGConditionalDefine) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			Append("#ifdef ")
@@ -32,14 +29,14 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 				generateExpression(condition.Expression)
 			}
 		}
-//		generateConditionalDefine(condition)
+//        generateConditionalDefine(condition)
 		AppendLine()
 	}
-	
+
 	override func generateConditionElse() {
 		AppendLine("#else")
 	}
-	
+
 	override func generateConditionEnd(_ condition: CGConditionalDefine) {
 		AppendLine("#endif")
 	}
@@ -73,7 +70,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append(" = ")
 		generateExpression(statement.StartValue)
 		Append("; ")
-		
+
 		generateIdentifier(statement.LoopVariableName)
 		if statement.Direction == CGLoopDirectionKind.Forward {
 			Append(" <= ")
@@ -161,18 +158,18 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append(" = ")
 		generateExpression(statement.Value)
 		generateStatementTerminator()
-	}	
-	
+	}
+
 	//
 	// Expressions
 	//
-	
+
 	override func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
 		Append("sizeof(")
 		generateExpression(expression.Expression)
 		Append(")")
 	}
-	
+
 	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
 		Append("*(")
 		generateExpression(expression.PointerExpression)
@@ -188,7 +185,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .ForceUnwrapNullable: // no-op
 		}
 	}
-	
+
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Concat: fallthrough
@@ -212,7 +209,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .BitwiseAnd: Append("&")
 			case .BitwiseOr: Append("|")
 			case .BitwiseXor: Append("^")
-			//case .Implies: 
+			//case .Implies:
 			case .Is: Append("is")
 			//case .IsNot:
 			//case .In:
@@ -256,20 +253,20 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 				case "\0".."\31": result.Append("\\"+Integer(ch).ToString()) // Cannot use the binary operator ".."
 				case "\u{0080}".."\u{ffffffff}": result.Append("\\u{"+Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4)) // Cannot use the binary operator ".."
 				*/
-				default: 
+				default:
 					if ch < 32 || ch > 0x7f {
 						result.Append(cStyleEscapeSequenceForCharacter(ch))
 					} else {
 						result.Append(ch)
 					}
-					
+
 			}
 		}
 		return result.ToString()
 	}
-	
+
 	internal func cStyleEscapeSequenceForCharacter(_ ch: Char) -> String {
-		return "\\U"+Sugar.Convert.ToHexString(Integer(ch), 8) // plain C: always use 8 hex digits with "\U"
+		return "\\U"+Convert.ToHexString(Integer(ch), 8) // plain C: always use 8 hex digits with "\U"
 	}
 
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
@@ -279,7 +276,7 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		Append("'\(cStyleEscapeCharactersInStringLiteral(expression.Value.ToString()))'")
 	}
-	
+
 	private func cStyleAppendNumberKind(_ numberKind: CGNumberKind?) {
 		if let numberKind = numberKind {
 			switch numberKind {
@@ -314,5 +311,5 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
 		generateTypeReference(type.`Type`)
 		Append("*")
-	}	
+	}
 }
