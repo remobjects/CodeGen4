@@ -96,6 +96,10 @@ public class CGNamedTypeReference : CGTypeReference {
 		result.IsClassType = IsClassType
 		return result
 	}
+
+	@ToString public func ToString() -> String {
+		return "<\(Name)>";
+	}
 }
 
 public class CGPredefinedTypeReference : CGTypeReference {
@@ -204,6 +208,10 @@ public class CGPredefinedTypeReference : CGTypeReference {
 	public static lazy var Void = CGPredefinedTypeReference(.Void)
 	public static lazy var Object = CGPredefinedTypeReference(.Object)
 	public static lazy var Class = CGPredefinedTypeReference(.Class)
+
+	@ToString public func ToString() -> String {
+		return Kind.ToString();
+	}
 }
 
 public enum CGPredefinedTypeKind {
@@ -267,6 +275,10 @@ public class CGInlineBlockTypeReference : CGTypeReference {
 		result.IsClassType = IsClassType
 		return result
 	}
+
+	@ToString public func ToString() -> String {
+		return "block";
+	}
 }
 
 public class CGPointerTypeReference : CGTypeReference {
@@ -295,6 +307,10 @@ public class CGPointerTypeReference : CGTypeReference {
 		result.Reference = Reference
 		return result
 	}
+
+	@ToString public func ToString() -> String {
+		return "<pointer to \(`Type`.ToString())>";
+	}
 }
 
 public class CGConstantTypeReference : CGTypeReference { /* C++ only, currently */
@@ -314,6 +330,10 @@ public class CGConstantTypeReference : CGTypeReference { /* C++ only, currently 
 		result.IsClassType = IsClassType
 		return result
 	}
+
+	@ToString public func ToString() -> String {
+		return "<constant \(`Type`.ToString())>";
+	}
 }
 
 public class CGKindOfTypeReference : CGTypeReference {
@@ -332,6 +352,10 @@ public class CGKindOfTypeReference : CGTypeReference {
 		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
+	}
+
+	@ToString public func ToString() -> String {
+		return "<kind of \(`Type`.ToString())>";
 	}
 }
 
@@ -354,6 +378,10 @@ public class CGTupleTypeReference : CGTypeReference {
 		result.IsClassType = IsClassType
 		return result
 	}
+
+	@ToString public func ToString() -> String {
+		return "<tuple ...)>";
+	}
 }
 
 public class CGSequenceTypeReference : CGTypeReference {
@@ -371,6 +399,10 @@ public class CGSequenceTypeReference : CGTypeReference {
 		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
+	}
+
+	@ToString public func ToString() -> String {
+		return "<sequence od \(`Type`.ToString())>";
 	}
 }
 
@@ -424,6 +456,10 @@ public class CGArrayTypeReference : CGTypeReference {
 		result.IsClassType = IsClassType
 		return result
 	}
+
+	@ToString public func ToString() -> String {
+		return "<array of \(`Type`.ToString())>";
+	}
 }
 
 public class CGArrayBounds : CGEntity {
@@ -457,5 +493,9 @@ public class CGDictionaryTypeReference : CGTypeReference {
 		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
+	}
+
+	@ToString public func ToString() -> String {
+		return "<dinctionary of \(`KeyType`.ToString()):\(`ValueType`.ToString())>";
 	}
 }
