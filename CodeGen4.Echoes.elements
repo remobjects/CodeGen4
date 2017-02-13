@@ -1,79 +1,81 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
-    <PropertyGroup>
-        <ProductVersion>3.5</ProductVersion>
-        <RootNamespace>RemObjects.CodeGen4</RootNamespace>
-        <ProjectGuid>2C3408F4-2270-4310-9A38-6A5296129576</ProjectGuid>
-        <OutputType>library</OutputType>
-        <AssemblyName>CodeGen4</AssemblyName>
-        <AllowGlobals>False</AllowGlobals>
-        <AllowLegacyWith>False</AllowLegacyWith>
-        <AllowLegacyOutParams>False</AllowLegacyOutParams>
-        <AllowLegacyCreate>False</AllowLegacyCreate>
-        <AllowUnsafeCode>False</AllowUnsafeCode>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-        <DefineConstants>FAKESUGAR</DefineConstants>
-        <DefaultUses>System.Collections.Generic,System.IO,System.Linq,System.Text</DefaultUses>
-        <Name>CodegGen4 (.NET)</Name>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <Optimize>false</Optimize>
-        <OutputPath>.\bin\Debug</OutputPath>
-        <GeneratePDB>True</GeneratePDB>
-        <GenerateMDB>True</GenerateMDB>
-        <EnableAsserts>True</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <StartMode>Project</StartMode>
-        <RegisterForComInterop>False</RegisterForComInterop>
-        <CpuType>anycpu</CpuType>
-        <RuntimeVersion>v25</RuntimeVersion>
-        <XmlDoc>False</XmlDoc>
-        <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <Optimize>true</Optimize>
-        <OutputPath>.\bin\Release</OutputPath>
-        <GeneratePDB>False</GeneratePDB>
-        <GenerateMDB>False</GenerateMDB>
-        <EnableAsserts>False</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <StartMode>Project</StartMode>
-        <RegisterForComInterop>False</RegisterForComInterop>
-        <CpuType>anycpu</CpuType>
-        <RuntimeVersion>v25</RuntimeVersion>
-        <XmlDoc>False</XmlDoc>
-        <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="mscorlib"/>
-        <Reference Include="System"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="System.Core">
-            <RequiredTargetFramework>3.5</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="System.Xml.Linq">
-            <RequiredTargetFramework>3.5</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="System.Data.DataSetExtensions">
-            <RequiredTargetFramework>3.5</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="Echoes">
-            <Private>True</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Properties\AssemblyInfo.swift"/>
-        <Compile Include="Properties\FakeSugar.pas"/>
-        <Compile Include="CodeDomToCG4.swift"/>
-    </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets"/>
-    <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
+  <PropertyGroup>
+    <ProductVersion>3.5</ProductVersion>
+    <RootNamespace>RemObjects.CodeGen4</RootNamespace>
+    <ProjectGuid>2C3408F4-2270-4310-9A38-6A5296129576</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AssemblyName>CodeGen4</AssemblyName>
+    <AllowGlobals>False</AllowGlobals>
+    <AllowLegacyWith>False</AllowLegacyWith>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
+    <AllowUnsafeCode>False</AllowUnsafeCode>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
+    <Name>CodegGen4 (.NET)</Name>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug</OutputPath>
+    <GeneratePDB>True</GeneratePDB>
+    <GenerateMDB>True</GenerateMDB>
+    <EnableAsserts>True</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <StartMode>Project</StartMode>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <CpuType>anycpu</CpuType>
+    <RuntimeVersion>v25</RuntimeVersion>
+    <XmlDoc>False</XmlDoc>
+    <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <GeneratePDB>False</GeneratePDB>
+    <GenerateMDB>False</GenerateMDB>
+    <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <StartMode>Project</StartMode>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <CpuType>anycpu</CpuType>
+    <RuntimeVersion>v25</RuntimeVersion>
+    <XmlDoc>False</XmlDoc>
+    <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Echoes">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elements">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.swift" />
+    <Compile Include="CodeDomToCG4.swift" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets" />
+  <Import Project="Codegen4.Shared.projitems" Label="Shared" />
 </Project>

@@ -13,7 +13,7 @@ public __abstract class CGBaseMultilineStatement : CGStatement {
 		Lines = lines
 	}
 	public init(_ lines: String) {
-		Lines = lines.Replace("\r", "").Split("\n").ToList<String>()
+		Lines = lines.Replace("\r", "").Split("\n").MutableVersion()
 	}
 }
 

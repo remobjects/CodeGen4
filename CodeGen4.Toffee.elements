@@ -1,48 +1,47 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
-    <PropertyGroup>
-        <RootNamespace>RemObjects.CodeGen4</RootNamespace>
-        <ProjectGuid>EA4135EC-C7A2-454F-A53C-A9B6FE92DA94</ProjectGuid>
-        <OutputType>StaticLibrary</OutputType>
-        <AssemblyName>CodeGen4</AssemblyName>
-        <AllowGlobals>False</AllowGlobals>
-        <AllowLegacyWith>False</AllowLegacyWith>
-        <AllowLegacyOutParams>False</AllowLegacyOutParams>
-        <AllowLegacyCreate>False</AllowLegacyCreate>
-        <AllowUnsafeCode>False</AllowUnsafeCode>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-        <SDK>OS X</SDK>
-        <CreateHeaderFile>True</CreateHeaderFile>
-        <Name>CodegGen4 (Cocoa)</Name>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <Optimize>false</Optimize>
-        <OutputPath>.\bin\Debug</OutputPath>
-        <DefineConstants>DEBUG;TRACE;</DefineConstants>
-        <GenerateDebugInfo>True</GenerateDebugInfo>
-        <EnableAsserts>True</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <Optimize>true</Optimize>
-        <OutputPath>.\bin\Release</OutputPath>
-        <GenerateDebugInfo>False</GenerateDebugInfo>
-        <EnableAsserts>False</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="Foundation"/>
-        <Reference Include="rtl"/>
-        <Reference Include="libToffee"/>
-        <Reference Include="libSugar"/>
-        <Reference Include="libxml2"/>
-    </ItemGroup>
-    <ItemGroup/>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets"/>
-    <ItemGroup/>
-    <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
+  <PropertyGroup>
+    <RootNamespace>RemObjects.CodeGen4</RootNamespace>
+    <ProjectGuid>EA4135EC-C7A2-454F-A53C-A9B6FE92DA94</ProjectGuid>
+    <OutputType>StaticLibrary</OutputType>
+    <AssemblyName>CodeGen4</AssemblyName>
+    <AllowGlobals>False</AllowGlobals>
+    <AllowLegacyWith>False</AllowLegacyWith>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
+    <AllowUnsafeCode>False</AllowUnsafeCode>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <SDK>OS X</SDK>
+    <CreateHeaderFile>True</CreateHeaderFile>
+    <Name>CodegGen4 (Cocoa)</Name>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <EnableAsserts>True</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Foundation" />
+    <Reference Include="rtl" />
+    <Reference Include="libToffee" />
+    <Reference Include="libElements" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets" />
+  <Import Project="Codegen4.Shared.projitems" Label="Shared" />
 </Project>

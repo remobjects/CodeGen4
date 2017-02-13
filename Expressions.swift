@@ -13,7 +13,7 @@ public class CGRawExpression : CGExpression { // not language-agnostic. obviosul
 		init(lines.ToList())
 	}*/
 	public init(_ lines: String) {
-		Lines = lines.Replace("\r", "").Split("\n").ToList<String>()
+		Lines = lines.Replace("\r", "").Split("\n").MutableVersion()
 	}
 }
 

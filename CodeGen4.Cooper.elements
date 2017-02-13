@@ -1,60 +1,62 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
-    <PropertyGroup>
-        <ProductVersion>3.5</ProductVersion>
-        <ProjectGuid>258FD135-ABBB-46D5-8B7E-00266CD01152</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-        <AllowLegacyCreate>False</AllowLegacyCreate>
-        <AllowLegacyOutParams>False</AllowLegacyOutParams>
-        <CrossPlatform>True</CrossPlatform>
-        <SuppressWarnings>JW0</SuppressWarnings>
-        <AssemblyName>codegen4</AssemblyName>
-        <Name>CodegGen4 (Java)</Name>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <Optimize>false</Optimize>
-        <OutputPath>.\bin\Debug</OutputPath>
-        <DefineConstants>DEBUG;TRACE;</DefineConstants>
-        <GenerateDebugInfo>True</GenerateDebugInfo>
-        <EnableAsserts>True</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <StartMode>Project</StartMode>
-        <RegisterForComInterop>False</RegisterForComInterop>
-        <CpuType>anycpu</CpuType>
-        <RuntimeVersion>v25</RuntimeVersion>
-        <XmlDoc>False</XmlDoc>
-        <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <Optimize>true</Optimize>
-        <OutputPath>.\bin\Release</OutputPath>
-        <GenerateDebugInfo>False</GenerateDebugInfo>
-        <EnableAsserts>False</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <StartMode>Project</StartMode>
-        <RegisterForComInterop>False</RegisterForComInterop>
-        <CpuType>anycpu</CpuType>
-        <RuntimeVersion>v25</RuntimeVersion>
-        <XmlDoc>False</XmlDoc>
-        <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-        <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="rt"/>
-        <Reference Include="cooper">
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="sugar">
-            <Private>True</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup/>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.targets"/>
-    <Import Project="Codegen4.Shared.projitems" Label="Shared"/>
+  <PropertyGroup>
+    <ProductVersion>3.5</ProductVersion>
+    <ProjectGuid>258FD135-ABBB-46D5-8B7E-00266CD01152</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
+    <CrossPlatform>True</CrossPlatform>
+    <SuppressWarnings>JW0</SuppressWarnings>
+    <AssemblyName>codegen4</AssemblyName>
+    <Name>CodegGen4 (Java)</Name>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
+    <RootNamespace>RemObjects.CodeGen4</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <EnableAsserts>True</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <StartMode>Project</StartMode>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <CpuType>anycpu</CpuType>
+    <RuntimeVersion>v25</RuntimeVersion>
+    <XmlDoc>False</XmlDoc>
+    <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <StartMode>Project</StartMode>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <CpuType>anycpu</CpuType>
+    <RuntimeVersion>v25</RuntimeVersion>
+    <XmlDoc>False</XmlDoc>
+    <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="rt" />
+    <Reference Include="cooper">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="elements">
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Cooper.targets" />
+  <Import Project="Codegen4.Shared.projitems" Label="Shared" />
 </Project>
