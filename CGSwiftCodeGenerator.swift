@@ -576,6 +576,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	private func swiftGenerateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
+		if emitExternal, let externalName = param.ExternalName ?? externalName {
+			if externalName != param.Name {
+				generateIdentifier(externalName)
+				Append(" ")
+			}
+		} else if emitExternal {
+			Append("_ ")
+		}
+		generateIdentifier(param.Name)
+		Append(": ")
 		switch param.Modifier {
 			case .Out:
 				if Dialect == CGSwiftCodeGeneratorDialect.Silver {
@@ -587,16 +597,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("inout ")
 			default:
 		}
-		if emitExternal, let externalName = param.ExternalName ?? externalName {
-			if externalName != param.Name {
-				generateIdentifier(externalName)
-				Append(" ")
-			}
-		} else if emitExternal {
-			Append("_ ")
-		}
-		generateIdentifier(param.Name)
-		Append(": ")
 		generateTypeReference(param.`Type`)
 		if let defaultValue = param.DefaultValue {
 			Append(" = ")
@@ -809,23 +809,34 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func swiftGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind, sealed: Boolean = false) {
-		switch visibility {
-			case .Unspecified:
-				if sealed {
-					Append("final ")
-				}
-			case .Unit, .Assembly:
-				Append("internal ") // non-sealed for internal use is implied
-				if sealed {
-					Append("final ")
-				}
-			case .Public:
-				if sealed {
-					Append("public final ")
-				} else {
-					Append("open ")
-				}
+	func swiftGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind, sealed: Boolean = false, type: CGTypeDefinition? = nil) {
+		if let type = type, type is CGClassTypeDefinition {
+			switch visibility {
+				case .Unspecified:
+					if sealed {
+						Append("final ")
+					}
+				case .Unit, .Assembly:
+					Append("internal ") // non-sealed for internal use is implied
+					if sealed {
+						Append("final ")
+					}
+				case .Public:
+					if sealed {
+						Append("public final ")
+					} else {
+						Append("open ")
+					}
+			}
+		} else {
+			switch visibility {
+				case .Unspecified:
+					break;
+				case .Unit, .Assembly:
+					Append("internal ")
+				case .Public:
+					Append("public ")
+			}
 		}
 	}
 
@@ -941,7 +952,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed)
+		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed, type: type)
 		swiftGenerateStaticPrefix(type.Static)
 		swiftGenerateAbstractPrefix(type.Abstract)
 		Append("class ")
@@ -958,7 +969,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed)
+		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed, type: type)
 		swiftGenerateStaticPrefix(type.Static)
 		swiftGenerateAbstractPrefix(type.Abstract)
 		Append("struct ")
@@ -975,7 +986,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
-		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed)
+		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed, type: type)
 		Append("protocol ")
 		generateIdentifier(type.Name)
 		swiftGenerateGenericParameters(type.GenericParameters)
