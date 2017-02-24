@@ -9,13 +9,22 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		super.init()
 
 		// current as of Elements 8.1 and Swift 1.2
-		keywords = ["__abstract", "__await", "__catch", "__event", "__finally", "__mapped", "__out", "__partial", "__throw", "__try", "__using", "__yield", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__",
-					"as", "associativity", "autoreleasepool", "break", "case", "catch", "class", "continue", "convenience", "default", "defer", "deinit", "didSet", "do", "dynamicType",
+		hardKeywords = ["__abstract", "__await", "__catch", "__event", "__finally", "__mapped", "__out", "__partial", "__throw", "__try", "__using", "__yield", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__",
+					"associativity", "autoreleasepool", "break", "case", "catch", "class", "continue", "convenience", "default", "defer", "deinit", "didSet", "do", "dynamicType",
 					"else", "enum", "extension", "fallthrough", "false", "final", "for", "func", "get", "guard", "if", "import", "in", "infix", "init", "inout", "internal", "is",
 					"lazy", "left", "let", "mutating", "nil", "none", "nonmutating", "open", "operator", "optional", "override", "postfix", "precedence", "prefix", "private", "protocol", "public",
 					"repeat", "required", "rethrows", "return", "right", "self", "Self", "set", "static", "strong", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "typealias",
 					"unowned", "var", "weak", "where", "while", "willSet"].ToList() as! List<String>
+
+		softKeywords = ["as"].ToList() as! List<String>
+
+		keywords = List<String>()
+		keywords?.Add(hardKeywords)
+		keywords?.Add(softKeywords)
 	}
+
+	private var hardKeywords: List<String>
+	private var softKeywords: List<String>
 
 	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
 
@@ -539,7 +548,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append(", ")
 			}
 			if let name = param.Name {
-				generateIdentifier(name)
+				generateIdentifier(name, keywords: hardKeywords)
 				Append(": ")
 			} else if p == 0, let name = firstParamName {
 				generateIdentifier(name)
@@ -853,7 +862,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Protected: fallthrough
 			case .Published: fallthrough
 			case .Public:
-				if virtuality == .Virtual {
+				if virtuality == .Virtual || virtuality == .Override {
 					Append("open")
 				} else {
 					Append("public")
@@ -1370,7 +1379,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .AnsiChar: Append("AnsiChar")
 			case .UTF16Char: Append("Char")
 			case .UTF32Char: Append("Character")
-			case .Dynamic: Append("AnyObject")
+			case .Dynamic: Append("Any")
 			case .InstanceType: Append("Self")
 			case .Void: Append("()")
 			case .Object: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append("Object") } else { Append("NSObject") }

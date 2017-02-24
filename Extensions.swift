@@ -121,8 +121,12 @@ public extension CGExpression {
 		return CGCallParameter(self)
 	}
 
-	public func AsCallParameter(_ name: String) -> CGCallParameter {
-		return CGCallParameter(self, name)
+	public func AsCallParameter(_ name: String?) -> CGCallParameter {
+		if let name = name {
+			return CGCallParameter(self, name)
+		} else {
+			return CGCallParameter(self)
+		}
 	}
 
 	public func AsEllipsisCallParameter() -> CGCallParameter {

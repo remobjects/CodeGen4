@@ -314,22 +314,30 @@
 		generateIdentifier(name, escaped: escaped, alwaysEmitNamespace: false)
 	}
 
+	@inline(__always) internal final func generateIdentifier(_ name: String, keywords: List<String>?) {
+		generateIdentifier(name, keywords: keywords, alwaysEmitNamespace: false)
+	}
+
 	@inline(__always) internal final func generateIdentifier(_ name: String, alwaysEmitNamespace: Boolean) {
 		generateIdentifier(name, escaped: true, alwaysEmitNamespace: alwaysEmitNamespace)
 	}
 
-	internal final func generateIdentifier(_ name: String, escaped: Boolean, alwaysEmitNamespace: Boolean) {
+	@inline(__always) internal final func generateIdentifier(_ name: String, escaped: Boolean, alwaysEmitNamespace: Boolean) {
+		generateIdentifier(name, keywords: escaped ? keywords : nil, alwaysEmitNamespace: alwaysEmitNamespace)
+	}
+
+	internal final func generateIdentifier(_ name: String, keywords: List<String>?, alwaysEmitNamespace: Boolean) {
 
 		if omitNamespacePrefixes && !alwaysEmitNamespace {
 			if name.Contains(".") {
 				if let parts = name.Split("."), length(parts) > 0 {
-					generateIdentifier(parts[length(parts)-1], escaped: escaped)
+					generateIdentifier(parts[length(parts)-1], keywords: keywords)
 					return
 				}
 			}
 		}
 
-		if escaped {
+		if let keywords = keywords {
 			if name.Contains(".") {
 				let parts = name.Split(".")
 				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, callback: { part in self.generateIdentifier(part, escaped: true) })
