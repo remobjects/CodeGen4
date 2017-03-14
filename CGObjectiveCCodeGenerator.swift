@@ -465,8 +465,9 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateEnumValueAccessExpression(_ expression: CGEnumValueAccessExpression) {
-		// don't prefix with typename in ObjC
-		generateIdentifier(expression.ValueName)
+		if let namedType = expression.Type as? CGNamedTypeReference {
+			generateIdentifier(namedType.Name+"_"+expression.ValueName) // Obj-C enums must be unique
+		}
 	}
 
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
