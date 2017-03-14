@@ -1,5 +1,4 @@
-﻿#if !FAKESUGAR
-public extension RemObjects.Elements.RTL.String {
+﻿public extension RemObjects.Elements.RTL.String {
 
 	public func AsTypeReference() -> CGTypeReference {
 		return CGNamedTypeReference(self)
@@ -37,7 +36,6 @@ public extension RemObjects.Elements.RTL.String {
 		return CGCompilerDirective(self)
 	}
 }
-#endif
 
 public extension RemObjects.Elements.System.String {
 
