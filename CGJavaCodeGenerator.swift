@@ -238,11 +238,23 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine(";")
 	}
 
-	/*
 	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
-		// handled in base
+		// Hack for Java not knwoing about properties
+		if /*Dialect != .Iodine || */ let property = statement.Target as? CGPropertyAccessExpression {
+			javaGenerateCallSiteForExpression(property)
+			generateIdentifier("set_"+property.Name)
+			Append("(")
+			if let params = property.Parameters, params.Count > 0 {
+				javaGenerateCallParameters(property.Parameters)
+				Append(", ")
+			}
+			generateExpression(statement.Value)
+			Append(")")
+		} else {
+			super.generateAssignmentStatement(statement)
+		}
 	}
-	*/
+
 
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 		if let callSite = statement.CallSite, callSite is CGInheritedExpression {
@@ -478,12 +490,22 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		javaGenerateCallSiteForExpression(property)
-		generateIdentifier(property.Name)
-		if let params = property.Parameters, params.Count > 0 {
-			Append("[")
-			javaGenerateCallParameters(property.Parameters)
-			Append("]")
-		}
+
+		/*if Dialect == .Iodine {
+			generateIdentifier("get_"+property.Name)
+			if let params = property.Parameters, params.Count > 0 {
+				Append("[")
+				javaGenerateCallParameters(property.Parameters)
+				Append("]")
+			}
+		} else {*/
+			generateIdentifier("get_"+property.Name)
+			Append("(")
+			if let params = property.Parameters, params.Count > 0 {
+				javaGenerateCallParameters(property.Parameters)
+			}
+			Append(")")
+		/*}*/
 	}
 
 	/*
@@ -836,25 +858,23 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		javaGenerateStaticPrefix(property.Static && !type.Static)
 
-		Append("/* property */ ")
-		if let type = property.`Type` {
-			generateTypeReference(type)
-			Append(" ")
-		} else {
-			Append("var ")
+		if Dialect != .Iodine {
+			assert(false, "generatePropertyDefinition is not supported in Java, except in Iodine")
 		}
 
-		if property.Default {
-			Append("this")
-		} else {
-			generateIdentifier(property.Name)
+		guard let propertyType = property.Type else {
+			assert(false, "Properties cannot use type infewrence for Java.")
+			return
+			#hint should this really warn?
 		}
-		AppendLine(";")
 
-		/*if let params = property.Parameters, params.Count > 0 {
+		//javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		//javaGenerateStaticPrefix(property.Static && !type.Static)
+
+		Append("// __property")
+
+		if let params = property.Parameters, params.Count > 0 {
 
 			Append("[")
 			javaGenerateDefinitionParameters(params)
@@ -873,15 +893,21 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			incIndent()
 
 			if let getStatements = property.GetStatements {
-				AppendLine("get{")
-				AppendLine("{")
+				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
+				javaGenerateStaticPrefix(property.Static && !type.Static)
+				generateTypeReference(propertyType)
+				generateIdentifier(" get_"+property.Name)
+				AppendLine("() {")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(getStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let getExpresssion = property.GetExpression {
-				AppendLine("get{")
-				AppendLine("{")
+				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
+				javaGenerateStaticPrefix(property.Static && !type.Static)
+				generateTypeReference(propertyType)
+				generateIdentifier(" get_"+property.Name)
+				AppendLine("() {")
 				incIndent()
 				generateStatement(CGReturnStatement(getExpresssion))
 				decIndent()
@@ -889,15 +915,23 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			}
 
 			if let setStatements = property.SetStatements {
-				AppendLine("set")
-				AppendLine("{")
+				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
+				javaGenerateStaticPrefix(property.Static && !type.Static)
+				generateIdentifier("set_"+property.Name)
+				AppendLine("(")
+				generateTypeReference(propertyType)
+				AppendLine(" value) {")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(setStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let setExpression = property.SetExpression {
-				AppendLine("set")
-				AppendLine("{")
+				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
+				javaGenerateStaticPrefix(property.Static && !type.Static)
+				generateIdentifier("set_"+property.Name)
+				AppendLine("(")
+				generateTypeReference(propertyType)
+				AppendLine(" value) {")
 				incIndent()
 				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
 				decIndent()
@@ -905,14 +939,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			}
 
 			decIndent()
-			Append("}")
+			Append("// }")
 
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
 			}
 			AppendLine("")
-		}*/
+		}
 	}
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
