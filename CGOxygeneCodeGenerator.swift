@@ -421,7 +421,7 @@
 			//case .None
 			case .Virtual: Append(" virtual;")
 			case .Abstract: Append(" abstract;")
-			case .Override: Append(" override; ")
+			case .Override: Append(" override;")
 			case .Final: Append(" final;")
 			case .Reintroduce: Append(" reintroduce;")
 			default:
