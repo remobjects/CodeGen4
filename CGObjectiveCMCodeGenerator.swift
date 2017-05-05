@@ -62,12 +62,16 @@
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
-			Append("@synthesize ")
-			generateIdentifier(property.Name)
-			// 32-bit OS X Objective-C needs properies explicitly synthesized
-			Append(" = __p_")
-			generateIdentifier(property.Name, escaped: false)
-			AppendLine(";")
+			if property.Static {
+				assert(false, "static properties w/ storage are not supported for Objective-C")
+			} else {
+				Append("@synthesize ")
+				generateIdentifier(property.Name)
+				// 32-bit OS X Objective-C needs properies explicitly synthesized
+				Append(" = __p_")
+				generateIdentifier(property.Name, escaped: false)
+				AppendLine(";")
+			}
 		} else {
 			if let method = property.GetterMethodDefinition() {
 				method.Name = property.Name

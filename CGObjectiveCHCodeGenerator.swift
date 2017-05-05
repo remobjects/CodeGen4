@@ -113,44 +113,59 @@
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-
-		if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
-			Append("// overriden ") // we don't need to re-emit overriden properties in header?
-		}
-
-		Append("@property ")
-
-		Append("(")
-		if property.Atomic {
-			Append("atomic")
-		} else {
-			Append("nonatomic")
-		}
-		if let type = property.`Type` {
-			if type.IsClassType {
-				switch type.StorageModifier {
-					case .Strong: Append(", strong")
-					case .Weak: Append(", weak")
-					case .Unretained: Append(", unsafe_unretained")
+		if property.Static {
+			Append("+ (")
+			if let type = property.`Type` {
+				generateTypeReference(type)
+				if !objcTypeRefereneIsPointer(type) {
+					Append(" ")
 				}
 			} else {
-				//todo?
+				Append("id ")
 			}
-		}
-		if property.ReadOnly {
-			Append(", readonly")
-		}
-		Append(") ")
-
-		if let type = property.`Type` {
-			generateTypeReference(type)
-			if !objcTypeRefereneIsPointer(type) {
-				Append(" ")
-			}
+			Append(")")
+			generateIdentifier(property.Name)
+			AppendLine(";")
 		} else {
-			Append("id ")
-		}
-		generateIdentifier(property.Name)
-		AppendLine(";")
+
+			if property.Virtuality == CGMemberVirtualityKind.Override || property.Virtuality == CGMemberVirtualityKind.Final {
+				Append("// overriden ") // we don't need to re-emit overriden properties in header?
+			}
+
+			Append("@property ")
+
+			Append("(")
+			if property.Atomic {
+				Append("atomic")
+			} else {
+				Append("nonatomic")
+			}
+			if let type = property.`Type` {
+				if type.IsClassType {
+					switch type.StorageModifier {
+						case .Strong: Append(", strong")
+						case .Weak: Append(", weak")
+						case .Unretained: Append(", unsafe_unretained")
+					}
+				} else {
+					//todo?
+				}
+			}
+			if property.ReadOnly {
+				Append(", readonly")
+			}
+			Append(") ")
+
+			if let type = property.`Type` {
+				generateTypeReference(type)
+				if !objcTypeRefereneIsPointer(type) {
+					Append(" ")
+				}
+			} else {
+				Append("id ")
+			}
+			generateIdentifier(property.Name)
+			AppendLine(";")
+		 }
 	}
 }

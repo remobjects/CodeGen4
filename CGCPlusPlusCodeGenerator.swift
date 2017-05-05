@@ -1037,5 +1037,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if type.Reference {
 			Append("&")
 		}        else {
-			Append("*")        }    }
+			Append("*")
+		}
+	}
 }
