@@ -1044,8 +1044,14 @@
 
 	func generateAttributes(_ attributes: List<CGAttribute>?) {
 		if let attributes = attributes, attributes.Count > 0 {
-			for a in attributes{
+			for a in attributes {
+				if let condition = a.Condition {
+					generateConditionStart(condition)
+				}
 				generateAttribute(a)
+				if let condition = a.Condition {
+					generateConditionEnd(condition)
+				}
 			}
 		}
 	}

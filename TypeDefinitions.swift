@@ -471,6 +471,7 @@ public class CGAttribute: CGEntity {
 	public var `Type`: CGTypeReference
 	public var Parameters: List<CGCallParameter>?
 	public var Comment: CGSingleLineCommentStatement?
+	public var Condition: CGConditionalDefine?
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
