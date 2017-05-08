@@ -60,6 +60,7 @@ public class CGCompilerDirective {
 public class CGImport {
 	public var Namespace: CGNamespaceReference?
 	public var StaticClass: CGNamedTypeReference?
+	public var Condition: CGConditionalDefine?
 
 	public var Name: String! {
 		if let ns = Namespace {

@@ -166,11 +166,22 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			AppendLine("uses")
 			incIndent()
 			for i in 0 ..< imports.Count {
+				if let condition = imports[i].Condition {
+					if i == imports.Count-1 {
+						assert(false, "Condition not allowed on last import, for Pascal");
+					}
+					generateConditionStart(condition, inline: true)
+				}
+
 				generateIdentifier(imports[i].Name, alwaysEmitNamespace: true)
 				if i < imports.Count-1 {
 					AppendLine(",")
 				} else {
 					generateStatementTerminator()
+				}
+
+				if let condition = imports[i].Condition {
+					generateConditionEnd(condition, inline: true)
 				}
 			}
 			AppendLine()
@@ -187,17 +198,41 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateConditionStart(_ condition: CGConditionalDefine) {
-		Append("{$IF ")
-		generateConditionalDefine(condition) // Oxygene is easier than plain Pascal here
-		AppendLine("}")
+		generateConditionStart(condition, inline: false);
 	}
 
 	override func generateConditionElse() {
-		AppendLine("{$ELSE}")
+		generateConditionElse(inline: false);
 	}
 
 	override func generateConditionEnd(_ condition: CGConditionalDefine) {
-		AppendLine("{$ENDIF}")
+		generateConditionEnd(condition, inline: false);
+	}
+
+	func generateConditionStart(_ condition: CGConditionalDefine, inline: Boolean) {
+		Append("{$IF ")
+		generateConditionalDefine(condition) // Oxygene is easier than plain Pascal here
+		if inline {
+			Append("}")
+		} else {
+			AppendLine("}")
+		}
+	}
+
+	func generateConditionElse(inline: Boolean) {
+		if inline {
+			Append("{$ELSE}")
+		} else {
+			AppendLine("{$ELSE}")
+		}
+	}
+
+	func generateConditionEnd(_ condition: CGConditionalDefine, inline: Boolean) {
+		if inline {
+			Append("{$ENDIF}")
+		} else {
+			AppendLine("{$ENDIF}")
+		}
 	}
 
 	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {

@@ -200,13 +200,25 @@
 	internal func generateImports() {
 		if currentUnit.Imports.Count > 0 {
 			for i in currentUnit.Imports {
+				if let condition = i.Condition {
+					generateConditionStart(condition)
+				}
 				generateImport(i)
+				if let condition = i.Condition {
+					generateConditionEnd(condition)
+				}
 			}
 			AppendLine()
 		}
 		if currentUnit.FileImports.Count > 0 {
 			for i in currentUnit.FileImports {
+				if let condition = i.Condition {
+					generateConditionStart(condition)
+				}
 				generateFileImport(i)
+				if let condition = i.Condition {
+					generateConditionEnd(condition)
+				}
 			}
 			AppendLine()
 		}
