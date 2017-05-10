@@ -175,14 +175,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 				generateIdentifier(imports[i].Name, alwaysEmitNamespace: true)
 				if i < imports.Count-1 {
-					AppendLine(",")
+					Append(",")
 				} else {
-					generateStatementTerminator()
+					Append(";")
 				}
 
 				if let condition = imports[i].Condition {
 					generateConditionEnd(condition, inline: true)
 				}
+				AppendLine()
 			}
 			AppendLine()
 			decIndent()
