@@ -457,7 +457,7 @@
 		}
 	}
 
-	func generateConditionEnd(_ condition: CGConditionalDefine, inline: Boolean) {
+	override func generateConditionEnd(_ condition: CGConditionalDefine, inline: Boolean) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			Append("{$ENDIF}")
 		} else {
