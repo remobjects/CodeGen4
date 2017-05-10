@@ -436,7 +436,7 @@
 	// Statements
 	//
 
-	override func generateConditionStart(_ condition: CGConditionalDefine) {
+	override func generateConditionStart(_ condition: CGConditionalDefine, inline: Boolean) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
 			Append("{$IFDEF ")
 			Append(name.Name)
@@ -451,21 +451,26 @@
 				generateExpression(condition.Expression)
 			}
 		}
-//        generateConditionalDefine(condition)
-		AppendLine("}")
+		Append("}")
+		if (!inline) {
+			AppendLine()
+		}
 	}
 
-	override func generateConditionEnd(_ condition: CGConditionalDefine) {
+	func generateConditionEnd(_ condition: CGConditionalDefine, inline: Boolean) {
 		if let name = condition.Expression as? CGNamedIdentifierExpression {
-			AppendLine("{$ENDIF}")
+			Append("{$ENDIF}")
 		} else {
 			//if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == .Not,
 			if let not = condition.Expression as? CGUnaryOperatorExpression, not.Operator == CGUnaryOperatorKind.Not,
 			   let name = not.Value as? CGNamedIdentifierExpression {
-				AppendLine("{$ENDIF}")
+				Append("{$ENDIF}")
 			} else {
-				AppendLine("{$IFEND}")
+				Append("{$IFEND}")
 			}
+		}
+		if (!inline) {
+			AppendLine()
 		}
 	}
 

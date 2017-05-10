@@ -197,41 +197,38 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	// Statements
 	//
 
-	override func generateConditionStart(_ condition: CGConditionalDefine) {
+	final override func generateConditionStart(_ condition: CGConditionalDefine) {
 		generateConditionStart(condition, inline: false);
 	}
 
-	override func generateConditionElse() {
+	final override func generateConditionElse() {
 		generateConditionElse(inline: false);
 	}
 
-	override func generateConditionEnd(_ condition: CGConditionalDefine) {
+	final override func generateConditionEnd(_ condition: CGConditionalDefine) {
 		generateConditionEnd(condition, inline: false);
 	}
 
 	func generateConditionStart(_ condition: CGConditionalDefine, inline: Boolean) {
 		Append("{$IF ")
 		generateConditionalDefine(condition) // Oxygene is easier than plain Pascal here
-		if inline {
-			Append("}")
-		} else {
-			AppendLine("}")
+		Append("}")
+		if (!inline) {
+			AppendLine()
 		}
 	}
 
 	func generateConditionElse(inline: Boolean) {
-		if inline {
-			Append("{$ELSE}")
-		} else {
-			AppendLine("{$ELSE}")
+		Append("{$ELSE}")
+		if (!inline) {
+			AppendLine()
 		}
 	}
 
 	func generateConditionEnd(_ condition: CGConditionalDefine, inline: Boolean) {
-		if inline {
-			Append("{$ENDIF}")
-		} else {
-			AppendLine("{$ENDIF}")
+		Append("{$ENDIF}")
+		if (!inline) {
+			AppendLine()
 		}
 	}
 
