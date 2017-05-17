@@ -864,7 +864,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		guard let propertyType = property.Type else {
-			assert(false, "Properties cannot use type infewrence for Java.")
+			assert(false, "Properties cannot use type inference for Java.")
 			return
 			#hint should this really warn?
 		}
