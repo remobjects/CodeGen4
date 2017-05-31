@@ -63,7 +63,7 @@ public class CGDefaultExpression: CGExpression {
 }
 
 public class CGSelectorExpression: CGExpression { /* Cocoa only */
-	var Name: String
+	public var Name: String
 
 	public init(_ name: String) {
 		Name = name
@@ -227,7 +227,7 @@ public class CGPointerDereferenceExpression: CGExpression {
 }
 
 public class CGParenthesesExpression: CGExpression {
-	var Value: CGExpression
+	public var Value: CGExpression
 
 	public init(_ value: CGExpression) {
 		Value = value

@@ -246,7 +246,7 @@ public class CGIntegerRangeTypeReference : CGTypeReference {
 	public var Start: Integer
 	public var End: Integer
 
-	init(_ start: Integer, _ end: Integer) {
+	public init(_ start: Integer, _ end: Integer) {
 		Start = start
 		End = end
 	}

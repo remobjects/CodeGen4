@@ -32,10 +32,10 @@ public class CGSingleLineCommentStatement : CGStatement {
 }
 
 public class CGUnsupportedStatement : CGCommentStatement {
-	init() {
+	public init() {
 		super.init("Unsupported statement.")
 	}
-	init(_ statement: String) {
+	public init(_ statement: String) {
 		super.init("Unsupported statement: \(statement)")
 	}
 }
@@ -208,7 +208,7 @@ public class CGSwitchStatementCase : CGEntity {
 }
 
 public class CGLockingStatement: CGNestingStatement {
-	var Expression: CGExpression
+	public var Expression: CGExpression
 
 	public init(_ expression: CGExpression, _ nestedStatement: CGStatement) {
 		super.init(nestedStatement)
@@ -275,7 +275,7 @@ public class CGYieldStatement: CGStatement {
 }
 
 public class CGThrowStatement: CGStatement {
-	var Exception: CGExpression?
+	public var Exception: CGExpression?
 
 	public init() {
 	}
