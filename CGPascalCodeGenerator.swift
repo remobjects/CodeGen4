@@ -735,10 +735,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, _ implementation: Boolean) {
-		pascalGenerateDefinitionParameters(parameters)
-	}
-
 	func pascalGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>) {
 		if let parameters = parameters, parameters.Count > 0 {
 			Append("<")
@@ -1199,7 +1195,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	internal func pascalGenerateSecondHalfOfMethodHeader(_ method: CGMethodLikeMemberDefinition, implementation: Boolean, includeVisibility: Boolean = false) {
 		if let parameters = method.Parameters, parameters.Count > 0 {
 			Append("(")
-			pascalGenerateDefinitionParameters(parameters, implementation)
+			pascalGenerateDefinitionParameters(parameters)
 			Append(")")
 		}
 		if let returnType = method.ReturnType, !returnType.IsVoid {
@@ -1473,7 +1469,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(property.Name)
 		if let parameters = property.Parameters, parameters.Count > 0 {
 			Append("[")
-			pascalGenerateDefinitionParameters(parameters, false)
+			pascalGenerateDefinitionParameters(parameters)
 			Append("]")
 		}
 		if let type = property.`Type` {

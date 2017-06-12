@@ -408,7 +408,6 @@ public class CGParameterDefinition : CGEntity {
 	public var `Type`: CGTypeReference
 	public var Modifier: CGParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
-	public var RawAttribute: String? //delphi only
 
 	public init(_ name: String, _ type: CGTypeReference) {
 		Name = name
