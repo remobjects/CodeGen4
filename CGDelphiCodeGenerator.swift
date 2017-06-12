@@ -655,4 +655,35 @@
 			super.generateCharacterLiteralExpression(expression);
 		}
 	}
+
+	override func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, _ implementation: Boolean) {
+		helpGenerateCommaSeparatedList(parameters, separator: { self.Append(";") self.AppendLine() self.Append("    ")}) { param in
+			if (!implementation) {
+				if let attr = param.RawAttribute {
+					self.Append(attr)
+					self.Append(" ")
+				}
+			}
+			if let exp = param.`Type` as? CGConstantTypeReference {
+				self.Append("const ")
+			}
+			else {
+				switch param.Modifier {
+					case .Var: self.Append("var ")
+					case .Const: self.Append("const ")
+					case .Out: self.Append("out ")
+					case .Params: self.Append("params ") //todo: Oxygene ony?
+					default:
+				}
+			}
+			self.generateIdentifier(param.Name)
+			self.Append(": ")
+			self.generateTypeReference(param.`Type`)
+			if let defaultValue = param.DefaultValue {
+				self.Append(" = ")
+				self.generateExpression(defaultValue)
+			}
+		}
+	}
+
 }
