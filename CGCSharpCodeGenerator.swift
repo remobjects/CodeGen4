@@ -737,7 +737,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 
-	override func generateAttribute(_ attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters, parameters.Count > 0 {

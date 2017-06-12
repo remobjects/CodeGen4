@@ -713,6 +713,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
 		helpGenerateCommaSeparatedList(parameters, separator: { self.Append("; ") }) { param in
+			self.generateAttributes(param.Attributes, inline: true)
 			if let exp = param.`Type` as? CGConstantTypeReference {
 				self.Append("const ")
 			}
@@ -941,7 +942,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 
-	override func generateAttribute(_ attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters, parameters.Count > 0 {
@@ -950,11 +951,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(")")
 		}
 		Append("]")
-		if let comment = attribute.Comment {
-			Append(" ")
-			generateSingleLineCommentStatement(comment)
+		if inline {
+			if let comment = attribute.Comment {
+				Append(" { ")
+				generateSingleLineCommentStatement(comment)
+				Append(" }")
+			}
 		} else {
-			AppendLine()
+			if let comment = attribute.Comment {
+				Append(" ")
+				generateSingleLineCommentStatement(comment)
+			} else {
+				AppendLine()
+			}
 		}
 	}
 

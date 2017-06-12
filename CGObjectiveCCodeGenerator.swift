@@ -541,7 +541,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	// Type Definitions
 	//
 
-	override func generateAttribute(_ attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		// no-op, we dont support attribtes in Objective-C
 	}
 

@@ -1055,20 +1055,32 @@
 	//
 
 	func generateAttributes(_ attributes: List<CGAttribute>?) {
+	}
+
+	func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
 		if let attributes = attributes, attributes.Count > 0 {
-			for a in attributes {
+			for i in 0..<attributes?.Count {
+				let a = attributes[i]
 				if let condition = a.Condition {
 					generateConditionStart(condition)
-				}
-				generateAttribute(a)
-				if let condition = a.Condition {
+					generateAttribute(a, inline: false)
 					generateConditionEnd(condition)
+				} else {
+					generateAttribute(a, inline: inline)
+					if inline && i < attributes?.Count-1 {
+						Append(" ")
+					}
 				}
 			}
 		}
 	}
 
-	func generateAttribute(_ attribute: CGAttribute) {
+	final func generateAttribute(_ attribute: CGAttribute) {
+		// descendant must override
+		generateAttribute(attribute, inline: false);
+	}
+
+	internal func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		// descendant must override
 		assert(false, "generateAttribute not implemented")
 	}

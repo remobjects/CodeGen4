@@ -285,7 +285,7 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 
-	override func generateAttribute(_ attribute: CGAttribute) {
+	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 
 	}
 
