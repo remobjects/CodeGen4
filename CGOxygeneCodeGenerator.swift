@@ -193,7 +193,7 @@
 				self.Append("method ")
 				if member.Parameters.Count > 0 {
 					self.Append("(")
-					self.pascalGenerateDefinitionParameters(member.Parameters)
+					self.pascalGenerateDefinitionParameters(member.Parameters, implementation: false)
 					self.Append(")")
 				}
 				if let returnType = member.ReturnType {
@@ -286,7 +286,7 @@
 		}
 	}
 
-	override func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
+	override func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, implementation: Boolean) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -303,6 +303,9 @@
 				param.startLocation = currentLocation
 			}
 
+			if !implementation {
+				self.generateAttributes(param.Attributes, inline: true)
+			}
 			generateParameterDefinition(param)
 			param.endLocation = currentLocation
 		}
@@ -386,7 +389,7 @@
 			Append("block(")
 		}
 		if let parameters = block.Parameters, parameters.Count > 0 {
-			pascalGenerateDefinitionParameters(parameters)
+			pascalGenerateDefinitionParameters(parameters, implementation: false)
 		}
 		Append(")")
 		if let returnType = block.ReturnType, !returnType.IsVoid {

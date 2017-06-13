@@ -711,9 +711,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
+	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, implementation: Boolean) {
 		helpGenerateCommaSeparatedList(parameters, separator: { self.Append("; ") }) { param in
-			self.generateAttributes(param.Attributes, inline: true)
+			if !implementation {
+				self.generateAttributes(param.Attributes, inline: true)
+			}
 			if let exp = param.`Type` as? CGConstantTypeReference {
 				self.Append("const ")
 			}
@@ -1226,7 +1228,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	internal func pascalGenerateSecondHalfOfMethodHeader(_ method: CGMethodLikeMemberDefinition, implementation: Boolean, includeVisibility: Boolean = false) {
 		if let parameters = method.Parameters, parameters.Count > 0 {
 			Append("(")
-			pascalGenerateDefinitionParameters(parameters)
+			pascalGenerateDefinitionParameters(parameters, implementation: implementation)
 			Append(")")
 		}
 		if let returnType = method.ReturnType, !returnType.IsVoid {
@@ -1500,7 +1502,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(property.Name)
 		if let parameters = property.Parameters, parameters.Count > 0 {
 			Append("[")
-			pascalGenerateDefinitionParameters(parameters)
+			pascalGenerateDefinitionParameters(parameters, implementation: false)
 			Append("]")
 		}
 		if let type = property.`Type` {
