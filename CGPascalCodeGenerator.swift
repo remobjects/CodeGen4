@@ -943,8 +943,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
 		if let attributes = attributes, attributes.Count > 0 {
 			if inline {
-				for i in 0..<attributes?.Count {
-					let a = attributes[i]
+				for a in attributes {
 					if let condition = a.Condition {
 						generateConditionStart(condition, inline: true)
 						generateAttribute(a, inline: true)
@@ -952,9 +951,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					} else {
 						generateAttribute(a, inline: inline)
 					}
-					if i < attributes?.Count-1 {
-						Append(" ")
-					}
+					Append(" ")
 				}
 			} else {
 				super.generateAttributes(attributes, inline: false)

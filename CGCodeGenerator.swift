@@ -352,7 +352,7 @@
 		if let keywords = keywords {
 			if name.Contains(".") {
 				let parts = name.Split(".")
-				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, callback: { part in self.generateIdentifier(part, escaped: true) })
+				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, wrapWhenItExceedsLineLength: false, callback: { part in self.generateIdentifier(part, escaped: true) })
 			} else {
 				var checkName = name
 				if !keywordsAreCaseSensitive {
@@ -1060,17 +1060,14 @@
 
 	func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
 		if let attributes = attributes, attributes.Count > 0 {
-			for i in 0..<attributes?.Count {
-				let a = attributes[i]
+			for a in attributes {
 				if let condition = a.Condition {
 					generateConditionStart(condition)
 					generateAttribute(a, inline: false)
 					generateConditionEnd(condition)
 				} else {
 					generateAttribute(a, inline: inline)
-					if inline && i < attributes?.Count-1 {
-						Append(" ")
-					}
+					Append(" ")
 				}
 			}
 		}
