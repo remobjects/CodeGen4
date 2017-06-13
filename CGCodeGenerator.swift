@@ -1055,6 +1055,7 @@
 	//
 
 	func generateAttributes(_ attributes: List<CGAttribute>?) {
+		generateAttributes(attributes, inline: false)
 	}
 
 	func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {

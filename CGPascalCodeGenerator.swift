@@ -938,6 +938,28 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 
+	override func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
+		if let attributes = attributes, attributes.Count > 0 {
+			if inline {
+				for i in 0..<attributes?.Count {
+					let a = attributes[i]
+					if let condition = a.Condition {
+						generateConditionStart(condition, inline: true)
+						generateAttribute(a, inline: true)
+						generateConditionEnd(condition, inline: true)
+					} else {
+						generateAttribute(a, inline: inline)
+					}
+					if i < attributes?.Count-1 {
+						Append(" ")
+					}
+				}
+			} else {
+				super.generateAttributes(attributes, inline: false)
+			}
+		}
+	}
+
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		Append("[")
 		generateTypeReference(attribute.`Type`)
