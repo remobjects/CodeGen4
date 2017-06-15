@@ -341,7 +341,7 @@
 			case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
 			case .SmartDouble: quoteChar = expression.Value.Contains(DOUBLE) && !expression.Value.Contains(SINGLE) ? SINGLE : DOUBLE
 		}
-		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: quoteChar))
+		AppendPascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: quoteChar)
 	}
 
 	//

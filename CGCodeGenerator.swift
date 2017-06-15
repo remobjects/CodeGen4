@@ -1605,7 +1605,7 @@
 		return currentCode
 	}
 
-	private final func AppendIndentToVirtualColumn(_ targetColumn: Integer) {
+	internal final func AppendIndentToVirtualColumn(_ targetColumn: Integer) {
 		atStart = false
 		if useTabs {
 			currentLocation.column += targetColumn/tabSize+targetColumn%tabSize

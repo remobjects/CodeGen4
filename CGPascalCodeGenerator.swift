@@ -859,16 +859,28 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	internal func pascalEscapeCharactersInStringLiteral(_ string: String, quoteChar: Char) -> String {
-		let result = StringBuilder()
+	internal func AppendPascalEscapeCharactersInStringLiteral(_ string: String, quoteChar: Char) {
 		let len = string.Length
 
 		if len == 0 {
-			return quoteChar+quoteChar
+			Append(quoteChar+quoteChar)
+			return;
 		}
+
+		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
 
 		var inQuotes = false
 		for i in 0 ..< len {
+
+			if currentLocation.virtualColumn > splitLinesLongerThan {
+				if inQuotes {
+					Append(quoteChar)
+					inQuotes = false
+				}
+				AppendLine("+")
+				AppendIndentToVirtualColumn(startLocation)
+			}
+
 			let ch = string[i]
 			switch ch as! UInt16 {
 				case 32...127:
@@ -876,26 +888,25 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						fallthrough
 					}
 					if !inQuotes {
-						result.Append(quoteChar)
+						Append(quoteChar)
 						inQuotes = true
 					}
-					result.Append(ch)
+					Append(ch)
 				default:
 					if inQuotes {
-						result.Append(quoteChar)
+						Append(quoteChar)
 						inQuotes = false
 					}
-					result.Append("#\(ch  as! UInt32)")
+					Append("#\(ch  as! UInt32)")
 			}
 		}
 		if inQuotes {
-			result.Append(quoteChar)
+			Append(quoteChar)
 		}
-		return result.ToString()
 	}
 
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
-		Append(pascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: "'"))
+		AppendPascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: "'")
 	}
 
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
@@ -941,20 +952,25 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
+		var lastCondition: CGConditionalDefine?
 		if let attributes = attributes, attributes.Count > 0 {
-			if inline {
-				for a in attributes {
-					if let condition = a.Condition {
-						generateConditionStart(condition, inline: true)
-						generateAttribute(a, inline: true)
-						generateConditionEnd(condition, inline: true)
-					} else {
-						generateAttribute(a, inline: inline)
+			for a in attributes {
+				if a.Condition?.Expression != lastCondition?.Expression {
+					if let condition = lastCondition {
+						generateConditionEnd(condition, inline: inline)
 					}
-					Append(" ")
+					lastCondition = a.Condition
+					if let condition = a.Condition {
+						generateConditionStart(condition, inline: inline)
+					}
 				}
-			} else {
-				super.generateAttributes(attributes, inline: false)
+				generateAttribute(a, inline: inline)
+			}
+			if let condition = lastCondition {
+				generateConditionEnd(condition, inline: inline)
+			}
+			if inline {
+				Append(" ")
 			}
 		}
 	}
