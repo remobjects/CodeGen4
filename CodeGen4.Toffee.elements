@@ -10,6 +10,7 @@
     <AllowLegacyOutParams>False</AllowLegacyOutParams>
     <AllowLegacyCreate>False</AllowLegacyCreate>
     <AllowUnsafeCode>False</AllowUnsafeCode>
+    <CrossPlatform>True</CrossPlatform>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
     <SDK>OS X</SDK>
     <CreateHeaderFile>True</CreateHeaderFile>
