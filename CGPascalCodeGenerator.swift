@@ -952,7 +952,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
-		var lastCondition: CGConditionalDefine? = 0
+		var lastCondition: CGConditionalDefine? = nil
 		if let attributes = attributes, attributes.Count > 0 {
 			for a in attributes {
 				if a.Condition?.Expression != lastCondition?.Expression {
