@@ -688,26 +688,18 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateCallParameters(_ parameters: List<CGCallParameter>) {
-		for p in 0 ..< parameters.Count {
-			let param = parameters[p]
-			if p > 0 {
-				Append(", ")
-			}
-			generateExpression(param.Value)
+		helpGenerateCommaSeparatedList(parameters) { param in
+			self.generateExpression(param.Value)
 		}
 	}
 
 	func pascalGenerateAttributeParameters(_ parameters: List<CGCallParameter>) {
-		for p in 0 ..< parameters.Count {
-			let param = parameters[p]
-			if p > 0 {
-				Append(", ")
-			}
+		helpGenerateCommaSeparatedList(parameters) { param in
 			if let name = param.Name {
-				generateIdentifier(name)
-				Append(" := ")
+				self.generateIdentifier(name)
+				self.Append(" := ")
 			}
-			generateExpression(param.Value)
+			self.generateExpression(param.Value)
 		}
 	}
 
