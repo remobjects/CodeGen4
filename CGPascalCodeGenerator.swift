@@ -749,10 +749,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateGenericConstraints(_ parameters: List<CGGenericParameterDefinition>?, needSemicolon: Boolean = false) {
 		if let parameters = parameters, parameters.Count > 0 {
 			var needsWhere = true
+			var addedAny = false
 			helpGenerateCommaSeparatedList(parameters) { param in
 				if let constraints = param.Constraints, constraints.Count > 0 {
 					if needsWhere {
-						self.Append(", ")
+						self.Append(" where ")
 						needsWhere = false
 					} else {
 						self.Append(", ")
@@ -762,20 +763,22 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						if let constraint = constraint as? CGGenericHasConstructorConstraint {
 							self.Append(" has constructor")
 						//todo: 72051: Silver: after "if let x = x as? Foo", x still has the less concrete type. Sometimes.
-						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
+						} else if let constraint = constraint as? CGGenericIsSpecificTypeConstraint {
 							self.Append(" is ")
-							self.generateTypeReference(constraint2.`Type`)
-						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeKindConstraint {
-							switch constraint2.Kind {
+							self.generateTypeReference(constraint.`Type`)
+						} else if let constraint = constraint as? CGGenericIsSpecificTypeKindConstraint {
+							switch constraint.Kind {
 								case .Class: self.Append(" is class")
 								case .Struct: self.Append(" is record")
 								case .Interface: self.Append(" is interface")
 							}
+						} else {
+							assert(false, "Unsupported constraint type \(constraint)")
 						}
 					}
 				}
 			}
-			if needSemicolon {
+			if needSemicolon && addedAny {
 				Append(";")
 			}
 		}

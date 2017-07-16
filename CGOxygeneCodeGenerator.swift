@@ -406,7 +406,7 @@
 		pascalGenerateStaticPrefix(type.Static)
 		Append("extension class")
 		pascalGenerateAncestorList(type)
-		pascalGenerateGenericConstraints(type.GenericParameters)
+		pascalGenerateGenericConstraints(type.GenericParameters, needSemicolon: true)
 		AppendLine()
 		incIndent()
 	}
