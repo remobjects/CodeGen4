@@ -750,8 +750,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if let parameters = parameters, parameters.Count > 0 {
 			var needsWhere = true
 			var addedAny = false
-			helpGenerateCommaSeparatedList(parameters) { param in
+			var lastParamHadConstraints = false
+			helpGenerateCommaSeparatedList(parameters, separator: {
+				if lastParamHadConstraints {
+					self.Append(", ")
+				}
+				lastParamHadConstraints = false
+			}) { param in
 				if let constraints = param.Constraints, constraints.Count > 0 {
+					lastParamHadConstraints = true
 					if needsWhere {
 						self.Append(" where ")
 						needsWhere = false
