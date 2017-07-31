@@ -1067,7 +1067,6 @@
 					generateConditionEnd(condition)
 				} else {
 					generateAttribute(a, inline: inline)
-					Append(" ")
 				}
 			}
 		}

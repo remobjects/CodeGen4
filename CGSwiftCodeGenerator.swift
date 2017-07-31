@@ -814,7 +814,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 			generateSingleLineCommentStatement(comment)
 		} else {
-			AppendLine()
+			if inline {
+				Append(" ")
+			} else {
+				AppendLine()
+			}
 		}
 	}
 

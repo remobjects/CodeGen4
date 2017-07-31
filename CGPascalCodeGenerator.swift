@@ -971,9 +971,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if let condition = lastCondition {
 				generateConditionEnd(condition, inline: inline)
 			}
-			if inline {
-				Append(" ")
-			}
 		}
 	}
 
@@ -989,9 +986,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if inline {
 			if let comment = attribute.Comment {
 				Append(" { ")
-				generateSingleLineCommentStatement(comment)
+				AppendLine(commentStatement.Comment?.Replace("}", ")"))
 				Append(" }")
 			}
+			Append(" ")
 		} else {
 			if let comment = attribute.Comment {
 				Append(" ")
