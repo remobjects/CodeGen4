@@ -986,7 +986,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if inline {
 			if let comment = attribute.Comment {
 				Append(" { ")
-				AppendLine(commentStatement.Comment?.Replace("}", ")"))
+				AppendLine(comment.Comment?.Replace("}", ")"))
 				Append(" }")
 			}
 			Append(" ")
