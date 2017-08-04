@@ -1,0 +1,24 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# RemObjects Fire
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Tests.Echoes", "CodeGen4.Tests.Echoes.elements", "{EF12A564-EECC-4E41-A96C-85AC6E6FA4C8}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Tests.Shared", "CodeGen4.Tests.Shared.elements", "{311E71AB-9BA2-407F-8934-FB4EC6E69806}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodegGen4 (Shared)", "..\Codegen4.Shared.elements", "{615FC69D-8D8A-4996-9D58-B042CD883941}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AnyCPU = Debug|AnyCPU
+		Release|AnyCPU = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF12A564-EECC-4E41-A96C-85AC6E6FA4C8}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{EF12A564-EECC-4E41-A96C-85AC6E6FA4C8}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{EF12A564-EECC-4E41-A96C-85AC6E6FA4C8}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{EF12A564-EECC-4E41-A96C-85AC6E6FA4C8}.Release|AnyCPU.Build.0 = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
