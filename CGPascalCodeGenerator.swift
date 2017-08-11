@@ -869,12 +869,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			return;
 		}
 
-		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
+		var startLocation = lastStartLocation ?? currentLocation.virtualColumn
+		if startLocation > Integer(Double(splitLinesLongerThan)*0.75) {
+			startLocation = Integer(Double(splitLinesLongerThan)*0.75)
+			if currentLocation.virtualColumn > splitLinesLongerThan-Math.Min(10,length(string)) {
+				AppendLine()
+				AppendIndentToVirtualColumn(startLocation)
+			}
+		}
 
 		var inQuotes = false
 		for i in 0 ..< len {
 
-			if currentLocation.virtualColumn > splitLinesLongerThan {
+			if i > 0 && currentLocation.virtualColumn > splitLinesLongerThan {
 				if inQuotes {
 					Append(quoteChar)
 					inQuotes = false

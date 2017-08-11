@@ -1,134 +1,134 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-        <HasSharedItems>true</HasSharedItems>
-        <SharedGUID>615FC69D-8D8A-4996-9D58-B042CD883941</SharedGUID>
-    </PropertyGroup>
-    <PropertyGroup Label="Configuration">
-        <Import_RootNamespace>CodeGen4.Shared</Import_RootNamespace>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusCPPCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusHCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)TypeDefinitions.swift">
-            <VirtualFolder>Code Definition</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)Base.swift">
-            <VirtualFolder>Code Definition</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)Statements.swift">
-            <VirtualFolder>Code Definition</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)TypeReferences.swift">
-            <VirtualFolder>Code Definition</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)Expressions.swift">
-            <VirtualFolder>Code Definition</VirtualFolder>
-        </Compile>
-        <None Include="$(MSBuildThisFileDirectory)README.md"/>
-        <Compile Include="$(MSBuildThisFileDirectory)CGCodeGenerator.swift">
-            <VirtualFolder>Code Generation</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGSwiftCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGPascalCodeGenerator.swift">
-            <VirtualFolder>Code Generation — Pascal</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGOxygeneCodeGenerator.swift">
-            <VirtualFolder>Code Generation — Pascal</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGObjectiveCCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGObjectiveCHCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGObjectiveCMCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGDelphiCodeGenerator.swift">
-            <VirtualFolder>Code Generation — Pascal</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGJavaCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGCStyleCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGCSharpCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGSkeletonCodeGenerator.swift">
-            <VirtualFolder>Code Generation</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)Extensions.swift">
-            <VirtualFolder>Code Generation</VirtualFolder>
-        </Compile>
-        <None Include="$(MSBuildThisFileDirectory)LICENSE.md"/>
-        <Compile Include="$(MSBuildThisFileDirectory)CGJavaScriptCodeGenerator.swift">
-            <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
-        </Compile>
-        <Compile Include="$(MSBuildThisFileDirectory)CGVisualBasicNetCodeGenerator.swift">
-            <VirtualFolder>Code Generation</VirtualFolder>
-        </Compile>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Code Definition">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — C-Style Languages">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — Pascal">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Definition">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — C-Style Languages">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — Pascal">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Definition">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — C-Style Languages">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — Pascal">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Definition">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — C-Style Languages">
-            <Virtual>True</Virtual>
-        </Folder>
-        <Folder Include="Code Generation — Pascal">
-            <Virtual>True</Virtual>
-        </Folder>
-    </ItemGroup>
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>615FC69D-8D8A-4996-9D58-B042CD883941</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>CodeGen4.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusCPPCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusHCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TypeDefinitions.swift">
+      <VirtualFolder>Code Definition</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Base.swift">
+      <VirtualFolder>Code Definition</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Statements.swift">
+      <VirtualFolder>Code Definition</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TypeReferences.swift">
+      <VirtualFolder>Code Definition</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Expressions.swift">
+      <VirtualFolder>Code Definition</VirtualFolder>
+    </Compile>
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
+    <Compile Include="$(MSBuildThisFileDirectory)CGCodeGenerator.swift">
+      <VirtualFolder>Code Generation</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGSwiftCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGPascalCodeGenerator.swift">
+      <VirtualFolder>Code Generation — Pascal</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGOxygeneCodeGenerator.swift">
+      <VirtualFolder>Code Generation — Pascal</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGObjectiveCCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGObjectiveCHCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGObjectiveCMCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGDelphiCodeGenerator.swift">
+      <VirtualFolder>Code Generation — Pascal</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGJavaCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGCStyleCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGCSharpCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGSkeletonCodeGenerator.swift">
+      <VirtualFolder>Code Generation</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.swift">
+      <VirtualFolder>Code Generation</VirtualFolder>
+    </Compile>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE.md" />
+    <Compile Include="$(MSBuildThisFileDirectory)CGJavaScriptCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGVisualBasicNetCodeGenerator.swift">
+      <VirtualFolder>Code Generation</VirtualFolder>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Code Definition">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — C-Style Languages">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — Pascal">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Definition">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — C-Style Languages">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — Pascal">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Definition">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — C-Style Languages">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — Pascal">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Definition">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — C-Style Languages">
+      <Virtual>True</Virtual>
+    </Folder>
+    <Folder Include="Code Generation — Pascal">
+      <Virtual>True</Virtual>
+    </Folder>
+  </ItemGroup>
 </Project>
