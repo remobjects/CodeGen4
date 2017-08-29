@@ -422,22 +422,28 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func javaGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
-		for p in 0 ..< parameters.Count {
-			let param = parameters[p]
-			if p > 0 {
-				Append(", ")
-			}
+	override func generateParameterDefinition(_ param: CGParameterDefinition) {
+		if Dialect == .Iodine {
 			switch param.Modifier {
-				case .Var: Append("var ")
-				case .Const: Append("const ")
-				case .Out: Append("out ") //todo: Oxygene ony?
-				case .Params: Append("params ") //todo: Oxygene ony?
+				case .Var: Append("__ref ")
+				//case .Const: Append("const ") //todo: Oxygene ony?
+				case .Out: Append("__out ")
+				//case .Params: Append("params ")
 				default:
 			}
-			generateTypeReference(param.`Type`)
-			Append(" ")
-			generateIdentifier(param.Name)
+		}
+		generateTypeReference(param.`Type`)
+		Append(" ")
+		generateIdentifier(param.Name)
+		if let defaultValue = param.DefaultValue {
+			Append(" = ")
+			generateExpression(defaultValue)
+		}
+	}
+
+	func javaGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
+		helpGenerateCommaSeparatedList(parameters) { param in
+			self.generateParameterDefinition(param)
 		}
 	}
 
