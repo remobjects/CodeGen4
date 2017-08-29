@@ -260,7 +260,7 @@
 					Append(", ")
 				}
 			}
-			switch parameters[p].Modifier {
+			switch param.Modifier {
 				case .Out: Append("out ")
 				case .Var: Append("var ")
 				default:

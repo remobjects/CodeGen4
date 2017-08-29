@@ -479,13 +479,18 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
-				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let name = param.Name {
+				if Dialect == .Hydrogene, let name = param.Name {
 					Append(") ")
 					generateIdentifier(name)
 					Append("(")
 				} else {
 					Append(", ")
 				}
+			}
+			switch param.Modifier {
+				case .Out: self.Append("out ")
+				case .Var: self.Append("var ")
+				default:
 			}
 			generateExpression(param.Value)
 		}

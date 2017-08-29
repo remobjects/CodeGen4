@@ -402,7 +402,20 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
-				Append(", ")
+				if Dialect == .Iodine, let name = param.Name {
+					Append(") ")
+					generateIdentifier(name)
+					Append("(")
+				} else {
+					Append(", ")
+				}
+			}
+			if Dialect == .Iodine {
+				switch param.Modifier {
+					case .Out: self.Append("__out ")
+					case .Var: self.Append("__ref ")
+					default:
+				}
 			}
 			generateExpression(param.Value)
 		}
