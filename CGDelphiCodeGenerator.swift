@@ -211,7 +211,11 @@
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed at step2
 			}
-			   else {
+			else if let global = global as? CGGlobalPropertyDefinition {
+				// skip global properties
+				Append("// global proerties are not supported.")
+			}
+			else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}
 		}
@@ -223,6 +227,10 @@
 			}
 			else if let global = g as? CGGlobalFunctionDefinition {
 				pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
+			}
+			else if let global = global as? CGGlobalPropertyDefinition {
+				// skip global properties
+				Append("// global proerties are not supported.")
 			}
 			else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
@@ -403,7 +411,7 @@
 			Append(" = ")
 			generateExpression(initializer)
 		} else {
-			if type == CGGlobalTypeDefinition.GlobalType {
+			if type is CGGlobalTypeDefinition {
 				Append("var ")
 			}
 			generateIdentifier(variable.Name)

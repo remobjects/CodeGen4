@@ -1043,6 +1043,8 @@
 			generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 		} else if let global = global as? CGGlobalVariableDefinition {
 			generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
+		} else if let global = global as? CGGlobalPropertyDefinition {
+			generateTypeMember(global.Property, type: CGGlobalTypeDefinition.GlobalType)
 		}
 
 		else {

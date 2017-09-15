@@ -736,10 +736,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func cppGenerateMethodDefinitionHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, header: Boolean) {
-		let isCtor = (method as? CGConstructorDefinition) != nil;
-		let isDtor = (method as? CGDestructorDefinition) != nil;
-		let isInterface = (type as? CGInterfaceTypeDefinition) != nil;
-		let isGlobal = type == CGGlobalTypeDefinition.GlobalType;
+		let isCtor = (method as? CGConstructorDefinition) != nil
+		let isDtor = (method as? CGDestructorDefinition) != nil
+		let isInterface = (type as? CGInterfaceTypeDefinition) != nil
+		let isGlobal = type is CGGlobalTypeDefinition
 		if header {
 			if method.Static {
 				if isCBuilder()    {

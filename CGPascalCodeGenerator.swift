@@ -147,6 +147,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		else if let global = global as? CGGlobalVariableDefinition {
 			// skip global variables
 		}
+		else if let global = global as? CGGlobalPropertyDefinition {
+			// skip global properties
+			Append("// global proerties are not supported.")
+		}
 		else {
 			assert(false, "unsupported global found: \(typeOf(global).ToString())")
 		}

@@ -145,7 +145,7 @@
 	}
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
-		if type == CGGlobalTypeDefinition.GlobalType {
+		if type is CGGlobalTypeDefinition {
 			super.generateFieldDefinition(field, type: type)
 		}
 	}
