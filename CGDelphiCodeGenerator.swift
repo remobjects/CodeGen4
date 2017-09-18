@@ -211,7 +211,7 @@
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed at step2
 			}
-			else if let global = global as? CGGlobalPropertyDefinition {
+			else if let global = g as? CGGlobalPropertyDefinition {
 				// skip global properties
 				Append("// global proerties are not supported.")
 			}
@@ -228,7 +228,7 @@
 			else if let global = g as? CGGlobalFunctionDefinition {
 				pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 			}
-			else if let global = global as? CGGlobalPropertyDefinition {
+			else if let global = g as? CGGlobalPropertyDefinition {
 				// skip global properties
 				Append("// global proerties are not supported.")
 			}

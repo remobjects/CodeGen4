@@ -132,7 +132,7 @@ public class CGGlobalVariableDefinition : CGGlobalDefinition {
 public class CGGlobalPropertyDefinition : CGGlobalDefinition {
 	public let Property: CGPropertyDefinition
 
-	public init(_ proeprty: CGPropertyDefinition) {
+	public init(_ property: CGPropertyDefinition) {
 		Property = property
 	}
 }
