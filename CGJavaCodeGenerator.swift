@@ -17,6 +17,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGJavaCodeGeneratorDialect = .Standard
 
+	public var isElements: Boolean { return isIodine }
+	public var isIodine: Boolean { return Dialect == .Iodine }
+	public var isStandard: Boolean { return Dialect == .Standard }
+
 	public convenience init(dialect: CGJavaCodeGeneratorDialect) {
 		init()
 		Dialect = dialect
@@ -1009,24 +1013,24 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			switch (type.Kind) {
 				case .Int: Append("Integer")
 				case .Int8: Append("Byte")
-				//case .UInt8: Append("byte")
+				case .UInt8: if isIodine { Append("UInt8") } else { Append("/* Unsupported type: UInt8 */") }
 				case .Int16: Append("Short")
-				//case .UInt16: Append("UInt16")
+				case .UInt16: if isIodine { Append("UInt16") } else { Append("/* Unsupported type: UInt16 */") }
 				case .Int32: Append("Integer")
-				//case .UInt32: Append("uint")
+				case .UInt32: if isIodine { Append("UInt32") } else { Append("/* Unsupported type: UInt32 */") }
 				case .Int64: Append("Long")
-					//case .UInt64: Append("UInt64")
-				//case .IntPtr: Append("IntPtr")
-				//case .UIntPtr: Append("UIntPtr")
+				case .UInt64: if isIodine { Append("UInt64") } else { Append("/* Unsupported type: UInt64 */") }
+				case .IntPtr: if isIodine { Append("IntPtr") } else { Append("/* Unsupported type: IntPtr */") }
+				case .UIntPtr: if isIodine { Append("UIntPtr") } else { Append("/* Unsupported type: UIntPtr */") }
 				case .Single: Append("Float")
 				case .Double: Append("Double")
 				case .Boolean: Append("Boolean")
 				case .String: Append("String")
 				case .AnsiChar: Append("AnsiChar")
 				case .UTF16Char: Append("Char")
-				//case .UTF32Char: Append("UInt32")
-				//case .Dynamic: Append("Dynamic")
-				//case .InstanceType: Append("instancetype")
+				case .UTF32Char: if isIodine { Append("UTF32Char") } else { Append("/* Unsupported type: UTF32Char */") }
+				case .Dynamic: if isIodine { Append("dynamic") } else { Append("/* Unsupported type: Dynamic */") }
+				case .InstanceType: if isIodine { Append("instancetype") } else { Append("/* Unsupported type: InstanceType */") }
 				case .Void: Append("Void")
 				case .Object: Append("Object")
 				case .Class: Append("Class") // todo: make platform-specific
@@ -1036,27 +1040,27 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			switch (type.Kind) {
 				case .Int: Append("int")
 				case .Int8: Append("byte")
-				//case .UInt8: Append("byte")
+				case .UInt8: if isIodine { Append("UInt8") } else { Append("/* Unsupported type: UInt8 */") }
 				case .Int16: Append("short")
-				//case .UInt16: Append("UInt16")
+				case .UInt16: if isIodine { Append("UInt16") } else { Append("/* Unsupported type: UInt16 */") }
 				case .Int32: Append("int")
-				//case .UInt32: Append("uint")
+				case .UInt32: if isIodine { Append("UInt32") } else { Append("/* Unsupported type: UInt32 */") }
 				case .Int64: Append("long")
-				//case .UInt64: Append("UInt64")
-				//case .IntPtr: Append("IntPtr")
-				//case .UIntPtr: Append("UIntPtr")
+				case .UInt64: if isIodine { Append("UInt64") } else { Append("/* Unsupported type: UInt64 */") }
+				case .IntPtr: if isIodine { Append("IntPtr") } else { Append("/* Unsupported type: IntPtr */") }
+				case .UIntPtr: if isIodine { Append("UIntPtr") } else { Append("/* Unsupported type: UIntPtr */") }
 				case .Single: Append("float")
 				case .Double: Append("double")
 				case .Boolean: Append("boolean")
 				case .String: Append("String")
 				case .AnsiChar: Append("AnsiChar")
 				case .UTF16Char: Append("Char")
-				//case .UTF32Char: Append("UInt32")
-				//case .Dynamic: Append("Dynamic")
-				//case .InstanceType: Append("instancetype")
+				case .UTF32Char: if isIodine { Append("UTF32Char") } else { Append("/* Unsupported type: UTF32Char */") }
+				case .Dynamic: if isIodine { Append("dynamic") } else { Append("/* Unsupported type: Dynamic */") }
+				case .InstanceType: if isIodine { Append("instancetype") } else { Append("/* Unsupported type: InstanceType */") }
 				case .Void: Append("void")
 				case .Object: Append("Object")
-				//case .Class: Append("Class") // todo: make platform-specific
+				case .Class: Append("Class") // todo: make platform-specific
 				default: Append("/*Unsupported type*/")
 			}
 		}
