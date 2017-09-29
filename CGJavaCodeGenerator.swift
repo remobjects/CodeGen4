@@ -1007,6 +1007,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		if (!ignoreNullability) && (((type.Nullability == CGTypeNullabilityKind.NullableUnwrapped) && (type.DefaultNullability == CGTypeNullabilityKind.NotNullable)) || (type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped)) {
 			switch (type.Kind) {
+				case .Int: Append("Integer")
 				case .Int8: Append("Byte")
 				//case .UInt8: Append("byte")
 				case .Int16: Append("Short")
@@ -1021,18 +1022,19 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				case .Double: Append("Double")
 				case .Boolean: Append("Boolean")
 				case .String: Append("String")
-				//case .AnsiChar: Append("AnsiChar")
+				case .AnsiChar: Append("AnsiChar")
 				case .UTF16Char: Append("Char")
-					//case .UTF32Char: Append("UInt32")
+				//case .UTF32Char: Append("UInt32")
 				//case .Dynamic: Append("Dynamic")
 				//case .InstanceType: Append("instancetype")
 				case .Void: Append("Void")
 				case .Object: Append("Object")
+				case .Class: Append("Class") // todo: make platform-specific
 				default: Append("/*Unsupported type*/")
 			}
-		}
-		else {
+		} else {
 			switch (type.Kind) {
+				case .Int: Append("int")
 				case .Int8: Append("byte")
 				//case .UInt8: Append("byte")
 				case .Int16: Append("short")
@@ -1047,13 +1049,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				case .Double: Append("double")
 				case .Boolean: Append("boolean")
 				case .String: Append("String")
-				//case .AnsiChar: Append("AnsiChar")
+				case .AnsiChar: Append("AnsiChar")
 				case .UTF16Char: Append("Char")
 				//case .UTF32Char: Append("UInt32")
 				//case .Dynamic: Append("Dynamic")
 				//case .InstanceType: Append("instancetype")
 				case .Void: Append("void")
 				case .Object: Append("Object")
+				//case .Class: Append("Class") // todo: make platform-specific
 				default: Append("/*Unsupported type*/")
 			}
 		}
