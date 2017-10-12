@@ -650,6 +650,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("(")
 			cSharpGenerateCallParameters(expression.Parameters)
 			Append(")")
+
+			if let propertyInitializers = expression.PropertyInitializers, propertyInitializers.Count > 0 {
+				Append("{ ")
+				helpGenerateCommaSeparatedList(propertyInitializers) { param in
+					self.Append(param.Name)
+					self.Append(" = ")
+					self.generateExpression(param.Value)
+				}
+				Append(" }")
+			}
 		}
 	}
 

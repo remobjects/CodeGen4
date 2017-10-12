@@ -566,7 +566,7 @@ public class CGNewInstanceExpression : CGExpression {
 	public var ConstructorName: String? // can optionally be provided for languages that support named .ctors (Elements, Objectice-C, Swift)
 	public var Parameters: List<CGCallParameter>
 	public var ArrayBounds: List<CGExpression>? // for array initialization.
-	public var PropertyInitializers = List<CGCallParameter>() // for Oxygene extended .ctor calls
+	public var PropertyInitializers = List<CGPropertyInitializer>() // for Oxygene and C# extended .ctor calls
 
 	public convenience init(_ type: CGTypeReference) {
 		init(type.AsExpression())
@@ -691,6 +691,16 @@ public class CGCallParameter: CGEntity {
 	}
 	public init(_ value: CGExpression, _ name: String) {
 		//public init(value) // 71582: Silver: delegating to a second .ctor doesn't properly detect that a field will be initialized
+		Value = value
+		Name = name
+	}
+}
+
+public class CGPropertyInitializer: CGEntity {
+	public var Name: String
+	public var Value: CGExpression
+
+	public init(_ name: String, _ value: CGExpression) {
 		Value = value
 		Name = name
 	}

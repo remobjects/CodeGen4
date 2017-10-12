@@ -509,6 +509,16 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		javaGenerateCallParameters(expression.Parameters)
 		Append(")")
+
+		if let propertyInitializers = expression.PropertyInitializers, propertyInitializers.Count > 0 {
+			Append("/* Property Initializers : ")
+			helpGenerateCommaSeparatedList(propertyInitializers) { param in
+				self.Append(param.Name)
+				self.Append(" = ")
+				self.generateExpression(param.Value)
+			}
+			Append(" */")
+		}
 	}
 
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
