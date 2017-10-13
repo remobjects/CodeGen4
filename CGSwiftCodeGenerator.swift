@@ -710,7 +710,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			Append(")")
 
 			if let propertyInitializers = expression.PropertyInitializers, propertyInitializers.Count > 0 {
-				Append("/* Property Initializers : ")
+				Append(" /* Property Initializers : ")
 				helpGenerateCommaSeparatedList(propertyInitializers) { param in
 					self.Append(param.Name)
 					self.Append(" = ")
