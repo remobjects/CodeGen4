@@ -1101,6 +1101,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if field.Constant {
 			Append("const ")
 		}
+
 		if let type = field.`Type` {
 			cSharpGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)

@@ -9,7 +9,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		super.init()
 
 		// current as of Elements 8.1 and C# 6.0
-		keywords = ["abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized", "boolean", "do", "if",
+		keywords = ["__assembly", "__block", "__extension", "__get", "__module", "__out", "__partial", "__ref", "__set", "__strong", "__struct", "__unretained", "__weak",
+					"abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized", "boolean", "do", "if",
 					"private", "this", "break", "double", "implements", "protected", "throw", "byte", "else", "import", "public", "throws", "case",
 					"enum", "instanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char", "final", "interface", "static",
 					"void", "class", "finally", "long", "strictfp", "volatile", "const", "float", "native", "super", "while"].ToList() as! List<String>
@@ -229,6 +230,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
 		if let type = statement.`Type` {
+			javaGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 			Append(" ")
 		} else {
@@ -394,6 +396,16 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		// handled in base
 	}
 	*/
+
+	internal func javaGenerateStorageModifierPrefix(_ type: CGTypeReference) {
+		if Dialect != .Iodine {
+			switch type.StorageModifier {
+				case .Strong: break
+				case .Weak: Append("__weak ")
+				case .Unretained: Append("__unretained ")
+			}
+		}
+	}
 
 	internal func javaGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
@@ -681,8 +693,27 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	}
 
-	override func generateBlockType(_ type: CGBlockTypeDefinition) {
+	override func generateBlockType(_ block: CGBlockTypeDefinition) {
+		if Dialect != .Iodine {
+			assert(false, "generateBlockType is not supported in Java, except in Iodine")
+		}
 
+		if block.IsPlainFunctionPointer {
+			Append("[FunctionPointer] ")
+		}
+		Append("__block ")
+		if let returnType = block.ReturnType {
+			generateTypeReference(returnType)
+		} else {
+			Append("void")
+		}
+		Append(" ")
+		generateIdentifier(block.Name)
+		Append(" (")
+		if let parameters = block.Parameters, parameters.Count > 0 {
+			javaGenerateDefinitionParameters(parameters)
+		}
+		AppendLine(");")
 	}
 
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
@@ -881,6 +912,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append("final ")
 		}
 		if let type = field.`Type` {
+			javaGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 			Append(" ")
 		} else {
@@ -900,51 +932,100 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			assert(false, "generatePropertyDefinition is not supported in Java, except in Iodine")
 		}
 
-		guard let propertyType = property.Type else {
-			assert(false, "Properties cannot use type inference for Java.")
-			return
-			#hint should this really warn?
+		javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		javaGenerateStaticPrefix(property.Static && !type.Static)
+		javaGenerateVirtualityPrefix(property)
+
+		if let type = property.`Type` {
+			javaGenerateStorageModifierPrefix(type)
+			generateTypeReference(type)
+			Append(" ")
+		} else {
+			Append("var ")
 		}
 
-		//javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		//javaGenerateStaticPrefix(property.Static && !type.Static)
-
-		Append("// __property")
+		if property.Default {
+			Append("this")
+		} else {
+			generateIdentifier(property.Name)
+		}
 
 		if let params = property.Parameters, params.Count > 0 {
-
 			Append("[")
 			javaGenerateDefinitionParameters(params)
 			Append("]")
+		}
 
+		func appendGet() {
+			if let v = property.GetterVisibility {
+				self.javaGenerateMemberTypeVisibilityPrefix(v)
+			}
+			self.Append("__get")
+		}
+		func appendSet() {
+			if let v = property.SetterVisibility {
+				self.javaGenerateMemberTypeVisibilityPrefix(v)
+			}
+			self.Append("__set")
 		}
 
 		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+
+			if property.ReadOnly {
+				Append(" { ")
+				appendGet()
+				Append("; }")
+			} else if property.WriteOnly {
+				Append(" { ")
+				appendSet()
+				Append("; }")
+			} else {
+				Append(" { ")
+				appendGet()
+				Append("; ")
+				appendSet()
+				Append("; }")
+			}
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
+				Append(";")
 			}
-			AppendLine(";")
+			AppendLine()
+
 		} else {
-			AppendLine(" {")
+
+			if definitionOnly {
+				Append("{ ")
+				if property.GetStatements != nil || property.GetExpression != nil {
+					appendGet()
+					Append("; ")
+				}
+				if property.SetStatements != nil || property.SetExpression != nil {
+					appendSet()
+					Append("; ")
+				}
+				Append("}")
+				AppendLine()
+				return
+			}
+
+			AppendLine()
+			AppendLine("{")
 			incIndent()
 
 			if let getStatements = property.GetStatements {
-				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-				javaGenerateStaticPrefix(property.Static && !type.Static)
-				generateTypeReference(propertyType)
-				generateIdentifier(" get_"+property.Name)
-				AppendLine("() {")
+				appendGet()
+				AppendLine()
+				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(getStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let getExpresssion = property.GetExpression {
-				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-				javaGenerateStaticPrefix(property.Static && !type.Static)
-				generateTypeReference(propertyType)
-				generateIdentifier(" get_"+property.Name)
-				AppendLine("() {")
+				appendGet()
+				AppendLine()
+				AppendLine("{")
 				incIndent()
 				generateStatement(CGReturnStatement(getExpresssion))
 				decIndent()
@@ -952,23 +1033,17 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			}
 
 			if let setStatements = property.SetStatements {
-				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-				javaGenerateStaticPrefix(property.Static && !type.Static)
-				generateIdentifier("set_"+property.Name)
-				AppendLine("(")
-				generateTypeReference(propertyType)
-				AppendLine(" value) {")
+				appendSet()
+				AppendLine()
+				AppendLine("{")
 				incIndent()
 				generateStatementsSkippingOuterBeginEndBlock(setStatements)
 				decIndent()
 				AppendLine("}")
 			} else if let setExpression = property.SetExpression {
-				javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-				javaGenerateStaticPrefix(property.Static && !type.Static)
-				generateIdentifier("set_"+property.Name)
-				AppendLine("(")
-				generateTypeReference(propertyType)
-				AppendLine(" value) {")
+				appendSet()
+				AppendLine()
+				AppendLine("{")
 				incIndent()
 				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
 				decIndent()
@@ -976,13 +1051,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			}
 
 			decIndent()
-			Append("// }")
+			Append("}")
 
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
+				Append(";")
 			}
-			AppendLine("")
+			AppendLine()
 		}
 	}
 
@@ -1077,7 +1153,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-		Append("delegate ")
+		if Dialect != .Iodine {
+			assert(false, "generateInlineBlockTypeReference is not supported in Java, except in Iodine")
+		}
+
+		if type.Block.IsPlainFunctionPointer {
+			Append("[FunctionPointer] ")
+		}
+		Append("__block ")
 		if let returnType = type.Block.ReturnType {
 			Append(" ")
 			generateTypeReference(returnType)
