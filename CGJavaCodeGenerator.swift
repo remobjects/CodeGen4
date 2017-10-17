@@ -9,7 +9,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		super.init()
 
 		// current as of Elements 8.1 and C# 6.0
-		keywords = ["__assembly", "__block", "__extension", "__get", "__module", "__out", "__partial", "__ref", "__set", "__strong", "__struct", "__unretained", "__weak",
+		keywords = ["__assembly", "__block", "__extension", "__get", "__module", "__out", "__partial", "__ref", "__selector", "__set", "__strong", "__struct", "__unretained", "__weak",
 					"abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized", "boolean", "do", "if",
 					"private", "this", "break", "double", "implements", "protected", "throw", "byte", "else", "import", "public", "throws", "case",
 					"enum", "instanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char", "final", "interface", "static",
