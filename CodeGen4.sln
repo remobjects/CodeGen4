@@ -1,13 +1,15 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Cooper", "CodeGen4.Cooper.elements", "{258FD135-ABBB-46D5-8B7E-00266CD01152}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodegGen4 (.NET)", "CodeGen4.Echoes.elements", "{2C3408F4-2270-4310-9A38-6A5296129576}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Echoes", "CodeGen4.Echoes.elements", "{2C3408F4-2270-4310-9A38-6A5296129576}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodegGen4 (Cocoa)", "CodeGen4.Toffee.elements", "{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodeGen4.Toffee", "CodeGen4.Toffee.elements", "{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodegGen4 (Java)", "CodeGen4.Cooper.elements", "{258FD135-ABBB-46D5-8B7E-00266CD01152}"
 EndProject
-Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Codegen4.Shared", "Codegen4.Shared.elements", "{615FC69D-8D8A-4996-9D58-B042CD883941}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "CodegGen4 (Shared)", "Codegen4.Shared.elements", "{615FC69D-8D8A-4996-9D58-B042CD883941}"
+EndProject
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Playground", "Tests\Playground\Playground.elements", "{FE58CBFE-5EFA-4E2A-8CE8-291682A121B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,6 @@ Global
 		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{258FD135-ABBB-46D5-8B7E-00266CD01152}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{258FD135-ABBB-46D5-8B7E-00266CD01152}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{2C3408F4-2270-4310-9A38-6A5296129576}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
 		{2C3408F4-2270-4310-9A38-6A5296129576}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{2C3408F4-2270-4310-9A38-6A5296129576}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
@@ -25,8 +25,14 @@ Global
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
 		{EA4135EC-C7A2-454F-A53C-A9B6FE92DA94}.Release|AnyCPU.Build.0 = Release|AnyCPU
-		{615FC69D-8D8A-4996-9D58-B042CD883941}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{615FC69D-8D8A-4996-9D58-B042CD883941}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{258FD135-ABBB-46D5-8B7E-00266CD01152}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{258FD135-ABBB-46D5-8B7E-00266CD01152}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{258FD135-ABBB-46D5-8B7E-00266CD01152}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{258FD135-ABBB-46D5-8B7E-00266CD01152}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{FE58CBFE-5EFA-4E2A-8CE8-291682A121B0}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{FE58CBFE-5EFA-4E2A-8CE8-291682A121B0}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{FE58CBFE-5EFA-4E2A-8CE8-291682A121B0}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{FE58CBFE-5EFA-4E2A-8CE8-291682A121B0}.Release|AnyCPU.Build.0 = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
