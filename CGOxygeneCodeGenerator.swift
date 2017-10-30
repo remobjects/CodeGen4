@@ -26,7 +26,7 @@
 					"has",
 					"if", "implementation", "implements", "implies", "in", "index", "inherited", "inline", "interface", "invariants", "is", "iterator",
 					"join",
-					"lazy", "locked", "locking", "loop",
+					"lazy", "lifetimestrategy", "locked", "locking", "loop",
 					"mapped", "matching", "method", "mod", "module", "namespace",
 					"nested", "new", "nil", "not", "notify", "nullable",
 					"of", "old", "on", "operator", "optional", "or", "order", "out", "override",
