@@ -417,7 +417,6 @@
 			generateIdentifier(variable.Name)
 			if let type = variable.`Type` {
 				Append(": ")
-				pascalGenerateStorageModifierPrefix(type)
 				generateTypeReference(type)
 			}
 			if let initializer = variable.Initializer { // todo: Oxygene only?

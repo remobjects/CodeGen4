@@ -1364,6 +1364,8 @@
 			generateArrayTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGDictionaryTypeReference {
 			generateDictionaryTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGTypeReferenceWithStorageModifier {
+			generateTypeReferenceWithStorageModifier(type, ignoreNullability: ignoreNullability)
 		}
 
 		else {
@@ -1436,6 +1438,20 @@
 			case .Object: generateIdentifier("Object")
 			case .Class: generateIdentifier("Class")
 		}
+	}
+
+	internal func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
+		switch storageModifier {
+			case .Strong: break
+			case .Weak: generateInlineComment("Weak")
+			case .Unretained: generateInlineComment("Unretained")
+			default: break
+		}
+	}
+
+	internal func generateTypeReferenceWithStorageModifier(_ type: CGTypeReferenceWithStorageModifier, ignoreNullability: Boolean = false) {
+		generateStorageModifier(type.StorageModifier)
+		generateTypeReference(type.Type, ignoreNullability: ignoreNullability)
 	}
 
 	internal func generateIntegerRangeTypeReference(_ type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {

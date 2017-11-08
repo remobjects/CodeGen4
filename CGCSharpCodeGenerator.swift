@@ -458,13 +458,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	internal func cSharpGenerateStorageModifierPrefix(_ type: CGTypeReference) {
-		if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene {
-			switch type.StorageModifier {
-				case .Strong: break
-				case .Weak: Append("__weak ")
-				case .Unretained: Append("__unretained ")
-			}
+	internal override func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
+		switch storageModifier {
+			case .Strong: break
+			case .Weak: Append("__weak ")
+			case .Unretained: Append("__unretained ")
 		}
 	}
 
@@ -1103,7 +1101,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if let type = field.`Type` {
-			cSharpGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 			Append(" ")
 		} else {
@@ -1123,7 +1120,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateVirtualityPrefix(property)
 
 		if let type = property.`Type` {
-			cSharpGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
 			Append(" ")
 		} else {
@@ -1350,7 +1346,17 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
-		#hint todo
+		Append("(")
+		for m in 0 ..< type.Members.Count {
+			if m > 0 {
+				Append(", ")
+			}
+			generateTypeReference(type.Members[m])
+		}
+		Append(")")
+		if !ignoreNullability {
+			cSharpGenerateSuffixForNullability(type)
+		}
 	}
 
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {

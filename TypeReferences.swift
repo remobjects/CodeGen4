@@ -9,12 +9,10 @@ public enum CGTypeNullabilityKind {
 }
 
 public __abstract class CGTypeReference : CGEntity {
-	public /*fileprivate*/internal(set) var Nullability: CGTypeNullabilityKind = .Default
-	public /*fileprivate*/internal(set) var DefaultNullability: CGTypeNullabilityKind = .NotNullable
-	public /*fileprivate*/internal(set) var DefaultValue: CGExpression?
-	#hint StorageModifier shouldn't really be on the type? refactor!
-	public /*fileprivate*/internal(set) var StorageModifier: CGStorageModifierKind = .Strong
-	public /*fileprivate*/internal(set) var IsClassType = false
+	public fileprivate(set) var Nullability: CGTypeNullabilityKind = .Default
+	public fileprivate(set) var DefaultNullability: CGTypeNullabilityKind = .NotNullable
+	public fileprivate(set) var DefaultValue: CGExpression?
+	public fileprivate(set) var IsClassType = false
 
 	public lazy var NullableUnwrapped: CGTypeReference    = ActualNullability == CGTypeNullabilityKind.NullableUnwrapped    ? self : self.copyWithNullability(CGTypeNullabilityKind.NullableUnwrapped)
 	public lazy var NullableNotUnwrapped: CGTypeReference = ActualNullability == CGTypeNullabilityKind.NullableNotUnwrapped ? self : self.copyWithNullability(CGTypeNullabilityKind.NullableNotUnwrapped)
@@ -36,6 +34,24 @@ public __abstract class CGTypeReference : CGEntity {
 	}
 
 	public __abstract func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference
+}
+
+public class CGTypeReferenceWithStorageModifier : CGTypeReference {
+	public fileprivate(set) var Type: CGTypeReference
+	public fileprivate(set) var StorageModifier: CGStorageModifierKind = .Strong
+
+	public init(_ type: CGTypeReference, _ storageModifier: CGStorageModifierKind) {
+		Type = type
+		StorageModifier = storageModifier
+	}
+
+	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGTypeReferenceWithStorageModifier(Type.copyWithNullability(nullability), StorageModifier)
+	}
+
+	public func copyWithStorageModifier(_ storageModifier: CGStorageModifierKind) -> CGTypeReferenceWithStorageModifier {
+		return CGTypeReferenceWithStorageModifier(Type, storageModifier)
+	}
 }
 
 public enum CGStorageModifierKind {
@@ -92,7 +108,6 @@ public class CGNamedTypeReference : CGTypeReference {
 
 		result.Namespace = Namespace
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -178,7 +193,6 @@ public class CGPredefinedTypeReference : CGTypeReference {
 		let result = CGPredefinedTypeReference(Kind, defaultNullability: nil, nullability: nullability)
 
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -271,7 +285,6 @@ public class CGInlineBlockTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -302,7 +315,6 @@ public class CGPointerTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		result.Reference = Reference
 		return result
@@ -326,7 +338,6 @@ public class CGConstantTypeReference : CGTypeReference { /* C++ only, currently 
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -349,7 +360,6 @@ public class CGKindOfTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -374,7 +384,6 @@ public class CGTupleTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -396,7 +405,6 @@ public class CGSequenceTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -418,7 +426,6 @@ public class CGSetTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -452,7 +459,6 @@ public class CGArrayTypeReference : CGTypeReference {
 		result.Nullability = nullability
 		result.ArrayKind = ArrayKind
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
@@ -490,7 +496,6 @@ public class CGDictionaryTypeReference : CGTypeReference {
 
 		result.Nullability = nullability
 		result.DefaultValue = DefaultValue
-		result.StorageModifier = StorageModifier
 		result.IsClassType = IsClassType
 		return result
 	}
