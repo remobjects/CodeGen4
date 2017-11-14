@@ -506,7 +506,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDestroyInstanceExpression(_ expression: CGDestroyInstanceExpression) {
-		#hint cover 'delete [] a' case
+		//#hint cover 'delete [] a' case
 		// problem with deleting arrays:
 		// int * a = new int[500];
 		// delete [] a;
