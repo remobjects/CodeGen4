@@ -672,6 +672,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func javaGeneratePartialPrefix(_ isPartial: Boolean) {
+		if isPartial {
+			Append("__partial ")
+		}
+	}
+
 	func javaGenerateSealedPrefix(_ isSealed: Boolean) {
 		if isSealed {
 			Append("final ")
@@ -749,6 +755,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
 		javaGenerateStaticPrefix(type.Static)
 		javaGenerateAbstractPrefix(type.Abstract)
+		javaGeneratePartialPrefix(type.Partial)
 		javaGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
@@ -768,6 +775,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
 		javaGenerateStaticPrefix(type.Static)
 		javaGenerateAbstractPrefix(type.Abstract)
+		javaGeneratePartialPrefix(type.Partial)
 		javaGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)

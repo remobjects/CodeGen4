@@ -911,6 +911,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	func swiftGeneratePartialPrefix(_ isPartial: Boolean) {
+		if isPartial {
+			Append("partial ")
+		}
+	}
+
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("typealias ")
@@ -981,6 +987,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed, type: type)
 		swiftGenerateStaticPrefix(type.Static)
+		swiftGeneratePartialPrefix(type.Partial)
 		swiftGenerateAbstractPrefix(type.Abstract)
 		Append("class ")
 		generateIdentifier(type.Name)
@@ -998,6 +1005,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed, type: type)
 		swiftGenerateStaticPrefix(type.Static)
+		swiftGeneratePartialPrefix(type.Partial)
 		swiftGenerateAbstractPrefix(type.Abstract)
 		Append("struct ")
 		generateIdentifier(type.Name)

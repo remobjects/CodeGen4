@@ -802,9 +802,15 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func cSharpGenerateAbstractPrefix(_ isAbstract: Boolean) {
-		if isAbstract {
+	func cSharpGenerateAbstractPrefix(_ isPartial: Boolean) {
+		if isPartial {
 			Append("abstract ")
+		}
+	}
+
+	func cSharpGeneratePartialPrefix(_ isAbstract: Boolean) {
+		if isAbstract {
+			Append("partial ")
 		}
 	}
 
@@ -902,6 +908,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		cSharpGenerateStaticPrefix(type.Static)
 		cSharpGenerateAbstractPrefix(type.Abstract)
+		cSharpGeneratePartialPrefix(type.Partial)
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("class ")
 		generateIdentifier(type.Name)
@@ -922,6 +929,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		cSharpGenerateStaticPrefix(type.Static)
 		cSharpGenerateAbstractPrefix(type.Abstract)
+		cSharpGeneratePartialPrefix(type.Partial)
 		cSharpGenerateSealedPrefix(type.Sealed)
 		Append("struct ")
 		generateIdentifier(type.Name)
