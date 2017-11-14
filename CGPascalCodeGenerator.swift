@@ -670,7 +670,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateIfThenElseExpression is not supported in base Pascal, only Oxygene")
 	}
 
-	internal override func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
+	internal func pascalGenerateStorageModifierPrefixIfNeeded(_ storageModifier: CGStorageModifierKind) {
 		switch storageModifier {
 			case .Strong: break
 			case .Weak: Append("weak ")
@@ -1484,27 +1484,28 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		// no-op
 	}
 
-	override func generateFieldDefinition(_ variable: CGFieldDefinition, type: CGTypeDefinition) {
-		if variable.Static {
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
+		if field.Static {
 			Append("class ")
 		}
-		if variable.Constant, let initializer = variable.Initializer {
+		if field.Constant, let initializer = field.Initializer {
 			Append("const ")
-			generateIdentifier(variable.Name)
-			if let type = variable.`Type` {
+			generateIdentifier(field.Name)
+			if let type = field.`Type` {
 				Append(": ")
+				pascalGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 				generateTypeReference(type)
 			}
 			Append(" = ")
 			generateExpression(initializer)
 		} else {
 			Append("var ")
-			generateIdentifier(variable.Name)
-			if let type = variable.`Type` {
+			generateIdentifier(field.Name)
+			if let type = field.`Type` {
 				Append(": ")
 				generateTypeReference(type)
 			}
-			if let initializer = variable.Initializer { // todo: Oxygene only?
+			if let initializer = field.Initializer { // todo: Oxygene only?
 				Append(" := ")
 				generateExpression(initializer)
 			}
@@ -1512,7 +1513,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		if isUnified {
 			Append("; ")
-			pascalGenerateMemberVisibilityKeyword(variable.Visibility)
+			pascalGenerateMemberVisibilityKeyword(field.Visibility)
 		}
 		generateStatementTerminator()
 	}
@@ -1530,6 +1531,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		if let type = property.`Type` {
 			Append(": ")
+			pascalGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
 			generateTypeReference(type)
 		}
 

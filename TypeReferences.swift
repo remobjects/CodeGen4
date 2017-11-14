@@ -36,24 +36,6 @@ public __abstract class CGTypeReference : CGEntity {
 	public __abstract func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference
 }
 
-public class CGTypeReferenceWithStorageModifier : CGTypeReference {
-	public fileprivate(set) var Type: CGTypeReference
-	public fileprivate(set) var StorageModifier: CGStorageModifierKind = .Strong
-
-	public init(_ type: CGTypeReference, _ storageModifier: CGStorageModifierKind) {
-		Type = type
-		StorageModifier = storageModifier
-	}
-
-	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
-		return CGTypeReferenceWithStorageModifier(Type.copyWithNullability(nullability), StorageModifier)
-	}
-
-	public func copyWithStorageModifier(_ storageModifier: CGStorageModifierKind) -> CGTypeReferenceWithStorageModifier {
-		return CGTypeReferenceWithStorageModifier(Type, storageModifier)
-	}
-}
-
 public enum CGStorageModifierKind {
 	case Strong
 	case Weak

@@ -396,15 +396,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	internal override func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
+	internal func javaGenerateStorageModifierPrefixIfNeeded(_ storageModifier: CGStorageModifierKind) {
 		if Dialect != .Iodine {
 			switch storageModifier {
 				case .Strong: break
 				case .Weak: Append("__weak ")
 				case .Unretained: Append("__unretained ")
 			}
-		} else {
-			super.generateStorageModifier(storageModifier)
 		}
 	}
 
@@ -920,6 +918,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if field.Constant {
 			Append("final ")
 		}
+		javaGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 		if let type = field.`Type` {
 			generateTypeReference(type)
 			Append(" ")
@@ -944,6 +943,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateStaticPrefix(property.Static && !type.Static)
 		javaGenerateVirtualityPrefix(property)
 
+		javaGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
 		if let type = property.`Type` {
 			generateTypeReference(type)
 			Append(" ")

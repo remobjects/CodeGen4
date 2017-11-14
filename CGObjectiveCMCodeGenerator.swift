@@ -84,17 +84,10 @@
 		}
 	}
 
-	internal override func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
-		switch storageModifier {
-			case .Strong: Append("__strong ")
-			case .Weak: Append("__weak ")
-			case .Unretained: Append("__unsafe_unretained")
-		}
-	}
-
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		if field.Static {
 			Append("static ")
+			objcGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 			if let type = field.`Type` {
 				generateTypeReference(type)
 				if !objcTypeRefereneIsPointer(type) {

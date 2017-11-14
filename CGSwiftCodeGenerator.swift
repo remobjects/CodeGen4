@@ -515,18 +515,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	internal func swiftGenerateStorageModifierPrefixIfNeeded(_ type: CGTypeReference?) {
-		if let type = type as? CGTypeReferenceWithStorageModifier {
-			switch type.StorageModifier {
-				case .Strong: break
-				case .Weak: Append("weak ")
-				case .Unretained: Append("unowned ")
-			}
+	internal func swiftGenerateStorageModifierPrefixIfNeeded(_ storageModifier: CGStorageModifierKind) {
+		switch storageModifier {
+			case .Strong: break
+			case .Weak: Append("weak ")
+			case .Unretained: Append("unowned ")
 		}
-	}
-
-	internal override func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
-		// no-op
 	}
 
 	internal func swiftGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
@@ -1174,7 +1168,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		swiftGenerateMemberTypeVisibilityPrefix(field.Visibility, virtuality: field.Virtuality)
 		swiftGenerateStaticPrefix(field.Static && !type.Static)
-		swiftGenerateStorageModifierPrefixIfNeeded(field.`Type`)
+		swiftGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 		if field.Constant {
 			Append("let ")
 		} else {
@@ -1219,7 +1213,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if property.Lazy {
 			Append("lazy ")
 		}
-		swiftGenerateStorageModifierPrefixIfNeeded(property.`Type`)
+		swiftGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
 
 		if let params = property.Parameters, params.Count > 0 {
 

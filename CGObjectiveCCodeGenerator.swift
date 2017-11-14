@@ -327,6 +327,14 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	internal func objcGenerateStorageModifierPrefixIfNeeded(_ storageModifier: CGStorageModifierKind) {
+		switch storageModifier {
+			case .Strong: Append("__strong ")
+			case .Weak: Append("__weak ")
+			case .Unretained: Append("__unsafe_unretained")
+		}
+	}
+
 	func objcGenerateCallParameters(_ parameters: List<CGCallParameter>, skipFirstName: Boolean = false) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]

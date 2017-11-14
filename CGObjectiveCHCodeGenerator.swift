@@ -116,6 +116,7 @@
 		if property.Static {
 			Append("+ (")
 			if let type = property.`Type` {
+				objcGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
 				generateTypeReference(type)
 				if !objcTypeRefereneIsPointer(type) {
 					Append(" ")

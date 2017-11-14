@@ -458,7 +458,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	internal override func generateStorageModifier(_ storageModifier: CGStorageModifierKind) {
+	internal func csharpGenerateStorageModifierPrefixIfNeeded(_ storageModifier: CGStorageModifierKind) {
 		switch storageModifier {
 			case .Strong: break
 			case .Weak: Append("__weak ")
@@ -1108,6 +1108,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("const ")
 		}
 
+		csharpGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 		if let type = field.`Type` {
 			generateTypeReference(type)
 			Append(" ")
@@ -1127,6 +1128,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateStaticPrefix(property.Static && !type.Static)
 		cSharpGenerateVirtualityPrefix(property)
 
+		csharpGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
 		if let type = property.`Type` {
 			generateTypeReference(type)
 			Append(" ")
