@@ -278,7 +278,7 @@ public class CGInlineBlockTypeReference : CGTypeReference {
 
 public class CGPointerTypeReference : CGTypeReference {
 	public let `Type`: CGTypeReference
-	public let Reference = false /* C++ only: "&" (true) vs "*" (false) */
+	public private(set) var Reference = false /* C++ only: "&" (true) vs "*" (false) */
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
@@ -357,6 +357,7 @@ public class CGTupleTypeReference : CGTypeReference {
 
 	public init(_ members: List<CGTypeReference>) {
 		Members = members
+		DefaultNullability = .NotNullable
 	}
 	public convenience init(_ members: CGTypeReference...) {
 		init(members.ToList())
@@ -404,6 +405,7 @@ public class CGSetTypeReference : CGTypeReference {
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
+		DefaultNullability = .NotNullable
 	}
 
 	override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
@@ -431,6 +433,7 @@ public class CGArrayTypeReference : CGTypeReference {
 
 	public init(_ type: CGTypeReference, _ bounds: List<CGArrayBounds>? = nil) {
 		`Type` = type
+		DefaultNullability = .NullableNotUnwrapped
 		if let bounds = bounds {
 			Bounds = bounds
 		} else {
@@ -474,6 +477,8 @@ public class CGDictionaryTypeReference : CGTypeReference {
 	public init(_ keyType: CGTypeReference, _ valueType: CGTypeReference) {
 		KeyType = keyType
 		ValueType = valueType
+		DefaultNullability = .NullableNotUnwrapped
+		IsClassType = true
 	}
 
 	override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
