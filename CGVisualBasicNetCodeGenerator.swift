@@ -779,7 +779,7 @@
 		}
 
 		incIndent()
-		generateStatements(method.LocalVariables)
+		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
 		decIndent()
 		AppendLine("End Sub")

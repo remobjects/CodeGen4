@@ -873,7 +873,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		generateStatements(method.LocalVariables)
+		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
 		decIndent()
 		AppendLine("}")
@@ -900,7 +900,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 		AppendLine("{")
 		incIndent()
-		generateStatements(ctor.LocalVariables)
+		generateStatements(variables: ctor.LocalVariables)
 		generateStatements(ctor.Statements)
 		decIndent()
 		AppendLine("}")

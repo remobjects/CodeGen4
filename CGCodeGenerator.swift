@@ -386,7 +386,7 @@
 		}
 	}
 
-	internal final func generateStatements(_ statements: List<CGVariableDeclarationStatement>?) {
+	internal final func generateStatements(variables statements: List<CGVariableDeclarationStatement>?) {
 		// descendant should not override
 		if let statements = statements {
 			for g in statements {

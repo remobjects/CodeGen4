@@ -563,7 +563,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			} else {
 				AppendLine("begin")
 				incIndent()
-				generateStatements(method.LocalVariables)
+				generateStatements(variables: method.LocalVariables)
 				generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 				decIndent()
 				Append("end")
@@ -588,7 +588,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			}
 			AppendLine(" begin")
 			incIndent()
-			generateStatements(method.LocalVariables)
+			generateStatements(variables: method.LocalVariables)
 			generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 			decIndent()
 			Append("end")

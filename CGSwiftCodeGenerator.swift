@@ -423,7 +423,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 		AppendLine()
 		incIndent()
-		generateStatements(method.LocalVariables)
+		generateStatements(variables: method.LocalVariables)
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 		decIndent()
 		Append("}")
@@ -1086,7 +1086,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 		AppendLine(" {")
 		incIndent()
-		generateStatements(method.LocalVariables)
+		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
 		decIndent()
 		AppendLine("}")
@@ -1118,7 +1118,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 		AppendLine(" {")
 		incIndent()
-		generateStatements(ctor.LocalVariables)
+		generateStatements(variables: ctor.LocalVariables)
 		generateStatements(ctor.Statements)
 		decIndent()
 		AppendLine("}")
@@ -1134,7 +1134,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 		AppendLine(" {")
 		incIndent()
-		generateStatements(dtor.LocalVariables)
+		generateStatements(variables: dtor.LocalVariables)
 		generateStatements(dtor.Statements)
 		decIndent()
 		AppendLine("}")
@@ -1159,7 +1159,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 		AppendLine(" {")
 		incIndent()
-		generateStatements(finalizer.LocalVariables)
+		generateStatements(variables: finalizer.LocalVariables)
 		generateStatements(finalizer.Statements)
 		decIndent()
 		AppendLine("}")
