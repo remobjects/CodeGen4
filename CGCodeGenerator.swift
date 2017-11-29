@@ -1233,7 +1233,9 @@
 		if let condition = type.Condition {
 			generateConditionStart(condition)
 		}
-
+		if let condition = member.Condition {
+			generateConditionStart(condition)
+		}
 		member.startLocation = currentLocation;
 		generateCommentStatement(member.Comment)
 		generateAttributes(member.Attributes)
@@ -1270,6 +1272,10 @@
 			member.endLocation = currentLocation;
 		}*/
 		member.endLocation = currentLocation;
+
+		if let condition = member.Condition {
+			generateConditionEnd(condition)
+		}
 
 		if let condition = type.Condition {
 			generateConditionEnd(condition)
