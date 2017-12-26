@@ -245,9 +245,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 		// Hack for Java not knwoing about properties
-		if /*Dialect != .Iodine || */ let property = statement.Target as? CGPropertyAccessExpression {
+		if Dialect != .Iodine, let property = statement.Target as? CGPropertyAccessExpression {
 			javaGenerateCallSiteForExpression(property)
-			generateIdentifier("set_"+property.Name)
+			generateIdentifier("set"+uppercaseFirstLetter(property.Name))
 			Append("(")
 			if let params = property.Parameters, params.Count > 0 {
 				javaGenerateCallParameters(property.Parameters)
@@ -535,21 +535,21 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		javaGenerateCallSiteForExpression(property)
 
-		/*if Dialect == .Iodine {
-			generateIdentifier("get_"+property.Name)
+		if Dialect == .Iodine {
+			generateIdentifier(property.Name)
 			if let params = property.Parameters, params.Count > 0 {
 				Append("[")
 				javaGenerateCallParameters(property.Parameters)
 				Append("]")
 			}
-		} else {*/
-			generateIdentifier("get_"+property.Name)
+		} else {
+			generateIdentifier("get"+uppercaseFirstLetter(property.Name))
 			Append("(")
 			if let params = property.Parameters, params.Count > 0 {
 				javaGenerateCallParameters(property.Parameters)
 			}
 			Append(")")
-		/*}*/
+		}
 	}
 
 	/*
