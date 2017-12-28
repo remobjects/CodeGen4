@@ -439,7 +439,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
-			case .Is: Append("is")
 			case .AddEvent: Append("+=")
 			case .RemoveEvent: Append("-=")
 			default: super.generateBinaryOperator(`operator`)

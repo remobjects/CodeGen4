@@ -312,18 +312,13 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
-		if cast.ThrowsException {
 			Append("((")
 			generateTypeReference(cast.TargetType)
 			Append(")(")
 			generateExpression(cast.Expression)
 			Append("))")
-		} else {
-			Append("(")
-			generateExpression(cast.Expression)
-			Append(" as ")
-			generateTypeReference(cast.TargetType)
-			Append(")")
+		if !cast.ThrowsException {
+			Append("/* exception-less lasts not supported */")
 		}
 	}
 
@@ -380,6 +375,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Is: Append("instanceof")
+			case .AddEvent: Append("+=")
+			case .RemoveEvent: Append("-=")
 			default: super.generateBinaryOperator(`operator`)
 		}
 	}
