@@ -1032,7 +1032,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("extension ")
-		generateIdentifier(type.Name)
+		if let ancestor = type.Ancestors.FirstOrDefault() {
+			generateTypeReference(ancestor, ignoreNullability: true)
+		} else {
+			generateIdentifier(type.Name)
+		}
 		Append(" ")
 		AppendLine("{ ")
 		incIndent()
