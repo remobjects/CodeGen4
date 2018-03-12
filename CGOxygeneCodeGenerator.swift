@@ -143,13 +143,16 @@
 
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 		if let callSite = statement.CallSite {
-			generateExpression(callSite)
 			if callSite is CGInheritedExpression {
+				generateExpression(callSite)
 				Append(" ")
+			} else if callSite is CGSelfExpression {
+				// no-op
 			} else {
-				Append(".")
+				assert(false, "Unsupported call site for construtor call.")
 			}
 		}
+
 		Append("constructor")
 		if let name = statement.ConstructorName {
 			Append(" ")
