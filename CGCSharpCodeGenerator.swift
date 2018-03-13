@@ -696,7 +696,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	/*
 	override func generateIntegerLiteralExpression(_ expression: CGIntegerLiteralExpression) {
-		// handled in base
+		switch literalExpression.Base {
+			case 1: Append("0b"+literalExpression.StringRepresentation(base:1))
+			default: super.generateStringLiteralExpression(expression)
+		}
 	}
 	*/
 

@@ -378,7 +378,20 @@ public class CGCharacterLiteralExpression: CGLiteralExpression {
 }
 
 public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
-	public var Value: Int64 = 0
+	public var SignedValue: Int64? = nil {
+		didSet {
+			if SignedValue != nil {
+				UnsignedValue = nil
+			}
+		}
+	}
+	public var UnsignedValue: Int64? = nil {
+		didSet {
+			if UnsignedValue != nil {
+				SignedValue = nil
+			}
+		}
+	}
 	public var Base = 10
 	public var NumberKind: CGNumberKind?
 
@@ -387,19 +400,31 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	public init() {
 	}
 	public init(_ value: Int64) {
-		Value = value
+		SignedValue = value
 	}
 	public init(_ value: Int64, # base: Int32) {
-		Value = value
+		SignedValue = value
 		Base = base
 	}
-
+	public init(_ value: UInt64) {
+		UnsignedValue = value
+	}
+	public init(_ value: UInt64, # base: Int32) {
+		UnsignedValue = value
+		Base = base
+	}
 	override func StringRepresentation() -> String {
-		return Convert.ToString(Value, 10)
+		return StringRepresentation(base: Base)
 	}
 
-	internal func StringRepresentation(# base: Int32) -> String {
-		return Convert.ToString(Value, base)
+	internal func StringRepresentation(base: Int32) -> String {
+		if let SignedValue = SignedValue {
+			return Convert.ToString(SignedValue, base)
+		} else if let UnsignedValue = UnsignedValue {
+			return Convert.ToString(UnsignedValue, base)
+		} else {
+			return Convert.ToString(0, base)
+		}
 	}
 }
 
