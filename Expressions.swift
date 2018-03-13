@@ -392,6 +392,11 @@ public class CGIntegerLiteralExpression: CGLanguageAgnosticLiteralExpression {
 			}
 		}
 	}
+
+	@Obsolete public var Value: Int64 {
+		return coalesce(SignedValue, UnsignedValue, 0)
+	}
+
 	public var Base = 10
 	public var NumberKind: CGNumberKind?
 
