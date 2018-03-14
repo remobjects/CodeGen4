@@ -489,8 +489,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				}
 			}
 			switch param.Modifier {
+				case .Var: self.Append("ref ")
 				case .Out: self.Append("out ")
-				case .Var: self.Append("var ")
 				default:
 			}
 			generateExpression(param.Value)

@@ -428,8 +428,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			}
 			if Dialect == .Iodine {
 				switch param.Modifier {
-					case .Out: self.Append("__out ")
 					case .Var: self.Append("__ref ")
+					case .Out: self.Append("__out ")
 					default:
 				}
 			}
