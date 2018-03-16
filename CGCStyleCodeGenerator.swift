@@ -160,16 +160,16 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}
 
-    override func generateGotoStatement(_ statement: CGGotoStatement) {
+	override func generateGotoStatement(_ statement: CGGotoStatement) {
 		Append("goto ");
-        Append(statement.Target);
-        generateStatementTerminator();
+		Append(statement.Target);
+		generateStatementTerminator();
 	}
 
-    override func generateLabelStatement(_ statement: CGLabelStatement) {
+	override func generateLabelStatement(_ statement: CGLabelStatement) {
 		Append(statement.Name);
-        Append(":");
-        generateStatementTerminator();
+		Append(":");
+		generateStatementTerminator();
 	}
 
 	//
@@ -193,27 +193,27 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .Plus: Append("+")
 			case .Minus: Append("-")
 			case .Not: Append("!")
-            case .BitwiseNot: Append("~")
+			case .BitwiseNot: Append("~")
 			case .AddressOf: Append("&")
-            case .Dereference: Append("*")
+			case .Dereference: Append("*")
 			case .ForceUnwrapNullable: // no-op
 		}
 	}
 
-    internal func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
+	internal func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 		// descendant may override, but this will work for most languages.
-        if (expression.Operator == CGUnaryOperatorKind.Dereference) {
-            Append("(");
-        }
+		if (expression.Operator == CGUnaryOperatorKind.Dereference) {
+			Append("(");
+		}
 		if let operatorString = expression.OperatorString {
 			Append(operatorString)
 		} else if let `operator` = expression.Operator {
 			generateUnaryOperator(`operator`)
 		}
 		generateExpression(expression.Value)
-        if (expression.Operator == CGUnaryOperatorKind.Dereference) {
-            Append(")");
-        }
+		if (expression.Operator == CGUnaryOperatorKind.Dereference) {
+			Append(")");
+		}
 	}
 
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {

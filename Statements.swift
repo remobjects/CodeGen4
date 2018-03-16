@@ -353,7 +353,7 @@ public class CGLabelStatement: CGStatement {
 
 public class CGGotoStatement: CGStatement {
 	public var Target: String
-	
+
 	public init(_ target: String) {
 		Target = target
 	}

@@ -504,9 +504,9 @@
 			generateConstructorCallStatement(statement)
 		} else if let statement = statement as? CGEmptyStatement {
 			AppendLine()
-		} else if let expression = statement as? CGGotoStatement { 
+		} else if let expression = statement as? CGGotoStatement {
 			generateGotoStatement(expression)
-		} else if let expression = statement as? CGLabelStatement { 
+		} else if let expression = statement as? CGLabelStatement {
 			generateLabelStatement(expression)
 		} else if let expression = statement as? CGExpression { // should be last but one
 			generateExpressionStatement(expression)
@@ -684,12 +684,12 @@
 		assert(false, "generateConstructorCallStatement not implemented")
 	}
 
-    internal func generateGotoStatement(_ statement: CGGotoStatement) {
+	internal func generateGotoStatement(_ statement: CGGotoStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateGotoStatement not implemented")
 	}
 
-    internal func generateLabelStatement(_ statement: CGLabelStatement) {
+	internal func generateLabelStatement(_ statement: CGLabelStatement) {
 		// descendant must override this or generateImports()
 		assert(false, "generateLabelStatement not implemented")
 	}
@@ -1652,18 +1652,18 @@
 			}
 		}
 	}
-    
-    public final func ExpressionToString(_ expression: CGExpression) -> String {
-        currentCode = StringBuilder()
-		
+
+	public final func ExpressionToString(_ expression: CGExpression) -> String {
+		currentCode = StringBuilder()
+
 		generateExpression(expression);
 		return currentCode.ToString()
-    }
+	}
 
-    public final func StatementToString(_ statement: CGStatement) -> String {
-        currentCode = StringBuilder()
-		
+	public final func StatementToString(_ statement: CGStatement) -> String {
+		currentCode = StringBuilder()
+
 		generateStatement(statement);
 		return currentCode.ToString()
-    }
+	}
 }

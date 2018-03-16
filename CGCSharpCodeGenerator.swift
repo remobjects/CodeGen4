@@ -472,9 +472,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	internal func cSharpGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
-            if (expression.Name != "") {
-                Append(".")
-            }
+			if (expression.Name != "") {
+				Append(".")
+			}
 		}
 	}
 
@@ -499,8 +499,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-    override func generateConditionStart(_ condition: CGConditionalDefine) {
-        // repeated as c# does not have ifndef while C does.
+	override func generateConditionStart(_ condition: CGConditionalDefine) {
+		// repeated as c# does not have ifndef while C does.
 		Append("#if ")
 		generateExpression(condition.Expression)
 		AppendLine()
@@ -848,7 +848,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-        cSharpGenerateTypeVisibilityPrefix(type.Visibility)
+		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("using ")
 		generateIdentifier(type.Name)
 		Append(" = ")

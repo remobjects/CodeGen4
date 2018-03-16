@@ -454,16 +454,16 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}
 
-    override func generateGotoStatement(_ statement: CGGotoStatement) {
+	override func generateGotoStatement(_ statement: CGGotoStatement) {
 		Append("goto ");
-        Append(statement.Target);
-        generateStatementTerminator();
+		Append(statement.Target);
+		generateStatementTerminator();
 	}
 
-    override func generateLabelStatement(_ statement: CGLabelStatement) {
+	override func generateLabelStatement(_ statement: CGLabelStatement) {
 		Append(statement.Name);
-        Append(":");
-        generateStatementTerminator();
+		Append(":");
+		generateStatementTerminator();
 	}
 
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
@@ -633,23 +633,23 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		switch (`operator`) {
 			case .Plus: Append("+")
 			case .Minus: Append("-")
-            case .BitwiseNot: if inConditionExpression { Append("NOT ") } else { Append("not ") }            
-			case .Not: if inConditionExpression { Append("NOT ") } else { Append("not ") }            
+			case .BitwiseNot: if inConditionExpression { Append("NOT ") } else { Append("not ") }
+			case .Not: if inConditionExpression { Append("NOT ") } else { Append("not ") }
 			case .AddressOf: Append("@")
 			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
-            case .Dereference: 
+			case .Dereference:
 		}
 	}
 
-    override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
-        if (expression.Operator == CGUnaryOperatorKind.Dereference) {
-            generateExpression(expression.Value);
-            Append("^");
-        } else {
-            super.generateUnaryOperatorExpression(expression);
-        }
-        
-    }
+	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
+		if (expression.Operator == CGUnaryOperatorKind.Dereference) {
+			generateExpression(expression.Value);
+			Append("^");
+		} else {
+			super.generateUnaryOperatorExpression(expression);
+		}
+
+	}
 
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
@@ -708,9 +708,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if callSite is CGInheritedExpression {
 				Append(" ")
 			} else {
-                if (expression.Name != "") {
-                    Append(".")
-                }
+				if (expression.Name != "") {
+					Append(".")
+				}
 				return false
 			}
 		}
@@ -1076,7 +1076,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		generateIdentifier(type.Name)
 		Append(" = ")
-        pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		generateTypeReference(type.ActualType)
 		generateStatementTerminator()
 	}

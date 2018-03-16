@@ -410,9 +410,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	internal func javaGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
-            if (expression.Name != "") {
-                Append(".")
-            }
+			if (expression.Name != "") {
+				Append(".")
+			}
 		}
 	}
 
