@@ -500,14 +500,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
     override func generateConditionStart(_ condition: CGConditionalDefine) {
-		if let name = condition.Expression as? CGNamedIdentifierExpression {
-			Append("#ifdef ")
-			Append(name.Name)
-		} else {
-            // repeated as c# does not have ifndef while C does.
-			Append("#if ")
-			generateExpression(condition.Expression)
-		}
+        // repeated as c# does not have ifndef while C does.
+		Append("#if ")
+		generateExpression(condition.Expression)
 		AppendLine()
 	}
 
@@ -853,6 +848,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
+        cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("using ")
 		generateIdentifier(type.Name)
 		Append(" = ")
