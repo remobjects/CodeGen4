@@ -342,3 +342,19 @@ public class CGAssignmentStatement: CGStatement {
 		Value = value
 	}
 }
+
+public class CGLabelStatement: CGStatement {
+	public var Name: String
+
+	public init(_ name: String) {
+		Name = name
+	}
+}
+
+public class CGGotoStatement: CGStatement {
+	public var Target: String
+	
+	public init(_ target: String) {
+		Target = target
+	}
+}

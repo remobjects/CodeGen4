@@ -128,7 +128,7 @@
 	}
 
 	override func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
-		Append("var ")
+        Append("var ");
 		generateIdentifier(statement.Name)
 		if let type = statement.`Type` {
 			Append(": ")
@@ -138,6 +138,9 @@
 			Append(" := ")
 			generateExpression(value)
 		}
+        if (statement.ReadOnly) {
+            Append("; readonly");
+        }
 		AppendLine(";")
 	}
 
