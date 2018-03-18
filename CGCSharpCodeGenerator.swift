@@ -860,7 +860,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if block.IsPlainFunctionPointer {
 			Append("[FunctionPointer] ")
 		}
-        cSharpGenerateTypeVisibilityPrefix(block.Visibility)
+		cSharpGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("delegate ")
 		if let returnType = block.ReturnType {
 			generateTypeReference(returnType)
