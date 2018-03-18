@@ -1121,6 +1121,13 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		cSharpGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		cSharpGenerateStaticPrefix(field.Static && !type.Static)
+		var fixedArrayType: Boolean = false
+		if let arr = field.Type as? CGArrayTypeReference {
+			if let bounds = arr.Bounds, bounds.Count == 1 {
+				Append("fixed ");
+				fixedArrayType = true;
+			}
+		}
 		if field.Constant {
 			Append("const ")
 		}
@@ -1131,12 +1138,22 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 		csharpGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 		if let type = field.`Type` {
-			generateTypeReference(type)
+			if fixedArrayType {
+				generateTypeReference((type as! CGArrayTypeReference).Type)
+			} else {
+				generateTypeReference(type)
+			}
 			Append(" ")
 		} else {
 			Append("var ")
 		}
 		generateIdentifier(field.Name)
+		if fixedArrayType {
+			Append("[");
+			let arr = field.Type as! CGArrayTypeReference
+			Append("" + (arr.Bounds[0].end - arr.Bounds[0].start + 1));
+			Append("]");
+		}
 		if let value = field.Initializer {
 			Append(" = ")
 			generateExpression(value)
