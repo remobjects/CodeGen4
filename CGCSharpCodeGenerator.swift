@@ -1151,7 +1151,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if fixedArrayType {
 			Append("[");
 			let arr = field.Type as! CGArrayTypeReference
-			Append("" + (arr.Bounds[0].end - arr.Bounds[0].start + 1));
+			Append("" + (arr.Bounds[0].End - arr.Bounds[0].Start + 1));
 			Append("]");
 		}
 		if let value = field.Initializer {
