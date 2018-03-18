@@ -183,9 +183,9 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
-		Append("*(")
+		Append("(*(")
 		generateExpression(expression.PointerExpression)
-		Append(")")
+		Append("))")
 	}
 
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
@@ -195,25 +195,18 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .Not: Append("!")
 			case .BitwiseNot: Append("~")
 			case .AddressOf: Append("&")
-			case .Dereference: Append("*")
 			case .ForceUnwrapNullable: // no-op
 		}
 	}
 
 	internal func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 		// descendant may override, but this will work for most languages.
-		if (expression.Operator == CGUnaryOperatorKind.Dereference) {
-			Append("(");
-		}
 		if let operatorString = expression.OperatorString {
 			Append(operatorString)
 		} else if let `operator` = expression.Operator {
 			generateUnaryOperator(`operator`)
 		}
 		generateExpression(expression.Value)
-		if (expression.Operator == CGUnaryOperatorKind.Dereference) {
-			Append(")");
-		}
 	}
 
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {

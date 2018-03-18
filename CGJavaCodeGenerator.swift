@@ -707,8 +707,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if block.IsPlainFunctionPointer {
-			Append("[FunctionPointer] ")
+			Append("@FunctionPointer ")
 		}
+        javaGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("__block ")
 		if let returnType = block.ReturnType {
 			generateTypeReference(returnType)

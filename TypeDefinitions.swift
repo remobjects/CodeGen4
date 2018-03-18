@@ -265,6 +265,7 @@ public __abstract class CGFieldOrPropertyDefinition: CGFieldLikeMemberDefinition
 
 public class CGFieldDefinition: CGFieldOrPropertyDefinition {
 	public var Constant = false
+	public var Volatile = false
 }
 
 public class CGPropertyDefinition: CGFieldOrPropertyDefinition {

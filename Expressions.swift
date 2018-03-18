@@ -259,7 +259,6 @@ public enum CGUnaryOperatorKind {
 	case Not
 	case AddressOf
 	case ForceUnwrapNullable
-	case Dereference
 	case BitwiseNot
 }
 

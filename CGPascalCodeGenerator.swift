@@ -637,18 +637,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			case .Not: if inConditionExpression { Append("NOT ") } else { Append("not ") }
 			case .AddressOf: Append("@")
 			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
-			case .Dereference:
 		}
-	}
-
-	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
-		if (expression.Operator == CGUnaryOperatorKind.Dereference) {
-			generateExpression(expression.Value);
-			Append("^");
-		} else {
-			super.generateUnaryOperatorExpression(expression);
-		}
-
 	}
 
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
@@ -1536,6 +1525,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				Append(" := ")
 				generateExpression(initializer)
 			}
+		}
+
+		if field.Volatile {
+			Append("; volatile")
 		}
 
 		if isUnified {

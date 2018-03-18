@@ -860,6 +860,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if block.IsPlainFunctionPointer {
 			Append("[FunctionPointer] ")
 		}
+        cSharpGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("delegate ")
 		if let returnType = block.ReturnType {
 			generateTypeReference(returnType)
@@ -1122,6 +1123,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateStaticPrefix(field.Static && !type.Static)
 		if field.Constant {
 			Append("const ")
+		}
+
+		if field.Volatile {
+			Append("volatile ")
 		}
 
 		csharpGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
