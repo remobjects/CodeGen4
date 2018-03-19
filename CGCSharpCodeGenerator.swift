@@ -74,7 +74,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateGlobals() {
 		if let globals = currentUnit.Globals, globals.Count > 0{
-			AppendLine("public static class __Globals")
+			AppendLine("public static partial class __Global")
 			AppendLine("{")
 			incIndent()
 			super.generateGlobals()
