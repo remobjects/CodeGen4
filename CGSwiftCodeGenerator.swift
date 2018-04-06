@@ -965,6 +965,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		incIndent()
 		for m in type.Members {
 			if let m = m as? CGEnumValueDefinition {
+				self.generateAttributes(m.Attributes)
 				Append("case ")
 				generateIdentifier(m.Name)
 				if let value = m.Value {

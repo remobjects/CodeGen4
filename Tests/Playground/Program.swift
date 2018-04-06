@@ -9,9 +9,18 @@ var class1 = CGClassTypeDefinition("ConsoleApplication17.AgeRangeDataSetTableAda
 var class2 = CGClassTypeDefinition("TableAdapterManager")
 class1.Members.Add(CGNestedTypeDefinition(class2))
 class2.Members.Add(CGMethodDefinition("foo"))
-unit.Types.Add(class1)
+//unit.Types.Add(class1)
 
-var cg = CGOxygeneCodeGenerator()
+var enum1 = CGEnumTypeDefinition("Foo")
+var val = CGEnumValueDefinition("Bar")
+val.Attributes.Add(CGAttribute(CGNamedTypeReference("Boo")))
+enum1.Attributes.Add(CGAttribute(CGNamedTypeReference("Baz")))
+enum1.Members.Add(CGEnumValueDefinition("Bozo"))
+enum1.Members.Add(val)
+unit.Types.Add(enum1)
+
+
+var cg = CGJavaCodeGenerator()
 var code = cg.GenerateUnit(unit)
 
 print(code)
