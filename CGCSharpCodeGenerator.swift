@@ -290,6 +290,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if let name = statement.ConstructorName {
+			Append(" ")
 			Append(name)
 		}
 		Append("(")
