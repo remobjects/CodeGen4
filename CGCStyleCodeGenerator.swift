@@ -199,16 +199,6 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	internal func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
-		// descendant may override, but this will work for most languages.
-		if let operatorString = expression.OperatorString {
-			Append(operatorString)
-		} else if let `operator` = expression.Operator {
-			generateUnaryOperator(`operator`)
-		}
-		generateExpression(expression.Value)
-	}
-
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Concat: fallthrough
