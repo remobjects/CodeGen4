@@ -152,7 +152,7 @@
 			} else if callSite is CGSelfExpression {
 				// no-op
 			} else {
-				assert(false, "Unsupported call site for construtor call.")
+				assert(false, "Unsupported call site for constructor call.")
 			}
 		}
 

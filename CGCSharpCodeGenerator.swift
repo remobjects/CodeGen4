@@ -285,7 +285,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			} else if callSite is CGSelfExpression {
 				Append("this")
 			} else {
-				assert(false, "Unsupported call site for construtor call.")
+				assert(false, "Unsupported call site for constructor call.")
 			}
 		}
 
