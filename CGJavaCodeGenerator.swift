@@ -264,7 +264,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
 		if let callSite = statement.CallSite {
 			if callSite is CGInheritedExpression {
-				Append("base")
+				Append("super")
 			} else if callSite is CGSelfExpression {
 				Append("this")
 			} else {
