@@ -674,7 +674,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func javaGeneratePartialPrefix(_ isPartial: Boolean) {
-		if isPartial {
+		if isPartial && Dialect == .Iodine {
 			Append("__partial ")
 		}
 	}

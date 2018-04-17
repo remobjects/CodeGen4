@@ -906,8 +906,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func swiftGeneratePartialPrefix(_ isPartial: Boolean) {
-		if isPartial {
-			Append("partial ")
+		if isPartial  && Dialect == .Silver {
+			Append("__partial ")
 		}
 	}
 
