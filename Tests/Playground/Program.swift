@@ -19,8 +19,19 @@ enum1.Members.Add(CGEnumValueDefinition("Bozo"))
 enum1.Members.Add(val)
 unit.Types.Add(enum1)
 
+var ctor = CGConstructorDefinition("withFoo")
+var param = CGParameterDefinition("paramName", CGNamedTypeReference("ParamType"))
+param.ExternalName = "blub"
+ctor.Parameters.Add(param)
+var cls = CGClassTypeDefinition("CtorTest")
+cls.Members.Add(ctor)
+unit.Types.Add(cls)
 
-var cg = CGJavaCodeGenerator()
+var cg = CGSwiftCodeGenerator()
 var code = cg.GenerateUnit(unit)
+
+
+//var cg = CGJavaCodeGenerator()
+//var code = cg.GenerateUnit(unit)
 
 print(code)
