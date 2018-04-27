@@ -1662,7 +1662,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateMethodImplementation(property.GetterMethodDefinition()!, type: type)
 		}
 		if let setStatements = property.SetStatements {
-			pascalGenerateMethodImplementation(property.GetterMethodDefinition()!, type: type)
+			pascalGenerateMethodImplementation(property.SetterMethodDefinition()!, type: type)
 		}
 	}
 
