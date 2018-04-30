@@ -1561,6 +1561,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			}
 			self.Append("read")
 		}
+
 		func appendWrite() {
 			self.Append(" ")
 			if let v = property.SetterVisibility {
@@ -1638,16 +1639,27 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" default;")
 		}
 		pascalGenerateVirtualityModifiders(property)
-		AppendLine()
+		AppendLine();
+
+		if isUnified && !(type is CGInterfaceTypeDefinition) {
+			AppendLine();
+			pascalGeneratePropertyAccessorDefinition(property, type: type);
+		}
 	}
 
 	func pascalGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if !definitionOnly {
+			var isAppendLineNeeded: Boolean = false;
+
 			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
-				generateMethodDefinition(getterMethod, type: type)
+				generateMethodDefinition(getterMethod, type: type);
+				isAppendLineNeeded = true;
 			}
 			if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
-				generateMethodDefinition(setterMethod!, type: type)
+				if isAppendLineNeeded && isUnified {
+					AppendLine();
+				}
+				generateMethodDefinition(setterMethod, type: type);
 			}
 		}
 	}
