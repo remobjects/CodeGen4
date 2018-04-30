@@ -1212,7 +1212,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("(set) ")
 			}
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
+			if !(type is CGInterfaceTypeDefinition) {
+				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
+			}
 		}
 
 		swiftGenerateStaticPrefix(property.Static && !type.Static)
@@ -1253,6 +1255,18 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if property.IsShortcutProperty {
+
+			if type is CGInterfaceTypeDefinition  {
+				if property.ReadOnly {
+					Append(" { get }")
+				} else if property.WriteOnly {
+					Append(" { set }")
+				} else {
+					Append(" { get set }")
+				}
+				AppendLine()
+				return
+			}
 
 			if let value = property.Initializer {
 				Append(" = ")
