@@ -1216,6 +1216,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateTypeMembers(_ type: CGTypeDefinition) {
 		if isUnified {
 			if type.Members.Count > 0 {
+				decIndent()
+				AppendLine("private")
+				incIndent()
+				AppendLine()
 				super.generateTypeMembers(type)
 				// Todo: generate property and event implementations.
 				AppendLine()
@@ -1329,6 +1333,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if let conversion = method.CallingConvention {
 				pascalGenerateCallingConversion(conversion);
 			}
+
 		}
 
 		AppendLine()
