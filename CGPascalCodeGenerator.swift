@@ -1216,10 +1216,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateTypeMembers(_ type: CGTypeDefinition) {
 		if isUnified {
 			if type.Members.Count > 0 {
-				decIndent()
-				AppendLine("private")
-				incIndent()
-				AppendLine()
+				if !(type is CGInterfaceTypeDefinition) {
+					decIndent()
+					AppendLine("private")
+					incIndent()
+					AppendLine()
+				}
 				super.generateTypeMembers(type)
 				// Todo: generate property and event implementations.
 				AppendLine()
@@ -1433,7 +1435,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(method, type: type, methodKeyword:pascalKeywordForMethod(method), implementation: false, includeVisibility: isUnified)
-		if isUnified {
+		if isUnified && !(type is CGInterfaceTypeDefinition) {
 			if (method.Virtuality != CGMemberVirtualityKind.Abstract) && !method.External && !method.Empty {
 				pascalGenerateMethodBody(method, type: type)
 			}
