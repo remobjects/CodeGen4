@@ -623,11 +623,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 	*/
 
+	/*
 	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
-		Append("(");
-		super.generateBinaryOperatorExpression(expression);
-		Append(")");
+		// handled in base
 	}
+	*/
 
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
