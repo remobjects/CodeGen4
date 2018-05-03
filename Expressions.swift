@@ -663,6 +663,9 @@ public __abstract class CGMemberAccessExpression : CGExpression {
 public class CGFieldAccessExpression : CGMemberAccessExpression {
 }
 
+public class CGEventAccessExpression : CGFieldAccessExpression {
+}
+
 public class CGEnumValueAccessExpression : CGExpression {
 	public var `Type`: CGTypeReference
 	public var ValueName: String
