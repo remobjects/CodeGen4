@@ -500,7 +500,7 @@
 	*/
 
 	override func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
-		// handled in base
+
 	}
 
 	override func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
