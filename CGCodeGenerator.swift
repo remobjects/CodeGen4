@@ -764,10 +764,10 @@
 			generateIfThenElseExpression(expression)
 		} else if let expression = expression as? CGLocalVariableAccessExpression {
 			generateLocalVariableAccessExpression(expression)
-		} else if let expression = expression as? CGFieldAccessExpression {
-			generateFieldAccessExpression(expression)
 		} else if let expression = expression as? CGEventAccessExpression {
 			generateEventAccessExpression(expression)
+		} else if let expression = expression as? CGFieldAccessExpression {
+			generateFieldAccessExpression(expression)
 		} else if let expression = expression as? CGArrayElementAccessExpression {
 			generateArrayElementAccessExpression(expression)
 		} else if let expression = expression as? CGMethodCallExpression {
