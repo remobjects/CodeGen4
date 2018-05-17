@@ -1567,7 +1567,8 @@
 	internal var inConditionExpression = false
 
 	internal var positionedAfterPeriod: Boolean {
-		return (currentCode.ToString() as! String).EndsWith(".")
+		let length = currentCode.Length
+		return (length > 0) && (currentCode[length-1] == ".")
 	}
 
 	internal private(set) var currentLocation = CGLocation()
