@@ -1090,7 +1090,6 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
 
 	}
-	*/
 
 	override func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
 		if let genericArguments = genericArguments, genericArguments.Count > 0 {
@@ -1105,6 +1104,8 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append(">")
 		}
 	}
+	*/
+
 
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		if (!ignoreNullability) && (((type.Nullability == CGTypeNullabilityKind.NullableUnwrapped) && (type.DefaultNullability == CGTypeNullabilityKind.NotNullable)) || (type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped)) {

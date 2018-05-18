@@ -999,7 +999,7 @@
 				if p > 0 {
 					Append(",")
 				}
-				generateTypeReference(param, ignoreNullability: true)
+				generateTypeReference(param, ignoreNullability: false)
 			}
 			Append(")")
 		}
