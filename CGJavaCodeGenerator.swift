@@ -1086,27 +1086,6 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	// Type References
 	//
 
-	/*
-	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
-
-	}
-
-	override func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
-		if let genericArguments = genericArguments, genericArguments.Count > 0 {
-			Append("<")
-			for p in 0 ..< genericArguments.Count {
-				let param = genericArguments[p]
-				if p > 0 {
-					Append(",")
-				}
-				generateTypeReference(param) // overriden from base to not omit nullability on Java
-			}
-			Append(">")
-		}
-	}
-	*/
-
-
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		if (!ignoreNullability) && (((type.Nullability == CGTypeNullabilityKind.NullableUnwrapped) && (type.DefaultNullability == CGTypeNullabilityKind.NotNullable)) || (type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped)) {
 			switch (type.Kind) {
