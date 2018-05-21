@@ -585,7 +585,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	private func swiftGenerateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
 		if emitExternal, let externalName = externalName ?? param.ExternalName {
 			if externalName != param.Name {
-				writeLn(externalName)
 				generateIdentifier(externalName)
 				Append(" ")
 			}
