@@ -411,7 +411,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
 			if (expression.Name != "") {
-				Append(".")
+				if expression.NilSafe {
+					Append("?.")
+				else
+					Append(".")
 			}
 		}
 	}

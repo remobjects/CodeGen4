@@ -698,7 +698,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				Append(" ")
 			} else {
 				if (expression.Name != "") {
-					Append(".")
+					if expression.NilSafe {
+						Append(":")
+					else
+						Append(".")
 				}
 				return false
 			}
