@@ -476,8 +476,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if (expression.Name != "") {
 				if expression.NilSafe {
 					Append("?.")
-				else
+				} else {
 					Append(".")
+				}
 			}
 		}
 	}

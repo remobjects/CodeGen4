@@ -413,8 +413,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			if (expression.Name != "") {
 				if expression.NilSafe {
 					Append("?.")
-				else
+				} else {
 					Append(".")
+				}
 			}
 		}
 	}
