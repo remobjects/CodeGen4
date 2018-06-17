@@ -1528,7 +1528,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	private func removeWithPrefix(_ name: String) -> String {
 		var name = name
-		if name.ToLower().StartsWith("with") {
+		if name.ToLowerInvariant().StartsWith("with") {
 			name = name.Substring(4)
 		}
 		return lowercaseFirstLetter(name)
