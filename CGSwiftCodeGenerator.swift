@@ -583,7 +583,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	private func swiftGenerateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
-		if emitExternal, let externalName = param.ExternalName ?? externalName {
+		if emitExternal, let externalName = externalName ?? param.ExternalName {
 			if externalName != param.Name {
 				generateIdentifier(externalName)
 				Append(" ")
@@ -1211,7 +1211,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("(set) ")
 			}
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
+			if !(type is CGInterfaceTypeDefinition) {
+				swiftGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
+			}
 		}
 
 		swiftGenerateStaticPrefix(property.Static && !type.Static)
@@ -1252,6 +1254,18 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if property.IsShortcutProperty {
+
+			if type is CGInterfaceTypeDefinition  {
+				if property.ReadOnly {
+					Append(" { get }")
+				} else if property.WriteOnly {
+					Append(" { set }")
+				} else {
+					Append(" { get set }")
+				}
+				AppendLine()
+				return
+			}
 
 			if let value = property.Initializer {
 				Append(" = ")
@@ -1528,7 +1542,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	private func removeWithPrefix(_ name: String) -> String {
 		var name = name
-		if name.ToLower().StartsWith("with") {
+		if name.ToLowerInvariant().StartsWith("with") {
 			name = name.Substring(4)
 		}
 		return lowercaseFirstLetter(name)

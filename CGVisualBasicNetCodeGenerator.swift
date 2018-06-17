@@ -240,9 +240,11 @@
 		}
 	}
 
+	/*
 	override func generateNamedIdentifierExpression(_ expression: CGNamedIdentifierExpression) {
-
+		// handled in base
 	}
+	*/
 
 	override func generateAssignedExpression(_ expression: CGAssignedExpression) {
 		if !expression.Inverted {
@@ -269,7 +271,19 @@
 	}
 
 	override func generateTypeCastExpression(_ expression: CGTypeCastExpression) {
-
+		if expression.ThrowsException {
+			Append("CType(")
+			generateExpression(expression.Expression)
+			Append(", ")
+			generateTypeReference(expression.TargetType)
+			Append(")")
+		} else {
+			Append("TryCast(")
+			generateExpression(expression.Expression)
+			Append(", ")
+			generateTypeReference(expression.TargetType)
+			Append(")")
+		}
 	}
 
 	override func generateInheritedExpression(_ expression: CGInheritedExpression) {
@@ -285,7 +299,7 @@
 	}
 
 	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
-
+		Append("value")
 	}
 
 	override func generateAwaitExpression(_ expression: CGAwaitExpression) {
@@ -310,11 +324,22 @@
 	}
 	*/
 
-	/*
 	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
-		// handled in base
+		// null check is a very special case in VB.NET
+		if let nilExpression = (expression.RighthandValue as? CGNilExpression), (expression.Operator == CGBinaryOperatorKind.Equals || expression.Operator == CGBinaryOperatorKind.NotEquals) {
+			if expression.Operator == CGBinaryOperatorKind.NotEquals {
+				Append("Not ")
+			}
+			Append("(")
+			generateExpression(expression.LefthandValue)
+			Append(")")
+			Append(" Is ")
+			generateNilExpression(nilExpression);
+		}
+		else {
+			super.generateBinaryOperatorExpression(expression)
+		}
 	}
-	*/
 
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 
@@ -366,6 +391,11 @@
 	override func generateFieldAccessExpression(_ expression: CGFieldAccessExpression) {
 		vbGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
+	}
+
+	override func generateEventAccessExpression(_ expression: CGEventAccessExpression) {
+		generateFieldAccessExpression(expression)
+		Append("Event")
 	}
 
 	/*
@@ -724,7 +754,6 @@
 		vbGenerateGenericConstraints(type.GenericParameters)
 		vbGenerateAncestorList(type)
 		AppendLine()
-		AppendLine("{")
 		incIndent()
 	}
 
@@ -745,6 +774,26 @@
 	// Type Members
 	//
 
+	internal func vbKeywordForMethod(_ method: CGMethodDefinition) -> String {
+		if let returnType = method.ReturnType, !returnType.IsVoid {
+			return "Function"
+		}
+		return "Sub"
+	}
+
+	func vbGenerateImplementedInterface(_ member: CGMemberDefinition) {
+		if let implementsInterface = member.ImplementsInterface {
+			Append(" Implements ")
+			generateTypeReference(implementsInterface)
+			Append(".")
+			if let implementsMember = member.ImplementsInterfaceMember {
+				generateIdentifier(implementsMember)
+			} else {
+				generateIdentifier(member.Name)
+			}
+		}
+	}
+
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 			vbGenerateStaticPrefix(method.Static && !type.Static)
@@ -759,7 +808,8 @@
 			}*/
 			vbGenerateVirtualityPrefix(method)
 		}
-		Append("Sub ")
+		Append(vbKeywordForMethod(method))
+		Append(" ")
 		generateIdentifier(method.Name)
 		vbGenerateGenericParameters(method.GenericParameters)
 		Append("(")
@@ -771,6 +821,7 @@
 			generateTypeReference(returnType)
 			returnType.endLocation = currentLocation
 		}
+		vbGenerateImplementedInterface(method)
 		AppendLine()
 		//vbGenerateGenericConstraints(method.GenericParameters)
 
@@ -782,7 +833,8 @@
 		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
 		decIndent()
-		AppendLine("End Sub")
+		Append("End ")
+		AppendLine(vbKeywordForMethod(method))
 	}
 
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
@@ -819,10 +871,6 @@
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		vbGenerateStaticPrefix(property.Static && !type.Static)
-		vbGenerateVirtualityPrefix(property)
-
 		if property.ReadOnly || (property.SetStatements == nil && property.SetExpression == nil && (property.GetStatements != nil || property.GetExpression != nil)) {
 			Append("ReadOnly ")
 		} else {
@@ -833,7 +881,7 @@
 
 		Append("Property ")
 		//if property.Default {
-		//    Append("this")
+		// Append("this")
 		//} else {
 			generateIdentifier(property.Name)
 		//}
@@ -849,33 +897,16 @@
 			Append("]")
 		}
 
-		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
+		vbGenerateImplementedInterface(property)
 
-			if property.ReadOnly {
-				Append(" { get; }")
-			} else if property.WriteOnly {
-				Append(" { set; }")
-			} else {
-				Append(" { get; set; }")
-			}
+		if property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil {
 			if let value = property.Initializer {
 				Append(" = ")
 				generateExpression(value)
 			}
 			AppendLine()
-
 		} else {
-
 			if definitionOnly {
-				/*Append("{ ")
-				if property.GetStatements != nil || property.GetExpression != nil {
-					Append("get; ")
-				}
-				if property.SetStatements != nil || property.SetExpression != nil {
-					Append("set; ")
-				}
-				Append("}")
-				AppendLine()*/
 				return
 			}
 
@@ -925,7 +956,20 @@
 	}
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
+		vbGenerateMemberTypeVisibilityPrefix(event.Visibility)
+		vbGenerateStaticPrefix(event.Static && !type.Static)
+		vbGenerateVirtualityPrefix(event)
 
+		Append("Event ")
+		generateIdentifier(event.Name)
+		if let type = event.`Type` {
+			Append(" As ")
+			generateTypeReference(type)
+		}
+
+		vbGenerateImplementedInterface(event)
+
+		AppendLine()
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
@@ -940,35 +984,52 @@
 	// Type References
 	//
 
+	/*
 	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
+		// handled in base
+	}
+	*/
 
+	override func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
+		if let genericArguments = genericArguments, genericArguments.Count > 0 {
+			Append("(")
+			Append("Of ")
+			for p in 0 ..< genericArguments.Count {
+				let param = genericArguments[p]
+				if p > 0 {
+					Append(",")
+				}
+				generateTypeReference(param, ignoreNullability: false)
+			}
+			Append(")")
+		}
 	}
 
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
-			case .Int: Append("")
-			case .UInt: Append("")
-			case .Int8: Append("")
-			case .UInt8: Append("")
-			case .Int16: Append("")
-			case .UInt16: Append("")
-			case .Int32: Append("")
-			case .UInt32: Append("")
-			case .Int64: Append("")
-			case .UInt64: Append("")
-			case .IntPtr: Append("")
-			case .UIntPtr: Append("")
-			case .Single: Append("")
-			case .Double: Append("")
-			case .Boolean: Append("")
-			case .String: Append("")
-			case .AnsiChar: Append("")
-			case .UTF16Char: Append("")
-			case .UTF32Char: Append("")
+			case .Int: Append("Integer")
+			case .UInt: Append("UInteger")
+			case .Int8: Append("SByte")
+			case .UInt8: Append("Byte")
+			case .Int16: Append("Short")
+			case .UInt16: Append("UShort")
+			case .Int32: Append("Integer")
+			case .UInt32: Append("UInteger")
+			case .Int64: Append("Long")
+			case .UInt64: Append("ULong")
+			case .IntPtr: Append("IntPtr")
+			case .UIntPtr: Append("UIntPtr")
+			case .Single: Append("Single")
+			case .Double: Append("Double")
+			case .Boolean: Append("Boolean")
+			case .String: Append("String")
+			case .AnsiChar: Append("AnsiChar")
+			case .UTF16Char: Append("Char")
+			case .UTF32Char: Append("UInt32")
 			case .Dynamic: Append("")
 			case .InstanceType: Append("")
 			case .Void: Append("")
-			case .Object: Append("")
+			case .Object: Append("Object")
 			case .Class: Append("")
 		}
 	}
@@ -990,7 +1051,13 @@
 	}
 
 	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
-
+		generateTypeReference(type.`Type`)
+		Append("()")
+		if let bounds = type.Bounds, bounds.Count > 0 {
+			for b in 1 ..< type.Bounds.Count {
+				Append("()")
+			}
+		}
 	}
 
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {

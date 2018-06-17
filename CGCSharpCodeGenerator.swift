@@ -474,7 +474,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
 			if (expression.Name != "") {
-				Append(".")
+				if expression.NilSafe {
+					Append("?.")
+				} else {
+					Append(".")
+				}
 			}
 		}
 	}
@@ -1164,9 +1168,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		cSharpGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		cSharpGenerateStaticPrefix(property.Static && !type.Static)
-		cSharpGenerateVirtualityPrefix(property)
+		if !(type is CGInterfaceTypeDefinition) {
+			cSharpGenerateMemberTypeVisibilityPrefix(property.Visibility)
+			cSharpGenerateStaticPrefix(property.Static && !type.Static)
+			cSharpGenerateVirtualityPrefix(property)
+		}
 
 		csharpGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
 		if let type = property.`Type` {
@@ -1194,6 +1200,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			}
 			self.Append("get")
 		}
+
 		func appendSet() {
 			if let v = property.SetterVisibility {
 				self.cSharpGenerateMemberTypeVisibilityPrefix(v)

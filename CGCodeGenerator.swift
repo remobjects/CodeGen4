@@ -764,6 +764,8 @@
 			generateIfThenElseExpression(expression)
 		} else if let expression = expression as? CGLocalVariableAccessExpression {
 			generateLocalVariableAccessExpression(expression)
+		} else if let expression = expression as? CGEventAccessExpression {
+			generateEventAccessExpression(expression)
 		} else if let expression = expression as? CGFieldAccessExpression {
 			generateFieldAccessExpression(expression)
 		} else if let expression = expression as? CGArrayElementAccessExpression {
@@ -937,6 +939,10 @@
 	internal func generateFieldAccessExpression(_ expression: CGFieldAccessExpression) {
 		// descendant must override
 		assert(false, "generateFieldAccessExpression not implemented")
+	}
+
+	internal func generateEventAccessExpression(_ expression: CGEventAccessExpression) {
+		generateFieldAccessExpression(expression)
 	}
 
 	internal func generateArrayElementAccessExpression(_ expression: CGArrayElementAccessExpression) {
@@ -1408,7 +1414,7 @@
 				if p > 0 {
 					Append(",")
 				}
-				generateTypeReference(param, ignoreNullability: true)
+				generateTypeReference(param, ignoreNullability: false)
 			}
 			Append(">")
 		}
@@ -1561,7 +1567,8 @@
 	internal var inConditionExpression = false
 
 	internal var positionedAfterPeriod: Boolean {
-		return (currentCode.ToString() as! String).EndsWith(".")
+		let length = currentCode.Length
+		return (length > 0) && (currentCode[length-1] == ".")
 	}
 
 	internal private(set) var currentLocation = CGLocation()
