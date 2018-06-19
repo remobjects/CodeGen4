@@ -27,19 +27,6 @@ var cls = CGClassTypeDefinition("CtorTest")
 cls.Members.Add(ctor)
 unit.Types.Add(cls)
 
-let result = CGConstructorDefinition
-result.Parameters.Add(CGParameterDefinition("url",
-pt,
-ExternalName := "of",
-Modifier := case el.Mode of
-FxParameterMode.Out: CGParameterModifierKind.Out;
-FxParameterMode.Ref: CGParameterModifierKind.Var;
-FxParameterMode.Params,
-FxParameterMode.Ellipsis: CGParameterModifierKind.Params;
-else CGParameterModifierKind.In;
-end));
-end;
-
 var cg = CGSwiftCodeGenerator()
 var code = cg.GenerateUnit(unit)
 
