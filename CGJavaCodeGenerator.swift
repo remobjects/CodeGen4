@@ -1079,7 +1079,22 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
-		assert(false, "generateEventDefinition is not supported in Java")
+
+		if Dialect != .Iodine {
+			assert(false, "generateEventDefinition is not supported in Java, except in Iodine")
+		}
+
+		javaGenerateMemberTypeVisibilityPrefix(event.Visibility)
+		javaGenerateStaticPrefix(event.Static && !type.Static)
+		javaGenerateVirtualityPrefix(event)
+
+		Append("__event ")
+		if let type = event.`Type` {
+			generateTypeReference(type)
+			Append(" ")
+		}
+		generateIdentifier(event.Name)
+		AppendLine(";")
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
