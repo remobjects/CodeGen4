@@ -312,7 +312,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateSelectorExpression(_ expression: CGSelectorExpression) {
-		assert(false, "generateSelectorExpression is not supported in C#, except in Hydrogene")
+		assert(false, "generateSelectorExpression is not supported")
 	}
 
 	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
@@ -322,7 +322,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			generateExpression(cast.Expression)
 			Append("))")
 		if !cast.ThrowsException {
-			Append("/* exception-less lasts not supported */")
+			Append("/* exception-less casts not supported */")
 		}
 	}
 
