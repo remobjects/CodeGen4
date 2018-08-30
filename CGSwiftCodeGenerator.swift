@@ -605,6 +605,9 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			default:
 		}
 		generateTypeReference(param.`Type`)
+		if param.Modifier == .Params {
+			Append("...")
+		}
 		if let defaultValue = param.DefaultValue {
 			Append(" = ")
 			generateExpression(defaultValue)
