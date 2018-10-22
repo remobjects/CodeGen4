@@ -151,13 +151,3 @@ public extension CGMethodDefinition {
 		return CGGlobalFunctionDefinition(self)
 	}
 }
-
-public extension Swift.Array {
-	public func ToList() -> List<T>{
-		var l = List<T>();
-		for m in self {
-			l.Add(m);
-		}
-		return l;
-	}
-}
