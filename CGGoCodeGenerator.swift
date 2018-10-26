@@ -1180,12 +1180,12 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine("}")
 	}
 
-	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
+	internal func generateFieldOrPropertyDefinition(_ field: CGFieldOrPropertyDefinition, type: CGTypeDefinition) {
 		goGenerateMemberTypeVisibilityPrefix(field.Visibility, virtuality: field.Virtuality)
 		goGenerateStaticPrefix(field.Static && !type.Static)
-		goGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
-		if field.Constant {
-			Append("let ")
+		//goGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
+		if field.ReadOnly || (field as? CGFieldDefinition)?.Constant {
+			Append("const ")
 		} else {
 			Append("var ")
 		}
@@ -1194,141 +1194,24 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 			Append(": ")
 			generateTypeReference(type)
 		}
+
 		if let value = field.Initializer {
 			Append(" = ")
 			generateExpression(value)
-		} else {
-			goGenerateDefaultInitializerForType(field.`Type`)
 		}
 		AppendLine()
 	}
 
+	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
+		generateFieldOrPropertyDefinition(field, type: type)
+	}
+
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-
-		if property.GetterVisibility != nil || property.SetterVisibility != nil {
-			if let v = property.GetterVisibility {
-				goGenerateMemberTypeVisibilityPrefix(v, virtuality: property.Virtuality, appendSpace: false)
-				Append("(get) ")
-			} else {
-				goGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
-			}
-
-			if let v = property.SetterVisibility {
-				goGenerateMemberTypeVisibilityPrefix(v, virtuality: property.Virtuality, appendSpace: false)
-				Append("(set) ")
-			} else {
-				goGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality, appendSpace: false)
-				Append("(set) ")
-			}
-		} else {
-			if !(type is CGInterfaceTypeDefinition) {
-				goGenerateMemberTypeVisibilityPrefix(property.Visibility, virtuality: property.Virtuality)
-			}
-		}
-
-		goGenerateStaticPrefix(property.Static && !type.Static)
-		if property.Lazy {
-			Append("lazy ")
-		}
-		goGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
-
 		if let params = property.Parameters, params.Count > 0 {
-
-			Append("subscript ")
-			generateIdentifier(property.Name)
-			Append("(")
-			goGenerateDefinitionParameters(params)
-			Append(")")
-			if let type = property.`Type` {
-				Append(" -> ")
-				generateTypeReference(type)
-			} else {
-				assert(false, "Swift Subscripts must have a well-defined type.")
-			}
-			assert(property.Initializer == nil, "Go Subscripts cannot have an initializer.")
-
+			assert(property.Initializer == nil, "Indexers are not supported for Go.")
 		} else {
-
-			if property.ReadOnly && (property.IsShortcutProperty) {
-				Append("let ")
-			} else if property.WriteOnly {
-				Append("private(set) var ")
-			} else {
-				Append("var ")
-			}
-			generateIdentifier(property.Name)
-			if let type = property.`Type` {
-				Append(": ")
-				generateTypeReference(type)
-			}
-		}
-
-		if property.IsShortcutProperty {
-
-			if type is CGInterfaceTypeDefinition  {
-				if property.ReadOnly {
-					Append(" { get }")
-				} else if property.WriteOnly {
-					Append(" { set }")
-				} else {
-					Append(" { get set }")
-				}
-				AppendLine()
-				return
-			}
-
-			if let value = property.Initializer {
-				Append(" = ")
-				generateExpression(value)
-			} else {
-				goGenerateDefaultInitializerForType(property.`Type`)
-			}
-			AppendLine()
-
-		} else {
-
-			if let value = property.Initializer {
-				assert(false, "Swift Properties cannot have both accessor statements and an initializer")
-			}
-
-			if type is CGInterfaceTypeDefinition || definitionOnly {
-				AppendLine()
-				return
-			}
-
-			AppendLine(" {")
-			incIndent()
-
-			if let getStatements = property.GetStatements {
-				AppendLine("get {")
-				incIndent()
-				generateStatementsSkippingOuterBeginEndBlock(getStatements)
-				decIndent()
-				AppendLine("}")
-			} else if let getExpresssion = property.GetExpression {
-				AppendLine("get {")
-				incIndent()
-				generateStatement(CGReturnStatement(getExpresssion))
-				decIndent()
-				AppendLine("}")
-			}
-
-			if let setStatements = property.SetStatements {
-				AppendLine("set {")
-				incIndent()
-				generateStatementsSkippingOuterBeginEndBlock(setStatements)
-				decIndent()
-				AppendLine("}")
-			} else if let setExpression = property.SetExpression {
-				AppendLine("set {")
-				incIndent()
-				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
-				decIndent()
-				AppendLine("}")
-			}
-
-			decIndent()
-			AppendLine("}")
+			//generateFieldOrPropertyDefinition(field, type: type) // E46 Unknown identifier "generateFieldOrPropertyDefinition type"
+			generateFieldOrPropertyDefinition(property, type: type)
 		}
 	}
 
@@ -1367,22 +1250,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	func goSuffixForNullability(_ nullability: CGTypeNullabilityKind, defaultNullability: CGTypeNullabilityKind) -> String {
-		switch nullability {
-			case .Unknown:
-				if Dialect == CGGoCodeGeneratorDialect.Gold {
-					return "¡"
-				} else {
-					return ""
-				}
-			case .NullableUnwrapped:
-				return "!"
-			case .NullableNotUnwrapped:
-				return "?"
-			case .NotNullable:
-				return ""
-			case .Default:
-				return goSuffixForNullability(defaultNullability, defaultNullability:CGTypeNullabilityKind.Unknown)
-		}
+		return ""
 	}
 
 	func goSuffixForNullabilityForCollectionType(_ type: CGTypeReference) -> String {
