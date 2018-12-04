@@ -151,3 +151,10 @@ public extension CGMethodDefinition {
 		return CGGlobalFunctionDefinition(self)
 	}
 }
+
+@if(defined("TOFFEE") && exists(Swift.Array))
+public extension Swift.Array {
+	public func ToList() -> List<T> {
+		return self.platformList.ToList()
+	}
+}
