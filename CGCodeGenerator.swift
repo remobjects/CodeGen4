@@ -170,6 +170,181 @@
 		}
 	}
 
+	/* */
+
+	public var failOnAsserts: Boolean = false
+
+	@inline()internal func assert(_ fatal: Boolean, _ message: String) {
+
+	}
+	internal func assert(_ fatal: Boolean, _ message: String) {
+		if failOnAsserts {
+			throw Exception(message)
+		} else {
+			generateInlineComment(message)
+		}
+	}
+
+	/* These following functions *can* be overriden by descendants, if needed */
+
+	internal func generateHeader() {
+		// descendant can override, if needed
+		if let comment = currentUnit.HeaderComment, comment.Lines.Count > 0 {
+			generateStatement(comment)
+			AppendLine()
+		}
+	}
+
+	internal func generateFooter() {
+		// descendant can override, if needed
+	}
+
+	internal func generateForwards() {
+		// descendant can override, if needed
+	}
+
+	internal func generateDirectives() {
+		if currentUnit.Directives.Count > 0 {
+			for d in currentUnit.Directives {
+				generateDirective(d)
+			}
+			AppendLine()
+		}
+	}
+
+	internal func generateImports() {
+		if currentUnit.Imports.Count > 0 {
+			for i in currentUnit.Imports {
+				if let condition = i.Condition {
+					generateConditionStart(condition)
+				}
+				generateImport(i)
+				if let condition = i.Condition {
+					generateConditionEnd(condition)
+				}
+			}
+			AppendLine()
+		}
+		if currentUnit.FileImports.Count > 0 {
+			for i in currentUnit.FileImports {
+				if let condition = i.Condition {
+					generateConditionStart(condition)
+				}
+				generateFileImport(i)
+				if let condition = i.Condition {
+					generateConditionEnd(condition)
+				}
+			}
+			AppendLine()
+		}
+	}
+
+	internal func generateTypeDefinitions() {
+		// descendant should not usually override
+		generateTypeDefinitions(currentUnit.Types)
+	}
+
+	internal func generateTypeDefinitions(_ Types : List<CGTypeDefinition>) {
+		// descendant should not usually override
+		for t in Types {
+			generateTypeDefinition(t)
+			AppendLine()
+		}
+	}
+
+	internal func generateGlobals() {
+
+		var lastGlobal: CGGlobalDefinition? = nil
+		for g in currentUnit.Globals {
+			if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
+				AppendLine()
+			}
+			generateGlobal(g)
+			lastGlobal = g;
+		}
+		if lastGlobal != nil {
+			AppendLine()
+		}
+	}
+
+	internal final func generateDirective(_ directive: CGCompilerDirective) {
+		if let condition = directive.Condition {
+			generateConditionStart(condition)
+			incIndent()
+		}
+		AppendLine(directive.Directive)
+		if let condition = directive.Condition {
+			decIndent()
+			generateConditionEnd(condition)
+		}
+	}
+
+	internal func generateSingleLineCommentPrefix() {
+		// descendant may override, but this will work for all current languages we support.
+		Append("// ")
+	}
+
+	internal func generateImport(_ `import`: CGImport) {
+		// descendant must override this or generateImports()
+		assert(false, "generateImport not implemented")
+	}
+
+	internal func generateFileImport(_ `import`: CGImport) {
+		// descendant should override if it supports file imports
+	}
+
+	//
+	// Helpers
+	//
+
+	internal func memberNeedsSpace(_ member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+		if memberIsSingleLine(member) && memberIsSingleLine(lastMember) {
+			return false;
+		}
+		return true
+	}
+
+	internal func globalNeedsSpace(_ global: CGGlobalDefinition, afterGlobal lastGlobal: CGGlobalDefinition) -> Boolean {
+		if globalIsSingleLine(global) && globalIsSingleLine(lastGlobal) {
+			return false;
+		}
+		return true
+	}
+
+	internal func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
+		// reasoablew default, works for al current languages
+		if member is CGFieldDefinition {
+			return true
+		}
+		if let property = member as? CGPropertyDefinition {
+			return property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil
+		}
+		return false
+	}
+
+	internal func globalIsSingleLine(_ global: CGGlobalDefinition) -> Boolean {
+		if global is CGGlobalVariableDefinition {
+			return true
+		}
+		return false
+	}
+
+	//
+	// Indentifiers
+	//
+
+	@inline(__always) internal func assert(_ fatal: Boolean, _ message: String) {
+		assert(true, message)
+	}
+
+	internal func assert(_ message: String) {
+		if failOnAsserts {
+			throw Exception(message)
+		} else {
+			generateInlineComment(message)
+		}
+	}
+
 	/* These following functions *can* be overriden by descendants, if needed */
 
 	internal func generateHeader() {
