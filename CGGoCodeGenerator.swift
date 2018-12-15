@@ -532,13 +532,13 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 			if p > 0 {
 				Append(", ")
 			}
-			if let name = param.Name {
-				generateIdentifier(name)
-				Append(": ")
-			} else if p == 0, let name = firstParamName {
-				generateIdentifier(name)
-				Append(": ")
-			}
+			//if let name = param.Name {
+				//generateIdentifier(name)
+				//Append(": ")
+			//} else if p == 0, let name = firstParamName {
+				//generateIdentifier(name)
+				//Append(": ")
+			//}
 			switch param.Modifier {
 				case .Out: fallthrough
 				case .Var:
@@ -572,21 +572,21 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	private func goGenerateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
 		generateIdentifier(param.Name)
 		Append(" ")
-		switch param.Modifier {
-			case .Out:
-				if Dialect == CGGoCodeGeneratorDialect.Gold {
-					Append("__out ")
-				} else {
-					fallthrough
-				}
-			case .Var:
-				Append(" *")
-			default:
-		}
-		generateTypeReference(param.`Type`)
 		if param.Modifier == .Params {
 			Append("...")
 		}
+		generateTypeReference(param.`Type`)
+		//switch param.Modifier {
+			//case .Out:
+				//if Dialect == CGGoCodeGeneratorDialect.Gold {
+					//Append("__out ")
+				//} else {
+					//fallthrough
+				//}
+			//case .Var:
+				//Append(" *")
+			//default:
+		//}
 		if let defaultValue = param.DefaultValue {
 			Append(" = ")
 			generateExpression(defaultValue)
@@ -663,10 +663,10 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	override func generateMethodCallExpression(_ method: CGMethodCallExpression) {
 		goGenerateCallSiteForExpression(method)
 		generateIdentifier(method.Name)
-		generateGenericArguments(method.GenericArguments)
-		if method.CallOptionally {
-			Append("?")
-		}
+		//generateGenericArguments(method.GenericArguments)
+		//if method.CallOptionally {
+			//Append("?")
+		//}
 		Append("(")
 		goGenerateCallParameters(method.Parameters)
 		Append(")")
@@ -1005,9 +1005,10 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		goGenerateStaticPrefix(type.Static)
 		goGeneratePartialPrefix(type.Partial)
 		goGenerateAbstractPrefix(type.Abstract)
-		Append("struct ")
+		Append("type ")
 		generateIdentifier(type.Name)
-		goGenerateGenericParameters(type.GenericParameters)
+		Append(" struct")
+		//goGenerateGenericParameters(type.GenericParameters)
 		goGenerateAncestorList(type)
 		AppendLine(" { ")
 		incIndent()
@@ -1020,9 +1021,10 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		goGenerateTypeVisibilityPrefix(type.Visibility, sealed: type.Sealed, type: type)
-		Append("protocol ")
+		Append("type ")
 		generateIdentifier(type.Name)
-		goGenerateGenericParameters(type.GenericParameters)
+		Append(" interface")
+		//goGenerateGenericParameters(type.GenericParameters)
 		goGenerateAncestorList(type)
 		AppendLine(" { ")
 		incIndent()
@@ -1048,7 +1050,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
-		assert(false, "generateClassType is not supported in Go")
+		assert(false, "generateExtensionType is not supported in Go")
 		//decIndent()
 		//AppendLine("}")
 	}
@@ -1078,11 +1080,11 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 			Append("self")
 			Append(" *")
 			generateIdentifier(type.Name)
-			Append(")")
+			Append(") ")
 		}
 
 		generateIdentifier(method.Name)
-		goGenerateGenericParameters(method.GenericParameters)
+		//goGenerateGenericParameters(method.GenericParameters)
 		Append("(")
 		goGenerateDefinitionParameters(method.Parameters)
 		Append(")")

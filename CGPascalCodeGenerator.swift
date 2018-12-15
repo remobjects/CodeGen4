@@ -803,7 +803,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 								case .Interface: self.Append(" is interface")
 							}
 						} else {
-							assert(false, "Unsupported constraint type \(constraint)")
+							self.assert(false, "Unsupported constraint type \(constraint)")
 						}
 					}
 				}
