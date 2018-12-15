@@ -769,11 +769,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		Append("[")
-		for e in 0 ..< array.Elements.Count {
-			if e > 0 {
-				Append(", ")
-			}
-			generateExpression(array.Elements[e])
+			helpGenerateCommaSeparatedList(array.Elements) {
+			self.generateExpression($0)
 		}
 		Append("]")
 	}
