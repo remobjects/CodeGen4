@@ -456,29 +456,29 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 	}
 
 	override func StringRepresentation() -> String {
-		if let value = DoubleValue {
-			var result = Convert.ToStringInvariant(value)
-			if !result.Contains(".") {
-				result += ".0";
-			}
-			return result
-		} else if let value = IntegerValue {
-			return value.ToString()+".0"
-		} else if let value = StringValue {
-			if value.IndexOf(".") > -1 || value.ToLower().IndexOf("e") > -1 {
-				return value
-			} else {
-				return value+".0"
-			}
-		} else {
-			return "0.0"
-		}
+		return StringRepresentation(base: 10)
 	}
 
 	internal func StringRepresentation(# base: Int32) -> String {
 		switch base {
 			case 10:
-				return StringRepresentation()
+				if let value = DoubleValue {
+					var result = Convert.ToStringInvariant(value)
+					if !result.Contains(".") {
+						result += ".0";
+					}
+					return result
+				} else if let value = IntegerValue {
+					return value.ToString()+".0"
+				} else if let value = StringValue {
+					if value.IndexOf(".") > -1 || value.ToLower().IndexOf("e") > -1 {
+						return value
+					} else {
+						return value+".0"
+					}
+				} else {
+					return "0.0"
+				}
 			case 16:
 				if DoubleValue != nil {
 					throw Exception("base 16 (Hex) float literals with double value are not currently supported.")
@@ -496,6 +496,12 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 			default:
 				throw Exception("Base \(base) float literals are not currently supported.")
 		}
+	}
+}
+
+public class CGImaginaryLiteralExpression: CGFloatLiteralExpression {
+	internal override func StringRepresentation(# base: Int32) -> String {
+		return super.StringRepresentation(base: base)+"i";
 	}
 }
 
