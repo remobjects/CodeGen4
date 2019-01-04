@@ -174,8 +174,10 @@
 
 	public var failOnAsserts: Boolean = false
 
-	@inline(__always) internal func assert(_ fatal: Boolean, _ message: String) {
-		assert(message)
+	@inline(__always) internal func assert(_ ok: Boolean, _ message: String) {
+		if !ok {
+			assert(message)
+		}
 	}
 
 	internal func assert(_ message: String) {
