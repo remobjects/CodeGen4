@@ -1098,7 +1098,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
-		//todo
+		generateCommentStatement(CGCommentStatement("Custom Operator \(customOperator.Name)"))
 	}
 
 	//

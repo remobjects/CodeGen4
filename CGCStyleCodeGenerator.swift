@@ -9,6 +9,38 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		tabSize = 4
 	}
 
+	func wellKnownSymbolForCustomOperator(name: String!) -> String? {
+		switch name.ToUpper() {
+			case "plus": return "+"
+			case "minus": return "-"
+			case "bitwisenot": return "!"
+			case "increment": return "++"
+			case "decrement": return "--"
+			//case "implicit": return "__implicit"
+			//case "explicit": return "__explicit"
+			case "true": return "true"
+			case "false": return "false"
+			case "add": return "+"
+			case "subtract": return "-"
+			case "multiply": return "*"
+			case "divide": return "/"
+			case "modulus": return "%"
+			case "bitwiseand": return "&"
+			case "bitwiseor": return "|"
+			case "bitwisexor": return "^"
+			case "shiftlft": return "<<"
+			case "shiftright": return ">>"
+			case "equal": return "="
+			case "notequal": return "<>"
+			case "less": return "<"
+			case "lessorequal": return "<="
+			case "greater": return ">"
+			case "greaterorequal": return ">="
+			case "in": return "in"
+			default: return nil
+		}
+	}
+
 	override func generateInlineComment(_ comment: String) {
 		var comment = comment.Replace("*/", "* /")
 		Append("/* \(comment) */")

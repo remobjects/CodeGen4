@@ -1344,8 +1344,55 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	override func wellKnownSymbolForCustomOperator(name: String!) -> String? {
+		switch name.ToUpper() {
+			case "implicit": return "__implicit"
+			case "explicit": return "__explicit"
+			default: return super.wellKnownSymbolForCustomOperator(name: name)
+		}
+	}
+
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
-		//todo
+		if type is CGInterfaceTypeDefinition {
+			if customOperator.Optional {
+				Append("optional ")
+			}
+			swiftGenerateStaticPrefix(customOperator.Static && !type.Static)
+		} else {
+			swiftGenerateMemberTypeVisibilityPrefix(customOperator.Visibility, virtuality: customOperator.Virtuality)
+			swiftGenerateStaticPrefix(customOperator.Static && !type.Static)
+			if customOperator.External && Dialect == CGSwiftCodeGeneratorDialect.Silver {
+				Append("__extern ")
+			}
+		}
+		Append("static func ")
+		if let symbol = wellKnownSymbolForCustomOperator(name: customOperator.Name) {
+			Append(symbol)
+		} else {
+			Append(customOperator.Name)
+		}
+		Append("(")
+		swiftGenerateDefinitionParameters(customOperator.Parameters)
+		Append(")")
+
+		if let returnType = customOperator.ReturnType, !returnType.IsVoid {
+			Append(" -> ")
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+		}
+
+		if type is CGInterfaceTypeDefinition || customOperator.External || definitionOnly {
+			AppendLine()
+			return
+		}
+
+		AppendLine(" {")
+		incIndent()
+		generateStatements(variables: customOperator.LocalVariables)
+		generateStatements(customOperator.Statements)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
