@@ -619,7 +619,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("make(")
-			for b in bounds {
+			for _ in bounds {
 				Append("[]")
 			}
 			generateExpression(expression.`Type`, ignoreNullability: true)
