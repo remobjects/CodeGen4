@@ -1316,7 +1316,66 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
-		generateCommentStatement(CGCommentStatement("Custom Operator \(customOperator.Name)"))
+
+		if type is CGInterfaceTypeDefinition {
+			if customOperator.Optional {
+				Append("[Optional] ")
+			}
+			cSharpGenerateStaticPrefix(!type.Static)
+		} else {
+			cSharpGenerateMemberTypeVisibilityPrefix(customOperator.Visibility)
+			cSharpGenerateStaticPrefix(!type.Static)
+			cSharpGenerateVirtualityPrefix(customOperator)
+		}
+
+		let lowerName = customOperator.Name.ToLower()
+		if lowerName == "implicit" || lowerName == "explicit" {
+
+			Append(lowerName)
+			Append(" operator")
+			if let returnType = customOperator.ReturnType {
+				returnType.startLocation = currentLocation
+				generateTypeReference(returnType)
+				returnType.endLocation = currentLocation
+			} else {
+				Append("void")
+			}
+
+		} else {
+
+			if let returnType = customOperator.ReturnType {
+				returnType.startLocation = currentLocation
+				generateTypeReference(returnType)
+				returnType.endLocation = currentLocation
+				Append(" ")
+			} else {
+				Append("void ")
+			}
+			Append("operator ")
+
+			if let symbol = wellKnownSymbolForCustomOperator(name: customOperator.Name) {
+				Append(symbol)
+			} else {
+				Append(customOperator.Name)
+			}
+		}
+
+		Append("(")
+		cSharpGenerateDefinitionParameters(customOperator.Parameters)
+		Append(")")
+
+		if type is CGInterfaceTypeDefinition || customOperator.Virtuality == CGMemberVirtualityKind.Abstract || customOperator.External || definitionOnly {
+			AppendLine(";")
+			return
+		}
+
+		AppendLine()
+		AppendLine("{")
+		incIndent()
+		generateStatements(variables: customOperator.LocalVariables)
+		generateStatements(customOperator.Statements)
+		decIndent()
+		AppendLine("}")
 	}
 
 	override func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
