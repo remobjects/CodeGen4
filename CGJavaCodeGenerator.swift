@@ -1127,7 +1127,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				case .UTF16Char: Append("Char")
 				case .UTF32Char: if isIodine { Append("UTF32Char") } else { Append("/* Unsupported type: UTF32Char */") }
 				case .Dynamic: if isIodine { Append("dynamic") } else { Append("/* Unsupported type: Dynamic */") }
-				case .InstanceType: if isIodine { Append("instancetype") } else { Append("/* Unsupported type: InstanceType */") }
+				case .InstanceType: if isIodine { Append("InstanceType") } else { Append("/* Unsupported type: InstanceType */") }
 				case .Void: Append("Void")
 				case .Object: Append("Object")
 				case .Class: Append("Class") // todo: make platform-specific
@@ -1154,7 +1154,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 				case .UTF16Char: Append("Char")
 				case .UTF32Char: if isIodine { Append("UTF32Char") } else { Append("/* Unsupported type: UTF32Char */") }
 				case .Dynamic: if isIodine { Append("dynamic") } else { Append("/* Unsupported type: Dynamic */") }
-				case .InstanceType: if isIodine { Append("instancetype") } else { Append("/* Unsupported type: InstanceType */") }
+				case .InstanceType: if isIodine { Append("InstanceType") } else { Append("/* Unsupported type: InstanceType */") }
 				case .Void: Append("void")
 				case .Object: Append("Object")
 				case .Class: Append("Class") // todo: make platform-specific

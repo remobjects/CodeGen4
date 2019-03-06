@@ -585,7 +585,7 @@
 			case .UTF16Char: Append("Char")
 			case .UTF32Char: Append("UInt32") // tood?
 			case .Dynamic: Append("dynamic")
-			case .InstanceType: Append("instancetype")
+			case .InstanceType: Append("InstanceType")
 			case .Void: Append("{VOID}")
 			case .Object: Append("Object")
 			case .Class: generateIdentifier("Class") // todo: make platform-specific

@@ -1432,7 +1432,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .UTF16Char: Append("char")
 			case .UTF32Char: Append("UInt32")
 			case .Dynamic: Append("dynamic")
-			case .InstanceType: Append("instancetype")
+			case .InstanceType: Append("InstanceType")
 			case .Void: Append("void")
 			case .Object: Append("object")
 			case .Class: Append("Class") // todo: make platform-specific
