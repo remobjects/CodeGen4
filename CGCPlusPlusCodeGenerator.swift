@@ -1005,12 +1005,14 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		generateTypeReference(type.`Type`)
-		var bounds = type.Bounds.Count
-		if bounds == 0 {
-			bounds = 1
-		}
-		for b in 0 ..< bounds {
-			Append("[]")
+		if let bounds = type.Bounds {
+			var count = bounds.Count
+			if count == 0 {
+				count = 1
+			}
+			for b in 0 ..< count {
+				Append("[]")
+			}
 		}
 	}
 

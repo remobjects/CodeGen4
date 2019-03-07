@@ -1050,11 +1050,11 @@
 
 	}
 
-	override func generateArrayTypeReference(_ type: CGArrayTypeReference, ignoreNullability: Boolean = false) {
-		generateTypeReference(type.`Type`)
+	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
+		generateTypeReference(array.`Type`)
 		Append("()")
-		if let bounds = type.Bounds, bounds.Count > 0 {
-			for b in 1 ..< type.Bounds.Count {
+		if let bounds = array.Bounds, bounds.Count > 0 {
+			for b in 1 ..< bounds.Count {
 				Append("()")
 			}
 		}

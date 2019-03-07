@@ -1156,8 +1156,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		generateIdentifier(field.Name)
 		if fixedArrayType {
 			Append("[");
-			let arr = field.Type as! CGArrayTypeReference
-			Append("" + (arr.Bounds[0].End - arr.Bounds[0].Start + 1));
+			if let array = field.Type as? CGArrayTypeReference {
+				if let bounds = array.Bounds {
+					Append("" + (bounds[0].End - bounds[0].Start + 1));
+				}
+			}
 			Append("]");
 		}
 		if let value = field.Initializer {
@@ -1477,18 +1480,18 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		generateTypeReference(array.`Type`)
-		var bounds = array.Bounds.Count
-		if bounds == 0 {
-			bounds = 1
-		}
-		for b in 0 ..< bounds {
-			Append("[]")
+		if let bounds = array.Bounds {
+			var count = bounds.Count
+			if count == 0 {
+				count = 1
+			}
+			for b in 0 ..< count {
+				Append("[]")
+			}
 		}
 		if !ignoreNullability {
 			cSharpGenerateSuffixForNullability(array)
 		}
-
-		// bounds are not supported in C#
 	}
 
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {

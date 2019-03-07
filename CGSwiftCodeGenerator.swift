@@ -1540,34 +1540,36 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
-		var bounds = array.Bounds.Count
-		if bounds == 0 {
-			bounds = 1
-		}
-		switch (array.ArrayKind){
-			case .Static:
-				fallthrough
-			case .Dynamic:
-				generateTypeReference(array.`Type`)
-				Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
-				for b in 0 ..< bounds {
-					Append("[]")
-				}
-				if !ignoreNullability {
-					Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NotNullable))
-				}
-			case .HighLevel:
-				for b in 0 ..< bounds {
-					Append("[")
-				}
-				generateTypeReference(array.`Type`)
-				Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
-				for b in 0 ..< bounds {
-					Append("]")
-				}
-				if !ignoreNullability {
-					Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NullableUnwrapped))
-				}
+		if let bounds = array.Bounds {
+			var count = bounds.Count
+			if count == 0 {
+				count = 1
+			}
+			switch (array.ArrayKind){
+				case .Static:
+					fallthrough
+				case .Dynamic:
+					generateTypeReference(array.`Type`)
+					Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
+					for b in 0 ..< count {
+						Append("[]")
+					}
+					if !ignoreNullability {
+						Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NotNullable))
+					}
+				case .HighLevel:
+					for b in 0 ..< count {
+						Append("[")
+					}
+					generateTypeReference(array.`Type`)
+					Append(swiftSuffixForNullabilityForCollectionType(array.`Type`))
+					for b in 0 ..< count {
+						Append("]")
+					}
+					if !ignoreNullability {
+						Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NullableUnwrapped))
+					}
+			}
 		}
 		// bounds are not supported in Swift
 	}

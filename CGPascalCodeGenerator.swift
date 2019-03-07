@@ -1776,15 +1776,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("array")
 		if let bounds = array.Bounds, bounds.Count > 0 {
 			Append("[")
-			for b in 0 ..< array.Bounds.Count {
-				let bound = array.Bounds[b]
-				if b > 0 {
-					Append(", ")
+			if let bounds = array.Bounds {
+				helpGenerateCommaSeparatedList(bounds) { bound in
+					self.Append(bound.Start.ToString())
+					self.Append("..")
+					if let end = bound.End {
+						self.Append(end.ToString())
+					}
 				}
-				Append(bound.Start.ToString())
-				Append("..")
-				if let end = bound.End {
-					Append(end.ToString())
+			} else if let boundsTypes = array.BoundsTypes {
+				helpGenerateCommaSeparatedList(boundsTypes) { boundsType in
+					self.generateTypeReference(boundsType, ignoreNullability: true)
 				}
 			}
 			Append("]")
