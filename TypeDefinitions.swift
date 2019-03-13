@@ -187,6 +187,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var CallingConvention: CGCallingConventionKind? /* Delphi and C++Builder only */
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
+	public var LocalTypes: List<CGTypeDefinition>? // Legacy Delphi only.
 
 	public init(_ name: String) {
 		super.init(name)

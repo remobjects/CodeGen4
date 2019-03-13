@@ -1400,6 +1400,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 				decIndent()
 			}
+			if let localTypes = method.LocalTypes, localTypes.Count > 0 {
+				if self is CGOxygeneCodeGenerator {
+					assert("Local type definitions are not supported in Oxygene");
+
+				} else {
+					AppendLine("type")
+					incIndent()
+					for t in localTypes {
+						generateTypeDefinition(t);
+					}
+					decIndent()
+				}
+			}
 		}
 		AppendLine("begin")
 		incIndent()
