@@ -41,19 +41,21 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			generateImport(i)
 		}
 		AppendLine()
-		Append("namespace")
 		if let namespace = currentUnit.Namespace {
+			Append("namespace")
 			Append(" ")
 			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
+			AppendLine()
+			AppendLine("{")
+			incIndent()
 		}
-		AppendLine()
-		AppendLine("{")
-		incIndent()
 	}
 
 	override func generateFooter() {
-		decIndent()
-		AppendLine("}")
+		if let namespace = currentUnit.Namespace {
+			decIndent()
+			AppendLine("}")
+		}
 	}
 
 	override func generateImports() {
