@@ -25,6 +25,13 @@ param.ExternalName = "blub"
 ctor.Parameters.Add(param)
 ctor.LocalTypes = List<CGTypeDefinition>()
 ctor.LocalTypes?.Add(CGEnumTypeDefinition("Foo"))
+
+var lm = CGMethodDefinition("loc")
+lm.Parameters.Add(CGParameterDefinition("x", CGPredefinedTypeReference.String))
+
+ctor.LocalMethods = List<CGMethodDefinition>()
+ctor.LocalMethods?.Add(lm)
+
 var cls = CGClassTypeDefinition("CtorTest")
 cls.Members.Add(ctor)
 unit.Types.Add(cls)

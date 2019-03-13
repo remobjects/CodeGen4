@@ -1345,7 +1345,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		AppendLine()
 	}
 
-	internal func pascalGenerateMethodHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false) {
+	internal func pascalGenerateMethodHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition?, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false) {
 		if type is CGInterfaceTypeDefinition && method.Optional {
 			Append("[Optional] ")
 		}
@@ -1355,7 +1355,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		Append(methodKeyword)
 		Append(" ")
-		if implementation && !(type is CGGlobalTypeDefinition) {
+		if let type = type, implementation && !(type is CGGlobalTypeDefinition) {
 			generateIdentifier(type.Name)
 			Append(".")
 		}
@@ -1385,7 +1385,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation, includeVisibility: includeVisibility)
 	}
 
-	internal func pascalGenerateMethodBody(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, allowLocalVariables: Boolean = true) {
+	internal func pascalGenerateMethodBody(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition?, allowLocalVariables: Boolean = true) {
 		if allowLocalVariables {
 			if let localVariables = method.LocalVariables, localVariables.Count > 0 {
 				AppendLine("var")
@@ -1412,6 +1412,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					}
 					decIndent()
 				}
+			}
+			if let localMethods = method.LocalMethods, localMethods.Count > 0 {
+				incIndent()
+				AppendLine()
+				for m in localMethods {
+					pascalGenerateMethodHeader(m, type: nil, methodKeyword: pascalKeywordForMethod(m), implementation: false)
+					pascalGenerateMethodBody(m, type: nil)
+				}
+				decIndent()
 			}
 		}
 		AppendLine("begin")

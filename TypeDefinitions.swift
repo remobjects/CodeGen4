@@ -188,6 +188,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 	public var LocalTypes: List<CGTypeDefinition>? // Legacy Delphi only.
+	public var LocalMethods: List<CGMethodDefinition>? // Pascal only.
 
 	public init(_ name: String) {
 		super.init(name)
