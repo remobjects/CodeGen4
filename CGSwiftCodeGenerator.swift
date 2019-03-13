@@ -473,6 +473,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		//todo
 	}
 
+	override func generateRangeExpression(_ expression: CGRangeExpression) {
+		generateExpression(expression.StartValue)
+		Append("...")
+		generateExpression(expression.EndValue)
+	}
+
 	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 		if let `operator` = expression.Operator, `operator` == .ForceUnwrapNullable {
 			generateExpression(expression.Value)

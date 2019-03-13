@@ -617,6 +617,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(")^")
 	}
 
+	override func generateRangeExpression(_ expression: CGRangeExpression) {
+		generateExpression(expression.StartValue)
+		Append("..")
+		generateExpression(expression.EndValue)
+	}
+
 	/*
 	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
 		// handled in base

@@ -234,6 +234,16 @@ public class CGParenthesesExpression: CGExpression {
 	}
 }
 
+public class CGRangeExpression: CGExpression {
+	public var StartValue: CGExpression
+	public var EndValue: CGExpression
+
+	public init(_ startValue: CGExpression, _ endValue: CGExpression) {
+		StartValue = startValue
+		EndValue = endValue
+	}
+}
+
 public class CGUnaryOperatorExpression: CGExpression {
 	public var Value: CGExpression
 	public var Operator: CGUnaryOperatorKind? // for standard operators

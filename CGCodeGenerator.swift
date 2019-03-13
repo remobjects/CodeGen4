@@ -774,6 +774,8 @@
 			generatePointerDereferenceExpression(expression)
 		} else if let expression = expression as? CGParenthesesExpression {
 			generateParenthesesExpression(expression)
+		} else if let expression = expression as? CGRangeExpression {
+			generateRangeExpression(expression)
 		} else if let expression = expression as? CGUnaryOperatorExpression {
 			generateUnaryOperatorExpression(expression)
 		} else if let expression = expression as? CGBinaryOperatorExpression {
@@ -911,6 +913,11 @@
 		Append("(")
 		generateExpression(expression.Value)
 		Append(")")
+	}
+
+	internal func generateRangeExpression(_ expression: CGRangeExpression) {
+		// descendant must override
+		assert(false, "generateRangeExpression not implemented")
 	}
 
 	internal func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
