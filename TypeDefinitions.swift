@@ -422,15 +422,6 @@ public class CGParameterDefinition : CGEntity {
 	}
 }
 
-public class CGAnonymousMethodParameterDefinition : CGEntity {
-	public var Name: String
-	public var `Type`: CGTypeReference?
-
-	public init(_ name: String) {
-		Name = name
-	}
-}
-
 public class CGGenericParameterDefinition : CGEntity {
 	public var Constraints = List<CGGenericConstraint>()
 	public var Name: String
