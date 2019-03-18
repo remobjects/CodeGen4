@@ -1269,8 +1269,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			case .Abstract: Append(" virtual; abstract;")
 			case .Override: Append(" override;")
 			//case .Final: /* Oxygene only*/
-			case .Reintroduce: Append(" reintroduce;")
 			default:
+		}
+		if member.Reintroduced {
+			Append(" reintroduce;")
 		}
 	}
 

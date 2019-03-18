@@ -760,8 +760,10 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				switch (method.Virtuality) {
 					case .Virtual:       Append("virtual ");
 					case .Override:       Append("virtual ");
-					case .Reintroduce: if isCBuilder() { Append("HIDESBASE "); }
 					default: // ????
+				}
+				if method.Reintroduced {
+					Append(" HIDESBASE ")
 				}
 			}
 		}

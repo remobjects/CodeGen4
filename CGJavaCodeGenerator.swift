@@ -694,7 +694,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			//case .None
 			//case .Virtual:
 			//case .Override:
-			//case .Reintroduce:
+			//case .Reintroduced:
 			case .Abstract: Append("abstract ")
 			case .Final: Append("final ")
 			default:

@@ -443,8 +443,10 @@
 			case .Abstract: Append(" abstract;")
 			case .Override: Append(" override;")
 			case .Final: Append(" final;")
-			case .Reintroduce: Append(" reintroduce;")
 			default:
+		}
+		if member.Reintroduced {
+			Append(" reintroduce;")
 		}
 	}
 

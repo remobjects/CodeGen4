@@ -811,7 +811,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 			//case .Abstract: if Dialect == CGGoCodeGeneratorDialect.Gold { Append(" __abstract") }
 			//case .Override: Append(" override")
 			//case .Final: Append(" final")
-			//case .Reintroduce: break;
+			//case .Reintroduced: break;
 		//}
 		//if appendSpace {
 			//Append(" ")

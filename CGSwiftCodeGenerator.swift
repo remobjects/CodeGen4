@@ -892,7 +892,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Abstract: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append(" __abstract") }
 			case .Override: Append(" override")
 			case .Final: Append(" final")
-			case .Reintroduce: break;
 		}
 		if appendSpace {
 			Append(" ")

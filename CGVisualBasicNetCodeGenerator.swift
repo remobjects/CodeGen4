@@ -582,8 +582,10 @@
 			case .Abstract: Append("MustOverride ")
 			case .Override: Append("Overrides ")
 			case .Final: Append("NotOverridable ")
-			case .Reintroduce: Append("Shadows ")
 			default:
+		}
+		if member.Reintroduced {
+			Append("Shadows ")
 		}
 	}
 

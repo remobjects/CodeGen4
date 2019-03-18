@@ -122,13 +122,13 @@ public enum CGMemberVirtualityKind {
 	case Abstract
 	case Override
 	case Final
-	case Reintroduce
 }
 
 public __abstract class CGMemberDefinition: CGEntity {
 	public var Name: String
 	public var Visibility: CGMemberVisibilityKind = .Private
 	public var Virtuality: CGMemberVirtualityKind = .None
+	public var Reintroduced = false
 	public var Static = false
 	public var Overloaded = false
 	public var Locked = false /* Oxygene only */
