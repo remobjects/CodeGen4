@@ -1492,6 +1492,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			for b in 0 ..< count {
 				Append("[]")
 			}
+		} else {
+			Append("[]")
 		}
 		if !ignoreNullability {
 			cSharpGenerateSuffixForNullability(array)

@@ -1575,7 +1575,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 						Append(swiftSuffixForNullability(array.Nullability, defaultNullability: .NullableUnwrapped))
 					}
 			}
+		} else {
+			Append("[]")
 		}
+
 		// bounds are not supported in Swift
 	}
 

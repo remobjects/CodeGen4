@@ -1246,6 +1246,8 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 				case .HighLevel:
 					assert(false, "generateDictionaryTypeReference is not supported for Go")
 			}
+		} else {
+			Append("[]")
 		}
 	}
 
