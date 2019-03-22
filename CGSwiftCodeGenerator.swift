@@ -1545,6 +1545,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
+		generateTypeReference(array.`Type`)
 		if let bounds = array.Bounds {
 			var count = bounds.Count
 			if count == 0 {
