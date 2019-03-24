@@ -519,7 +519,10 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		if param.Modifier == .Params {
 			Append("...")
 		}
-		generateTypeReference(param.`Type`)
+		if let type = param.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
 		//switch param.Modifier {
 			//case .Out:
 				//if Dialect == CGGoCodeGeneratorDialect.Gold {

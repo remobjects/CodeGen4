@@ -610,7 +610,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("inout ")
 			default:
 		}
-		generateTypeReference(param.`Type`)
+		if let type = param.`Type` {
+			generateTypeReference(type)
+		} else {
+			assert("CGParameterDefinition needs a type, for Swift")
+		}
 		if param.Modifier == .Params {
 			Append("...")
 		}

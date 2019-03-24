@@ -566,8 +566,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
 		if method.Lambda {
 			Append("(")
-			helpGenerateCommaSeparatedList(method.Parameters) {param in
-				self.generateIdentifier(param.Name)
+			helpGenerateCommaSeparatedList(method.Parameters) { param in
+				self.generateAttributes(param.Attributes, inline: true)
+				self.generateParameterDefinition(param)
 			}
 			Append(") -> ")
 			if method.Statements.Count == 1, let expression = method.Statements[0] as? CGExpression {
@@ -732,30 +733,35 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	override func generateParameterDefinition(_ param: CGParameterDefinition) {
+		if let exp = param.`Type` as? CGConstantTypeReference {
+			self.Append("const ")
+		} else {
+			switch param.Modifier {
+				case .Var: self.Append("var ")
+				case .Const: self.Append("const ")
+				case .Out: self.Append("out ")
+				case .Params: self.Append("params ") //todo: Oxygene ony?
+				default:
+			}
+		}
+		self.generateIdentifier(param.Name)
+		if let type = param.`Type` {
+			self.Append(": ")
+			self.generateTypeReference(type)
+		}
+		if let defaultValue = param.DefaultValue {
+			self.Append(" = ")
+			self.generateExpression(defaultValue)
+		}
+	}
+
 	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, implementation: Boolean) {
 		helpGenerateCommaSeparatedList(parameters, separator: { self.Append("; ") }) { param in
 			if !implementation {
 				self.generateAttributes(param.Attributes, inline: true)
 			}
-			if let exp = param.`Type` as? CGConstantTypeReference {
-				self.Append("const ")
-			}
-			else {
-				switch param.Modifier {
-					case .Var: self.Append("var ")
-					case .Const: self.Append("const ")
-					case .Out: self.Append("out ")
-					case .Params: self.Append("params ") //todo: Oxygene ony?
-					default:
-				}
-			}
-			self.generateIdentifier(param.Name)
-			self.Append(": ")
-			self.generateTypeReference(param.`Type`)
-			if let defaultValue = param.DefaultValue {
-				self.Append(" = ")
-				self.generateExpression(defaultValue)
-			}
+			self.generateParameterDefinition(param)
 		}
 	}
 

@@ -383,7 +383,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				generateIdentifier(externalName)
 			}
 			Append(":(")
-			generateTypeReference(param.`Type`)
+			if let type = param.`Type` {
+				generateTypeReference(type)
+			} else {
+				assert("CGParameterDefinition needs a type, for Objective-C")
+			}
 			switch param.Modifier {
 				case .Var: Append("*")
 				case .Out: Append("*")

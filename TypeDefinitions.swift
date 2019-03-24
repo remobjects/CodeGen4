@@ -410,11 +410,15 @@ public enum CGParameterModifierKind {
 
 public class CGParameterDefinition : CGEntity {
 	public var Name: String
-	public var ExternalName: String? // Swift and Cocoa only
-	public var `Type`: CGTypeReference
+	public var ExternalName: String?
+	public var `Type`: CGTypeReference?
 	public var Modifier: CGParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	public var Attributes = List<CGAttribute>()
+
+	public init(_ name: String) {
+		Name = name
+	}
 
 	public init(_ name: String, _ type: CGTypeReference) {
 		Name = name
@@ -422,14 +426,8 @@ public class CGParameterDefinition : CGEntity {
 	}
 }
 
-public class CGAnonymousMethodParameterDefinition : CGEntity {
-	public var Name: String
-	public var `Type`: CGTypeReference?
-
-	public init(_ name: String) {
-		Name = name
-	}
-}
+@Obsolete("Use CGParameterDefinition")
+public typealias CGAnonymousMethodParameterDefinition = CGParameterDefinition
 
 public class CGGenericParameterDefinition : CGEntity {
 	public var Constraints = List<CGGenericConstraint>()

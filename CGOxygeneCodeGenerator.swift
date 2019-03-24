@@ -284,8 +284,10 @@
 			default:
 		}
 		generateIdentifier(param.Name)
-		Append(": ")
-		generateTypeReference(param.`Type`)
+		if let type = param.`Type` {
+			Append(": ")
+			generateTypeReference(type)
+		}
 		if let defaultValue = param.DefaultValue {
 			Append(" := ")
 			generateExpression(defaultValue)

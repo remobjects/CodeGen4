@@ -412,7 +412,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				case .Out:   self.Append("/* out */ ")
 				default:
 			}
-			self.generateTypeReference(param.`Type`)
+			if let type = param.`Type` {
+				self.generateTypeReference(type)
+			} else {
+				self.assert("CGParameterDefinition needs a type, for Objective-C")
+			}
 			switch param.Modifier {
 				case .Var: self.Append(" &")
 				case .Out: self.Append(" &")

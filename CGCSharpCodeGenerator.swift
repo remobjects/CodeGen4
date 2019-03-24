@@ -380,7 +380,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
 		Append("(")
 		helpGenerateCommaSeparatedList(method.Parameters) { param in
-			self.generateIdentifier(param.Name)
+			self.generateParameterDefinition(param)
 		}
 		AppendLine(") => {")
 		incIndent()
@@ -535,7 +535,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			case .Params: Append("params ")
 			default:
 		}
-		generateTypeReference(param.`Type`)
+		if let type = param.`Type` {
+			generateTypeReference(type)
+		}
 		Append(" ")
 		generateIdentifier(param.Name)
 		if let defaultValue = param.DefaultValue {
