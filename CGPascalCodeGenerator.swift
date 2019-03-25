@@ -310,11 +310,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
 		decIndent()
 		Append("until ")
-		if let notCondition = statement.Condition as? CGUnaryOperatorExpression, notCondition.Operator == CGUnaryOperatorKind.Not {
-			generateExpression(notCondition.Value)
-		} else {
-			generateExpression(CGUnaryOperatorExpression.NotExpression(statement.Condition))
-		}
+		generateExpression(statement.Condition)
 		generateStatementTerminator()
 	}
 
