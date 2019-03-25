@@ -769,7 +769,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	func pascalGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>) {
+	func pascalGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
 		if let parameters = parameters, parameters.Count > 0 {
 			Append("<")
 			helpGenerateCommaSeparatedList(parameters) { param in
@@ -1375,11 +1375,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(" ")
 		if let type = type, implementation && !(type is CGGlobalTypeDefinition) {
 			generateIdentifier(type.Name)
+			pascalGenerateGenericParameters(type.GenericParameters)
 			Append(".")
 		}
 		generateIdentifier(method.Name)
-		if let realMethod = method as? CGMethodDefinition, let genericParameter = realMethod.GenericParameters {
-			pascalGenerateGenericParameters(genericParameter)
+		if let realMethod = method as? CGMethodDefinition {
+			pascalGenerateGenericParameters(realMethod.GenericParameters)
 		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation, includeVisibility: includeVisibility)
 	}
