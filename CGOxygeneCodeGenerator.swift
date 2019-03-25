@@ -78,6 +78,23 @@
 	}
 
 	//
+	// Types
+	//
+
+	override func pascalGenerateImplementedInterface(_ member: CGMemberDefinition) {
+		if let implementsInterface = member.ImplementsInterface {
+			Append(" implements ")
+			generateTypeReference(implementsInterface)
+			if let implementsInterfaceMember = member.ImplementsInterfaceMember {
+				Append(".")
+				generateIdentifier(implementsInterfaceMember)
+			}
+			Append(";")
+		}
+	}
+
+
+	//
 	// Statements
 	//
 
@@ -512,6 +529,12 @@
 		if !definitionOnly {
 			//todo: add/remove/raise
 		}
+		if isUnified {
+			Append(" ")
+			pascalGenerateMemberVisibilityKeyword(event.Visibility)
+			Append(";")
+		}
+		pascalGenerateImplementedInterface(event)
 		pascalGenerateVirtualityModifiders(event)
 		AppendLine()
 	}

@@ -1290,6 +1290,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		//overridden in delphi codegen
 	}
 
+	internal __abstract func pascalGenerateImplementedInterface(_ member: CGMemberDefinition)
+
+	internal func pascalGenerateImplementedInterfaceMethodResolution(_ member: CGMethodDefinition, type: CGTypeDefinition) {
+		// no-op, Delphi overrides
+	}
+
 	internal func pascalGenerateSecondHalfOfMethodHeader(_ method: CGMethodLikeMemberDefinition, implementation: Boolean, includeVisibility: Boolean = false) {
 		if let parameters = method.Parameters, parameters.Count > 0 {
 			Append("(")
@@ -1311,6 +1317,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				pascalGenerateMemberVisibilityKeyword(method.Visibility)
 				Append(";")
 			}
+
+			pascalGenerateImplementedInterface(method)
 
 			if self is CGOxygeneCodeGenerator {
 				if let `throws` = method.ThrownExceptions {
@@ -1479,6 +1487,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
+		pascalGenerateImplementedInterfaceMethodResolution(method, type: type)
 		pascalGenerateMethodHeader(method, type: type, methodKeyword:pascalKeywordForMethod(method), implementation: false, includeVisibility: isUnified)
 		if isUnified && !(type is CGInterfaceTypeDefinition) {
 			if (method.Virtuality != CGMemberVirtualityKind.Abstract) && !method.External && !method.Empty {
@@ -1578,6 +1587,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if field.Volatile {
 			Append("; volatile")
 		}
+
+		pascalGenerateImplementedInterface(field);
 
 		if isUnified {
 			Append("; ")
@@ -1690,6 +1701,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if property.Default {
 			Append(" default;")
 		}
+		pascalGenerateImplementedInterface(property)
 		pascalGenerateVirtualityModifiders(property)
 		AppendLine();
 

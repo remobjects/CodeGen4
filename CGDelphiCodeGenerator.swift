@@ -151,6 +151,27 @@
 	// Type Definitions
 	//
 
+	override func pascalGenerateImplementedInterface(_ member: CGMemberDefinition) {
+		if let implementsInterface = member.ImplementsInterface, member.ImplementsInterfaceMember == nil {
+			Append(" implements ")
+			generateTypeReference(implementsInterface)
+			Append(";")
+		}
+	}
+
+	override func pascalGenerateImplementedInterfaceMethodResolution(_ member: CGMethodDefinition, type: CGTypeDefinition) {
+		if let implementsInterface = member.ImplementsInterface, let implementsInterfaceMember = member.ImplementsInterfaceMember {
+			Append(pascalKeywordForMethod(member))
+			Append(" ")
+			generateTypeReference(implementsInterface, ignoreNullability: true)
+			Append(".")
+			generateIdentifier(implementsInterfaceMember)
+			Append(" = ")
+			generateIdentifier(member.Name)
+			AppendLine(";")
+		}
+	}
+
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		generateIdentifier(type.Name)
 		pascalGenerateGenericParameters(type.GenericParameters)
