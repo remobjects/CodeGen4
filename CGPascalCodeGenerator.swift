@@ -551,6 +551,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("self")
 	}
 
+	override func generateResultExpression(_ expression: CGResultExpression) {
+		Append("result")
+	}
+
 	override func generateNilExpression(_ expression: CGNilExpression) {
 		Append("nil")
 	}

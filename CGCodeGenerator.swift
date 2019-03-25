@@ -760,6 +760,8 @@
 			generateInheritedExpression(expression)
 		} else if let expression = expression as? CGSelfExpression {
 			generateSelfExpression(expression)
+		} else if let expression = expression as? CGResultExpression {
+			generateResultExpression(expression)
 		} else if let expression = expression as? CGNilExpression {
 			generateNilExpression(expression)
 		} else if let expression = expression as? CGPropertyValueExpression {
@@ -877,6 +879,11 @@
 	internal func generateSelfExpression(_ expression: CGSelfExpression) {
 		// descendant must override
 		assert(false, "generateSelfExpression not implemented")
+	}
+
+	internal func generateResultExpression(_ expression: CGResultExpression) {
+		// descendant must override
+		assert(false, "generateResukltExpression not implemented")
 	}
 
 	internal func generateNilExpression(_ expression: CGNilExpression) {

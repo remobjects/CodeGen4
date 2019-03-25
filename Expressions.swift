@@ -347,6 +347,10 @@ public class CGSelfExpression: CGExpression { // "self" or "this"
 	public static lazy let `Self` = CGSelfExpression()
 }
 
+public class CGResultExpression: CGExpression { // "result"
+	public static lazy let Result = CGResultExpression()
+}
+
 public class CGNilExpression: CGExpression { // "nil" or "null"
 	public static lazy let Nil = CGNilExpression()
 }
