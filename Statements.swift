@@ -122,7 +122,7 @@ public class CGForToLoopStatement: CGNestingStatement {
 	public var EndValue: CGExpression
 	public var Direction: CGLoopDirectionKind = .Forward
 
-	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ startValue: CGExpression, _ endValue: CGExpression, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference?, _ startValue: CGExpression, _ endValue: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
@@ -133,10 +133,10 @@ public class CGForToLoopStatement: CGNestingStatement {
 
 public class CGForEachLoopStatement: CGNestingStatement {
 	public var LoopVariableName: String
-	public var LoopVariableType: CGTypeReference //not all languages require this but some do, so we'll require it
+	public var LoopVariableType: CGTypeReference? //not all languages require this but some do, so we'll require it
 	public var Collection: CGExpression
 
-	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ collection: CGExpression, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference?, _ collection: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
 		LoopVariableName = loopVariableName
 		LoopVariableType = loopVariableType
