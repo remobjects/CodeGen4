@@ -545,6 +545,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateInheritedExpression(_ expression: CGInheritedExpression) {
 		Append("inherited")
+		if let callExpression = expression.CallExpression{
+			Append(" ")
+			generateExpression(callExpression)
+		}
 	}
 
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
@@ -627,6 +631,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("..")
 		generateExpression(expression.EndValue)
 	}
+
+
 
 	/*
 	override func generateUnaryOperatorExpression(_ expression: CGUnaryOperatorExpression) {
@@ -713,7 +719,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						Append(":")
 					} else {
 						Append(".")
-						}
+					}
 				}
 				return false
 			}
@@ -1098,7 +1104,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
-		Append("enum (")
+			Append("enum (")
 
 		helpGenerateCommaSeparatedList(type.Members) { m in
 			if let member = m as? CGEnumValueDefinition {
@@ -1830,19 +1836,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if let bounds = array.Bounds, bounds.Count > 0 {
 			Append("[")
 			if let bounds = array.Bounds {
-				helpGenerateCommaSeparatedList(bounds) { bound in
-					self.Append(bound.Start.ToString())
-					self.Append("..")
-					if let end = bound.End {
-						self.Append(end.ToString())
-					}
+			helpGenerateCommaSeparatedList(bounds) { bound in
+				self.Append(bound.Start.ToString())
+				self.Append("..")
+				if let end = bound.End {
+					self.Append(end.ToString())
 				}
+			}
 			} else if let boundsTypes = array.BoundsTypes {
 				helpGenerateCommaSeparatedList(boundsTypes) { boundsType in
 					self.generateTypeReference(boundsType, ignoreNullability: true)
 				}
-			}
-			Append("]")
+				}
+				Append("]")
 		}
 		Append(" of ")
 		generateTypeReference(array.`Type`)

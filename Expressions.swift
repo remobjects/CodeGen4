@@ -180,6 +180,12 @@ public class CGAnonymousMethodMemberDefinition : CGAnonymousMemberDefinition{
 
 public class CGInheritedExpression: CGExpression {
 	public static lazy let Inherited = CGInheritedExpression()
+	public var CallExpression: CGExpression?
+	public init() {
+	}
+	public init(_ callExpression: CGExpression?) {
+		CallExpression = callExpression
+	}
 }
 
 public class CGIfThenElseExpression: CGExpression { // aka Ternary operator
@@ -243,6 +249,7 @@ public class CGRangeExpression: CGExpression {
 		EndValue = endValue
 	}
 }
+
 
 public class CGUnaryOperatorExpression: CGExpression {
 	public var Value: CGExpression
