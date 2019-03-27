@@ -187,14 +187,14 @@
 	}
 
 	override func generateAll() {
+		generateHeader()
+		generateDirectives()
 		if !definitionOnly {
-			generateHeader()
-			generateDirectives()
 			AppendLine("interface")
 			AppendLine()
-			pascalGenerateImports(currentUnit.Imports)
-			delphiGenerateGlobalInterfaceVariables()
 		}
+		pascalGenerateImports(currentUnit.Imports)
+		delphiGenerateGlobalInterfaceVariables()
 		delphiGenerateInterfaceTypeDefinition()
 		if !definitionOnly {
 			delphiGenerateGlobalInterfaceMethods()

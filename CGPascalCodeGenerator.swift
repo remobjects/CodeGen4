@@ -31,18 +31,18 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//
 
 	override func generateAll() {
-		if !definitionOnly {
-			generateHeader()
-			generateDirectives()
-			if !isUnified {
+		generateHeader()
+		generateDirectives()
+		if !isUnified {
+			if !definitionOnly {
 				AppendLine("interface")
 				AppendLine()
-				pascalGenerateImports(currentUnit.Imports)
-			} else {
-				pascalGenerateImports(currentUnit.Imports.Concat(currentUnit.ImplementationImports).ToList())
 			}
-			generateGlobals()
+			pascalGenerateImports(currentUnit.Imports)
+		} else {
+			pascalGenerateImports(currentUnit.Imports.Concat(currentUnit.ImplementationImports).ToList())
 		}
+		generateGlobals()
 		if currentUnit.Types.Count > 0 {
 			AppendLine("type")
 			incIndent()
