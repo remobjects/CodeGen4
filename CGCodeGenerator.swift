@@ -1078,6 +1078,20 @@
 		Append(")")
 	}
 
+	internal func generateSingleNameOrTupleWithNames(_ names: ImmutableList<String>) {
+		// descendant may override, but this will work for most languages.
+		if names.Count == 1 {
+			generateIdentifier(names[0])
+		} else {
+			Append("(")
+			helpGenerateCommaSeparatedList(names) { name in
+				self.generateIdentifier(name)
+			}
+			Append(")")
+		}
+	}
+
+
 	internal func generateTypeReferenceExpression(_ expression: CGTypeReferenceExpression, ignoreNullability: Boolean) {
 		// descendant may override, but this will work for most languages.
 		generateTypeReference(expression.`Type`, ignoreNullability: ignoreNullability)

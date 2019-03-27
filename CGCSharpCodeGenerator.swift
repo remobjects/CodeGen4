@@ -121,7 +121,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(type)
 			Append(" ")
 		}
-		generateIdentifier(statement.LoopVariableName)
+		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
 		Append(" in ")
 		generateExpression(statement.Collection)
 		AppendLine(")")

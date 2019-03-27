@@ -106,7 +106,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			generateTypeReference(type)
 			Append(" ")
 		}
-		generateIdentifier(statement.LoopVariableName)
+		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
 		Append(": ")
 		generateExpression(statement.Collection)
 		AppendLine(")")

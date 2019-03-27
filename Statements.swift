@@ -132,14 +132,20 @@ public class CGForToLoopStatement: CGNestingStatement {
 }
 
 public class CGForEachLoopStatement: CGNestingStatement {
-	public var LoopVariableName: String
-	public var LoopVariableType: CGTypeReference //not all languages require this but some do, so we'll require it
+	public var LoopVariableNames: List<String>
+	public var LoopVariableType: CGTypeReference? //not all languages require this but some do, so we'll require it
 	public var Collection: CGExpression
 
-	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference, _ collection: CGExpression, _ statement: CGStatement) {
+	public init(_ loopVariableName: String, _ loopVariableType: CGTypeReference? = nil, _ collection: CGExpression, _ statement: CGStatement) {
 		super.init(statement)
-		LoopVariableName = loopVariableName
+		LoopVariableNames = List<String>(loopVariableName)
 		LoopVariableType = loopVariableType
+		Collection = collection
+	}
+
+	public init(_ loopVariableNames: List<String>, _ collection: CGExpression, _ statement: CGStatement) {
+		super.init(statement)
+		LoopVariableNames = loopVariableNames
 		Collection = collection
 	}
 }

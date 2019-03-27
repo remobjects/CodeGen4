@@ -117,7 +117,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
 		Append("for ")
-		generateIdentifier(statement.LoopVariableName)
+		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
 		Append(" in ")
 		generateExpression(statement.Collection)
 		AppendLine(" {")

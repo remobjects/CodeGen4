@@ -286,7 +286,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
 		Append("for each ")
-		generateIdentifier(statement.LoopVariableName)
+		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
 		if let type = statement.LoopVariableType {
 			Append(": ")
 			generateTypeReference(type)
