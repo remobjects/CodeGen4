@@ -840,7 +840,11 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-		assert(false, "generateAliasType is not supported for Go")
+		Append("type ")
+		generateIdentifier(type.Name)
+		Append(" = ")
+		generateTypeReference(type.ActualType)
+		AppendLine()
 	}
 
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
