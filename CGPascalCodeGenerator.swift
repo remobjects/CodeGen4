@@ -1489,7 +1489,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		pascalGenerateImplementedInterfaceMethodResolution(method, type: type)
 		pascalGenerateMethodHeader(method, type: type, methodKeyword:pascalKeywordForMethod(method), implementation: false, includeVisibility: isUnified)
-		if isUnified && !(type is CGInterfaceTypeDefinition) {
+		if isUnified && !definitionOnly && !(type is CGInterfaceTypeDefinition) {
 			if (method.Virtuality != CGMemberVirtualityKind.Abstract) && !method.External && !method.Empty {
 				pascalGenerateMethodBody(method, type: type)
 			}
@@ -1505,7 +1505,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: false, includeVisibility: isUnified)
-		if isUnified {
+		if isUnified && !definitionOnly {
 			if ctor.Virtuality != CGMemberVirtualityKind.Abstract && !ctor.External && !ctor.Empty {
 				pascalGenerateMethodBody(ctor, type: type)
 			}
@@ -1538,7 +1538,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: false, includeVisibility: isUnified)
-		if isUnified {
+		if isUnified && !definitionOnly {
 			pascalGenerateMethodBody(customOperator, type: type)
 		}
 	}

@@ -505,7 +505,7 @@
 
 	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: false)
-		if isUnified {
+		if isUnified && !definitionOnly {
 			pascalGenerateMethodBody(finalizer, type: type)
 		}
 	}
