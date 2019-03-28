@@ -1,16 +1,19 @@
-﻿public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
+﻿public enum CGOxygeneCodeGeneratorStyle {
+	case Standard
+	case Unified
+}
 
-	public enum CGOxygeneCodeGeneratorStyle {
-		case Standard
-		case Unified
-	}
+public enum CGOxygeneStringQuoteStyle {
+	case Single
+	case Double
+	case SmartSingle
+	case SmartDouble
+}
 
-	public enum CGOxygeneStringQuoteStyle {
-		case Single
-		case Double
-		case SmartSingle
-		case SmartDouble
-	}
+public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
+
+	@Obsolete public typealias CGOxygeneCodeGeneratorStyle = CGOxygeneCodeGeneratorStyle
+	@Obsolete public typealias CGOxygeneStringQuoteStyle = CGOxygeneStringQuoteStyle
 
 	public init() {
 		super.init()
