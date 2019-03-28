@@ -5,56 +5,46 @@ import System.Text
 print("CodeGen4 Playground")
 
 var unit = CGCodeUnit()
-var class1 = CGClassTypeDefinition("ConsoleApplication17.AgeRangeDataSetTableAdapters.SelfReferenceComparer")
-var class2 = CGClassTypeDefinition("TableAdapterManager")
-class1.Members.Add(CGNestedTypeDefinition(class2))
-class2.Members.Add(CGMethodDefinition("foo"))
-//unit.Types.Add(class1)
 
-var enum1 = CGEnumTypeDefinition("Foo")
-var val = CGEnumValueDefinition("Bar")
-val.Attributes.Add(CGAttribute(CGNamedTypeReference("Boo")))
-enum1.Attributes.Add(CGAttribute(CGNamedTypeReference("Baz")))
-enum1.Members.Add(CGEnumValueDefinition("Bozo"))
-enum1.Members.Add(val)
-unit.Types.Add(enum1)
+var cls = CGClassTypeDefinition("DotTest")
 
-var cls = CGClassTypeDefinition("CtorTest")
+var td = CGMethodDefinition("TestDot")
+// Simple expressions
+var e1 = CGNamedIdentifierExpression("Named1")
+var m1 = CGMethodCallExpression(nil, "Methodcall", "value".AsNamedIdentifierExpression().AsCallParameter() )
+var arrayname = CGNamedIdentifierExpression("MyData")
+var ArrayParam = List<CGExpression>()
+ArrayParam.Add(CGIntegerLiteralExpression(1))
+var a1 = CGArrayElementAccessExpression(arrayname, ArrayParam)
 
-var ctor = CGConstructorDefinition("withFoo")
-var param = CGParameterDefinition("paramName", CGNamedTypeReference("ParamType"))
-param.ExternalName = "blub"
-ctor.Parameters.Add(param)
-ctor.LocalTypes = List<CGTypeDefinition>()
-ctor.LocalTypes?.Add(CGEnumTypeDefinition("Foo"))
+td.Statements.Add(CGCommentStatement("Simple Expressions"))
 
-var lm = CGMethodDefinition("loc")
-lm.Parameters.Add(CGParameterDefinition("x", CGPredefinedTypeReference.String))
-ctor.LocalMethods = List<CGMethodDefinition>()
-ctor.LocalMethods?.Add(lm)
+td.Statements.Add(e1)
+td.Statements.Add(m1)
+td.Statements.Add(a1)
 
-ctor.LocalMethods = List<CGMethodDefinition>()
-ctor.LocalMethods?.Add(lm)
+td.Statements.Add(CGCommentStatement("Now Property Access?"))
+td.Statements.Add(CGCommentStatement("Would like to see: Methodcall(value).Named1.MyData[1];"))
 
-cls.Members.Add(ctor)
+var lpn = CGPropertyAccessExpression(m1, "Named1")
+var lpd = CGPropertyAccessExpression(lpn, "MyData")
+var lpa = CGArrayElementAccessExpression(lpd, 1.AsLiteralExpression())
+td.Statements.Add(lpa)
 
 
+//var lp2 = CGPropertyAccessExpression(lpm, "Named1")
+//var lp3 = CGPropertyAccessExpression(lp2, "MyData")
+//td.Statements.Add(lp2)
+//td.Statements.Add(lp3)
 
-var m = CGMethodDefinition("LocalBar")
-m.ImplementsInterface = CGNamedTypeReference("IFoo")
-m.ImplementsInterfaceMember = "Bar"
-m.ImplementsInterface = CGNamedTypeReference("IFoo")
-cls.Members.Add(m)
+cls.Members.Add(td)
 
-var m2 = CGMethodDefinition("LocalFoo")
-m2.ImplementsInterface = CGNamedTypeReference("IFoo")
-cls.Members.Add(m2)
 
 unit.Types.Add(cls)
 
-var cg = CGOxygeneCodeGenerator()
+var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Unified)
 //var cg = CGDelphiCodeGenerator()
-var code = cg.GenerateUnit(unit)
+var code = cg.GenerateUnit(unit, definitionOnly: true);
 
 
 //var cg = CGJavaCodeGenerator()

@@ -12,9 +12,6 @@ public enum CGOxygeneStringQuoteStyle {
 
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
-	@Obsolete public typealias CGOxygeneCodeGeneratorStyle = CGOxygeneCodeGeneratorStyle
-	@Obsolete public typealias CGOxygeneStringQuoteStyle = CGOxygeneStringQuoteStyle
-
 	public init() {
 		super.init()
 
