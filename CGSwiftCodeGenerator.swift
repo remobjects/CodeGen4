@@ -1549,13 +1549,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 
-		generateTypeReference(array.`Type`)
 		if let bounds = array.Bounds {
 			var count = bounds.Count
 			if count == 0 {
 				count = 1
 			}
-			switch (array.ArrayKind){
+			switch (array.ArrayKind) {
 				case .Static:
 					fallthrough
 				case .Dynamic:
@@ -1581,7 +1580,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 					}
 			}
 		} else {
-			Append("[]")
+			switch (array.ArrayKind) {
+				case .Static:
+					fallthrough
+				case .Dynamic:
+					generateTypeReference(array.`Type`)
+					Append("[]")
+				case .HighLevel:
+					Append("[")
+					generateTypeReference(array.`Type`)
+					Append("]")
+			}
 		}
 
 		// bounds are not supported in Swift
