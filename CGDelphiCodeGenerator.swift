@@ -70,13 +70,25 @@
 			}
 			for type in t {
 				if let type = type as? CGInterfaceTypeDefinition {
+					if let condition = type.Condition {
+						generateConditionStart(condition)
+					}
 					AppendLine(type.Name + " = interface;")
+					if let condition = type.Condition {
+						generateConditionEnd(condition)
+					}
 				}
 			}
 
 			for type in t {
 				if let type = type as? CGClassTypeDefinition {
+					if let condition = type.Condition {
+						generateConditionStart(condition)
+					}
 					AppendLine(type.Name + " = class;")
+					if let condition = type.Condition {
+						generateConditionEnd(condition)
+					}
 				}
 			}
 			AppendLine()
