@@ -172,7 +172,17 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateLockingStatement(_ statement: CGLockingStatement) {
-		assert(false, "generateLockingStatement is not supported in Swift")
+		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+
+			Append("__lock ")
+			generateExpression(statement.Expression)
+			AppendLine(" {")
+			generateStatementSkippingOuterBeginEndBlock(statement.NestedStatement)
+			AppendLine("}")
+
+		} else {
+			assert(false, "generateLockingStatement is not supported in Swift")
+		}
 	}
 
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
