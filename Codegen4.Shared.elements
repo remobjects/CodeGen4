@@ -3,8 +3,6 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>615FC69D-8D8A-4996-9D58-B042CD883941</ProjectGuid>
     <Name>CodegGen4 (Shared)</Name>
-  </PropertyGroup>
-  <PropertyGroup>
     <RootNamespace>Codegen4.Shared</RootNamespace>
   </PropertyGroup>
   <Import Project="Codegen4.Shared.projitems" Label="Shared" />

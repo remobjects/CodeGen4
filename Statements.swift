@@ -315,6 +315,32 @@ public class CGConstructorCallStatement : CGStatement {
 	}
 }
 
+public class CGLocalMethodStatement : CGAnonymousMethodExpression {
+	public var Name: String
+	public var Throws = false /* Swift and Java only */
+
+	public init(_ name: String) {
+		super.init()
+		Name = name
+	}
+	public init(_ name: String, _ statements: List<CGStatement>) {
+		super.init(statements)
+		Name = name
+	}
+	public init(_ name: String, _ statements: CGStatement...) {
+		super.init(statements)
+		Name = name
+	}
+	public init(_ name: String, _ parameters: List<CGParameterDefinition>, _ statements: List<CGStatement>) {
+		super.init(parameters, statements)
+		Name = name
+	}
+	public init(_ name: String, _ parameters: CGParameterDefinition[], _ statements: CGStatement[]) {
+		super.init(parameters, statements)
+		Name = name
+	}
+}
+
 /* Operator statements */
 
 public class CGVariableDeclarationStatement: CGStatement {

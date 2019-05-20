@@ -183,6 +183,31 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		AppendLine(");")
 	}
 
+	override func generateLocalMethodStatement(_ method: CGLocalMethodStatement) {
+		Append("method ")
+		generateIdentifier(method.Name)
+		if method.Parameters.Count > 0 {
+			Append("(")
+			pascalGenerateDefinitionParameters(method.Parameters, implementation: false)
+			Append(")")
+		}
+
+		if let returnType = method.ReturnType, !returnType.IsVoid {
+			Append(": ")
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+		}
+		AppendLine(";")
+
+		AppendLine("begin")
+		incIndent()
+		generateStatements(variables: method.LocalVariables)
+		generateStatements(method.Statements)
+		decIndent()
+		AppendLine("end;")
+	}
+
 	//
 	// Expressions
 	//

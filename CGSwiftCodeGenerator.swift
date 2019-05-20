@@ -334,6 +334,33 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 	}
 
+	override func generateLocalMethodStatement(_ method: CGLocalMethodStatement) {
+		Append("func ")
+		generateIdentifier(method.Name)
+		Append("(")
+		swiftGenerateDefinitionParameters(method.Parameters)
+		Append(")")
+
+		if method.Throws {
+			Append(" throws")
+		}
+
+		if let returnType = method.ReturnType, !returnType.IsVoid {
+			Append(" -> ")
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+		}
+
+		AppendLine(" {")
+		incIndent()
+		generateStatements(variables: method.LocalVariables)
+		generateStatements(method.Statements)
+		decIndent()
+		AppendLine("}")
+	}
+
+
 	//
 	// Expressions
 	//

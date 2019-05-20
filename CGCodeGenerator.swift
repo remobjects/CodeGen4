@@ -526,6 +526,8 @@
 			generateGotoStatement(expression)
 		} else if let expression = statement as? CGLabelStatement {
 			generateLabelStatement(expression)
+		} else if let expression = statement as? CGLocalMethodStatement {
+			generateLocalMethodStatement(expression)
 		} else if let expression = statement as? CGExpression { // should be last but one
 			generateExpressionStatement(expression)
 		}
@@ -603,32 +605,32 @@
 	}
 
 	internal func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateBeginEndStatement not implemented")
 	}
 
 	internal func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateIfElseStatement not implemented")
 	}
 
 	internal func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateForToLoopStatement not implemented")
 	}
 
 	internal func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateForEachLoopStatement not implemented")
 	}
 
 	internal func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generagenerateWhileDoLoopStatementteImport not implemented")
 	}
 
 	internal func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateDoWhileLoopStatement not implemented")
 	}
 
@@ -638,78 +640,83 @@
 	}
 
 	internal func generateSwitchStatement(_ statement: CGSwitchStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateSwitchStatement not implemented")
 	}
 
 	internal func generateLockingStatement(_ statement: CGLockingStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateLockingStatement not implemented")
 	}
 
 	internal func generateUsingStatement(_ statement: CGUsingStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateUsingStatement not implemented")
 	}
 
 	internal func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateAutoReleasePoolStatement not implemented")
 	}
 
 	internal func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateTryFinallyCatchStatement not implemented")
 	}
 
 	internal func generateReturnStatement(_ statement: CGReturnStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateReturnStatement not implemented")
 	}
 
 	internal func generateYieldStatement(_ statement: CGYieldStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateYieldStatement not implemented")
 	}
 
 	internal func generateThrowStatement(_ statement: CGThrowStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateThrowStatement not implemented")
 	}
 
 	internal func generateBreakStatement(_ statement: CGBreakStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateBreakStatement not implemented")
 	}
 
 	internal func generateContinueStatement(_ statement: CGContinueStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateContinueStatement not implemented")
 	}
 
 	internal func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateVariableDeclarationStatement not implemented")
 	}
 
 	internal func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateAssignmentStatement not implemented")
 	}
 
 	internal func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateConstructorCallStatement not implemented")
 	}
 
 	internal func generateGotoStatement(_ statement: CGGotoStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateGotoStatement not implemented")
 	}
 
 	internal func generateLabelStatement(_ statement: CGLabelStatement) {
-		// descendant must override this or generateImports()
+		// descendant must override this
 		assert(false, "generateLabelStatement not implemented")
+	}
+
+	internal func generateLocalMethodStatement(_ statement: CGLocalMethodStatement) {
+		// descendant must override this
+		assert(false, "generateLocalMethodStatement not implemented")
 	}
 
 	internal func generateStatementTerminator() {

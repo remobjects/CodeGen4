@@ -300,6 +300,31 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 
+	override func generateLocalMethodStatement(_ method: CGLocalMethodStatement) {
+		if let returnType = method.ReturnType {
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+			Append(" ")
+		} else {
+			Append("void ")
+		}
+		generateIdentifier(method.Name)
+		//cSharpGenerateGenericParameters(method.GenericParameters)
+		Append("(")
+		cSharpGenerateDefinitionParameters(method.Parameters)
+		Append(")")
+		//cSharpGenerateGenericConstraints(method.GenericParameters)
+		AppendLine()
+
+		AppendLine("{")
+		incIndent()
+		generateStatements(variables: method.LocalVariables)
+		generateStatements(method.Statements)
+		decIndent()
+		AppendLine("}")
+	}
+
 	//
 	// Expressions
 	//

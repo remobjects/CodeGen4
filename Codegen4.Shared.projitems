@@ -80,7 +80,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CGVisualBasicNetCodeGenerator.swift">
       <VirtualFolder>Code Generation</VirtualFolder>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)CGGoCodeGenerator.swift" />
+    <Compile Include="$(MSBuildThisFileDirectory)CGGoCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code Definition">

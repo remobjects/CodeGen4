@@ -280,6 +280,31 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine(");")
 	}
 
+	override func generateLocalMethodStatement(_ method: CGLocalMethodStatement) {
+		if let returnType = method.ReturnType {
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+			Append(" ")
+		} else {
+			Append("void ")
+		}
+		generateIdentifier(method.Name)
+		//cSharpGenerateGenericParameters(method.GenericParameters)
+		Append("(")
+		javaGenerateDefinitionParameters(method.Parameters)
+		Append(")")
+		//javaGenerateGenericConstraints(method.GenericParameters)
+		AppendLine()
+
+		AppendLine("{")
+		incIndent()
+		generateStatements(variables: method.LocalVariables)
+		generateStatements(method.Statements)
+		decIndent()
+		AppendLine("}")
+	}
+
 	//
 	// Expressions
 	//
