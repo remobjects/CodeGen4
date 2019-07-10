@@ -30,7 +30,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 					"mapped", "matching", "method", "mod", "module", "namespace",
 					"nested", "new", "nil", "not", "notify", "nullable",
 					"of", "old", "on", "operator", "optional", "or", "order", "out", "override",
-					"parallel", "param", "params", "partial", "pinned", "private", "procedure", "property", "protected", "public",
+					"parallel", "param", "params", "partial", "pinned", "private", "procedure", "property", "protected", "public", "published",
 					"queryable", "raise", "raises", "read", "readonly", "record", "reintroduce", "remove", "repeat", "require", "result", "reverse", "sealed",
 					"select", "selector -", "self", "sequence", "set", "shl", "shr", "skip", "soft", "static", "step", "strong",
 					"take", "then", "to", "true", "try", "type",
