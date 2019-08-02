@@ -626,7 +626,7 @@
 
 	internal func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
 		// descendant must override this
-		assert(false, "generagenerateWhileDoLoopStatementteImport not implemented")
+		assert(false, "generateWhileDoLoopStatementteImport not implemented")
 	}
 
 	internal func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
