@@ -1126,18 +1126,22 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		assert(false, "generateDestructorDefinition is not supported in C#")
+	}
+
+	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 		} else {
-			cSharpGenerateMemberTypeVisibilityPrefix(dtor.Visibility)
-			cSharpGenerateVirtualityPrefix(dtor)
+			cSharpGenerateMemberTypeVisibilityPrefix(finalizer.Visibility)
+			cSharpGenerateVirtualityPrefix(finalizer)
 		}
 		Append("~")
 		generateIdentifier(type.Name)
 		Append("(")
-		cSharpGenerateDefinitionParameters(dtor.Parameters)
+		cSharpGenerateDefinitionParameters(finalizer.Parameters)
 		Append(")")
 
-		if dtor.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly{
+		if finalizer.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly {
 			AppendLine(";")
 			return
 		}
@@ -1145,14 +1149,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		generateStatements(variables: dtor.LocalVariables)
-		generateStatements(dtor.Statements)
+		generateStatements(variables: finalizer.LocalVariables)
+		generateStatements(finalizer.Statements)
 		decIndent()
 		AppendLine("}")
-	}
-
-	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
-
 	}
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
