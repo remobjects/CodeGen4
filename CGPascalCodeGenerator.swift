@@ -1831,10 +1831,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append("[")
 			if let bounds = array.Bounds {
 				helpGenerateCommaSeparatedList(bounds) { bound in
-					self.Append(bound.Start.ToString())
+					self.generateExpression(bound.Start)
 					self.Append("..")
 					if let end = bound.End {
-						self.Append(end.ToString())
+						self.generateExpression(end)
 					}
 				}
 			} else if let boundsTypes = array.BoundsTypes {

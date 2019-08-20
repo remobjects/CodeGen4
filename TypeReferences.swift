@@ -474,12 +474,16 @@ public class CGArrayTypeReference : CGTypeReference {
 }
 
 public class CGArrayBounds : CGEntity {
-	public var Start: Int32 = 0
-	public var End: Int32?
+	public var Start: CGExpression = 0
+	public var End: CGExpression?
 
 	public init() {
 	}
 	public init(_ start: Int32, end: Int32) {
+		Start = CGIntegerLiteralExpression(start)
+		End = CGIntegerLiteralExpression(end)
+	}
+    public init(_ start: CGExpression, end: CGExpression?) {
 		Start = start
 		End = end
 	}

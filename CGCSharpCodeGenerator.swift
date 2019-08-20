@@ -1189,7 +1189,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append("[");
 			if let array = field.Type as? CGArrayTypeReference {
 				if let bounds = array.Bounds {
-					Append("" + (bounds[0].End - bounds[0].Start + 1));
+                    generateExpression(bounds[0].End?);
+                    Append(" - ");
+                    generateExpression(bounds[0].Start);
+                    Append(" + 1");
 				}
 			}
 			Append("]");
