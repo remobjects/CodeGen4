@@ -483,7 +483,7 @@ public class CGArrayBounds : CGEntity {
 		Start = CGIntegerLiteralExpression(start)
 		End = CGIntegerLiteralExpression(end)
 	}
-    public init(_ start: CGExpression, end: CGExpression?) {
+	public init(_ start: CGExpression, end: CGExpression?) {
 		Start = start
 		End = end
 	}
