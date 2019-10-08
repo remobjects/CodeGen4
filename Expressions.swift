@@ -478,7 +478,8 @@ public class CGFloatLiteralExpression: CGLanguageAgnosticLiteralExpression {
 			case 10:
 				if let value = DoubleValue {
 					var result = Convert.ToStringInvariant(value)
-					if !result.Contains(".") {
+					let any: Char[] = [".", "E", "e"]
+					if !result.ContainsAny(any) {
 						result += ".0";
 					}
 					return result

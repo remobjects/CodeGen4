@@ -23,6 +23,8 @@ td.Statements.Add(e1)
 td.Statements.Add(m1)
 td.Statements.Add(a1)
 
+td.Statements.Add(CGVariableDeclarationStatement("x", CGPredefinedTypeReference.Double, CGFloatLiteralExpression(0.00000000000001)))
+
 td.Statements.Add(CGCommentStatement("Now Property Access?"))
 td.Statements.Add(CGCommentStatement("Would like to see: Methodcall(value).Named1.MyData[1];"))
 
@@ -44,7 +46,7 @@ unit.Types.Add(cls)
 
 var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Unified)
 //var cg = CGDelphiCodeGenerator()
-var code = cg.GenerateUnit(unit, definitionOnly: true);
+var code = cg.GenerateUnit(unit, definitionOnly: false);
 
 
 //var cg = CGJavaCodeGenerator()
