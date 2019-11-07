@@ -85,6 +85,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateTypeMemberImplementations(type)
 		} else if let type = type as? CGStructTypeDefinition {
 			pascalGenerateTypeMemberImplementations(type)
+		} else if let type = type as? CGInterfaceTypeDefinition {
+			pascalGenerateTypeMemberImplementations(type)
 		} else if let type = type as? CGExtensionTypeDefinition {
 			pascalGenerateTypeMemberImplementations(type)
 		}
@@ -110,6 +112,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	final func pascalGenerateTypeMemberImplementation(_ member: CGMemberDefinition, type: CGTypeDefinition) {
+
+		if (type is CGInterfaceTypeDefinition) && !(member is CGNestedTypeDefinition) {
+			return
+		}
 
 		if let condition = member.Condition {
 			generateConditionStart(condition)
@@ -1192,6 +1198,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		decIndent()
 		Append("end")
 		generateStatementTerminator()
+		pascalGenerateNestedTypes(type)
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {

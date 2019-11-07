@@ -33,6 +33,9 @@ var lpd = CGPropertyAccessExpression(lpn, "MyData")
 var lpa = CGArrayElementAccessExpression(lpd, 1.AsLiteralExpression())
 td.Statements.Add(lpa)
 
+var intf = CGInterfaceTypeDefinition("NestedInterface")
+intf.Members.Add(CGNestedTypeDefinition(cls))
+intf.Members.Add(td);
 
 //var lp2 = CGPropertyAccessExpression(lpm, "Named1")
 //var lp3 = CGPropertyAccessExpression(lp2, "MyData")
@@ -42,9 +45,9 @@ td.Statements.Add(lpa)
 cls.Members.Add(td)
 
 
-unit.Types.Add(cls)
+unit.Types.Add(intf)
 
-var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Unified)
+var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Standard)
 //var cg = CGDelphiCodeGenerator()
 var code = cg.GenerateUnit(unit, definitionOnly: false);
 
