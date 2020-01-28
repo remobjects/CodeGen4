@@ -161,14 +161,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
 		Append("using (")
-		if let type = statement.`Type` {
-			generateTypeReference(type)
-			Append(" ")
-		} else {
-			Append("var ")
+		if let name = statement.Name {
+			if let type = statement.`Type` {
+				generateTypeReference(type)
+				Append(" ")
+			} else {
+				Append("var ")
+			}
+			generateIdentifier(name)
+			Append(" = ")
 		}
-		generateIdentifier(statement.Name)
-		Append(" = ")
 		generateExpression(statement.Value)
 		AppendLine(")")
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)

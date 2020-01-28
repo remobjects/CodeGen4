@@ -188,13 +188,16 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 
-			Append("__using let ")
-			generateIdentifier(statement.Name)
-			if let type = statement.`Type` {
-				Append(": ")
-				generateTypeReference(type)
+			Append("__using ")
+			if let name = statement.Name {
+				Append("let ")
+				generateIdentifier(statement.Name)
+				if let type = statement.`Type` {
+					Append(": ")
+					generateTypeReference(type)
+				}
+				Append(" = ")
 			}
-			Append(" = ")
 			generateExpression(statement.Value)
 			AppendLine(" {")
 

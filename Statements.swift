@@ -223,7 +223,7 @@ public class CGLockingStatement: CGNestingStatement {
 }
 
 public class CGUsingStatement: CGNestingStatement {
-	public var Name: String
+	public var Name: String?
 	public var `Type`: CGTypeReference?
 	public var Value: CGExpression
 

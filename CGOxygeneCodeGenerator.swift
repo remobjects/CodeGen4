@@ -112,12 +112,14 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
 		Append("using ")
-		generateIdentifier(statement.Name)
-		if let type = statement.`Type` {
-			Append(": ")
-			generateTypeReference(type)
+		if let name = statement.Name {
+			generateIdentifier(name)
+			if let type = statement.`Type` {
+				Append(": ")
+				generateTypeReference(type)
+			}
+			Append(" := ")
 		}
-		Append(" := ")
 		generateExpression(statement.Value)
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
