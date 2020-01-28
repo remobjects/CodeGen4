@@ -232,6 +232,10 @@ public class CGUsingStatement: CGNestingStatement {
 		Name = name
 		Value = value
 	}
+	public init(_ value: CGExpression, _ nestedStatement: CGStatement) {
+		super.init(nestedStatement)
+		Value = value
+	}
 }
 
 public class CGAutoReleasePoolStatement: CGNestingStatement {}
