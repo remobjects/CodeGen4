@@ -1,19 +1,72 @@
-﻿public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
+﻿public enum CGVisualBasicCodeGeneratorDialect {
+	case Standard
+	case Mercury
+}
+
+public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
+
+	public init() {
+		super.init()
+
+		keywords = ["addhandler", "addressof", "alias", "and", "andalso", "as", "async", "boolean", "byref", "byte", "byval",
+					"call", "case", "catch", "cbool", "cbyte", "cchar", "cdate", "cdec", "cdbl", "char", "cint", "class", "clng", "cobj", "const", "continue", "csbyte", "cshort", "csng", "cstr", "ctype", "cuint", "culng", "cushort", "custom",
+					"date", "decimal", "declare", "default", "delegate", "dim", "directcast", "do", "double",
+					"each", "else", "elseif", "end", "endif", "enum", "erase", "error", "event", "exit", "extends", "false",
+					"finally", "for", "friend", "function", "get", "gettype", "getxmlnamespace", "global", "gosub", "goto", "handles",
+					"if", "if()", "implements", "imports", "in", "inherits", "integer", "interface", "iterator", "is", "isnot", "lazy", "let", "lib", "like", "long", "loop",
+					"me", "mod", "module", "mustinherit", "mustoverride", "mybase", "myclass",
+					"namespace", "narrowing", "new", "next", "not", "nothing", "notinheritable", "notoverridable", "null",
+					"object", "of", "on", "operator", "option", "optional", "or", "orelse", "overloads", "overridable", "overrides",
+					"paramarray", "partial", "private", "property", "protected", "ptr", "public",
+					"raiseevent", "readonly", "redim", "rem", "removehandler", "resume", "return",
+					"sbyte", "select", "set", "shadows", "shared", "short", "single", "static", "step", "stop", "string", "structure", "sub", "synclock",
+					"then", "throw", "to", "true", "try", "trycast", "typeof", "variant", "wend", "uinteger", "ulong", "ushort", "using",
+					"when", "while", "widening", "with", "withevents", "writeonly", "xor"].ToList() as! List<String>
+	}
+
+	public var Dialect: CGVisualBasicCodeGeneratorDialect = .Standard
+
+	public convenience init(dialect: CGVisualBasicCodeGeneratorDialect) {
+		init()
+		Dialect = dialect
+	}
 
 	public override var defaultFileExtension: String { return "vb" }
 
 	override func escapeIdentifier(_ name: String) -> String {
+		if (!positionedAfterPeriod) {
+			return "[\(name)]"
+		}
 		return name
 	}
 
+	var Methods: Stack<String> = Stack<String>()
+	var Loops: Stack<String> = Stack<String>()
+	var InLoop: Integer = 0
+
+	//done
 	override func generateHeader() {
-
+		AppendLine("Option Explicit On")
+		AppendLine("Option Infer On")
+		AppendLine("Option Strict Off")
+		AppendLine()
+		if let namespace = currentUnit.Namespace {
+			Append("Namespace")
+			Append(" ")
+			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
+			AppendLine()
+		}
 	}
 
+	//done
 	override func generateFooter() {
-
+		if let namespace = currentUnit.Namespace {
+			Append("End Namespace")
+			AppendLine()
+		}
 	}
 
+	//done
 	override func generateImports() {
 		super.generateImports()
 		if currentUnit.Imports.Count > 0 {
@@ -21,9 +74,11 @@
 		}
 	}
 
+	//done 21-5-2020
 	override func generateImport(_ imp: CGImport) {
 		if imp.StaticClass != nil {
-			//todo
+			Append("Imports ")
+			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
 		} else {
 			Append("Imports ")
 			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
@@ -31,22 +86,27 @@
 	}
 
 
+	//done
 	override func generateSingleLineCommentPrefix() {
 		Append("' ")
 	}
 
+	//done 21-5-2020
 	override func generateInlineComment(_ comment: String) {
-
+		//assert(false, "Inline comments are not supported on Visual Basic")
 	}
 
 	//
 	// Statements
 	//
 
+	//done
 	override func generateBeginEndStatement(_ statement: CGBeginEndBlockStatement) {
-
+		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
+		AppendLine("")
 	}
 
+	//done 21-5-2020
 	override func generateIfElseStatement(_ statement: CGIfThenElseStatement) {
 		Append("If ")
 		generateExpression(statement.Condition)
@@ -59,12 +119,16 @@
 			incIndent()
 			generateStatementSkippingOuterBeginEndBlock(elseStatement)
 			decIndent()
-			Append("end")
+			//Append("end")//done 21-5-2020
 		}
 		AppendLine("End If")
 	}
 
+	//21-5-2020
+	//todo: support for other step than 1? (not supported by CGForToLoopStatement)
 	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
+		InLoop = InLoop + 1
+		Loops.Push("For")
 		Append("For ")
 		generateIdentifier(statement.LoopVariableName)
 		if let type = statement.LoopVariableType {
@@ -92,40 +156,80 @@
 		AppendLine()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 		AppendLine("Next")
+		Loops.Pop()
+		InLoop = InLoop - 1
 	}
 
+	//done 21-5-2020
 	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
-
+		InLoop = InLoop + 1
+		Loops.Push("For")
+		Append("For Each")
+		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
+		if let type = statement.LoopVariableType {
+			Append(" As ")
+			generateTypeReference(type)
+		}
+		Append(" In ")
+		generateExpression(statement.Collection)
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		AppendLine("Next")
+		Loops.Pop()
+		InLoop = InLoop - 1
 	}
 
+	//done
 	override func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
+		InLoop = InLoop + 1
+		Loops.Push("For")
 		Append("Do While ")
 		generateExpression(statement.Condition)
 		AppendLine()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 		AppendLine("Loop")
+		Loops.Pop()
+		InLoop = InLoop - 1
 	}
 
+	//done 22-5-2020
 	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
-		Append("Do Until ")
+		InLoop = InLoop + 1
+		Loops.Push("For")
+		Append("Do ")
+		AppendLine()
+		incIndent()
+		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
+		decIndent()
+		Append("Loop While")
 		if let notCondition = statement.Condition as? CGUnaryOperatorExpression, notCondition.Operator == CGUnaryOperatorKind.Not {
 			generateExpression(notCondition.Value)
 		} else {
 			generateExpression(CGUnaryOperatorExpression.NotExpression(statement.Condition))
 		}
 		AppendLine()
+		Loops.Pop()
+		InLoop = InLoop - 1
+	}
+
+
+	//done 21-5-2020 (was marked out)
+	override func generateInfiniteLoopStatement(_ statement: CGInfiniteLoopStatement) {
+		InLoop = InLoop + 1
+		Loops.Push("For")
+		Append("Do ")
+		AppendLine()
 		incIndent()
-		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 		decIndent()
 		AppendLine("Loop")
+		Loops.Pop()
+		InLoop = InLoop - 1
 	}
 
-	/*
-	override func generateInfiniteLoopStatement(_ statement: CGInfiniteLoopStatement) {
-	}
-	*/
-
+	//done
 	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
+		InLoop = InLoop + 1 //misuse because you can break here in a lot of languages
+		Loops.Push("")
 		Append("Select Case ")
 		generateExpression(statement.Expression)
 		AppendLine()
@@ -148,23 +252,86 @@
 		}
 		decIndent()
 		AppendLine("End Select")
+		Loops.Pop()
+		InLoop = InLoop - 1
 	}
 
+	//done 21-5-2020
 	override func generateLockingStatement(_ statement: CGLockingStatement) {
+		Append("SyncLock ")
+		generateExpression(statement.Expression)
+		incIndent()
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		decIndent()
+		AppendLine("End SyncLock")
 	}
 
+	//done 21-5-2020
 	override func generateUsingStatement(_ statement: CGUsingStatement) {
-
+		Append("Using ")
+		if let name = statement.Name {
+			generateIdentifier(name)
+			if let type = statement.`Type` {
+				Append(" As ")
+				generateTypeReference(type)
+			}
+			Append(" = ")
+		}
+		generateExpression(statement.Value)
+		incIndent()
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		decIndent()
+		AppendLine("End Using")
 	}
 
+	//done 21-5-2020
 	override func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
-
+		Append("Using autoreleasepool ")
+		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
+		AppendLine("End Using ")
 	}
 
+	//done 22-5-2020
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
-
+		let finallyStatements = statement.FinallyStatements
+		let catchBlocks = statement.CatchBlocks
+		if (finallyStatements.Count + catchBlocks.Count) > 0 {
+			AppendLine("Try")
+			incIndent()
+		}
+		generateStatements(statement.Statements)
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
+			AppendLine("Catch ")
+			for b in catchBlocks {
+				if let name = b.Name, let type = b.`Type` {
+					generateIdentifier(name)
+					Append(" As ")
+					generateTypeReference(type)
+					if let wn = b.Filter {
+						Append(" When ")
+						generateExpression(wn)
+					}
+					AppendLine("")
+					incIndent()
+					generateStatements(b.Statements)
+					decIndent()
+				} else {
+					assert(catchBlocks.Count == 1, "Can only have a single Catch block, if there is no type filter")
+					generateStatements(b.Statements)
+				}
+			}
+			decIndent()
+		}
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
+			AppendLine("Finally")
+			incIndent()
+			generateStatements(finallyStatements)
+			decIndent()
+		}
+		AppendLine("End Try")
 	}
 
+	//done
 	override func generateReturnStatement(_ statement: CGReturnStatement) {
 		if let value = statement.Value {
 			Append("Return ")
@@ -175,18 +342,54 @@
 		}
 	}
 
+	//done 21-5-2020
 	override func generateThrowStatement(_ statement: CGThrowStatement) {
-
+		Append("Throw ")
+		if let value = statement.Exception {
+			generateExpression(value)
+		}
+		AppendLine()
 	}
 
+	//21-5-2020
+	//todo: everywhere you can break out need to be pushed and popped to create the correct statement
 	override func generateBreakStatement(_ statement: CGBreakStatement) {
-
+		if InLoop > 0{
+			let f = Loops.Pop()
+			Loops.Push(f)
+			if f != "" {
+				Append("Exit ")
+				AppendLine(f)
+			}
+		} else {
+			let f = Methods.Pop()
+			Methods.Push(f)
+			if f != "" {
+				Append("Exit ")
+				AppendLine(f)
+			}
+		}
 	}
 
+	//21-5-2020
+	//todo: everywhere you can continue need to be pushed and popped to create the correct statement
 	override func generateContinueStatement(_ statement: CGContinueStatement) {
-
+		let f = Loops.Pop()
+		Loops.Push(f)
+		if (f != "") {
+			Append("Continue ")
+			AppendLine(f)
+		}
 	}
 
+	//added and done, 21-5-2020
+	override func generateYieldStatement(_ statement: CGYieldStatement) {
+		Append("Yield ")
+		generateExpression(statement.Value)
+		AppendLine()
+	}
+
+	//done
 	override func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {
 		Append("Dim ")
 		generateIdentifier(statement.Name)
@@ -201,6 +404,7 @@
 		AppendLine()
 	}
 
+	//done
 	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
 		generateExpression(statement.Target)
 		Append(" = ")
@@ -208,10 +412,30 @@
 		AppendLine()
 	}
 
+	//done 21-5-2020
 	override func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
+		if let callSite = statement.CallSite {
+			if callSite is CGInheritedExpression {
+				generateExpression(callSite)
+				Append(" ")
+			} else if callSite is CGSelfExpression {
+				// no-op
+			} else {
+				assert(false, "Unsupported call site for constructor call.")
+			}
+		}
 
+		Append("New")
+		if let name = statement.ConstructorName {
+			Append(" ")
+			Append(name)
+		}
+		Append("(")
+		vbGenerateCallParameters(statement.Parameters)
+		AppendLine(")")
 	}
 
+	//done
 	override func generateStatementTerminator() {
 		AppendLine()
 	}
@@ -220,6 +444,7 @@
 	// Expressions
 	//
 
+	//done
 	internal func vbGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
@@ -227,17 +452,23 @@
 		}
 	}
 
+	//done 21-5-2020
 	func vbGenerateCallParameters(_ parameters: List<CGCallParameter>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
 				Append(", ")
 			}
+			if let name = param.Name { //block named parameters added 21-5-2020
+				generateIdentifier(name)
+				Append(" := ") //changed 21-5-2020
+			}
 			generateExpression(param.Value)
 		}
 	}
 
-	func vbGenerateAttributeParameters(_ parameters: List<CGCallParameter>) {
+	 //done 21-5-2020
+	 func vbGenerateAttributeParameters(_ parameters: List<CGCallParameter>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -245,7 +476,7 @@
 			}
 			if let name = param.Name {
 				generateIdentifier(name)
-				Append(" = ")
+				Append(" := ") //changed 21-5-2020
 			}
 			generateExpression(param.Value)
 		}
@@ -257,30 +488,41 @@
 	}
 	*/
 
+	 //done 21-5-2020
 	override func generateAssignedExpression(_ expression: CGAssignedExpression) {
-		if !expression.Inverted {
-			Append("Not ")
-		}
 		generateExpression(expression.Value)
-		Append("Is Nothong")
+		if expression.Inverted {
+			Append(" Is Nothing")
+		} else {
+			Append(" IsNot Nothing")
+		}
 	}
 
+	 //done 21-5-2020
 	override func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
-
+		Append("Len(")
+		generateExpression(expression.Expression)
+		Append(")")
 	}
 
-	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
-
+   //done 21-5-2020
+   override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
+		Append("typeOf(") //from RTL
+		generateExpression(expression.Expression)
+		Append(")")
 	}
 
+	//done
 	override func generateDefaultExpression(_ expression: CGDefaultExpression) {
-
+		Append("Nothing")
 	}
 
+	//done
 	override func generateSelectorExpression(_ expression: CGSelectorExpression) {
-
+		assert(false, "Not implemented yet")
 	}
 
+	//done
 	override func generateTypeCastExpression(_ expression: CGTypeCastExpression) {
 		if expression.ThrowsException {
 			Append("CType(")
@@ -297,36 +539,96 @@
 		}
 	}
 
+	//done
 	override func generateInheritedExpression(_ expression: CGInheritedExpression) {
 		Append("MyBase")
 	}
 
+	//done
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("Me")
 	}
 
+	//done
 	override func generateNilExpression(_ expression: CGNilExpression) {
 		Append("Nothing")
 	}
 
+	//done
 	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
 		Append("value")
 	}
 
+	//done 21-5-2020
 	override func generateAwaitExpression(_ expression: CGAwaitExpression) {
-
+		Append("Await ")
+		generateExpression(expression.Expression)
 	}
 
-	override func generateAnonymousMethodExpression(_ expression: CGAnonymousMethodExpression) {
+	//done 21-5-2020
+	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
+		if method.Lambda {
+			Append(vbKeywordForMethod(method, close: false))
+			Append("(")
+			helpGenerateCommaSeparatedList(method.Parameters) { param in
+				self.generateAttributes(param.Attributes, inline: true)
+				self.generateParameterDefinition(param)
+			}
+			Append(") ")
+			if method.Statements.Count == 1, let expression = method.Statements[0] as? CGExpression {
+				generateExpression(expression)
+				Methods.Pop() //single line has no End
+			} else {
+				incIndent()
+				generateStatements(variables: method.LocalVariables)
+				generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+				decIndent()
+				AppendLine(vbKeywordForMethod(method, close: true))
+			}
 
+		} else {
+			Append(vbKeywordForMethod(method, close: false))
+			Append("(")
+			if method.Parameters.Count > 0 {
+				helpGenerateCommaSeparatedList(method.Parameters) { param in
+					self.generateIdentifier(param.Name)
+					if let type = param.`Type` {
+						self.Append(" As ")
+						self.generateTypeReference(type)
+					}
+				}
+			}
+			 AppendLine(")")
+			 if let returnType = method.ReturnType {
+				Append(" As ")
+				generateTypeReference(returnType)
+			}
+			incIndent()
+			generateStatements(variables: method.LocalVariables)
+			generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+			decIndent()
+			AppendLine(vbKeywordForMethod(method, close: true))
+		}
 	}
 
-	override func generateAnonymousTypeExpression(_ expression: CGAnonymousTypeExpression) {
+	//done 21-5-2020
+	override func generateAnonymousTypeExpression(_ type: CGAnonymousTypeExpression) {
+		Append("New With {")
+		helpGenerateCommaSeparatedList(type.Members) { m in
 
-	}
+			self.generateIdentifier(m.Name)
+			self.Append(" = ")
+			if let member = m as? CGAnonymousPropertyMemberDefinition {
+				self.generateExpression(member.Value)
+			}
 
+		}
+		AppendLine("}")
+   }
+
+	//done 21-5-2020
 	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
-
+		assert(false, "Visual Basic does not support pointers")
 	}
 
 	/*
@@ -335,6 +637,7 @@
 	}
 	*/
 
+	//done
 	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
 		// null check is a very special case in VB.NET
 		if let nilExpression = (expression.RighthandValue as? CGNilExpression), (expression.Operator == CGBinaryOperatorKind.Equals || expression.Operator == CGBinaryOperatorKind.NotEquals) {
@@ -352,10 +655,20 @@
 		}
 	}
 
+	//done 21-5-2020
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
-
+		switch (`operator`) {
+			case .Plus: Append("+")
+			case .Minus: Append("-")
+			case .BitwiseNot: Append("Not ")
+			case .Not: Append("Not ")
+			case .AddressOf: Append("AddressOf ")
+			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
+		}
 	}
 
+	//done
+	//todo: add and remove event works completely different in VB
 	override func generateBinaryOperator(_ `operator`: CGBinaryOperatorKind) {
 		switch (`operator`) {
 			case .Concat: Append("&")
@@ -364,57 +677,78 @@
 			case .Multiplication: Append("*")
 			case .Division: Append("/")
 			case .LegacyPascalDivision: Append("/")
-			//case .Modulus: Append("mod")
+			case .Modulus: Append("Mod")
 			case .Equals: Append("=")
 			case .NotEquals: Append("<>")
 			case .LessThan: Append("<")
 			case .LessThanOrEquals: Append("<=")
 			case .GreaterThan: Append(">")
 			case .GreatThanOrEqual: Append(">=")
-			case .LogicalAnd: Append("And")
-			case .LogicalOr: Append("Or")
-			//case .LogicalXor: Append("Xor")
-			//case .Shl: Append("shl")
-			//case .Shr: Append("shr")
-			case .BitwiseAnd: Append("AND")
-			case .BitwiseOr: Append("OR")
-			//case .BitwiseXor: Append("XOR")
+			case .LogicalAnd: Append("AndAlso")
+			case .LogicalOr: Append("OrElse")
+			case .LogicalXor: Append("Xor")
+			case .Shl: Append("<<")
+			case .Shr: Append(">>")
+			case .BitwiseAnd: Append("And")
+			case .BitwiseOr: Append("Or")
+			case .BitwiseXor: Append("Xor")
 			//case .Implies:
-			//case .Is: Append("is")
-			//case .IsNot:
+			case .Is: Append("Is")
+			case .IsNot: Append("IsNot")
 			//case .In: Append("in")
 			//case .NotIn:
 			case .Assign: Append("=")
-			//case .AssignAddition:
-			//case .AssignSubtraction:
-			//case .AssignMultiplication:
-			//case .AssignDivision:
+			case .AssignAddition: Append("+=")
+			case .AssignSubtraction: Append("-=")
+			case .AssignMultiplication: Append("*=")
+			case .AssignDivision: Append("/=")
 			//case .AddEvent:
 			//case .RemoveEvent:
 			default: Append("/* NOT SUPPORTED */")
 		}
 	}
 
+	//done 21-5-2020
 	override func generateIfThenElseExpression(_ expression: CGIfThenElseExpression) {
-
+		Append("(if(")
+		generateExpression(expression.Condition)
+		Append(", ")
+		generateExpression(expression.IfExpression)
+		if let elseExpression = expression.ElseExpression {
+			Append(", ")
+			generateExpression(elseExpression)
+		}
+		Append(")")
 	}
 
+	//done
 	override func generateFieldAccessExpression(_ expression: CGFieldAccessExpression) {
 		vbGenerateCallSiteForExpression(expression)
 		generateIdentifier(expression.Name)
 	}
 
+	 //done
 	override func generateEventAccessExpression(_ expression: CGEventAccessExpression) {
 		generateFieldAccessExpression(expression)
 		Append("Event")
 	}
 
-	/*
-	override func generateArrayElementAccessExpression(_ expression: CGArrayElementAccessExpression) {
-		// handled in base
-	}
-	*/
 
+	override func generateArrayElementAccessExpression(_ expression: CGArrayElementAccessExpression) {
+		generateExpression(expression.Array)
+		Append("(")
+		for p in 0 ..< expression.Parameters.Count {
+			let param = expression.Parameters[p]
+			if p > 0 {
+				Append(", ")
+			}
+			generateExpression(param)
+		}
+		Append(")")
+	}
+
+
+	//done
 	override func generateMethodCallExpression(_ method: CGMethodCallExpression) {
 		//Append("Call ")
 		vbGenerateCallSiteForExpression(method)
@@ -425,6 +759,7 @@
 		Append(")")
 	}
 
+	//done
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("New ")
 		generateExpression(expression.`Type`)
@@ -441,13 +776,14 @@
 		//}
 	}
 
+	//done 21-5-2020
 	override func generatePropertyAccessExpression(_ property: CGPropertyAccessExpression) {
 		vbGenerateCallSiteForExpression(property)
 		generateIdentifier(property.Name)
 		if let params = property.Parameters, params.Count > 0 {
-			Append("[")
+			Append("(")
 			vbGenerateCallParameters(property.Parameters)
-			Append("]")
+			Append(")")
 		}
 	}
 
@@ -457,6 +793,7 @@
 	}
 	*/
 
+	//done
 	internal func vbEscapeCharactersInStringLiteral(_ string: String) -> String {
 		let result = StringBuilder()
 		let len = string.Length
@@ -470,18 +807,23 @@
 		return result.ToString()
 	}
 
+	//done
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 		Append("\"\(vbEscapeCharactersInStringLiteral(expression.Value))\"")
 	}
 
+	//done 22-5-2020
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
-
+		Append("ChrW(\(expression.Value))")
 	}
 
+	//done 21-5-2020
 	override func generateIntegerLiteralExpression(_ literalExpression: CGIntegerLiteralExpression) {
 		switch literalExpression.Base {
 			case 16: Append("&H"+literalExpression.StringRepresentation(base:16))
 			case 10: Append(literalExpression.StringRepresentation(base:10))
+			case 8: Append("&O"+literalExpression.StringRepresentation(base:8))
+			case 2: Append("&B"+literalExpression.StringRepresentation(base:2))
 			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Visual Basic.")
 		}
 	}
@@ -492,36 +834,50 @@
 	}
 	*/
 
-	override func generateArrayLiteralExpression(_ expression: CGArrayLiteralExpression) {
-
+	//done 21-5-2020
+	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
+		Append("{")
+		helpGenerateCommaSeparatedList(array.Elements) { e in
+			self.generateExpression(e)
+		}
+		Append("}")
 	}
 
+
+	//done 21-5-2020
 	override func generateSetLiteralExpression(_ expression: CGSetLiteralExpression) {
-
+		assert(false, "Sets are not supported")
 	}
 
+	//done 21-5-2020
 	override func generateDictionaryExpression(_ expression: CGDictionaryLiteralExpression) {
-
+		assert(false, "generateDictionaryExpression is not supported in Visual Basic")
 	}
 
-	/*
-	override func generateTupleExpression(_ expression: CGTupleLiteralExpression) {
-		// default handled in base
+	//done 21-5-2020
+	override func generateTupleExpression(_ tuple: CGTupleLiteralExpression) {
+		Append("(")
+		helpGenerateCommaSeparatedList(tuple.Members) { e in
+			self.generateExpression(e)
+		}
+		Append(")")
 	}
-	*/
 
+	//done 21-5-2020
 	override func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
-
+		assert(false, "Sets are not supported")
 	}
 
+	//done 21-5-2020
 	override func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
-
+		assert(false, "Sequences are not supported")
 	}
 
 	//
 	// Type Definitions
 	//
 
+	//done
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		Append("<")
 		generateTypeReference(attribute.`Type`)
@@ -543,6 +899,7 @@
 		}
 	}
 
+	//done
 	func vbGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
@@ -552,6 +909,7 @@
 		}
 	}
 
+	//done
 	func vbGenerateMemberTypeVisibilityPrefix(_ visibility: CGMemberVisibilityKind) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
@@ -568,28 +926,32 @@
 		}
 	}
 
+	//done
 	func vbGenerateStaticPrefix(_ isStatic: Boolean) {
 		if isStatic {
 			Append("Shared ")
 		}
 	}
 
+	//done 21-5-2020
 	func vbGenerateAbstractPrefix(_ isAbstract: Boolean) {
 		if isAbstract {
-			Append("Abstract ")
+			Append("MustInherit ")
 		}
 	}
 
+	//done 21-5-2020
 	func vbGenerateSealedPrefix(_ isSealed: Boolean) {
 		if isSealed {
-			Append("Final ")
+			Append("NotInherirable ")
 		}
 	}
 
+	//done 21-5-2020
 	func vbGenerateVirtualityPrefix(_ member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
-			case .Virtual: Append("Virtual ")
+			case .Virtual: Append("MustOverride ")
 			case .Abstract: Append("MustOverride ")
 			case .Override: Append("Overrides ")
 			case .Final: Append("NotOverridable ")
@@ -600,13 +962,15 @@
 		}
 	}
 
+	//done 21-5-2020
 	override func generateParameterDefinition(_ param: CGParameterDefinition) {
 		switch param.Modifier {
-			case .Var: Append("ref ")
-			case .Const: Append("const ") //todo: Oxygene ony?
-			case .Out: Append("out ")
-			case .Params: Append("params ")
-			default:
+			case .Var: Append("ByRef ")
+			case .Const: Append("") //byval
+			case .Out: Append("ByRef ")
+			case .In: Append("ByRef ")
+			case .Params: Append("ParamArray ")
+			default://byval
 		}
 		generateIdentifier(param.Name)
 		if let type = param.`Type` {
@@ -619,6 +983,7 @@
 		}
 	}
 
+	//done 21-5-2020
 	func vbGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
@@ -633,23 +998,19 @@
 		}
 	}
 
+	//Done 21-5-2020
 	func vbGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
 		if let parameters = parameters, parameters.Count > 0 {
-			Append("<")
+			Append("(Of ")
 			helpGenerateCommaSeparatedList(parameters) { param in
-				if let variance = param.Variance {
-					switch variance {
-						case .Covariant: self.Append("out ")
-						case .Contravariant: self.Append("in ")
-					}
-				}
 				self.generateIdentifier(param.Name)
 				//todo: constraints
 			}
-			Append(">")
+			Append(")")
 		}
 	}
 
+	//Done 21-5-2020
 	func vbGenerateGenericConstraints(_ parameters: List<CGGenericParameterDefinition>?) {
 		if let parameters = parameters, parameters.Count > 0 {
 			var needsWhere = true
@@ -665,15 +1026,14 @@
 					self.Append(": ")
 					self.helpGenerateCommaSeparatedList(constraints) { constraint in
 						if let constraint = constraint as? CGGenericHasConstructorConstraint {
-							self.Append("new()")
-						//todo: 72051: Silver: after "if let x = x as? Foo", x still has the less concrete type. Sometimes.
+							self.Append("new")
 						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeConstraint {
 							self.generateTypeReference(constraint2.`Type`)
 						} else if let constraint2 = constraint as? CGGenericIsSpecificTypeKindConstraint {
 							switch constraint2.Kind {
-								case .Class: self.Append("class")
-								case .Struct: self.Append("struct")
-								case .Interface: self.Append("interface")
+								case .Class: self.Append("Class")
+								case .Struct: self.Append("Structure")
+								case .Interface: self.Append("Interface")
 							}
 						}
 					}
@@ -682,6 +1042,7 @@
 		}
 	}
 
+	//Done
 	func vbGenerateAncestorList(_ type: CGClassOrStructTypeDefinition) {
 		if type.Ancestors.Count > 0 {
 			Append(" Of ")
@@ -710,18 +1071,46 @@
 		}
 	}
 
+	//Done 21-5-2020
+	//Todo: aliases must be on top of files -> after imports, before the rest of the code
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-
+		Append("Imports ")
+		generateIdentifier(type.Name)
+		Append(" = ")
+		generateTypeReference(type.ActualType)
+		generateStatementTerminator()
 	}
 
+	//Done 21-5-2020
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-
+		assert(false, "Block type is not supported in Visual Basic")
 	}
 
+	//Done 21-5-2020
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
-
+		vbGenerateTypeVisibilityPrefix(type.Visibility)
+		Append("Enum ")
+		generateIdentifier(type.Name)
+		if let baseType = type.BaseType {
+			Append(" As ")
+			generateTypeReference(baseType)
+		}
+		incIndent()
+		helpGenerateCommaSeparatedList(type.Members) { m in
+			if let member = m as? CGEnumValueDefinition {
+				self.generateAttributes(member.Attributes, inline: true)
+				self.generateIdentifier(member.Name)
+				if let value = member.Value {
+					self.Append(" = ")
+					self.generateExpression(value)
+				}
+			}
+		}
+		decIndent()
+		AppendLine("End Enum ")
 	}
 
+	//done 22-5-2020
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateStaticPrefix(type.Static)
@@ -736,11 +1125,14 @@
 		incIndent()
 	}
 
+	//done 22-5-2020
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
+		vbGenerateNestedTypes(type)
 		decIndent()
 		AppendLine("End Class")
 	}
 
+	//done 22-5-2020
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateStaticPrefix(type.Static)
@@ -755,11 +1147,24 @@
 		incIndent()
 	}
 
+	//done 22-5-2020
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
+		vbGenerateNestedTypes(type)
 		decIndent()
 		AppendLine("End Structure")
 	}
 
+
+	internal func vbGenerateNestedTypes(_ type: CGTypeDefinition) {
+		for m in type.Members {
+			if let nestedType = m as? CGNestedTypeDefinition {
+				AppendLine()
+				nestedType.`Type`.Name = nestedType.Name // Todo: nasty hack.
+				generateTypeDefinition(nestedType.`Type`)
+			}
+		}
+	}
+	//done 22-5-2020
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateSealedPrefix(type.Sealed)
@@ -772,30 +1177,87 @@
 		incIndent()
 	}
 
+
+	//done 22-5-2020
 	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
+		vbGenerateNestedTypes(type)
 		decIndent()
 		AppendLine("End Interface")
 	}
 
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
-
+		Append("<System.Runtime.CompilerServices.Extension>")
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
-
+		//no code needed
 	}
 
 	//
 	// Type Members
 	//
 
-	internal func vbKeywordForMethod(_ method: CGMethodDefinition) -> String {
-		if let returnType = method.ReturnType, !returnType.IsVoid {
-			return "Function"
+	//done 22-5-2020
+	internal func vbKeywordForMethod(_ method: CGMethodDefinition, close: Boolean) -> String {
+		if close {
+			Methods.Pop()
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				return "End Function"
+			} else {
+				return "End Sub"
+			}
+		} else {
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				Methods.Push("Function")
+				return "Function"
+			} else {
+				Methods.Push("Sub")
+				return "Sub"
+			}
 		}
-		return "Sub"
 	}
 
+	//done 22-5-2020
+	internal func vbKeywordForMethod(_ method: CGMethodLikeMemberDefinition, close: Boolean) -> String {
+		if close {
+			Methods.Pop()
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				return "End Function"
+			} else {
+				return "End Sub"
+			}
+		} else {
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				Methods.Push("Function")
+				return "Function"
+			} else {
+				Methods.Push("Sub")
+				return "Sub"
+			}
+		}
+	}
+
+	//done 22-5-2020
+	internal func vbKeywordForMethod(_ method: CGAnonymousMethodExpression, close: Boolean) -> String {
+		if close {
+			Methods.Pop()
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				return "End Function"
+			} else {
+				return "End Sub"
+			}
+		} else {
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				Methods.Push("Function")
+				return "Function"
+			} else {
+				Methods.Push("Sub")
+				return "Sub"
+			}
+		}
+	}
+
+	//done 22-5-2020
 	func vbGenerateImplementedInterface(_ member: CGMemberDefinition) {
 		if let implementsInterface = member.ImplementsInterface {
 			Append(" Implements ")
@@ -809,6 +1271,8 @@
 		}
 	}
 
+	//done 22-5-2020
+	//todo: P/Invoke declare
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 			vbGenerateStaticPrefix(method.Static && !type.Static)
@@ -823,7 +1287,7 @@
 			}*/
 			vbGenerateVirtualityPrefix(method)
 		}
-		Append(vbKeywordForMethod(method))
+		Append(vbKeywordForMethod(method, close: false))
 		Append(" ")
 		generateIdentifier(method.Name)
 		vbGenerateGenericParameters(method.GenericParameters)
@@ -848,22 +1312,146 @@
 		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
 		decIndent()
-		Append("End ")
-		AppendLine(vbKeywordForMethod(method))
+		AppendLine(vbKeywordForMethod(method, close: true))
 	}
 
+	//done 22-5-2020
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-
+		vbGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor")
+		vbGenerateMethodBody(ctor, type: type)
+		vbGenerateMethodFooter(ctor)
 	}
 
+	//done 22-5-2020
+	internal func vbGenerateConstructorHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String) {
+		vbGenerateMethodHeader("New", method: method)
+	}
+
+	//done 22-5-2020
+	internal func vbGenerateMethodHeader(_ methodName: String, method: CGMethodLikeMemberDefinition) {
+		vbGenerateMemberTypeVisibilityPrefix(method.Visibility)
+		Append(" ")
+		vbGenerateVirtualityModifiders(method)
+		Append(" ")
+		if method.Partial {
+			assert(false, "Visual Basic does not support Partial Methods")
+			//Append(" partial;")
+		}
+		if method.Async {
+			Append(" Async;")
+		}
+		if method.Static {
+			Append("Shared ")
+		}
+
+			if method.Overloaded {
+				Append(" Overrides ")
+			}
+		Append(vbKeywordForMethod(method, close: false))
+		Append(" ")
+		Append(methodName)
+		if let parameters = method.Parameters, parameters.Count > 0 {
+			Append("(")
+			vbGenerateDefinitionParameters(parameters)
+			Append(")")
+		}
+		if let returnType = method.ReturnType, !returnType.IsVoid {
+			Append(" As ")
+			returnType.startLocation = currentLocation
+			generateTypeReference(returnType)
+			returnType.endLocation = currentLocation
+		}
+
+		vbGenerateImplementedInterface(method)
+		if method.Locked {
+			AppendLine()
+			Append("SyncLock ")
+			if let lockedOn = method.LockedOn {
+				generateExpression(lockedOn)
+			} else {
+				Append("Me")
+			}
+		}
+		AppendLine()
+	}
+
+	//done 22-5-2020
+	func vbGenerateVirtualityModifiders(_ member: CGMemberDefinition) {
+		switch member.Virtuality {
+			//case .None
+			case .Virtual: Append(" Overridable")
+			case .Abstract: Append(" Abstract;")
+			case .Override: Append(" Overrides;")
+			case .Final:  Append(" NotOverridable")
+			default:
+		}
+		if member.Reintroduced {
+			Append(" reintroduce;")
+		}
+	}
+
+	//done 22-5-2020
+	internal func vbGenerateMethodFooter(_ method: CGMethodLikeMemberDefinition) {
+		AppendLine()
+		if method.Locked {
+			AppendLine("End SyncLock ")
+		}
+		AppendLine(vbKeywordForMethod(method, close: true))
+	}
+
+	//done 22-5-2020
+	internal func vbGenerateMethodBody(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition?) {
+		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
+			for v in localVariables {
+				if let type = v.`Type` {
+					Append("Dim ")
+					generateIdentifier(v.Name)
+					Append(" As ")
+					generateTypeReference(type)
+					if let val = v.Value {
+						generateIdentifier(v.Name)
+						Append(" := ")
+						generateExpressionStatement(val)
+					}
+					AppendLine()
+				}
+			}
+		}
+		if let localTypes = method.LocalTypes, localTypes.Count > 0 {
+			assert("Local type definitions are not supported in Visual Basic")
+		}
+		if let localMethods = method.LocalMethods, localMethods.Count > 0 {
+			for m in localMethods {
+				//local methods as anonymous method variables
+				Append("Dim ")
+				Append(method.Name)
+				Append(" = ")
+				vbGenerateMethodHeader("", method: m)
+				incIndent()
+				vbGenerateMethodBody(m, type: nil)
+				decIndent()
+				vbGenerateMethodFooter(m)
+				AppendLine("")
+			}
+		}
+		AppendLine("")
+		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		AppendLine()
+	}
+
+	//done 22-5-2020
 	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
-
+		assert(false, "Destructor is not supported in Visual Basic")
 	}
 
+	//done 22-5-2020
 	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
-
+		AppendLine("Protected Overrides Sub Finalize()")
+		vbGenerateMethodBody(finalizer, type: type)
+		AppendLine("End Sub")
 	}
 
+	//done
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		vbGenerateMemberTypeVisibilityPrefix(field.Visibility)
 		vbGenerateStaticPrefix(field.Static && !type.Static)
@@ -885,31 +1473,33 @@
 		}
 	}
 
+	//done 22-5-2020
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
+		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
+		if property.Static {
+			Append("Shared ")
+		}
 		if property.ReadOnly || (property.SetStatements == nil && property.SetExpression == nil && (property.GetStatements != nil || property.GetExpression != nil)) {
-			Append("ReadOnly ")
+			 Append("ReadOnly ")
 		} else {
 			if property.WriteOnly || (property.GetStatements == nil && property.GetExpression == nil && (property.SetStatements != nil || property.SetExpression != nil)) {
-				Append("ReadOnly ")
+				Append("WriteOnly ")
 			}
 		}
 
+		if property.Default {
+			Append("Default ")
+		}
 		Append("Property ")
-		//if property.Default {
-		// Append("this")
-		//} else {
-			generateIdentifier(property.Name)
-		//}
+		generateIdentifier(property.Name)
+		if let params = property.Parameters, params.Count > 0 {
+			Append("(")
+			vbGenerateDefinitionParameters(params)
+			Append(")")
+		}
 		if let type = property.`Type` {
 			Append(" As ")
-			//vbGenerateStorageModifierPrefix(type)
 			generateTypeReference(type)
-		}
-
-		if let params = property.Parameters, params.Count > 0 {
-			Append("[")
-			vbGenerateDefinitionParameters(params)
-			Append("]")
 		}
 
 		vbGenerateImplementedInterface(property)
@@ -955,21 +1545,15 @@
 				generateStatement(CGAssignmentStatement(setExpression, CGPropertyValueExpression.PropertyValue))
 				decIndent()
 				AppendLine("End Set")
-			} else {
-				AppendLine("ReadOnly")
 			}
 
 			decIndent()
 			Append("End Property")
-
-			/*if let value = property.Initializer {
-				Append(" = ")
-				generateExpression(value)
-			}*/
 			AppendLine()
 		}
 	}
 
+	//done
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
 		vbGenerateMemberTypeVisibilityPrefix(event.Visibility)
 		vbGenerateStaticPrefix(event.Static && !type.Static)
@@ -987,10 +1571,12 @@
 		AppendLine()
 	}
 
+	//todo: implement
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
 
 	}
 
+	//todo: implement
 	override func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
 
 	}
@@ -1005,6 +1591,7 @@
 	}
 	*/
 
+	//done 21-5-2020
 	override func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
 		if let genericArguments = genericArguments, genericArguments.Count > 0 {
 			Append("(")
@@ -1020,6 +1607,7 @@
 		}
 	}
 
+	//done 22-5-2020
 	override func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
 		switch (type.Kind) {
 			case .Int: Append("Integer")
@@ -1041,7 +1629,7 @@
 			case .AnsiChar: Append("AnsiChar")
 			case .UTF16Char: Append("Char")
 			case .UTF32Char: Append("UInt32")
-			case .Dynamic: Append("")
+			case .Dynamic: Append("Object")
 			case .InstanceType: Append("")
 			case .Void: Append("")
 			case .Object: Append("Object")
@@ -1049,22 +1637,40 @@
 		}
 	}
 
+	//done 22-5-2020
+	override func generateIntegerRangeTypeReference(_ type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
+		 assert(false, "Ranges are not supported by Visual Basic")
+	}
+
+	//done 22-5-2020
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-
+		 assert(false, "Inline Block Type References are not supported by Visual Basic")
 	}
 
+	//done 22-5-2020
 	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
-
+		 assert(false, "Pointers are not supported by Visual Basic")
 	}
 
+	//done 22-5-2020
 	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
-
+		 assert(false, "Kind Of Type References are not supported by Visual Basic")
 	}
 
+	//done 22-5-2020
 	override func generateTupleTypeReference(_ type: CGTupleTypeReference, ignoreNullability: Boolean = false) {
-
+		Append("Tuple (Of ")
+		for m in 0 ..< type.Members.Count {
+			if m > 0 {
+				Append(", ")
+			}
+			generateTypeReference(type.Members[m])
+		}
+		Append(")")
 	}
 
+
+	//done 22-5-2020
 	override func generateArrayTypeReference(_ array: CGArrayTypeReference, ignoreNullability: Boolean = false) {
 		generateTypeReference(array.`Type`)
 		Append("()")
@@ -1075,7 +1681,8 @@
 		}
 	}
 
+	//done 22-5-2020
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
-
+		 assert(false, "Dictionary Type References are not supported by Visual Basic")
 	}
 }
