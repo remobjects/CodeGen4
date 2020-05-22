@@ -77,7 +77,15 @@
 		generateExpression(statement.EndValue)
 		if let step = statement.Step {
 			Append(" Step ")
-			generateExpression(step)
+			if statement.Direction == CGLoopDirectionKind.Backward {
+				if let step = step as? CGUnaryOperatorExpression, step.Operator == CGUnaryOperatorKind.Minus {
+					generateExpression(step.Value)
+				} else {
+					generateExpression(CGUnaryOperatorExpression(step, CGUnaryOperatorKind.Minus))
+				}
+			} else {
+				generateExpression(step)
+			}
 		} else if statement.Direction == CGLoopDirectionKind.Backward {
 			Append(" Step -1")
 		}
