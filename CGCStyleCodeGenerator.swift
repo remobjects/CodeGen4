@@ -113,11 +113,21 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		Append("; ")
 
 		generateIdentifier(statement.LoopVariableName)
-		if statement.Direction == CGLoopDirectionKind.Forward {
-			Append("++ ")
-		} else {
-			Append("-- ")
+		if let step = statement.Step {
+			if statement.Direction == CGLoopDirectionKind.Forward {
+				Append(" += ")
+			} else {
+				Append(" -= ")
+			}
+			generateExpression(step)
+		} else  {
+			if statement.Direction == CGLoopDirectionKind.Forward {
+				Append("++ ")
+			} else {
+				Append("-- ")
+			}
 		}
+
 		AppendLine(")")
 
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
