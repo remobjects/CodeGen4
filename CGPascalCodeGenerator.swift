@@ -286,6 +286,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" downto ")
 		}
 		generateExpression(statement.EndValue)
+		if let step = statement.Step {
+			Append(" step ")
+			generateExpression(step)
+		}
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}

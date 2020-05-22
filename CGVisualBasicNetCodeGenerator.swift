@@ -75,7 +75,10 @@
 		generateExpression(statement.StartValue)
 		Append(" To ")
 		generateExpression(statement.EndValue)
-		if statement.Direction == CGLoopDirectionKind.Backward {
+		if let step = statement.Step {
+			Append(" Step ")
+			generateExpression(step)
+		} else if statement.Direction == CGLoopDirectionKind.Backward {
 			Append(" Step -1")
 		}
 		AppendLine()
