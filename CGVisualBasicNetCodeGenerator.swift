@@ -46,10 +46,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done
 	override func generateHeader() {
-		AppendLine("Option Explicit On")
-		AppendLine("Option Infer On")
-		AppendLine("Option Strict Off")
-		AppendLine()
+		if Dialect == .Mercury {
+			// not needed
+		} else {
+			AppendLine("Option Explicit On")
+			AppendLine("Option Infer On")
+			AppendLine("Option Strict Off")
+			AppendLine()
+		}
 		if let namespace = currentUnit.Namespace {
 			Append("Namespace")
 			Append(" ")
@@ -85,7 +89,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-
 	//done
 	override func generateSingleLineCommentPrefix() {
 		Append("' ")
@@ -93,7 +96,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 21-5-2020
 	override func generateInlineComment(_ comment: String) {
-		//assert(false, "Inline comments are not supported on Visual Basic")
+		if Dialect == .Mercury {
+			Append("/* \(comment) */")
+		} else {
+			assert(false, "Inline comments are not supported on Visual Basic")
+		}
 	}
 
 	//
@@ -551,7 +558,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done
 	override func generateNilExpression(_ expression: CGNilExpression) {
-		Append("Nothing")
+		if Dialect == .Mercury {
+			Append("Null")
+		} else {
+			Append("Nothing")
+		}
 	}
 
 	//done
@@ -628,7 +639,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 21-5-2020
 	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
-		assert(false, "Visual Basic does not support pointers")
+		if Dialect == .Mercury {
+			generateExpression(expression.PointerExpression)
+			Append(".Dereference^")
+		}
+		else {
+			assert(false, "Visual Basic does not support pointers")
+		}
 	}
 
 	/*
@@ -964,16 +981,27 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 21-5-2020
 	override func generateParameterDefinition(_ param: CGParameterDefinition) {
-		switch param.Modifier {
-			case .Var: Append("ByRef ")
-			case .Const: Append("") //byval
-			case .Out: Append("ByRef ")
-			case .In: Append("ByRef ")
-			case .Params: Append("ParamArray ")
-			default://byval
+		if Dialect == .Mercury {
+			switch param.Modifier {
+				case .Var: Append("ByRef ")
+				case .Const: Append("") //byval
+				case .Out: Append("Out ")
+				case .In: Append("In ")
+				case .Params: Append("ParamArray ")
+				default://byval
+			}
+		} else {
+			switch param.Modifier {
+				case .Var: Append("ByRef ")
+				case .Const: Append("") //byval
+				case .Out: Append("ByRef ")
+				case .In: Append("ByRef ")
+				case .Params: Append("ParamArray ")
+				default://byval
+			}
 		}
 		generateIdentifier(param.Name)
-		if let type = param.`Type` {
+		if let type = param.Type {
 			Append(" As ")
 			generateTypeReference(type)
 		}
@@ -1186,11 +1214,19 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
-		Append("<System.Runtime.CompilerServices.Extension>")
+		vbGenerateTypeVisibilityPrefix(type.Visibility)
+		Append(" Class ")
+		generateIdentifier(type.Name)
+		AppendLine()
+		incIndent()
+		Append(" Extends ")
+		vbGenerateAncestorList(type)
+		AppendLine()
+		AppendLine()
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
-		//no code needed
+		Append("End Class ")
 	}
 
 	//
@@ -1629,7 +1665,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			case .AnsiChar: Append("AnsiChar")
 			case .UTF16Char: Append("Char")
 			case .UTF32Char: Append("UInt32")
-			case .Dynamic: Append("Object")
+			case .Dynamic: Append("Dynamic")
 			case .InstanceType: Append("")
 			case .Void: Append("")
 			case .Object: Append("Object")
@@ -1649,7 +1685,18 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	override func generatePointerTypeReference(_ type: CGPointerTypeReference) {
-		 assert(false, "Pointers are not supported by Visual Basic")
+		if Dialect == .Mercury {
+			if (type.`Type` as? CGPredefinedTypeReference)?.Kind == CGPredefinedTypeKind.Void {
+				Append("Ptr")
+			} else {
+				Append("Ptr(Of ")
+				generateTypeReference(type.`Type`)
+				Append(")")
+			}
+		}
+		else {
+			assert(false, "Pointers are not supported by Visual Basic")
+		}
 	}
 
 	//done 22-5-2020
