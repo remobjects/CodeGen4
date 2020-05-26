@@ -1507,6 +1507,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
+		AppendLine()
 	}
 
 	//done 22-5-2020
