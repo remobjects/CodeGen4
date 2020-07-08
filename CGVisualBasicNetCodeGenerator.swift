@@ -610,7 +610,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				}
 			}
 			 AppendLine(")")
-			 if let returnType = method.ReturnType {
+			 if let returnType = method.ReturnType, !returnType.IsVoid {
 				Append(" As ")
 				generateTypeReference(returnType)
 			}
@@ -1330,7 +1330,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append("(")
 		vbGenerateDefinitionParameters(method.Parameters)
 		Append(")")
-		if let returnType = method.ReturnType {
+		if let returnType = method.ReturnType, !returnType.IsVoid {
 			Append(" As ")
 			returnType.startLocation = currentLocation
 			generateTypeReference(returnType)
