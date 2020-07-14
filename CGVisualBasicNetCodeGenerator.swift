@@ -984,9 +984,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if Dialect == .Mercury {
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
-				case .Const: Append("") //byval
+				//case .Const: Append("") //byval
 				case .Out: Append("Out ")
-				case .In: Append("In ")
 				case .Params: Append("ParamArray ")
 				default://byval
 			}
@@ -995,7 +994,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				case .Var: Append("ByRef ")
 				case .Const: Append("") //byval
 				case .Out: Append("ByRef ")
-				case .In: Append("ByRef ")
 				case .Params: Append("ParamArray ")
 				default://byval
 			}
