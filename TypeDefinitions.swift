@@ -189,6 +189,7 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
 	public var LocalTypes: List<CGTypeDefinition>? // Legacy Delphi only.
 	public var LocalMethods: List<CGMethodDefinition>? // Pascal only.
+	public var Handles: CGExpression? // Visual Basic only.
 
 	public init(_ name: String) {
 		super.init(name)
@@ -270,6 +271,7 @@ public __abstract class CGFieldOrPropertyDefinition: CGFieldLikeMemberDefinition
 public class CGFieldDefinition: CGFieldOrPropertyDefinition {
 	public var Constant = false
 	public var Volatile = false
+	public var WithEvents = false // Visual Basic only.
 }
 
 public class CGPropertyDefinition: CGFieldOrPropertyDefinition {

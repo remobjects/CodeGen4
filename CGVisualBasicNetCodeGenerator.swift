@@ -654,21 +654,35 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 	*/
 
-	//done
 	override func generateBinaryOperatorExpression(_ expression: CGBinaryOperatorExpression) {
-		// null check is a very special case in VB.NET
-		if let nilExpression = (expression.RighthandValue as? CGNilExpression), (expression.Operator == CGBinaryOperatorKind.Equals || expression.Operator == CGBinaryOperatorKind.NotEquals) {
-			if expression.Operator == CGBinaryOperatorKind.NotEquals {
-				Append("Not ")
-			}
-			Append("(")
-			generateExpression(expression.LefthandValue)
-			Append(")")
-			Append(" Is ")
-			generateNilExpression(nilExpression);
-		}
-		else {
-			super.generateBinaryOperatorExpression(expression)
+		switch (expression.Operator) {
+			case .AddEvent:
+				Append("AddHandler ")
+				generateExpression(expression.LefthandValue)
+				Append(", ")
+				generateExpression(expression.RighthandValue)
+			case .RemoveEvent:
+				Append("RemoveHandler ")
+				generateExpression(expression.LefthandValue)
+				Append(", ")
+				generateExpression(expression.RighthandValue)
+			case .Equals:
+				fallthrough
+			case .NotEquals:
+				if let nilExpression = (expression.RighthandValue as? CGNilExpression) {
+					if expression.Operator == CGBinaryOperatorKind.NotEquals {
+						Append("Not ")
+					}
+					Append("(")
+					generateExpression(expression.LefthandValue)
+					Append(")")
+					Append(" Is ")
+					generateNilExpression(nilExpression);
+				} else {
+					fallthrough
+				}
+			default:
+				super.generateBinaryOperatorExpression(expression)
 		}
 	}
 
@@ -719,8 +733,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			case .AssignSubtraction: Append("-=")
 			case .AssignMultiplication: Append("*=")
 			case .AssignDivision: Append("/=")
-			//case .AddEvent:
-			//case .RemoveEvent:
+			case .AddEvent: break // handled separately
+			case .RemoveEvent: break // handled separately
 			default: Append("/* NOT SUPPORTED */")
 		}
 	}
@@ -984,18 +998,18 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if Dialect == .Mercury {
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
-				//case .Const: Append("") //byval
+				case .Const: Append("In ")
 				case .Out: Append("Out ")
 				case .Params: Append("ParamArray ")
-				default://byval
+				case .In:
 			}
 		} else {
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
-				case .Const: Append("") //byval
-				case .Out: Append("ByRef ")
+				case .Const: Append("<In> ByRef ")
+				case .Out: Append("<Out> ByRef ")
 				case .Params: Append("ParamArray ")
-				default://byval
+				case .In:
 			}
 		}
 		generateIdentifier(param.Name)
@@ -1334,6 +1348,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			generateTypeReference(returnType)
 			returnType.endLocation = currentLocation
 		}
+		if let handlesExpression = method.Handles {
+			Append(" Handles")
+			generateExpression(handlesExpression)
+		}
 		vbGenerateImplementedInterface(method)
 		AppendLine()
 		//vbGenerateGenericConstraints(method.GenericParameters)
@@ -1493,6 +1511,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append("Const ")
 		} else {
 			Append("Dim ")
+		}
+		if field.WithEvents {
+			Append("WithEvents ")
 		}
 		generateIdentifier(field.Name)
 		if let type = field.`Type` {
