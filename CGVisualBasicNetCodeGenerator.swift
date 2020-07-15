@@ -1349,7 +1349,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			returnType.endLocation = currentLocation
 		}
 		if let handlesExpression = method.Handles {
-			Append(" Handles")
+			Append(" Handles ")
 			generateExpression(handlesExpression)
 		}
 		vbGenerateImplementedInterface(method)
