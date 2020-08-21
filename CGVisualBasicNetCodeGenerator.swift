@@ -474,8 +474,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	 //done 21-5-2020
-	 func vbGenerateAttributeParameters(_ parameters: List<CGCallParameter>) {
+	//done 21-5-2020
+	func vbGenerateAttributeParameters(_ parameters: List<CGCallParameter>) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -495,7 +495,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 	*/
 
-	 //done 21-5-2020
+	//done 21-5-2020
 	override func generateAssignedExpression(_ expression: CGAssignedExpression) {
 		generateExpression(expression.Value)
 		if expression.Inverted {
@@ -505,16 +505,16 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	 //done 21-5-2020
+	//done 21-5-2020
 	override func generateSizeOfExpression(_ expression: CGSizeOfExpression) {
 		Append("Len(")
 		generateExpression(expression.Expression)
 		Append(")")
 	}
 
-   //done 21-5-2020
-   override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
-		Append("typeOf(") //from RTL
+	//done 21-5-2020
+	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
+		Append("GetType(") //from RTL
 		generateExpression(expression.Expression)
 		Append(")")
 	}
