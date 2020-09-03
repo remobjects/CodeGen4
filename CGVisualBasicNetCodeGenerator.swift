@@ -8,20 +8,28 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	public init() {
 		super.init()
 
-		keywords = ["addhandler", "addressof", "alias", "and", "andalso", "as", "async", "boolean", "byref", "byte", "byval",
+		keywords = ["addhandler", "addressof", "alias", "and", "andalso", "as", "ascending", "assembly", "async", "await",
+					"boolean", "by", "byref", "byte", "byval",
 					"call", "case", "catch", "cbool", "cbyte", "cchar", "cdate", "cdec", "cdbl", "char", "cint", "class", "clng", "cobj", "const", "continue", "csbyte", "cshort", "csng", "cstr", "ctype", "cuint", "culng", "cushort", "custom",
-					"date", "decimal", "declare", "default", "delegate", "dim", "directcast", "do", "double",
-					"each", "else", "elseif", "end", "endif", "enum", "erase", "error", "event", "exit", "extends", "false",
-					"finally", "for", "friend", "function", "get", "gettype", "getxmlnamespace", "global", "gosub", "goto", "handles",
-					"if", "if()", "implements", "imports", "in", "inherits", "integer", "interface", "iterator", "is", "isnot", "lazy", "let", "lib", "like", "long", "loop",
-					"me", "mod", "module", "mustinherit", "mustoverride", "mybase", "myclass",
-					"namespace", "narrowing", "new", "next", "not", "nothing", "notinheritable", "notoverridable", "null",
-					"object", "of", "on", "operator", "option", "optional", "or", "orelse", "overloads", "overridable", "overrides",
-					"paramarray", "partial", "private", "property", "protected", "ptr", "public",
+					"date", "decimal", "declare", "default", "delegate", "descending", "dim", "directcast", "distinct", "do", "double", "dynamic",
+					"each", "else", "elseif", "end", "endif", "enum", "equals", "erase", "error", "event", "exit", "extends",
+					"false", "finally", "for", "friend", "from", "function",
+					"get", "gettype", "getxmlnamespace", "global", "gosub", "goto", "group",
+					"handles",
+					"if", "implements", "imports", "in", "inherits", "integer", "interface", "into", "iterator", "is", "isnot",
+					"join",
+					"key",
+					"lazy", "let", "lib", "like", "long", "loop",
+					"me", "mod", "module", "mustinherit", "mustoverride", "mybase", "myclass", "namespace",
+					"narrowing", "new", "next", "not", "nothing", "notinheritable", "notoverridable", "null",
+					"object", "of", "on", "operator", "option", "optional", "or", "order", "orelse", "out", "overloads", "overridable", "overrides",
+					"paramarray", "partial", "preserve", "private", "property", "protected", "ptr", "public",
 					"raiseevent", "readonly", "redim", "rem", "removehandler", "resume", "return",
-					"sbyte", "select", "set", "shadows", "shared", "short", "single", "static", "step", "stop", "string", "structure", "sub", "synclock",
-					"then", "throw", "to", "true", "try", "trycast", "typeof", "variant", "wend", "uinteger", "ulong", "ushort", "using",
-					"when", "while", "widening", "with", "withevents", "writeonly", "xor"].ToList() as! List<String>
+					"sbyte", "select", "set", "shadows", "shared", "short", "single", "skip", "static", "step", "stop", "string", "structure", "sub", "synclock",
+					"take", "then", "throw", "to", "true", "try", "trycast", "typeof",
+					"uinteger", "ulong", "ushort", "unmanaged", "until", "using",
+					"variant", "wend", "when", "where", "while", "widening", "with", "withevents", "writeonly",
+					"xor", "yield"].ToList() as! List<String>
 	}
 
 	public var Dialect: CGVisualBasicCodeGeneratorDialect = .Standard
