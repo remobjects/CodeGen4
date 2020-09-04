@@ -8,6 +8,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	public init() {
 		super.init()
 
+		useTabs = false
+		tabSize = 2
+		keywordsAreCaseSensitive = false
+
 		keywords = ["addhandler", "addressof", "alias", "and", "andalso", "as", "ascending", "assembly", "async", "await",
 					"boolean", "by", "byref", "byte", "byval",
 					"call", "case", "catch", "cbool", "cbyte", "cchar", "cdate", "cdec", "cdbl", "char", "cint", "class", "clng", "cobj", "const", "continue", "csbyte", "cshort", "csng", "cstr", "ctype", "cuint", "culng", "cushort", "custom",

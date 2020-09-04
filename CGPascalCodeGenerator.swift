@@ -6,6 +6,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	public var AlphaSortImplementationMembers: Boolean = false;
 
 	override public init() {
+		super.init()
+
 		useTabs = false
 		tabSize = 2
 		keywordsAreCaseSensitive = false
