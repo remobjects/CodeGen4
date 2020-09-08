@@ -95,9 +95,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if imp.StaticClass != nil {
 			Append("Imports ")
 			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
+			AppendLine()
 		} else {
 			Append("Imports ")
 			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
+			AppendLine()
 		}
 	}
 
@@ -1097,7 +1099,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//Done
 	func vbGenerateAncestorList(_ type: CGClassOrStructTypeDefinition) {
 		if type.Ancestors.Count > 0 {
-			Append(" Of ")
+			AppendLine()
+			incIndent()
+			Append("  Inherits ")
 			for a in 0 ..< type.Ancestors.Count {
 				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
@@ -1106,6 +1110,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					generateTypeReference(ancestor)
 				}
 			}
+			decIndent()
 		}
 		if type.ImplementedInterfaces.Count > 0 {
 			AppendLine()
