@@ -57,6 +57,17 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	var InLoop: Integer = 0
 
 	//done
+
+	override func generateAll() {
+		generateImports()
+		generateDirectives()
+		generateHeader()
+		generateForwards()
+		generateGlobals()
+		generateTypeDefinitions()
+		generateFooter()
+	}
+
 	override func generateHeader() {
 		if Dialect == .Mercury {
 			// not needed
@@ -71,12 +82,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" ")
 			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
 			AppendLine()
+			AppendLine()
 		}
 	}
 
 	//done
 	override func generateFooter() {
 		if let namespace = currentUnit.Namespace {
+			AppendLine()
 			Append("End Namespace")
 			AppendLine()
 		}
