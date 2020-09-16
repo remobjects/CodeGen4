@@ -261,6 +261,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			helpGenerateCommaSeparatedList(c.CaseExpressions) {
 				self.generateExpression($0)
 			}
+			AppendLine(":")
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
 			decIndent()
