@@ -158,6 +158,17 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("End If")
 	}
 
+	override func generateStatementIndentedOrTrailingIfItsABeginEndBlock(_ statement: CGStatement) {
+		AppendLine()
+		incIndent()
+		if let block = statement as? CGBeginEndBlockStatement {
+			generateStatements(block.Statements)
+		} else {
+			generateStatement(statement)
+		}
+		decIndent()
+	}
+
 	//21-5-2020
 	//todo: support for other step than 1? (not supported by CGForToLoopStatement)
 	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
@@ -187,7 +198,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		} else if statement.Direction == CGLoopDirectionKind.Backward {
 			Append(" Step -1")
 		}
-		AppendLine()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 		AppendLine("Next")
 		Loops.Pop()
@@ -218,7 +228,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Loops.Push("For")
 		Append("Do While ")
 		generateExpression(statement.Condition)
-		AppendLine()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 		AppendLine("Loop")
 		Loops.Pop()
@@ -251,10 +260,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		InLoop = InLoop + 1
 		Loops.Push("For")
 		Append("Do ")
-		AppendLine()
-		incIndent()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
-		decIndent()
 		AppendLine("Loop")
 		Loops.Pop()
 		InLoop = InLoop - 1
@@ -295,9 +301,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateLockingStatement(_ statement: CGLockingStatement) {
 		Append("SyncLock ")
 		generateExpression(statement.Expression)
-		incIndent()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
-		decIndent()
 		AppendLine("End SyncLock")
 	}
 
@@ -313,9 +317,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" = ")
 		}
 		generateExpression(statement.Value)
-		incIndent()
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
-		decIndent()
 		AppendLine("End Using")
 	}
 
@@ -752,8 +754,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			case .BitwiseOr: Append("Or")
 			case .BitwiseXor: Append("Xor")
 			//case .Implies:
-			case .Is: Append("Is")
-			case .IsNot: Append("IsNot")
+			//case .Is: Append("Is")
+			//case .IsNot: Append("IsNot")
 			//case .In: Append("in")
 			//case .NotIn:
 			case .Assign: Append("=")
