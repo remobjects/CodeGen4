@@ -994,7 +994,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	//done 21-5-2020
+	func vbGeneratePartialPrefix(_ isStatic: Boolean) {
+		if isStatic {
+			Append("Partial ")
+		}
+	}
+
 	func vbGenerateAbstractPrefix(_ isAbstract: Boolean) {
 		if isAbstract {
 			Append("MustInherit ")
@@ -1187,6 +1192,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		vbGenerateTypeVisibilityPrefix(type.Visibility)
 		vbGenerateStaticPrefix(type.Static)
+		vbGeneratePartialPrefix(type.Partial)
 		vbGenerateAbstractPrefix(type.Abstract)
 		vbGenerateSealedPrefix(type.Sealed)
 		Append("Class ")
