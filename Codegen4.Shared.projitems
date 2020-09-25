@@ -4,9 +4,9 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
     <SharedGUID>615FC69D-8D8A-4996-9D58-B042CD883941</SharedGUID>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration">
     <Import_RootNamespace>CodeGen4.Shared</Import_RootNamespace>
+    <ProjectGuid>{615FC69D-8D8A-4996-9D58-B042CD883941}</ProjectGuid>
+    <RootNamespace>RemObjects.CodeGen4</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CGCPlusPlusCPPCodeGenerator.swift">
