@@ -1409,6 +1409,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done 22-5-2020
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		vbGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor")
+		if type is CGInterfaceTypeDefinition || ctor.Virtuality == CGMemberVirtualityKind.Abstract || ctor.External || definitionOnly {
+			return
+		}
 		vbGenerateMethodBody(ctor, type: type)
 		vbGenerateMethodFooter(ctor)
 	}
@@ -1435,9 +1438,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append("Shared ")
 		}
 
-			if method.Overloaded {
-				Append(" Overrides ")
-			}
+		if method.Overloaded {
+			Append(" Overrides ")
+		}
 		Append(vbKeywordForMethod(method, close: false))
 		Append(" ")
 		Append(methodName)
