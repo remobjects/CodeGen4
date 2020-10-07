@@ -514,6 +514,8 @@
 			generateBreakStatement(statement)
 		} else if let statement = statement as? CGContinueStatement {
 			generateContinueStatement(statement)
+		} else if let statement = statement as? CGFallThroughStatement {
+			generateFallThroughStatement(statement)
 		} else if let statement = statement as? CGVariableDeclarationStatement {
 			generateVariableDeclarationStatement(statement)
 		} else if let statement = statement as? CGAssignmentStatement {
@@ -687,6 +689,11 @@
 	internal func generateContinueStatement(_ statement: CGContinueStatement) {
 		// descendant must override this
 		assert(false, "generateContinueStatement not implemented")
+	}
+
+	internal func generateFallThroughStatement(_ statement: CGFallThroughStatement) {
+		// descendant must override this
+		assert(false, "fallthrough is not supported")
 	}
 
 	internal func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {

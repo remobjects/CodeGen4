@@ -296,8 +296,8 @@ public class CGThrowStatement: CGStatement {
 }
 
 public class CGBreakStatement: CGStatement {}
-
 public class CGContinueStatement: CGStatement {}
+public class CGFallThroughStatement: CGStatement {}
 
 public class CGEmptyStatement: CGStatement {}
 
