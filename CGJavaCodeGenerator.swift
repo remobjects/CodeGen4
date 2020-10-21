@@ -373,8 +373,17 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		assert(false, "generateAwaitExpression is not supported in Java")
 	}
 
-	override func generateAnonymousMethodExpression(_ expression: CGAnonymousMethodExpression) {
-
+	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
+		Append("(")
+		helpGenerateCommaSeparatedList(method.Parameters) { param in
+			self.generateParameterDefinition(param)
+		}
+		AppendLine(") -> {")
+		incIndent()
+		generateStatements(variables: method.LocalVariables)
+		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		decIndent()
+		Append("}")
 	}
 
 	override func generateAnonymousTypeExpression(_ expression: CGAnonymousTypeExpression) {
