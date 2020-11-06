@@ -293,7 +293,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	internal func generateFallThroughStatement(_ statement: CGFallThroughStatement) {
+	override func generateFallThroughStatement(_ statement: CGFallThroughStatement) {
 		Append("fallthrough")
 		generateStatementTerminator()
 	}
