@@ -798,7 +798,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
-		javaGenerateStaticPrefix(type.Static)
+		javaGenerateStaticPrefix(type.JavaStatic)
 		javaGenerateAbstractPrefix(type.Abstract)
 		javaGeneratePartialPrefix(type.Partial)
 		javaGenerateSealedPrefix(type.Sealed)
@@ -818,7 +818,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
-		javaGenerateStaticPrefix(type.Static)
+		javaGenerateStaticPrefix(type.JavaStatic)
 		javaGenerateAbstractPrefix(type.Abstract)
 		javaGeneratePartialPrefix(type.Partial)
 		javaGenerateSealedPrefix(type.Sealed)
@@ -856,7 +856,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		AppendLine("[Category]")
 		javaGenerateTypeVisibilityPrefix(type.Visibility)
-		javaGenerateStaticPrefix(type.Static)
+		javaGenerateStaticPrefix(type.JavaStatic)
 		Append("class ")
 		generateIdentifier(type.Name)
 		javaGenerateAncestorList(type)
@@ -880,14 +880,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			if method.Optional {
 				generateAttribute(CGAttribute("Optional".AsTypeReference()));
 			}
-			javaGenerateStaticPrefix(method.Static && !type.Static)
+			javaGenerateStaticPrefix(method.Static || type.Static)
 		} else {
 			if method.Virtuality == CGMemberVirtualityKind.Override {
 				generateAttribute(CGAttribute("Override".AsTypeReference()));
 			}
 
 			javaGenerateMemberTypeVisibilityPrefix(method.Visibility)
-			javaGenerateStaticPrefix(method.Static && !type.Static)
+			javaGenerateStaticPrefix(method.Static || type.Static)
 			if method.External {
 				Append("extern ")
 			}
@@ -961,7 +961,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		javaGenerateMemberTypeVisibilityPrefix(field.Visibility)
-		javaGenerateStaticPrefix(field.Static && !type.Static)
+		javaGenerateStaticPrefix(field.Static || type.Static)
 		if field.Constant {
 			Append("final ")
 		}
@@ -987,7 +987,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		javaGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		javaGenerateStaticPrefix(property.Static && !type.Static)
+		javaGenerateStaticPrefix(property.Static || type.Static)
 		javaGenerateVirtualityPrefix(property)
 
 		javaGenerateStorageModifierPrefixIfNeeded(property.StorageModifier)
@@ -1123,7 +1123,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		javaGenerateMemberTypeVisibilityPrefix(event.Visibility)
-		javaGenerateStaticPrefix(event.Static && !type.Static)
+		javaGenerateStaticPrefix(event.Static || type.Static)
 		javaGenerateVirtualityPrefix(event)
 
 		Append("__event ")

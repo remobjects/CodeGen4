@@ -13,6 +13,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Members = List<CGMemberDefinition>()
 	public var Visibility: CGTypeVisibilityKind = .Unspecified        //in delphi, types with .Unit will be put into implementation section
 	public var Static = false
+	public var JavaStatic = false // Java language static types arent static in the regular sense
 	public var Sealed = false
 	public var Abstract = false
 	public var Comment: CGCommentStatement?
