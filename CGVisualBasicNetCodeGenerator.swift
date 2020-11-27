@@ -1159,9 +1159,26 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}
 
-	//Done 21-5-2020
-	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		assert(false, "Block type is not supported in Visual Basic")
+	override func generateBlockType(_ block: CGBlockTypeDefinition) {
+		if block.IsPlainFunctionPointer {
+			AppendLine("<FunctionPointer> _")
+		}
+		vbGenerateTypeVisibilityPrefix(block.Visibility)
+		Append("Delegate ")
+		if let returnType = block.ReturnType, !returnType.IsVoid {
+			Append("Function ")
+		} else {
+			Append("Sub ")
+		}
+		generateIdentifier(block.Name)
+		Append(" (")
+		if let parameters = block.Parameters, parameters.Count > 0 {
+			vbGenerateDefinitionParameters(parameters)
+		}
+		if let returnType = block.ReturnType, !returnType.IsVoid {
+			generateTypeReference(returnType)
+		}
+		AppendLine()
 	}
 
 	//Done 21-5-2020
