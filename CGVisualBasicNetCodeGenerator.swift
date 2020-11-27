@@ -1171,11 +1171,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append("Sub ")
 		}
 		generateIdentifier(block.Name)
-		Append(" (")
+		Append("(")
 		if let parameters = block.Parameters, parameters.Count > 0 {
 			vbGenerateDefinitionParameters(parameters)
 		}
+		Append(")")
 		if let returnType = block.ReturnType, !returnType.IsVoid {
+			Append(" As ")
 			generateTypeReference(returnType)
 		}
 		AppendLine()
