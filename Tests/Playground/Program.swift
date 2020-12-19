@@ -1,12 +1,14 @@
 ﻿import System.Collections.Generic
 import System.Linq
 import System.Text
+import RemObjects.CodeGen4
 
 print("CodeGen4 Playground")
 
 var unit = CGCodeUnit()
 
 var cls = CGClassTypeDefinition("DotTest")
+//cls.Ancestors.Add("Foo".AsTypeReference())
 
 var td = CGMethodDefinition("TestDot")
 // Simple expressions
@@ -47,8 +49,9 @@ cls.Members.Add(td)
 
 unit.Types.Add(intf)
 
-var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Standard)
+//var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Standard)
 //var cg = CGDelphiCodeGenerator()
+var cg = CGVisualBasicNetCodeGenerator()
 var code = cg.GenerateUnit(unit, definitionOnly: false);
 
 

@@ -1225,6 +1225,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		vbGenerateNestedTypes(type)
 		decIndent()
+		AppendLine()
 		AppendLine("End Class")
 	}
 
@@ -1248,6 +1249,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		vbGenerateNestedTypes(type)
 		decIndent()
+		AppendLine()
 		AppendLine("End Structure")
 	}
 
