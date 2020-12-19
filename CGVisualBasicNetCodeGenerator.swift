@@ -1118,11 +1118,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	//Done
-	func vbGenerateAncestorList(_ type: CGClassOrStructTypeDefinition) {
+	func vbGenerateAncestorList(_ type: CGClassOrStructTypeDefinition, keyword: String = "Inherits") {
 		if type.Ancestors.Count > 0 {
-			AppendLine()
-			incIndent()
-			Append("  Inherits ")
+			Append(keyword)
+			Append(" ")
 			for a in 0 ..< type.Ancestors.Count {
 				if let ancestor = type.Ancestors[a] {
 					if a > 0 {
@@ -1131,11 +1130,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					generateTypeReference(ancestor)
 				}
 			}
-			decIndent()
+			AppendLine()
 		}
 		if type.ImplementedInterfaces.Count > 0 {
-			AppendLine()
-			incIndent()
 			Append("Implements ")
 			for a in 0 ..< type.ImplementedInterfaces.Count {
 				if let interface = type.ImplementedInterfaces[a] {
@@ -1145,7 +1142,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					generateTypeReference(interface)
 				}
 			}
-			decIndent()
+			AppendLine()
 		}
 	}
 
@@ -1218,9 +1215,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		vbGenerateGenericParameters(type.GenericParameters)
 		vbGenerateGenericConstraints(type.GenericParameters)
-		vbGenerateAncestorList(type)
 		AppendLine()
 		incIndent()
+		vbGenerateAncestorList(type)
+		AppendLine()
 	}
 
 	//done 22-5-2020
@@ -1240,9 +1238,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		vbGenerateGenericParameters(type.GenericParameters)
 		vbGenerateGenericConstraints(type.GenericParameters)
-		vbGenerateAncestorList(type)
 		AppendLine()
 		incIndent()
+		vbGenerateAncestorList(type)
+		AppendLine()
 	}
 
 	//done 22-5-2020
@@ -1270,9 +1269,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		vbGenerateGenericParameters(type.GenericParameters)
 		vbGenerateGenericConstraints(type.GenericParameters)
-		vbGenerateAncestorList(type)
 		AppendLine()
 		incIndent()
+		vbGenerateAncestorList(type)
+		AppendLine()
 	}
 
 
@@ -1289,9 +1289,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		AppendLine()
 		incIndent()
-		Append(" Extends ")
-		vbGenerateAncestorList(type)
-		AppendLine()
+		vbGenerateAncestorList(type, keyword: "Extends")
 		AppendLine()
 	}
 
