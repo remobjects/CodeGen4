@@ -1610,10 +1610,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		if property.Static {
-			Append("Shared ")
+		if !(type is CGInterfaceTypeDefinition) {
+			vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
+			vbGenerateStaticPrefix(property.Static)
 		}
+
 		if property.ReadOnly || (property.SetStatements == nil && property.SetExpression == nil && (property.GetStatements != nil || property.GetExpression != nil)) {
 			 Append("ReadOnly ")
 		} else {
@@ -1625,6 +1626,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if property.Default {
 			Append("Default ")
 		}
+
 		Append("Property ")
 		generateIdentifier(property.Name)
 		if let params = property.Parameters, params.Count > 0 {
