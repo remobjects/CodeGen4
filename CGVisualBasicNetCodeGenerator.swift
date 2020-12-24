@@ -727,12 +727,22 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done 21-5-2020
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
-			case .Plus: Append("+")
-			case .Minus: Append("-")
-			case .BitwiseNot: Append("Not ")
-			case .Not: Append("Not ")
-			case .AddressOf: Append("AddressOf ")
-			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
+			case .Plus:
+				Append("+")
+			case .Minus:
+				Append("-")
+			case .BitwiseNot:
+				Append("Not ")
+			case .Not:
+				Append("Not ")
+			case .AddressOf:
+				Append("AddressOf ")
+			case .ForceUnwrapNullable:
+				if Dialect == .Standard {
+					// Do nothing for Standard VB.NET dialect
+				} else {
+					Append("{ NOT SUPPORTED }")
+				}
 		}
 	}
 
