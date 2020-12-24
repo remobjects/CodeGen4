@@ -59,8 +59,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done
 
 	override func generateAll() {
-		generateImports()
 		generateDirectives()
+		generateImports()
 		generateHeader()
 		generateForwards()
 		generateGlobals()
@@ -68,15 +68,23 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateFooter()
 	}
 
-	override func generateHeader() {
-		if Dialect == .Mercury {
-			// not needed
-		} else {
+	override func generateDirectives() {
+		super.generateDirectives()
+
+		if currentUnit.Imports.Count > 0 {
+			AppendLine()
+		}
+
+		// VB.NET-specific
+		if Dialect == .Standard {
 			AppendLine("Option Explicit On")
 			AppendLine("Option Infer On")
 			AppendLine("Option Strict Off")
 			AppendLine()
 		}
+	}
+
+	override func generateHeader() {
 		if let namespace = currentUnit.Namespace {
 			Append("Namespace")
 			Append(" ")
