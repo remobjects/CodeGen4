@@ -19,6 +19,10 @@ var ArrayParam = List<CGExpression>()
 ArrayParam.Add(CGIntegerLiteralExpression(1))
 var a1 = CGArrayElementAccessExpression(arrayname, ArrayParam)
 
+var p = CGParameterDefinition("foo", "String".AsTypeReference())
+p.ExternalName = "bar"
+td.Parameters.Add(p);
+
 td.Statements.Add(CGCommentStatement("Simple Expressions"))
 
 td.Statements.Add(e1)
@@ -45,6 +49,10 @@ intf.Members.Add(td);
 //td.Statements.Add(lp3)
 
 cls.Members.Add(td)
+
+var ctor = CGConstructorDefinition()
+ctor.Name = "withFoo";
+cls.Members.Add(ctor)
 
 
 unit.Types.Add(intf)
