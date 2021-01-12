@@ -59,8 +59,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done
 
 	override func generateAll() {
-		generateImports()
 		generateDirectives()
+		generateImports()
 		generateHeader()
 		generateForwards()
 		generateGlobals()
@@ -68,15 +68,23 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		generateFooter()
 	}
 
-	override func generateHeader() {
-		if Dialect == .Mercury {
-			// not needed
-		} else {
+	override func generateDirectives() {
+		super.generateDirectives()
+
+		if currentUnit.Imports.Count > 0 {
+			AppendLine()
+		}
+
+		// VB.NET-specific
+		if Dialect == .Standard {
 			AppendLine("Option Explicit On")
 			AppendLine("Option Infer On")
 			AppendLine("Option Strict Off")
 			AppendLine()
 		}
+	}
+
+	override func generateHeader() {
 		if let namespace = currentUnit.Namespace {
 			Append("Namespace")
 			Append(" ")
@@ -719,12 +727,22 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done 21-5-2020
 	override func generateUnaryOperator(_ `operator`: CGUnaryOperatorKind) {
 		switch (`operator`) {
-			case .Plus: Append("+")
-			case .Minus: Append("-")
-			case .BitwiseNot: Append("Not ")
-			case .Not: Append("Not ")
-			case .AddressOf: Append("AddressOf ")
-			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
+			case .Plus:
+				Append("+")
+			case .Minus:
+				Append("-")
+			case .BitwiseNot:
+				Append("Not ")
+			case .Not:
+				Append("Not ")
+			case .AddressOf:
+				Append("AddressOf ")
+			case .ForceUnwrapNullable:
+				if Dialect == .Standard {
+					// Do nothing for Standard VB.NET dialect
+				} else {
+					Append("{ NOT SUPPORTED }")
+				}
 		}
 	}
 
@@ -1606,10 +1624,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
-		if property.Static {
-			Append("Shared ")
+		if !(type is CGInterfaceTypeDefinition) {
+			vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
+			vbGenerateStaticPrefix(property.Static)
 		}
+
 		if property.ReadOnly || (property.SetStatements == nil && property.SetExpression == nil && (property.GetStatements != nil || property.GetExpression != nil)) {
 			 Append("ReadOnly ")
 		} else {
@@ -1621,6 +1640,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if property.Default {
 			Append("Default ")
 		}
+
 		Append("Property ")
 		generateIdentifier(property.Name)
 		if let params = property.Parameters, params.Count > 0 {
