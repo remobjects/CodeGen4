@@ -1030,6 +1030,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 21-5-2020
 	override func generateParameterDefinition(_ param: CGParameterDefinition) {
+		generateParameterDefinition(param, emitExternal: false)
+	}
+
+	func generateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
 		if Dialect == .Mercury {
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
@@ -1047,6 +1051,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				case .In:
 			}
 		}
+		if emitExternal, let externalName = externalName ?? param.ExternalName {
+			if externalName != param.Name {
+				generateIdentifier(externalName)
+				Append(" ")
+			}
+		}/* else if emitExternal {
+			Append("_ ")
+		}*/
 		generateIdentifier(param.Name)
 		if let type = param.Type {
 			Append(" As ")
@@ -1059,7 +1071,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	//done 21-5-2020
-	func vbGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
+	func vbGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, firstExternalName: String? = nil) {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
@@ -1068,7 +1080,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			} else {
 				param.startLocation = currentLocation
 			}
-			generateParameterDefinition(param)
+			generateParameterDefinition(param, emitExternal: true, externalName: p == 0 ? firstExternalName : nil)
 			param.endLocation = currentLocation
 		}
 	}
@@ -1443,15 +1455,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done 22-5-2020
 	internal func vbGenerateMethodHeader(_ methodName: String, method: CGMethodLikeMemberDefinition) {
 		vbGenerateMemberTypeVisibilityPrefix(method.Visibility)
-		Append(" ")
 		vbGenerateVirtualityModifiders(method)
-		Append(" ")
 		if method.Partial {
 			assert(false, "Visual Basic does not support Partial Methods")
-			//Append(" partial;")
+			Append("Partial ")
 		}
 		if method.Async {
-			Append(" Async;")
+			Append("Async ")
 		}
 		if method.Static {
 			Append("Shared ")
@@ -1463,11 +1473,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append(vbKeywordForMethod(method, close: false))
 		Append(" ")
 		Append(methodName)
-		if let parameters = method.Parameters, parameters.Count > 0 {
-			Append("(")
-			vbGenerateDefinitionParameters(parameters)
-			Append(")")
+		if let ctor = method as? CGConstructorDefinition, length(ctor.Name) > 0 {
+			Append(" ")
+			Append(ctor.Name)
 		}
+		Append("(")
+		if let parameters = method.Parameters, parameters.Count > 0 {
+			vbGenerateDefinitionParameters(parameters)
+		}
+		Append(")")
 		if let returnType = method.ReturnType, !returnType.IsVoid {
 			Append(" As ")
 			returnType.startLocation = currentLocation
@@ -1492,14 +1506,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	func vbGenerateVirtualityModifiders(_ member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
-			case .Virtual: Append(" Overridable")
-			case .Abstract: Append(" Abstract;")
-			case .Override: Append(" Overrides;")
-			case .Final:  Append(" NotOverridable")
+			case .Virtual: Append("Overridable ")
+			case .Abstract: Append("Abstract ")
+			case .Override: Append("Overrides ")
+			case .Final:  Append("NotOverridable ")
 			default:
 		}
 		if member.Reintroduced {
-			Append(" reintroduce;")
+			Append("Reintroduce ")
 		}
 	}
 
