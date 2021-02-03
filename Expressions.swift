@@ -777,3 +777,21 @@ public class CGArrayElementAccessExpression: CGExpression {
 		init(array, parameters.ToList())
 	}
 }
+
+public class CGYieldExpression: CGExpression  {
+	public var Value: CGExpression
+
+	public init(_ value: CGExpression) {
+		Value = value
+	}
+}
+
+public class CGThrowExpression: CGExpression {
+	public var Exception: CGExpression?
+
+	public init() {
+	}
+	public init(_ exception: CGExpression?) {
+		Exception = exception
+	}
+}

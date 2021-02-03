@@ -103,11 +103,11 @@ public class CGSkeletonCodeGenerator : CGCodeGenerator {
 
 	}
 
-	override func generateYieldStatement(_ statement: CGYieldStatement) {
+	override func generateYieldExpression(_ statement: CGYieldExpression) {
 
 	}
 
-	override func generateThrowStatement(_ statement: CGThrowStatement) {
+	override func generateThrowExpression(_ statement: CGThrowExpression) {
 
 	}
 

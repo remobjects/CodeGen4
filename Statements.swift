@@ -277,23 +277,11 @@ public class CGReturnStatement: CGStatement {
 	}
 }
 
-public class CGYieldStatement: CGStatement {
-	public var Value: CGExpression
 
-	public init(_ value: CGExpression) {
-		Value = value
-	}
-}
-
-public class CGThrowStatement: CGStatement {
-	public var Exception: CGExpression?
-
-	public init() {
-	}
-	public init(_ exception: CGExpression?) {
-		Exception = exception
-	}
-}
+@Obsolete("use CGYieldExpression, instead")
+public typealias CGYieldStatement = CGYieldExpression
+@Obsolete("use CGThrowExpression, instead")
+public typealias CGThrowStatement = CGThrowExpression
 
 public class CGBreakStatement: CGStatement {}
 public class CGContinueStatement: CGStatement {}

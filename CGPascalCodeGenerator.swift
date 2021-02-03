@@ -436,7 +436,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}
 
-	override func generateThrowStatement(_ statement: CGThrowStatement) {
+	override func generateThrowExpression(_ statement: CGThrowExpression) {
 		Append("raise")
 		if let value = statement.Exception {
 			Append(" ")

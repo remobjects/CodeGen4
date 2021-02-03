@@ -388,7 +388,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	//done 21-5-2020
-	override func generateThrowStatement(_ statement: CGThrowStatement) {
+	override func generateThrowExpression(_ statement: CGThrowExpression) {
 		Append("Throw ")
 		if let value = statement.Exception {
 			generateExpression(value)
@@ -428,7 +428,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	//added and done, 21-5-2020
-	override func generateYieldStatement(_ statement: CGYieldStatement) {
+	override func generateYieldExpression(_ statement: CGYieldExpression) {
 		Append("Yield ")
 		generateExpression(statement.Value)
 		AppendLine()

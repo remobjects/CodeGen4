@@ -506,10 +506,6 @@
 			generateTryFinallyCatchStatement(statement)
 		} else if let statement = statement as? CGReturnStatement {
 			generateReturnStatement(statement)
-		} else if let statement = statement as? CGYieldStatement {
-			generateYieldStatement(statement)
-		} else if let statement = statement as? CGThrowStatement {
-			generateThrowStatement(statement)
 		} else if let statement = statement as? CGBreakStatement {
 			generateBreakStatement(statement)
 		} else if let statement = statement as? CGContinueStatement {
@@ -671,14 +667,14 @@
 		assert(false, "generateReturnStatement not implemented")
 	}
 
-	internal func generateYieldStatement(_ statement: CGYieldStatement) {
+	internal func generateYieldExpression(_ statement: CGYieldExpression) {
 		// descendant must override this
-		assert(false, "generateYieldStatement not implemented")
+		assert(false, "generateYieldExpression not implemented")
 	}
 
-	internal func generateThrowStatement(_ statement: CGThrowStatement) {
+	internal func generateThrowExpression(_ statement: CGThrowExpression) {
 		// descendant must override this
-		assert(false, "generateThrowStatement not implemented")
+		assert(false, "generateThrowExpression not implemented")
 	}
 
 	internal func generateBreakStatement(_ statement: CGBreakStatement) {
@@ -838,6 +834,10 @@
 			generateTupleExpression(expression)
 		} else if let expression = expression as? CGTypeReferenceExpression {
 			generateTypeReferenceExpression(expression)
+		} else if let expression = expression as? CGYieldExpression {
+			generateYieldExpression(expression)
+		} else if let expression = expression as? CGThrowExpression {
+			generateThrowExpression(expression)
 		}
 
 		else {

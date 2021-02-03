@@ -194,7 +194,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	}
 	*/
 
-	override func generateYieldStatement(_ statement: CGYieldStatement) {
+	override func generateYieldExpression(_ statement: CGYieldExpression) {
 		//if Dialect == CGGoCodeGeneratorDialect.Gold {
 			//Append("__yield ")
 			//generateExpression(statement.Value)
@@ -204,7 +204,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		//}
 	}
 
-	override func generateThrowStatement(_ statement: CGThrowStatement) {
+	override func generateThrowExpression(_ statement: CGThrowExpression) {
 		if let value = statement.Exception {
 			Append("panic(")
 			generateExpression(value)
