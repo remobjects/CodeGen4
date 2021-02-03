@@ -8,6 +8,7 @@ public enum CGOxygeneStringQuoteStyle {
 	case Double
 	case SmartSingle
 	case SmartDouble
+	case CodeDomSafe
 }
 
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
@@ -401,8 +402,22 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		switch QuoteStyle {
 			case .Single: quoteChar = SINGLE
 			case .Double: quoteChar = DOUBLE
+			case .CodeDomSafe: fallthrough
 			case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
 			case .SmartDouble: quoteChar = expression.Value.Contains(DOUBLE) && !expression.Value.Contains(SINGLE) ? SINGLE : DOUBLE
+		}
+		if QuoteStyle == .CodeDomSafe && length(expression.Value) == 1 {
+			let ch = expression.Value[0]
+			switch ch as! UInt16 {
+				case 34:
+					Append("\"\"\"\"")
+					return
+				case 32...127:
+					break //process as normal, below
+				default:
+					Append("\"\"#\(ch  as! UInt32)")
+					return
+			}
 		}
 		AppendPascalEscapeCharactersInStringLiteral(expression.Value, quoteChar: quoteChar)
 	}

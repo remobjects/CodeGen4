@@ -29,6 +29,13 @@ td.Statements.Add(e1)
 td.Statements.Add(m1)
 td.Statements.Add(a1)
 
+td.Statements.Add("xy".AsLiteralExpression())
+td.Statements.Add("x".AsLiteralExpression())
+td.Statements.Add("'".AsLiteralExpression())
+td.Statements.Add("\"".AsLiteralExpression())
+td.Statements.Add("\n".AsLiteralExpression())
+td.Statements.Add("\"\"".AsLiteralExpression())
+
 td.Statements.Add(CGVariableDeclarationStatement("x", CGPredefinedTypeReference.Double, CGFloatLiteralExpression(0.00000000000001)))
 
 td.Statements.Add(CGCommentStatement("Now Property Access?"))
@@ -57,9 +64,10 @@ cls.Members.Add(ctor)
 
 unit.Types.Add(intf)
 
-//var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Standard)
+var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Standard)
+cg.QuoteStyle = .CodeDomSafe
 //var cg = CGDelphiCodeGenerator()
-var cg = CGVisualBasicNetCodeGenerator()
+//var cg = CGVisualBasicNetCodeGenerator()
 var code = cg.GenerateUnit(unit, definitionOnly: false);
 
 

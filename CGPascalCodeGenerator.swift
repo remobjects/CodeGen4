@@ -944,12 +944,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			let ch = string[i]
 			switch ch as! UInt16 {
 				case 32...127:
-					if ch == quoteChar {
-						fallthrough
-					}
 					if !inQuotes {
 						Append(quoteChar)
 						inQuotes = true
+					}
+					if ch == quoteChar {
+						Append(ch) // double it to escape it
 					}
 					Append(ch)
 				default:
