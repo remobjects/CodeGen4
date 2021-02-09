@@ -1788,14 +1788,30 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	//done 22-5-2020
 	override func generateIntegerRangeTypeReference(_ type: CGIntegerRangeTypeReference, ignoreNullability: Boolean = false) {
-		 assert(false, "Ranges are not supported by Visual Basic")
+		 assert(false, "Integer ranges are not supported by Visual Basic")
 	}
 
-	//done 22-5-2020
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-		 assert(false, "Inline Block Type References are not supported by Visual Basic")
+
+		let block = type.Block
+		if block.IsPlainFunctionPointer {
+			Append("<FunctionPointer> ")
+		}
+		if let returnType = block.ReturnType, !returnType.IsVoid {
+			Append("Function ")
+		} else {
+			Append("Sub ")
+		}
+		Append("(")
+		if let parameters = block.Parameters, parameters.Count > 0 {
+			vbGenerateDefinitionParameters(parameters)
+		}
+		Append(")")
+		if let returnType = block.ReturnType, !returnType.IsVoid {
+			Append(" As ")
+			generateTypeReference(returnType)
+		}
 	}
 
 	//done 22-5-2020
