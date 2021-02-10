@@ -628,6 +628,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				generateExpression(expression)
 				Methods.Pop() //single line has no End
 			} else {
+				AppendLine()
 				incIndent()
 				generateStatements(variables: method.LocalVariables)
 				generateStatementsSkippingOuterBeginEndBlock(method.Statements)
