@@ -1736,6 +1736,24 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Type References
 	//
 
+	func vbGenerateSuffixForNullability(_ type: CGTypeReference) {
+		// same as C#!
+		if type.DefaultNullability == CGTypeNullabilityKind.NotNullable || (type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped && Dialect == .Mercury) {
+			//Append("/*default not null*/")
+			if type.Nullability == CGTypeNullabilityKind.NullableUnwrapped || type.Nullability == CGTypeNullabilityKind.NullableNotUnwrapped {
+				Append("?")
+			}
+		} else {
+			//Append("/*default nullable*/")
+			if type.Nullability == CGTypeNullabilityKind.NotNullable {
+				//Append("/*not null*/")
+				if Dialect == .Mercury {
+					Append("!")
+				}
+			}
+		}
+	}
+
 	/*
 	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
 		// handled in base
@@ -1793,24 +1811,27 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateInlineBlockTypeReference(_ type: CGInlineBlockTypeReference, ignoreNullability: Boolean = false) {
-
-		let block = type.Block
-		if block.IsPlainFunctionPointer {
-			Append("<FunctionPointer> ")
-		}
-		if let returnType = block.ReturnType, !returnType.IsVoid {
-			Append("Function ")
+		if Dialect == .Mercury {
+			let block = type.Block
+			if block.IsPlainFunctionPointer {
+				Append("<FunctionPointer> ")
+			}
+			if let returnType = block.ReturnType, !returnType.IsVoid {
+				Append("Function ")
+			} else {
+				Append("Sub ")
+			}
+			Append("(")
+			if let parameters = block.Parameters, parameters.Count > 0 {
+				vbGenerateDefinitionParameters(parameters)
+			}
+			Append(")")
+			if let returnType = block.ReturnType, !returnType.IsVoid {
+				Append(" As ")
+				generateTypeReference(returnType)
+			}
 		} else {
-			Append("Sub ")
-		}
-		Append("(")
-		if let parameters = block.Parameters, parameters.Count > 0 {
-			vbGenerateDefinitionParameters(parameters)
-		}
-		Append(")")
-		if let returnType = block.ReturnType, !returnType.IsVoid {
-			Append(" As ")
-			generateTypeReference(returnType)
+			assert(false, "Inline Block Type References are not supported by Visual Basic")
 		}
 	}
 
@@ -1824,15 +1845,23 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				generateTypeReference(type.`Type`)
 				Append(")")
 			}
-		}
-		else {
+		} else {
 			assert(false, "Pointers are not supported by Visual Basic")
 		}
 	}
 
 	//done 22-5-2020
 	override func generateKindOfTypeReference(_ type: CGKindOfTypeReference, ignoreNullability: Boolean = false) {
-		 assert(false, "Kind Of Type References are not supported by Visual Basic")
+		if Dialect == .Mercury {
+			Append("Dynamic(Of ")
+			generateTypeReference(type.`Type`)
+			Append(")")
+			if !ignoreNullability {
+				vbGenerateSuffixForNullability(type)
+			}
+		} else {
+			assert(false, "Kind Of Type References are not supported by Visual Basic")
+		}
 	}
 
 	//done 22-5-2020
