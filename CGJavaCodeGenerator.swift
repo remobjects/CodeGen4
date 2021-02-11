@@ -211,7 +211,6 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("throw ")
 			generateExpression(value)
-			Append()
 		} else {
 			Append("throw")
 		}
