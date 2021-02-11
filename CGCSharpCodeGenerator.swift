@@ -230,7 +230,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateYieldExpression(_ statement: CGYieldExpression) {
 		Append("yield ")
 		generateExpression(statement.Value)
-		generateStatementTerminator()
 	}
 
 	override func generateThrowExpression(_ statement: CGThrowExpression) {
@@ -240,7 +239,6 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			Append("throw")
 		}
-		AppendLine(";")
 	}
 
 	/*

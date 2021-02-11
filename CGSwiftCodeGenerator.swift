@@ -265,7 +265,6 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
 			Append("__yield ")
 			generateExpression(statement.Value)
-			AppendLine()
 		} else {
 			assert(false, "generateYieldStatement is not supported in Swift, except in Silver")
 		}
@@ -275,9 +274,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("throw ")
 			generateExpression(value)
-			AppendLine()
 		} else {
-			AppendLine("throw")
+			Append("throw")
 		}
 	}
 

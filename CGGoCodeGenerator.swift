@@ -198,7 +198,6 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		//if Dialect == CGGoCodeGeneratorDialect.Gold {
 			//Append("__yield ")
 			//generateExpression(statement.Value)
-			//AppendLine()
 		//} else {
 			assert(false, "generateYieldStatement is not supported for Go, except in Gold")
 		//}
@@ -208,9 +207,9 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("panic(")
 			generateExpression(value)
-			AppendLine(")")
+			Append(")")
 		} else {
-			AppendLine("panic()")
+			Append("panic()")
 		}
 	}
 

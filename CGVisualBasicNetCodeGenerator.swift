@@ -393,7 +393,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if let value = statement.Exception {
 			generateExpression(value)
 		}
-		AppendLine()
 	}
 
 	//21-5-2020
@@ -431,7 +430,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateYieldExpression(_ statement: CGYieldExpression) {
 		Append("Yield ")
 		generateExpression(statement.Value)
-		AppendLine()
 	}
 
 	//done

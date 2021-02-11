@@ -144,7 +144,6 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	override func generateYieldExpression(_ statement: CGYieldExpression) {
 		Append("yield ")
 		generateExpression(statement.Value)
-		AppendLine(";")
 	}
 
 	override func generateVariableDeclarationStatement(_ statement: CGVariableDeclarationStatement) {

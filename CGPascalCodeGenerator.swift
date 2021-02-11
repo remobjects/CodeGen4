@@ -442,7 +442,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" ")
 			generateExpression(value)
 		}
-		generateStatementTerminator()
 	}
 
 	override func generateBreakStatement(_ statement: CGBreakStatement) {

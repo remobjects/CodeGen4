@@ -193,9 +193,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("throw ")
 			generateExpression(value)
-			AppendLine(";")
 		} else {
-			AppendLine("throw;")
+			Append("throw")
 		}
 	}
 

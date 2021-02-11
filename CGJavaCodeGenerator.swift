@@ -211,11 +211,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if let value = statement.Exception {
 			Append("throw ")
 			generateExpression(value)
-			AppendLine()
+			Append()
 		} else {
-			AppendLine("throw")
+			Append("throw")
 		}
-		AppendLine(";")
 	}
 
 	/*
