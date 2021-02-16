@@ -946,9 +946,13 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		assert(false, "Sets are not supported")
 	}
 
-	//done 21-5-2020
-	override func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
-		assert(false, "Sequences are not supported")
+	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
+		Append("ISequence(Of ")
+		generateTypeReference(sequence.`Type`)
+		Append(")")
+		if !ignoreNullability {
+			vbGenerateSuffixForNullability(sequence)
+		}
 	}
 
 	//
