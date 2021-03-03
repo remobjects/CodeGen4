@@ -70,11 +70,11 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
-		assert(false, "generateForEachLoopStatement catch blocks are not supported for Go")
+		assert(false, "for/each blocks are not supported for Go")
 	}
 
 	override func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
-		assert(false, "generateWhileDoLoopStatement catch blocks are not supported for Go")
+		assert(false, "while/do blocks are not supported for Go")
 		//Append("while ")
 		//generateExpression(statement.Condition)
 		//AppendLine(" {")
@@ -85,7 +85,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
-		assert(false, "generateDoWhileLoopStatement catch blocks are not supported for Go")
+		assert(false, "do/while blocks are not supported for Go")
 		//Append("repeat {")
 		//incIndent()
 		//generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
@@ -169,7 +169,7 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		}
 		generateStatements(statement.Statements)
 		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
-			assert(false, "generateTryFinallyCatchStatement catch blocks are not supported for Go")
+			assert(false, "try/catch blocks are not supported for Go")
 			//for b in catchBlocks {
 				//if let name = b.Name, let type = b.Type {
 					//Append("__catch ")
