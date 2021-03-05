@@ -1222,8 +1222,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(" As ")
 			generateTypeReference(baseType)
 		}
+		AppendLine()
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members) { m in
+		for m in type.Members {
 			if let member = m as? CGEnumValueDefinition {
 				self.generateAttributes(member.Attributes, inline: true)
 				self.generateIdentifier(member.Name)
@@ -1231,6 +1232,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					self.Append(" = ")
 					self.generateExpression(value)
 				}
+				AppendLine()
 			}
 		}
 		decIndent()
