@@ -1717,7 +1717,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateVirtualityModifiders(property)
 		AppendLine();
 
-		if isUnified && !(type is CGInterfaceTypeDefinition) {
+		if isUnified && !(type is CGInterfaceTypeDefinition && !property.IsShortcutProperty) {
 			AppendLine();
 			pascalGeneratePropertyAccessorDefinition(property, type: type);
 		}
