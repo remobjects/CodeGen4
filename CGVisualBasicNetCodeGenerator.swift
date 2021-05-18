@@ -504,7 +504,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			}
 			if let name = param.Name { //block named parameters added 21-5-2020
 				generateIdentifier(name)
-				Append(" := ") //changed 21-5-2020
+				Append(": ")
 			}
 			generateExpression(param.Value)
 		}
@@ -519,7 +519,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			}
 			if let name = param.Name {
 				generateIdentifier(name)
-				Append(" := ") //changed 21-5-2020
+				Append(": ")
 			}
 			generateExpression(param.Value)
 		}
