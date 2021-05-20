@@ -216,7 +216,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
 		InLoop = InLoop + 1
 		Loops.Push("For")
-		Append("For Each")
+		Append("For Each ")
 		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
 		if let type = statement.LoopVariableType {
 			Append(" As ")
