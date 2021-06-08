@@ -786,7 +786,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func cStyleEscapeSequenceForCharacter(_ ch: Char) -> String {
-		return "\\u{"+Convert.ToString(Integer(ch), 16)
+		return "\\u{"+Convert.ToString(Integer(ch), 16)+"}"
 	}
 
 	/*
