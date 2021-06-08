@@ -801,7 +801,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		Append("[")
-		generateTypeReference(attribute.`Type`)
+		generateAttributeScope(attribute)
+		generateTypeReference(attribute.Type)
 		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")
 			cSharpGenerateAttributeParameters(parameters)

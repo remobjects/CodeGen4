@@ -658,6 +658,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		Append("@")
+		generateAttributeScope(attribute)
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters, parameters.Count > 0 {
 			Append("(")

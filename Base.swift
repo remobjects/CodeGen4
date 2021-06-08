@@ -28,6 +28,7 @@ public class CGCodeUnit {
 	public var FileImports = List<CGImport>()
 	public var Types = List<CGTypeDefinition>()
 	public var Globals = List<CGGlobalDefinition>()
+	public var Attributes = List<CGAttribute>()
 
 	public var ImplementationDirectives = List<CGCompilerDirective>() /* Pascal only */
 	public var ImplementationImports = List<CGImport>()  /* Pascal only */

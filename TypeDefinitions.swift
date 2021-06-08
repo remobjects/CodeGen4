@@ -480,6 +480,7 @@ public class CGAttribute: CGEntity {
 	public var Parameters: List<CGCallParameter>?
 	public var Comment: CGSingleLineCommentStatement?
 	public var Condition: CGConditionalDefine?
+	public var Scope: CGAttributeScopeKind?
 
 	public init(_ type: CGTypeReference) {
 		`Type` = type
@@ -491,4 +492,9 @@ public class CGAttribute: CGEntity {
 	public convenience init(_ type: CGTypeReference,_ parameters: CGCallParameter...) {
 		init(type, parameters.ToList())
 	}
+}
+
+public enum CGAttributeScopeKind {
+	case Module
+	case Assembly
 }

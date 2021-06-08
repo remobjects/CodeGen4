@@ -156,6 +156,7 @@
 		generateImports()
 		generateForwards()
 		generateGlobals()
+		generateAttributes()
 		generateTypeDefinitions()
 		generateFooter()
 	}
@@ -269,6 +270,19 @@
 			AppendLine()
 		}
 	}
+
+	internal func generateAttributes() {
+
+		var hadAttributes = false
+		for a in currentUnit.Attributes {
+			generateAttribute(a)
+			hadAttributes = true
+		}
+		if hadAttributes {
+			AppendLine()
+		}
+	}
+
 
 	internal final func generateDirective(_ directive: CGCompilerDirective) {
 		if let condition = directive.Condition {
@@ -1164,6 +1178,15 @@
 	final func generateAttribute(_ attribute: CGAttribute) {
 		// descendant must override
 		generateAttribute(attribute, inline: false);
+	}
+
+	func generateAttributeScope(_ attribute: CGAttribute) {
+		if let scope = attribute.Scope {
+			switch scope {
+				case .Assembly: Append("assembby:")
+				case .Module: Append("module:")
+			}
+		}
 	}
 
 	internal func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
