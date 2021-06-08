@@ -21,6 +21,7 @@
 
 	public var omitNamespacePrefixes: Boolean = false
 	public var splitLinesLongerThan: Integer = 2048
+	public var preserveUnicodeCharactersInStringLiterals: Boolean = false
 
 	public final func GenerateUnit(_ unit: CGCodeUnit) -> String { // overload for VC# compastibility
 		return GenerateUnit(unit, definitionOnly: false)

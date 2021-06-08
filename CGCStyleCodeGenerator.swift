@@ -309,8 +309,14 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 				case "\u{0080}".."\u{ffffffff}": result.Append("\\u{"+Sugar.Cryptography.Utils.ToHexString(Integer(ch), 4)) // Cannot use the binary operator ".."
 				*/
 				default:
-					if ch < 32 || ch > 0x7f {
+					if ch < 32 {
 						result.Append(cStyleEscapeSequenceForCharacter(ch))
+					} else if ch > 0x7f {
+						if preserveUnicodeCharactersInStringLiterals {
+							result.Append(ch)
+						} else {
+							result.Append(cStyleEscapeSequenceForCharacter(ch))
+						}
 					} else {
 						result.Append(ch)
 					}

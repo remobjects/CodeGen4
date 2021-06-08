@@ -942,6 +942,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 			let ch = string[i]
 			switch ch as! UInt16 {
+				case 0...31:
+					if inQuotes {
+						Append(quoteChar)
+						inQuotes = false
+					}
+					Append("#\(ch  as! UInt32)")
 				case 32...127:
 					if !inQuotes {
 						Append(quoteChar)
@@ -952,11 +958,22 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					}
 					Append(ch)
 				default:
-					if inQuotes {
-						Append(quoteChar)
-						inQuotes = false
+					if preserveUnicodeCharactersInStringLiterals {
+						if !inQuotes {
+							Append(quoteChar)
+							inQuotes = true
+						}
+						if ch == quoteChar {
+							Append(ch) // double it to escape it
+						}
+						Append(ch)
+					} else {
+						if inQuotes {
+							Append(quoteChar)
+							inQuotes = false
+						}
+						Append("#\(ch  as! UInt32)")
 					}
-					Append("#\(ch  as! UInt32)")
 			}
 		}
 		if inQuotes {
