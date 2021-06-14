@@ -205,6 +205,7 @@
 			AppendLine("interface")
 			AppendLine()
 		}
+		generateAttributes()
 		pascalGenerateImports(currentUnit.Imports)
 		delphiGenerateGlobalInterfaceVariables()
 		delphiGenerateInterfaceTypeDefinition()

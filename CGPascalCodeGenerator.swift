@@ -40,8 +40,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				AppendLine("interface")
 				AppendLine()
 			}
+			generateAttributes()
 			pascalGenerateImports(currentUnit.Imports)
 		} else {
+			generateAttributes()
 			pascalGenerateImports(currentUnit.Imports.Concat(currentUnit.ImplementationImports).ToList())
 		}
 		generateGlobals()

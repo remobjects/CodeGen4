@@ -5,6 +5,7 @@
 	override func generateAll() {
 		generateHeader()
 		generateDirectives()
+		generateAttributes()
 		if let namespace = currentUnit.Namespace {
 			AppendLine();
 			cppHgenerateImports()

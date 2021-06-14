@@ -58,16 +58,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done
 
-	override func generateAll() {
-		generateDirectives()
-		generateImports()
-		generateHeader()
-		generateForwards()
-		generateGlobals()
-		generateTypeDefinitions()
-		generateFooter()
-	}
-
 	override func generateDirectives() {
 		super.generateDirectives()
 
