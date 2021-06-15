@@ -321,7 +321,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 21-5-2020
 	override func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
-		Append("Using autoreleasepool ")
+		Append("Using AutoReleasePool ")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 		AppendLine("End Using ")
 	}
