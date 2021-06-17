@@ -1886,6 +1886,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
-		 assert(false, "Dictionary Type References are not supported by Visual Basic")
+		Append("Dictionary(Of ")
+		generateTypeReference(type.KeyType)
+		Append(", ")
+		generateTypeReference(type.ValueType)
+		Append(")")
 	}
 }

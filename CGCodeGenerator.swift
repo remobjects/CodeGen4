@@ -912,7 +912,7 @@
 
 	internal func generateResultExpression(_ expression: CGResultExpression) {
 		// descendant must override
-		assert(false, "generateResukltExpression not implemented")
+		assert(false, "generateResultExpression not implemented")
 	}
 
 	internal func generateNilExpression(_ expression: CGNilExpression) {

@@ -1881,6 +1881,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
-		assert(false, "generateDictionaryTypeReference is not supported in Pascal")
+		Append("Dictionary<")
+		generateTypeReference(type.KeyType)
+		Append(",")
+		generateTypeReference(type.ValueType)
+		Append(">")
 	}
 }

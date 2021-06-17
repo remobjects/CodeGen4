@@ -708,4 +708,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		generateTypeReference(sequence.`Type`)
 	}
 
+	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
+		if !ignoreNullability {
+			pascalGeneratePrefixForNullability(type)
+		}
+		super.generateDictionaryTypeReference(type, ignoreNullability: ignoreNullability)
+	}
 }

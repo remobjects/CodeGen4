@@ -1532,6 +1532,13 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDictionaryTypeReference(_ type: CGDictionaryTypeReference, ignoreNullability: Boolean = false) {
-
+		Append("Dictionary<")
+		generateTypeReference(type.KeyType)
+		Append(",")
+		generateTypeReference(type.ValueType)
+		Append(">")
+		if !ignoreNullability {
+			cSharpGenerateSuffixForNullability(type)
+		}
 	}
 }
