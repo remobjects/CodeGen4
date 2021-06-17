@@ -239,7 +239,14 @@ public class CGUsingStatement: CGNestingStatement {
 	}
 }
 
-public class CGAutoReleasePoolStatement: CGNestingStatement {}
+public class CGAutoReleasePoolStatement: CGNestingStatement {
+}
+
+public class CGCheckedStatement : CGNestingStatement {
+}
+
+public class CGCUnsafeStatement : CGNestingStatement {
+}
 
 public class CGTryFinallyCatchStatement: CGBlockStatement {
 	public var FinallyStatements = List<CGStatement>()

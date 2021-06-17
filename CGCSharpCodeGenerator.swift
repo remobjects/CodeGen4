@@ -185,6 +185,16 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	override func generateCheckedStatement(_ statement: CGCheckedStatement) {
+		AppendLine("checked")
+		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
+	}
+
+	override func generateUnsafeStatement(_ statement: CGCUnsafeStatement) {
+		AppendLine("unsafe")
+		generateStatementIndentedUnlessItsABeginEndBlock(statement.NestedStatement)
+	}
+
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 		AppendLine("try")
 		AppendLine("{")

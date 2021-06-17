@@ -517,6 +517,10 @@
 			generateUsingStatement(statement)
 		} else if let statement = statement as? CGAutoReleasePoolStatement {
 			generateAutoReleasePoolStatement(statement)
+		} else if let statement = statement as? CGCheckedStatement {
+			generateCheckedStatement(statement)
+		} else if let statement = statement as? CGCUnsafeStatement {
+			generateUnsafeStatement(statement)
 		} else if let statement = statement as? CGTryFinallyCatchStatement {
 			generateTryFinallyCatchStatement(statement)
 		} else if let statement = statement as? CGReturnStatement {
@@ -670,6 +674,19 @@
 	internal func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
 		// descendant must override this
 		assert(false, "generateAutoReleasePoolStatement not implemented")
+		generateStatement(statement.NestedStatement); // as fallback code
+	}
+
+	internal func generateCheckedStatement(_ statement: CGCheckedStatement) {
+		// descendant must override this
+		assert(false, "generateCheckedStatement not implemented")
+		generateStatement(statement.NestedStatement); // as fallback code
+	}
+
+	internal func generateUnsafeStatement(_ statement: CGCUnsafeStatement) {
+		// descendant must override this
+		assert(false, "generateUnsafeStatement not implemented")
+		generateStatement(statement.NestedStatement); // as fallback code
 	}
 
 	internal func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
