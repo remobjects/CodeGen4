@@ -1672,6 +1672,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				decIndent()
 				AppendLine("End Get")
 			} else if let getExpresssion = property.GetExpression {
+				AppendLine("Get")
 				incIndent()
 				generateStatement(CGReturnStatement(getExpresssion))
 				decIndent()
