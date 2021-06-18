@@ -1599,7 +1599,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if field.Constant {
 			Append("Const ")
 		} else {
-			Append("Dim ")
+			if field.visibility == .Unspecified {
+				Append("Dim ")
+			}
 		}
 		if field.WithEvents {
 			Append("WithEvents ")
