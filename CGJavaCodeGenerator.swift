@@ -937,13 +937,14 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if ctor.Parameters.Count > 0 {
 			javaGenerateDefinitionParameters(ctor.Parameters)
 		}
-		AppendLine(")")
+		Append(")")
 
 		if definitionOnly {
 			AppendLine(";")
 			return
 		}
 
+		AppendLine()
 		AppendLine("{")
 		incIndent()
 		generateStatements(variables: ctor.LocalVariables)
