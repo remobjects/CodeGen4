@@ -1422,6 +1422,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if let realMethod = method as? CGMethodDefinition {
 			pascalGenerateGenericParameters(realMethod.GenericParameters)
 		}
+
+		var includeVisibility = includeVisibility
+		if type is CGInterfaceTypeDefinition && method.Visibility == .Public {
+			includeVisibility = false;
+		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation, includeVisibility: includeVisibility)
 	}
 
