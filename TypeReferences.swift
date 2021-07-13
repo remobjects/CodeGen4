@@ -38,6 +38,14 @@ public enum CGStorageModifierKind {
 	case Unretained
 }
 
+public class CGUnknownTypeReference : CGTypeReference {
+	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return self
+	}
+
+	public static lazy var UnknownType = CGUnknownTypeReference()
+}
+
 public class CGNamedTypeReference : CGTypeReference {
 	public let Name: String
 	public private(set) var Namespace: CGNamespaceReference?

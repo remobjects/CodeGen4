@@ -1476,6 +1476,8 @@
 		// descendant should not override
 		if let type = type as? CGNamedTypeReference {
 			generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGUnknownTypeReference {
+			generateUnknownTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGPredefinedTypeReference {
 			generatePredefinedTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGIntegerRangeTypeReference {
@@ -1540,6 +1542,10 @@
 			generateIdentifier(type.FullName)
 		}
 		generateGenericArguments(type.GenericArguments)
+	}
+
+	internal func generateUnknownTypeReference(_ type: CGUnknownTypeReference, ignoreNullability: Boolean = false) {
+		generateInlineComment("Unknown Type")
 	}
 
 	internal func generatePredefinedTypeReference(_ type: CGPredefinedTypeReference, ignoreNullability: Boolean = false) {
