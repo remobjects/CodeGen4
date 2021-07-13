@@ -1344,7 +1344,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		if !implementation {
 
-			if isUnified {
+			if includeVisibility {
 				Append(" ")
 				pascalGenerateMemberVisibilityKeyword(method.Visibility)
 				Append(";")
@@ -1424,8 +1424,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 
 		var includeVisibility = includeVisibility
-		if type is CGInterfaceTypeDefinition && method.Visibility == .Public {
-			includeVisibility = false;
+		if type is CGInterfaceTypeDefinition {
+			includeVisibility = method.Visibility != .Public;
 		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation, includeVisibility: includeVisibility)
 	}

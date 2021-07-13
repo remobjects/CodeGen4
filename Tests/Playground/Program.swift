@@ -61,17 +61,29 @@ var ctor = CGConstructorDefinition()
 ctor.Name = "withFoo";
 cls.Members.Add(ctor)
 
+var p2 = CGPropertyDefinition("Test")
+p2.Type = "String".AsTypeReference()
+cls.Members.Add(p2)
+
+var p3 = CGPropertyDefinition("Test")
+p3.Type = "String".AsTypeReference()
+//p3.GetStatements = List<CGStatement>()
+//p3.SetStatements = List<CGStatement>()
+
+cls.Members.Add(p3)
 
 unit.Types.Add(intf)
 
-var cg = CGOxygeneCodeGenerator(style: CGOxygeneCodeGeneratorStyle.Standard)
+var cg = CGOxygeneCodeGenerator(style: .Unified)
 cg.QuoteStyle = .CodeDomSafe
 //var cg = CGDelphiCodeGenerator()
 //var cg = CGVisualBasicNetCodeGenerator()
-var code = cg.GenerateUnit(unit, definitionOnly: false);
+print(cg.GenerateUnit(unit, definitionOnly: true))
 
+//var cgm = CGVisualBasicNetCodeGenerator(dialect: .Mercury)
+//var cg = CGDelphiCodeGenerator()
+//var cg = CGVisualBasicNetCodeGenerator()
+//print(cgm.GenerateUnit(unit, definitionOnly: false))
 
 //var cg = CGJavaCodeGenerator()
 //var code = cg.GenerateUnit(unit)
-
-print(code)
