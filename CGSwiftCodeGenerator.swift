@@ -1574,6 +1574,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 
+	override internal func generateSomeTypeReference(_ type: CGSomeTypeReference, ignoreNullability: Boolean = false) {
+		Append("some ")
+		generateTypeReference(type.Type)
+	}
+
 	override func generateSetTypeReference(_ setType: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference is not supported in Swift")
 	}

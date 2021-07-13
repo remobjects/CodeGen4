@@ -103,6 +103,23 @@ public class CGNamedTypeReference : CGTypeReference {
 	}
 }
 
+public class CGSomeTypeReference : CGTypeReference {
+	public var Type: CGTypeReference
+
+	public init(_ type: CGTypeReference) {
+		self.Type = type
+	}
+
+	public init(_ type: CGTypeReference, nullability: CGTypeNullabilityKind) {
+		self.Type = type
+		self.Nullability = nullability
+	}
+
+	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGSomeTypeReference(Type, nullability: nullability);
+	}
+}
+
 public class CGPredefinedTypeReference : CGTypeReference {
 	public var Kind: CGPredefinedTypeKind
 
