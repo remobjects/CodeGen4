@@ -821,7 +821,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		javaGenerateAbstractPrefix(type.Abstract)
 		javaGeneratePartialPrefix(type.Partial)
 		javaGenerateSealedPrefix(type.Sealed)
-		Append("struct ")
+		Append("__struct ")
 		generateIdentifier(type.Name)
 		//ToDo: generic constraints
 		javaGenerateAncestorList(type)
