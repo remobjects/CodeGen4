@@ -1492,8 +1492,8 @@
 			generateKindOfTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGTupleTypeReference {
 			generateTupleTypeReference(type, ignoreNullability: ignoreNullability)
-		} else if let type = type as? CGSomeTypeReference {
-			generateSomeTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGOpaqueTypeReference {
+			generateOpaqueTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSetTypeReference {
 			generateSetTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSequenceTypeReference {
@@ -1605,9 +1605,8 @@
 		assert(false, "generateTupleTypeReference not implemented")
 	}
 
-	internal func generateSomeTypeReference(_ type: CGSomeTypeReference, ignoreNullability: Boolean = false) {
-		generateInlineComment("some")
-		generateTypeReference(type.Type)
+	internal func generateOpaqueTypeReference(_ type: CGOpaqueTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateOpaqueTypeReference not implemented")
 	}
 
 	internal func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {

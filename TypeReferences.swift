@@ -103,7 +103,7 @@ public class CGNamedTypeReference : CGTypeReference {
 	}
 }
 
-public class CGSomeTypeReference : CGTypeReference {
+public class CGOpaqueTypeReference : CGTypeReference {
 	public var Type: CGTypeReference
 
 	public init(_ type: CGTypeReference) {
@@ -116,7 +116,7 @@ public class CGSomeTypeReference : CGTypeReference {
 	}
 
 	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
-		return CGSomeTypeReference(Type, nullability: nullability);
+		return CGOpaqueTypeReference(Type, nullability: nullability);
 	}
 }
 

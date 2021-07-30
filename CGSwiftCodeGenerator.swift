@@ -1574,7 +1574,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 
-	override internal func generateSomeTypeReference(_ type: CGSomeTypeReference, ignoreNullability: Boolean = false) {
+	override internal func generateOpaqueTypeReference(_ type: CGOpaqueTypeReference, ignoreNullability: Boolean = false) {
 		Append("some ")
 		generateTypeReference(type.Type)
 	}
