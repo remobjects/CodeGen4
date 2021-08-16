@@ -46,6 +46,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	public var QuoteStyle: CGOxygeneStringQuoteStyle = .SmartSingle
 
 	override var isUnified: Boolean { return Style == .Unified }
+	override var supportsInterfaceVisibilities: Boolean { return true }
 
 	public convenience init(style: CGOxygeneCodeGeneratorStyle) {
 		init()

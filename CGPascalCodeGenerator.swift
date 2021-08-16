@@ -27,6 +27,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal var isUnified: Boolean { return false }
+	internal var supportsInterfaceVisibilities: Boolean { return false }
 
 	//
 	// Pascal Special for interface/implementation separation
@@ -1424,7 +1425,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 
 		var includeVisibility = includeVisibility
-		if type is CGInterfaceTypeDefinition {
+		if type is CGInterfaceTypeDefinition && supportsInterfaceVisibilities {
 			includeVisibility = method.Visibility != .Public;
 		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation, includeVisibility: includeVisibility)
