@@ -513,8 +513,24 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	func javaGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>) {
-		helpGenerateCommaSeparatedList(parameters) { param in
-			self.generateParameterDefinition(param)
+		for p in 0 ..< parameters.Count {
+			let param = parameters[p]
+			if p > 0 {
+				if Dialect == .Iodine, let externalName = param.ExternalName {
+					Append(") ")
+					param.startLocation = currentLocation
+					generateIdentifier(externalName)
+					Append("(")
+				} else {
+					Append(", ")
+					param.startLocation = currentLocation
+				}
+			} else {
+				param.startLocation = currentLocation
+			}
+
+			generateParameterDefinition(param)
+			param.endLocation = currentLocation
 		}
 	}
 

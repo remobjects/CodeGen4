@@ -585,7 +585,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		for p in 0 ..< parameters.Count {
 			let param = parameters[p]
 			if p > 0 {
-				if Dialect == CGCSharpCodeGeneratorDialect.Hydrogene, let externalName = param.ExternalName {
+				if Dialect == .Hydrogene, let externalName = param.ExternalName {
 					Append(") ")
 					param.startLocation = currentLocation
 					generateIdentifier(externalName)
