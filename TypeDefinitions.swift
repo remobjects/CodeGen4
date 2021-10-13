@@ -146,6 +146,21 @@ public __abstract class CGMemberDefinition: CGEntity {
 	}
 }
 
+public class CGRawMemberDefinition: CGMemberDefinition {
+	public var Lines: List<String>
+
+	public init(_ lines: List<String>) {
+		super.init("__UNNAMED__")
+		Lines = lines
+	}
+	/*public convenience init(_ lines: String ...) {
+		init(lines.ToList())
+	}*/
+	public init(_ lines: String) {
+		Lines = lines.Replace("\r", "").Split("\n").MutableVersion()
+	}
+}
+
 public class CGEnumValueDefinition: CGMemberDefinition {
 	public var Value: CGExpression?
 

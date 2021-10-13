@@ -1386,6 +1386,8 @@
 			generateCustomOperatorDefinition(member, type:type)
 		} else if let member = member as? CGNestedTypeDefinition {
 			generateNestedTypeDefinition(member, type:type)
+		} else if let member = member as? CGRawMemberDefinition {
+			generateRawMemberDefinition(member, type:type)
 		} //...
 
 		else {
@@ -1453,6 +1455,13 @@
 	internal func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
 		// descendant must override
 		assert(false, "generateNestedTypeDefinition not implemented")
+	}
+
+	internal func generateRawMemberDefinition(_ member: CGRawMemberDefinition, type: CGTypeDefinition) {
+		for line in member.Lines {
+			AppendLine(line)
+			AppendLine()
+		}
 	}
 
 	internal func generateParameterDefinition(_ parameter: CGParameterDefinition) {
