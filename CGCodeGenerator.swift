@@ -1460,8 +1460,8 @@
 	internal func generateRawMemberDefinition(_ member: CGRawMemberDefinition, type: CGTypeDefinition) {
 		for line in member.Lines {
 			AppendLine(line)
-			AppendLine()
 		}
+		AppendLine()
 	}
 
 	internal func generateParameterDefinition(_ parameter: CGParameterDefinition) {
