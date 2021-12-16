@@ -80,9 +80,27 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 
+	private func pascatTypeHasImplementationMembers(_ type: CGTypeDefinition) -> Boolean {
+		if let type = type as? CGClassTypeDefinition {
+			return type.Members.Any {
+				!($0 is CGFieldDefinition)
+			}
+		} else if let type = type as? CGStructTypeDefinition {
+			return type.Members.Any {
+				!($0 is CGFieldDefinition)
+			}
+		} else if let type = type as? CGInterfaceTypeDefinition {
+			return false
+		} else if let type = type as? CGExtensionTypeDefinition {
+			return type.Members.Count > 0
+		} else {
+			return false
+		}
+	}
+
 	final func pascalGenerateTypeImplementation(_ type: CGTypeDefinition) {
 
-		if let condition = type.Condition {
+		if let condition = type.Condition, pascatTypeHasImplementationMembers(type) {
 			generateConditionStart(condition)
 		}
 
@@ -96,7 +114,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateTypeMemberImplementations(type)
 		}
 
-		if let condition = type.Condition {
+		if let condition = type.Condition, pascatTypeHasImplementationMembers(type) {
 			generateConditionEnd(condition)
 		}
 	}
