@@ -1358,9 +1358,6 @@
 
 	internal final func generateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition) {
 
-		if let condition = type.Condition {
-			generateConditionStart(condition)
-		}
 		if let condition = member.Condition {
 			generateConditionStart(condition)
 		}
@@ -1404,10 +1401,6 @@
 		member.endLocation = currentLocation;
 
 		if let condition = member.Condition {
-			generateConditionEnd(condition)
-		}
-
-		if let condition = type.Condition {
 			generateConditionEnd(condition)
 		}
 	}
