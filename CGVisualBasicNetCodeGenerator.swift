@@ -1414,9 +1414,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			if method.Awaitable {
 				Append("Async ")
 			}
-			/*if method.External {
-				Append("extern ")
-			}*/
+			if method.External {
+				Append("Declare ")
+			}
 			vbGenerateVirtualityPrefix(method)
 		}
 		Append(vbKeywordForMethod(method, close: false))
