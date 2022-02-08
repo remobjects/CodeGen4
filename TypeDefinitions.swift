@@ -36,6 +36,7 @@ public final class CGGlobalTypeDefinition : CGTypeDefinition {
 
 public class CGTypeAliasDefinition : CGTypeDefinition {
 	public var ActualType: CGTypeReference
+	public var Strict: Boolean = false
 
 	public init(_ name: String, _ actualType: CGTypeReference) {
 		super.init(name)

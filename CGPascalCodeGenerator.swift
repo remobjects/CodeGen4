@@ -1136,6 +1136,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateIdentifier(type.Name)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		if type.Strict {
+			Append("type ")
+		}
 		generateTypeReference(type.ActualType)
 		generateStatementTerminator()
 	}
