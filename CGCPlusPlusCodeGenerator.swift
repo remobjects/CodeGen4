@@ -803,6 +803,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				if let namespace = currentUnit.Namespace {
 					generateIdentifier(namespace.Name)
 					Append("::")
+					generateIdentifier(uppercaseFirstLetter(type.Name))
+					Append("::")
 				}
 			}
 			Append("~")
