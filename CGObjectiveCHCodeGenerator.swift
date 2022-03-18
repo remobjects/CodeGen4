@@ -29,7 +29,11 @@
 	//
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-
+		Append("typedef ")
+		generateTypeReference(type.ActualType)
+		Append(" ")
+		generateIdentifier(type.Name)
+		AppendLine(";")
 	}
 
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
