@@ -212,7 +212,7 @@
 	internal func generateFooter() {
 		// descendant can override, if needed
 
-		if let rawHeader = currentUnit.RawHeadeer, rawHeader.Count > 0 {
+		if let rawHFooter = currentUnit.RawFooter, rawHeader.Count > 0 {
 			AppendLine()
 			for s in rawHeader {
 				AppendLine(s)
