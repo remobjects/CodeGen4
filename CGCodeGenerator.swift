@@ -195,7 +195,7 @@
 	internal func generateHeader() {
 		// descendant can override, if needed
 
-		if let rawHeader = currentUnit.RawHeadeer, rawHeader.Count > 0 {
+		if let rawHeader = currentUnit.RawHeader, rawHeader.Count > 0 {
 			AppendLine()
 			for s in rawHeader {
 				AppendLine(s)
@@ -212,9 +212,9 @@
 	internal func generateFooter() {
 		// descendant can override, if needed
 
-		if let rawHFooter = currentUnit.RawFooter, rawHeader.Count > 0 {
+		if let rawHFooter = currentUnit.RawFooter, rawHFooter.Count > 0 {
 			AppendLine()
-			for s in rawHeader {
+			for s in rawHFooter {
 				AppendLine(s)
 			}
 			AppendLine()
@@ -1175,16 +1175,30 @@
 	//
 
 	internal func generateGlobal(_ global: CGGlobalDefinition) {
+		if let rawHeader = currentUnit.RawHeader, rawHeader.Count > 0 {
+			AppendLine()
+			for s in rawHeader {
+				AppendLine(s)
+			}
+			AppendLine()
+		}
+
 		if let global = global as? CGGlobalFunctionDefinition {
 			generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
 		} else if let global = global as? CGGlobalVariableDefinition {
 			generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
 		} else if let global = global as? CGGlobalPropertyDefinition {
 			generateTypeMember(global.Property, type: CGGlobalTypeDefinition.GlobalType)
+		} else {
+			assert(false, "unsupported global found: \(typeOf(global).ToString())")
 		}
 
-		else {
-			assert(false, "unsupported global found: \(typeOf(global).ToString())")
+		if let rawFooter = currentUnit.RawFooter, rawFooter.Count > 0 {
+			AppendLine()
+			for s in rawFooter {
+				AppendLine(s)
+			}
+			AppendLine()
 		}
 	}
 

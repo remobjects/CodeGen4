@@ -23,7 +23,7 @@ public class CGCodeUnit {
 	public var FileName: String?
 	public var Namespace: CGNamespaceReference?
 	public var HeaderComment = CGCommentStatement()
-	public var RawHeadeer: List<String>?
+	public var RawHeader: List<String>?
 	public var RawFooter: List<String>?
 
 	public var Directives = List<CGCompilerDirective>() /* will not be language agnostic */
@@ -115,6 +115,8 @@ public class CGConditionalDefine {
 }
 
 public __abstract class CGGlobalDefinition {
+	public var RawHeader: List<String>?
+	public var RawFooter: List<String>?
 }
 
 public class CGGlobalFunctionDefinition : CGGlobalDefinition {
