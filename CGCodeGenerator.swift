@@ -1175,7 +1175,7 @@
 	//
 
 	internal func generateGlobal(_ global: CGGlobalDefinition) {
-		if let rawHeader = currentUnit.RawHeader, rawHeader.Count > 0 {
+		if let rawHeader = global.RawHeader, rawHeader.Count > 0 {
 			AppendLine()
 			for s in rawHeader {
 				AppendLine(s)
@@ -1193,7 +1193,7 @@
 			assert(false, "unsupported global found: \(typeOf(global).ToString())")
 		}
 
-		if let rawFooter = currentUnit.RawFooter, rawFooter.Count > 0 {
+		if let rawFooter = global.RawFooter, rawFooter.Count > 0 {
 			AppendLine()
 			for s in rawFooter {
 				AppendLine(s)
