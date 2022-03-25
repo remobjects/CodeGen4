@@ -278,9 +278,22 @@
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
 				if global.Variable.Visibility != CGMemberVisibilityKind.Private {
+					if let rawHeader = global.RawHeader, rawHeader.Count > 0 {
+						AppendLine()
+						for s in rawHeader {
+							AppendLine(s)
+						}
+					}
 					generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
+					if let rawFooter = global.RawFooter, rawFooter.Count > 0 {
+						for s in rawFooter {
+							AppendLine(s)
+						}
+						AppendLine()
+					}
 					needCR = true;
 				}
+
 			}
 			else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed in delphiGenerateGlobalInterfaceMethods
