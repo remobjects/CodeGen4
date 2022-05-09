@@ -103,7 +103,7 @@ public class CGNamedTypeReference : CGTypeReference {
 	}
 }
 
-public class CGOpaqueTypeReference : CGTypeReference {
+__abstract public class CGWrapperTypeReference : CGTypeReference {
 	public var Type: CGTypeReference
 
 	public init(_ type: CGTypeReference) {
@@ -114,9 +114,23 @@ public class CGOpaqueTypeReference : CGTypeReference {
 		self.Type = type
 		self.Nullability = nullability
 	}
+}
 
+public class CGOpaqueTypeReference : CGWrapperTypeReference {
 	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
 		return CGOpaqueTypeReference(Type, nullability: nullability);
+	}
+}
+
+public class CGExistentialTypeReference : CGWrapperTypeReference {
+	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGExistentialTypeReference(Type, nullability: nullability);
+	}
+}
+
+public class CGMetaTypeReference : CGWrapperTypeReference {
+	public override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		return CGMetaTypeReference(Type, nullability: nullability);
 	}
 }
 

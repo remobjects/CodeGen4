@@ -1527,6 +1527,10 @@
 			generateTupleTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGOpaqueTypeReference {
 			generateOpaqueTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGExistentialTypeReference {
+			generateExistentialTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGMetaTypeReference {
+			generateMetaTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSetTypeReference {
 			generateSetTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSequenceTypeReference {
@@ -1640,6 +1644,14 @@
 
 	internal func generateOpaqueTypeReference(_ type: CGOpaqueTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateOpaqueTypeReference not implemented")
+	}
+
+	internal func generateExistentialTypeReference(_ type: CGExistentialTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateExistentialTypeReference not implemented")
+	}
+
+	internal func generateMetaTypeReference(_ type: CGMetaTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateMetaTypeReference not implemented")
 	}
 
 	internal func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {

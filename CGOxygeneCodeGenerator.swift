@@ -715,4 +715,9 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		super.generateDictionaryTypeReference(type, ignoreNullability: ignoreNullability)
 	}
+
+	override internal func generateMetaTypeReference(_ type: CGMetaTypeReference, ignoreNullability: Boolean = false) {
+		Append("class of ")
+		generateTypeReference(type.Type)
+	}
 }
