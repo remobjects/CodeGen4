@@ -54,7 +54,7 @@
     <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Swift">
+    <Reference Include="Silver">
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

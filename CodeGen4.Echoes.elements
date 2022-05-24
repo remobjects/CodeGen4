@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="Swift">
+    <Reference Include="Silver">
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
