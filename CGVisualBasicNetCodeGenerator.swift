@@ -124,9 +124,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if Dialect == .Mercury {
 			Append("/* \(comment) */")
 		} else {
-			for x in comment.Replace("\r\n", "\n").Split("\n") {
-				AppendLine("' " + x)
-			}
+			assert(false, "Inline comments are not supported on Visual Basic")
 		}
 	}
 
