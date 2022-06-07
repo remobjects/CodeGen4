@@ -395,6 +395,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("base")
 	}
 
+	override func generateMappedExpression(_ expression: CGMappedExpression) {
+		Append("__mapped")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("this")
 	}
@@ -1042,6 +1046,24 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
+		decIndent()
+		AppendLine("}")
+	}
+
+	override func generateMappedTypeStart(_ type: CGMappedTypeDefinition) {
+		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
+		cSharpGenerateStaticPrefix(type.Static)
+		Append("__mapped class ")
+		generateIdentifier(type.Name)
+		cSharpGenerateAncestorList(type)
+		Append(" => ")
+		generateTypeReference(type.mappedType)
+		AppendLine()
+		AppendLine("{")
+		incIndent()
+	}
+
+	override func generateMappedTypeEnd(_ type: CGMappedTypeDefinition) {
 		decIndent()
 		AppendLine("}")
 	}

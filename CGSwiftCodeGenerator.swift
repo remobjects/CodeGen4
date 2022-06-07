@@ -430,6 +430,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		Append("super")
 	}
 
+	override func generateMappedExpression(_ expression: CGMappedExpression) {
+		Append("__mapped")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("self")
 	}
@@ -1097,6 +1101,26 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
+		decIndent()
+		AppendLine("}")
+	}
+
+	override func generateMappedTypeStart(_ type: CGMappedTypeDefinition) {
+		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+		Append("__mapped class ")
+		if let ancestor = type.Ancestors.FirstOrDefault() {
+			generateTypeReference(ancestor, ignoreNullability: true)
+		} else {
+			generateIdentifier(type.Name)
+		}
+		Append(" => ")
+		generateTypeReference(type.mappedType)
+		Append(" ")
+		AppendLine("{ ")
+		incIndent()
+	}
+
+	override func generateMappedTypeEnd(_ type: CGMappedTypeDefinition) {
 		decIndent()
 		AppendLine("}")
 	}

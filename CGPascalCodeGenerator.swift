@@ -579,6 +579,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("inherited")
 	}
 
+	override func generateMappedExpression(_ expression: CGMappedExpression) {
+		Append("mapped")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("self")
 	}

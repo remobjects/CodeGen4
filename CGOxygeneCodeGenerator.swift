@@ -489,6 +489,21 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		incIndent()
 	}
 
+	override func generateMappedTypeStart(_ type: CGMappedTypeDefinition) {
+		generateIdentifier(type.Name)
+		pascalGenerateGenericParameters(type.GenericParameters)
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateStaticPrefix(type.Static)
+		Append("class")
+		pascalGenerateAncestorList(type)
+		Append(" mapped to ")
+		generateTypeReference(type.mappedType)
+		pascalGenerateGenericConstraints(type.GenericParameters, needSemicolon: true)
+		AppendLine()
+		incIndent()
+	}
+
 	//
 	// Type Members
 	//

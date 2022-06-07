@@ -355,6 +355,10 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append("super")
 	}
 
+	override func generateMappedExpression(_ expression: CGMappedExpression) {
+		Append("__mapped")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("this")
 	}
@@ -881,6 +885,24 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
+		decIndent()
+		AppendLine("}")
+	}
+
+	override func generateMappedTypeStart(_ type: CGMappedTypeDefinition) {
+		javaGenerateTypeVisibilityPrefix(type.Visibility)
+		javaGenerateStaticPrefix(type.JavaStatic)
+		Append("__mapped class ")
+		generateIdentifier(type.Name)
+		javaGenerateAncestorList(type)
+		Append(" => ")
+		generateTypeReference(type.mappedType)
+		AppendLine()
+		AppendLine("{")
+		incIndent()
+	}
+
+	override func generateMappedTypeEnd(_ type: CGMappedTypeDefinition) {
 		decIndent()
 		AppendLine("}")
 	}

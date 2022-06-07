@@ -345,8 +345,11 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateInheritedExpression(_ expression: CGInheritedExpression) {
-		assert(false, "generateInheritedExpression is not supported for Go, except in Gold")
-		//Append("super")
+		assert(false, "generateInheritedExpression is not supported for Go")
+	}
+
+	override func generateMappedExpression(_ expression: CGMappedExpression) {
+		assert(false, "generateMappedExpression is not supported for Go")
 	}
 
 	override func generateSelfExpression(_ expression: CGSelfExpression) {

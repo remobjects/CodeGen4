@@ -102,6 +102,30 @@ public class CGInterfaceTypeDefinition : CGClassOrStructTypeDefinition {
 public class CGExtensionTypeDefinition : CGClassOrStructTypeDefinition {
 }
 
+public class CGMappedTypeDefinition : CGClassOrStructTypeDefinition {
+	public var mappedType: CGTypeReference
+
+	public init(_ name: String, mappedType: CGTypeReference) {
+		super.init(name)
+		self.mappedType = mappedType
+	}
+	public init(_ name: String, mappedType: CGTypeReference, _ ancestor: CGTypeReference) {
+		super.init(name, ancestor)
+		self.mappedType = mappedType
+	}
+	public init(_ name: String, mappedType: CGTypeReference, _ ancestors: List<CGTypeReference>) {
+		super.init(name, ancestors)
+		self.mappedType = mappedType
+	}
+	public init(_ name: String, mappedType: CGTypeReference, _ ancestor: CGTypeReference, _ interfaces: List<CGTypeReference>) {
+		super.init(name, ancestor, interfaces)
+		self.mappedType = mappedType
+	}
+	public init(_ name: String, mappedType: CGTypeReference, _ ancestors: List<CGTypeReference>, _ interfaces: List<CGTypeReference>) {
+		super.init(name, ancestors, interfaces)
+		self.mappedType = mappedType
+	}}
+
 /* Type members */
 
 public enum CGMemberVisibilityKind {

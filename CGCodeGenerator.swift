@@ -817,6 +817,8 @@
 			generateTypeCastExpression(expression)
 		} else if let expression = expression as? CGInheritedExpression {
 			generateInheritedExpression(expression)
+		} else if let expression = expression as? CGMappedExpression {
+			generateMappedExpression(expression)
 		} else if let expression = expression as? CGSelfExpression {
 			generateSelfExpression(expression)
 		} else if let expression = expression as? CGResultExpression {
@@ -937,6 +939,11 @@
 	internal func generateInheritedExpression(_ expression: CGInheritedExpression) {
 		// descendant must override
 		assert(false, "generateInheritedExpression not implemented")
+	}
+
+	internal func generateMappedExpression(_ expression: CGMappedExpression) {
+		// descendant must override
+		assert(false, "generateMappedExpression not implemented")
 	}
 
 	internal func generateSelfExpression(_ expression: CGSelfExpression) {
@@ -1267,6 +1274,8 @@
 			generateInterfaceType(type)
 		} else if let type = type as? CGExtensionTypeDefinition {
 			generateExtensionType(type)
+		} else if let type = type as? CGMappedTypeDefinition {
+			generateMappedType(type)
 		}
 
 		else {
@@ -1331,6 +1340,13 @@
 		generateExtensionTypeEnd(type)
 	}
 
+	internal func generateMappedType(_ type: CGMappedTypeDefinition) {
+		// descendant should not usually override
+		generateMappedTypeStart(type)
+		generateTypeMembers(type)
+		generateMappedTypeEnd(type)
+	}
+
 	internal func generateTypeMembers(_ type: CGTypeDefinition) {
 
 		var lastMember: CGMemberDefinition? = nil
@@ -1381,6 +1397,16 @@
 	internal func generateExtensionTypeEnd(_ type: CGExtensionTypeDefinition) {
 		// descendant must override
 		assert(false, "generateExtensionTypeEnd not implemented")
+	}
+
+	internal func generateMappedTypeStart(_ type: CGMappedTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMappedTypeStart not implemented")
+	}
+
+	internal func generateMappedTypeEnd(_ type: CGMappedTypeDefinition) {
+		// descendant must override
+		assert(false, "generateMappedTypeEnd not implemented")
 	}
 
 	//

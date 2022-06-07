@@ -182,6 +182,10 @@ public class CGInheritedExpression: CGExpression {
 	public static lazy let Inherited = CGInheritedExpression()
 }
 
+public class CGMappedExpression: CGExpression {
+	public static lazy let Inherited = CGMappedExpression()
+}
+
 public class CGIfThenElseExpression: CGExpression { // aka Ternary operator
 	public var Condition: CGExpression
 	public var IfExpression: CGExpression
