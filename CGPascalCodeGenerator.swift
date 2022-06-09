@@ -583,6 +583,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("mapped")
 	}
 
+	override func generateOldExpression(_ expression: CGOldExpression) {
+		Append("old")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("self")
 	}
@@ -741,7 +745,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	internal func pascalGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) -> Boolean {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
-			if callSite is CGInheritedExpression {
+			if callSite is CGInheritedExpression || callSite is CGOldExpression {
 				Append(" ")
 			} else {
 				if (expression.Name != "") {

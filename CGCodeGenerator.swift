@@ -819,6 +819,8 @@
 			generateInheritedExpression(expression)
 		} else if let expression = expression as? CGMappedExpression {
 			generateMappedExpression(expression)
+		} else if let expression = expression as? CGOldExpression {
+			generateOlfExpression(expression)
 		} else if let expression = expression as? CGSelfExpression {
 			generateSelfExpression(expression)
 		} else if let expression = expression as? CGResultExpression {
@@ -944,6 +946,11 @@
 	internal func generateMappedExpression(_ expression: CGMappedExpression) {
 		// descendant must override
 		assert(false, "generateMappedExpression not implemented")
+	}
+
+	internal func generateOldExpression(_ expression: CGOldExpression) {
+		// descendant must override
+		assert(false, "generateOldExpression not implemented")
 	}
 
 	internal func generateSelfExpression(_ expression: CGSelfExpression) {

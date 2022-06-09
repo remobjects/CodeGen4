@@ -577,7 +577,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append("MyBase")
 	}
 
-	//done
+	override func generateMappedExpression(_ expression: CGMappedExpression) {
+		Append("MyMapped")
+	}
+
+	override func generateOldExpression(_ expression: CGOldExpression) {
+		Append("Old")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("Me")
 	}

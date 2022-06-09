@@ -352,6 +352,10 @@ public class CGGoCodeGenerator : CGCStyleCodeGenerator {
 		assert(false, "generateMappedExpression is not supported for Go")
 	}
 
+	override func generateOldExpression(_ expression: CGOldExpression) {
+		assert(false, "generateOldExpression is not supported for Go")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("self")
 	}

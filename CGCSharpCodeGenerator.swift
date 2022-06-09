@@ -399,6 +399,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("__mapped")
 	}
 
+	override func generateOldExpression(_ expression: CGOldExpression) {
+		Append("__old")
+	}
+
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
 		Append("this")
 	}
