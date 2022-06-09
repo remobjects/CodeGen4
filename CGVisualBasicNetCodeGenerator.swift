@@ -1456,7 +1456,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if let conditions = method.Preconditions, conditions.Count > 0 {
 			AppendLine("Require")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 			AppendLine("End Require")
 		}
@@ -1467,7 +1467,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if let conditions = method.Postconditions, conditions.Count > 0 {
 			AppendLine("Ensure")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 			AppendLine("End Ensure")
 		}

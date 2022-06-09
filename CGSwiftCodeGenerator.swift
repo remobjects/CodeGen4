@@ -1176,7 +1176,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine("__require")
 			AppendLine("{")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 			AppendLine("}")
 		}
@@ -1188,7 +1188,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine("__ensure")
 			AppendLine("{")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 			AppendLine("}")
 		}

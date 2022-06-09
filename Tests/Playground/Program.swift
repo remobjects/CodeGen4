@@ -25,13 +25,13 @@ td.Parameters.Add(p);
 
 td.Statements.Add(CGCommentStatement("Simple Expressions"))
 
-td.Preconditions = List<CGExpression>()
-td.Postconditions = List<CGExpression>()
-td.Preconditions!.Add(e1)
-td.Preconditions!.Add(e1)
+td.Preconditions = List<CGInvariant>()
+td.Postconditions = List<CGInvariant>()
+td.Preconditions!.Add(CGInvariant(e1))
+td.Preconditions!.Add(CGInvariant(e1, "Foo"))
 
-td.Postconditions!.Add(CGBinaryOperatorExpression(CGPropertyAccessExpression(CGOldExpression.Old, "Foo"), 5.AsLiteralExpression(), CGBinaryOperatorKind.Equals))
-td.Postconditions!.Add(e1)
+td.Postconditions!.Add(CGBinaryOperatorExpression(CGPropertyAccessExpression(CGOldExpression.Old, "Foo"), 5.AsLiteralExpression(), CGBinaryOperatorKind.Equals).AsInvariant())
+td.Postconditions!.Add(e1.AsInvariant())
 
 td.Statements.Add(e1)
 td.Statements.Add(m1)

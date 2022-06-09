@@ -248,8 +248,8 @@ public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
 
 public class CGMethodDefinition: CGMethodLikeMemberDefinition {
 	public var GenericParameters: List<CGGenericParameterDefinition>?
-	public var Preconditions: List<CGExpression>?
-	public var Postconditions: List<CGExpression>?
+	public var Preconditions: List<CGInvariant>?
+	public var Postconditions: List<CGInvariant>?
 }
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {

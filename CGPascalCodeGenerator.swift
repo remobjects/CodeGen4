@@ -1521,7 +1521,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if let method = method as? CGMethodDefinition, let conditions = method.Preconditions, conditions.Count > 0 {
 			AppendLine("require")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 		}
 
@@ -1558,7 +1558,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if let method = method as? CGMethodDefinition, let conditions = method.Postconditions, conditions.Count > 0 {
 			AppendLine("ensure")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 		}
 

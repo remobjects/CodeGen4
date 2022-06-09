@@ -142,3 +142,18 @@ public class CGGlobalPropertyDefinition : CGGlobalDefinition {
 		Property = property
 	}
 }
+
+public class CGInvariant {
+	public var Expression: CGExpression
+	public var Message: String?
+
+	public init(_ expression: CGExpression) {
+		Expression = expression
+	}
+	public init(_ expression: CGExpression, _ message: String) {
+		Expression = expression
+		if length(message) > 0 {
+			Message = message;
+		}
+	}
+}

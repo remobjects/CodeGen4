@@ -132,6 +132,14 @@ public extension CGExpression {
 		result.EllipsisParameter = true
 		return result
 	}
+
+	public func AsInvariant() -> CGInvariant {
+		return CGInvariant(self)
+	}
+
+	public func AsInvariant(_ message: String) -> CGInvariant {
+		return CGInvariant(self, message)
+	}
 }
 
 public extension CGTypeReference {

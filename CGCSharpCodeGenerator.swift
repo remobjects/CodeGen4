@@ -1122,7 +1122,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine("__require")
 			AppendLine("{")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 			AppendLine("}")
 		}
@@ -1134,7 +1134,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			AppendLine("__ensure")
 			AppendLine("{")
 			incIndent()
-			generateExpressions(conditions)
+			generateInvariantExpressions(conditions)
 			decIndent()
 			AppendLine("}")
 		}

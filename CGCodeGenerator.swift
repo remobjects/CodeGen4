@@ -429,9 +429,14 @@
 	// Statements
 	//
 
-	internal final func generateExpressions(_ expressions: List<CGExpression>) {
+	internal final func generateInvariantExpressions(_ expressions: List<CGInvariant>) {
 		for g in expressions {
-			generateStatement(g)
+			generateExpression(g.Expression)
+			if let message = g.Message, length(message) > 0 {
+				Append(" : ")
+				generateStringLiteralExpression(message.AsLiteralExpression())
+			}
+			generateStatementTerminator();
 		}
 	}
 
