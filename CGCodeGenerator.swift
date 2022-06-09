@@ -429,6 +429,12 @@
 	// Statements
 	//
 
+	internal final func generateExpressions(_ expressions: List<CGExpression>) {
+		for g in expressions {
+			generateStatement(g)
+		}
+	}
+
 	internal final func generateStatements(_ statements: List<CGStatement>) {
 		// descendant should not override
 		for g in statements {

@@ -1117,8 +1117,28 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
+
+		if let conditions = method.Preconditions, conditions.Count > 0 {
+			AppendLine("__require")
+			AppendLine("{")
+			incIndent()
+			generateExpressions(conditions)
+			decIndent()
+			AppendLine("}")
+		}
+
 		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
+
+		if let conditions = method.Postconditions, conditions.Count > 0 {
+			AppendLine("__ensure")
+			AppendLine("{")
+			incIndent()
+			generateExpressions(conditions)
+			decIndent()
+			AppendLine("}")
+		}
+
 		decIndent()
 		AppendLine("}")
 	}

@@ -1517,6 +1517,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				decIndent()
 			}
 		}
+
+		if let method = method as? CGMethodDefinition, let conditions = method.Preconditions, conditions.Count > 0 {
+			AppendLine("require")
+			incIndent()
+			generateExpressions(conditions)
+			decIndent()
+		}
+
 		AppendLine("begin")
 		incIndent()
 		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
@@ -1546,6 +1554,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 		decIndent()
+
+		if let method = method as? CGMethodDefinition, let conditions = method.Postconditions, conditions.Count > 0 {
+			AppendLine("ensure")
+			incIndent()
+			generateExpressions(conditions)
+			decIndent()
+		}
+
 		Append("end")
 		generateStatementTerminator()
 		if !isUnified {

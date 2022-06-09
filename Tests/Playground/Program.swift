@@ -25,6 +25,14 @@ td.Parameters.Add(p);
 
 td.Statements.Add(CGCommentStatement("Simple Expressions"))
 
+td.Preconditions = List<CGExpression>()
+td.Postconditions = List<CGExpression>()
+td.Preconditions!.Add(e1)
+td.Preconditions!.Add(e1)
+
+td.Postconditions!.Add(CGBinaryOperatorExpression(CGPropertyAccessExpression(CGOldExpression.Old, "Foo"), 5.AsLiteralExpression(), CGBinaryOperatorKind.Equals))
+td.Postconditions!.Add(e1)
+
 td.Statements.Add(e1)
 td.Statements.Add(m1)
 td.Statements.Add(a1)
@@ -78,12 +86,17 @@ var cg = CGOxygeneCodeGenerator(style: .Unified)
 cg.QuoteStyle = .CodeDomSafe
 //var cg = CGDelphiCodeGenerator()
 //var cg = CGVisualBasicNetCodeGenerator()
-print(cg.GenerateUnit(unit, definitionOnly: true))
+print(cg.GenerateUnit(unit, definitionOnly: false))
 
-//var cgm = CGVisualBasicNetCodeGenerator(dialect: .Mercury)
+var cgm = CGVisualBasicNetCodeGenerator(dialect: .Mercury)
 //var cg = CGDelphiCodeGenerator()
 //var cg = CGVisualBasicNetCodeGenerator()
-//print(cgm.GenerateUnit(unit, definitionOnly: false))
+print(cgm.GenerateUnit(unit, definitionOnly: false))
+
+var cgcs = CGCSharpCodeGenerator(dialect: .Hydrogene)
+//var cg = CGDelphiCodeGenerator()
+//var cg = CGVisualBasicNetCodeGenerator()
+print(cgcs.GenerateUnit(unit, definitionOnly: false))
 
 //var cg = CGJavaCodeGenerator()
 //var code = cg.GenerateUnit(unit)

@@ -1452,8 +1452,26 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 
 		incIndent()
+
+		if let conditions = method.Preconditions, conditions.Count > 0 {
+			AppendLine("Require")
+			incIndent()
+			generateExpressions(conditions)
+			decIndent()
+			AppendLine("End Require")
+		}
+
 		generateStatements(variables: method.LocalVariables)
 		generateStatements(method.Statements)
+
+		if let conditions = method.Postconditions, conditions.Count > 0 {
+			AppendLine("Ensure")
+			incIndent()
+			generateExpressions(conditions)
+			decIndent()
+			AppendLine("End Ensure")
+		}
+
 		decIndent()
 		AppendLine(vbKeywordForMethod(method, close: true))
 	}
@@ -1549,6 +1567,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	internal func vbGenerateMethodBody(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition?) {
+
+		//if let method = method as? CGMethodDefinition, let conditions = method.Preconditions, conditions.Count > 0 {
+			//AppendLine("Require")
+			//incIndent()
+			//generateExpressions(conditions)
+			//decIndent()
+			//AppendLine("End Require")
+		//}
+
 		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
 			for v in localVariables {
 				if let type = v.`Type` {
@@ -1584,6 +1611,15 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 		AppendLine("")
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+
+		//if let method = method as? CGMethodDefinition, let conditions = method.Postconditions, conditions.Count > 0 {
+			//AppendLine("Ensure")
+			//incIndent()
+			//generateExpressions(conditions)
+			//decIndent()
+			//AppendLine("End Ensure")
+		//}
+
 		AppendLine()
 	}
 
