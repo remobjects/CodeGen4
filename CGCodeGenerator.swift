@@ -426,19 +426,25 @@
 	}
 
 	//
-	// Statements
+	// Invariants
 	//
+
+	internal open var invariantCommentSeparator: String { " : " }
 
 	internal final func generateInvariantExpressions(_ expressions: List<CGInvariant>) {
 		for g in expressions {
 			generateExpression(g.Expression)
 			if let message = g.Message, length(message) > 0 {
-				Append(" : ")
+				Append(invariantCommentSeparator)
 				generateStringLiteralExpression(message.AsLiteralExpression())
 			}
 			generateStatementTerminator();
 		}
 	}
+
+	//
+	// Statements
+	//
 
 	internal final func generateStatements(_ statements: List<CGStatement>) {
 		// descendant should not override

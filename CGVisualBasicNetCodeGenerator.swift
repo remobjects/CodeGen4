@@ -45,6 +45,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	public override var defaultFileExtension: String { return "vb" }
 
+	override var invariantCommentSeparator: String { ", " }
+
 	override func escapeIdentifier(_ name: String) -> String {
 		if (!positionedAfterPeriod) {
 			return "[\(name)]"
