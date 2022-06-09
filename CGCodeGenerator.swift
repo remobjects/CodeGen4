@@ -820,7 +820,7 @@
 		} else if let expression = expression as? CGMappedExpression {
 			generateMappedExpression(expression)
 		} else if let expression = expression as? CGOldExpression {
-			generateOlfExpression(expression)
+			generateOldExpression(expression)
 		} else if let expression = expression as? CGSelfExpression {
 			generateSelfExpression(expression)
 		} else if let expression = expression as? CGResultExpression {
