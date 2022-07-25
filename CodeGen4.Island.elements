@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+  <PropertyGroup>
+    <RootNamespace>RemObjects.CodeGen4</RootNamespace>
+    <ProjectGuid>{9D54D745-25D9-418E-913A-8D0C292E1C5B}</ProjectGuid>
+    <OutputType>StaticLibrary</OutputType>
+    <AssemblyName>CodeGen4</AssemblyName>
+    <AllowGlobals>False</AllowGlobals>
+    <AllowLegacyWith>False</AllowLegacyWith>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
+    <AllowUnsafeCode>False</AllowUnsafeCode>
+    <CrossPlatform>True</CrossPlatform>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <SDK>OS X</SDK>
+    <CreateHeaderFile>True</CreateHeaderFile>
+    <Name>CodegGen4 (Island)</Name>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
+    <Mode>Island</Mode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <EnableAsserts>True</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Target)' == 'Darwin'">
+    <SubMode>Darwin</SubMode>
+    <SDK>macOS</SDK>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Target)' == 'Windows'">
+    <SubMode>Windows</SubMode>
+    <SDK>Windows</SDK>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Target)' == 'Linux'">
+    <SubMode>Linux</SubMode>
+    <SDK>Ubuntu</SDK>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="#" />
+    <Reference Include="Elements" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.targets" />
+  <Import Project="Codegen4.Shared.projitems" Label="Shared" />
+</Project>
