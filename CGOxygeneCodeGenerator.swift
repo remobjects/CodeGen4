@@ -408,14 +408,14 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 		if QuoteStyle == .CodeDomSafe && length(expression.Value) == 1 {
 			let ch = expression.Value[0]
-			switch ch as! UInt16 {
+			switch ord(ch) {
 				case 34:
 					Append("\"\"\"\"")
 					return
 				case 32...127:
 					break //process as normal, below
 				default:
-					Append("\"\"#\(ch  as! UInt32)")
+					Append("\"\"#\(ord(ch))")
 					return
 			}
 		}

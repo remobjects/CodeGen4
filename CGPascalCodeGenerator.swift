@@ -970,13 +970,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			}
 
 			let ch = string[i]
-			switch ch as! UInt16 {
+			switch ord(ch) {
 				case 0...31:
 					if inQuotes {
 						Append(quoteChar)
 						inQuotes = false
 					}
-					Append("#\(ch  as! UInt32)")
+					Append("#\(ord(ch))")
 				case 32...127:
 					if !inQuotes {
 						Append(quoteChar)
@@ -1001,7 +1001,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 							Append(quoteChar)
 							inQuotes = false
 						}
-						Append("#\(ch  as! UInt32)")
+						Append("#\(ord(ch))")
 					}
 			}
 		}
@@ -1015,13 +1015,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
-		Append("#\(expression.Value as! UInt32)")
+		Append("#\(ord(expression.Value))")
 	}
 
 	override func generateIntegerLiteralExpression(_ literalExpression: CGIntegerLiteralExpression) {
 		switch literalExpression.Base {
-			case 16: Append("$"+literalExpression.StringRepresentation(base:16))
-			case 10: Append(literalExpression.StringRepresentation(base:10))
+			case 16: Append("$"+literalExpression.StringRepresentation(base: 16))
+			case 10: Append(literalExpression.StringRepresentation(base: 10))
 			default: throw Exception("Base \(literalExpression.Base) integer literals are not currently supported for Pascal.")
 		}
 	}

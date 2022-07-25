@@ -703,7 +703,7 @@
 	}
 
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
-		var x = expression.Value as! UInt32;
+		var x = ord(expression.Value)
 		if (x >= 32) && (x < 127) {
 			Append("'"+expression.Value+"'");
 		} else {
