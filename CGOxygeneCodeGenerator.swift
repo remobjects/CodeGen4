@@ -446,7 +446,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .AssemblyAndProtected: Append("assembly and protected")
 			case .AssemblyOrProtected: Append("assembly or protected")
 			case .Protected: Append("protected")
-			case .Published: "published";
+			case .Published: Append("published");
 			case .Public: Append("public")
 		}
 	}
