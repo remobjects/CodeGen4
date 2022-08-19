@@ -446,7 +446,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .AssemblyAndProtected: Append("assembly and protected")
 			case .AssemblyOrProtected: Append("assembly or protected")
 			case .Protected: Append("protected")
-			case .Published: fallthrough
+			case .Published: "published";
 			case .Public: Append("public")
 		}
 	}
@@ -670,7 +670,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .UTF32Char: Append("UInt32") // tood?
 			case .Dynamic: Append("dynamic")
 			case .InstanceType: Append("InstanceType")
-			case .Void: Append("{VOID}")
+			case .Void: Append("Void")
 			case .Object: Append("Object")
 			case .Class: generateIdentifier("Class") // todo: make platform-specific
 		}
