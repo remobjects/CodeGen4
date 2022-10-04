@@ -1142,6 +1142,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		generateIdentifier(type.Name)
+		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		if type.Strict {
@@ -1152,7 +1153,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
-		assert(false, "generateIfThenElseExpression is not supported in base Pascal, only Oxygene")
+		assert(false, "generateBlockType is not supported in base Pascal, only Oxygene")
 	}
 
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
