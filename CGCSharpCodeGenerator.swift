@@ -906,6 +906,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("using ")
 		generateIdentifier(type.Name)
+		cSharpGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		generateTypeReference(type.ActualType)
 		AppendLine(";")

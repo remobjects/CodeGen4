@@ -763,7 +763,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-
+		assert(false, "generateAliasType is not supported in Java, except in Iodine")
 	}
 
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {

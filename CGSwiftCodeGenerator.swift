@@ -976,6 +976,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("typealias ")
 		generateIdentifier(type.Name)
+		swiftGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		generateTypeReference(type.ActualType)
 		AppendLine()

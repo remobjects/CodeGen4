@@ -1184,6 +1184,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		Append("Imports ")
 		generateIdentifier(type.Name)
+		vbGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		generateTypeReference(type.ActualType)
 		generateStatementTerminator()
