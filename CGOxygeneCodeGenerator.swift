@@ -552,9 +552,9 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
 
-	override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
-		assert(false, "generateDestructorDefinition is not supported in Oxygene")
-	}
+	//override func generateDestructorDefinition(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
+		//assert(false, "generateDestructorDefinition is not supported in Oxygene")
+	//}
 
 	override func pascalGenerateDestructorImplementation(_ dtor: CGDestructorDefinition, type: CGTypeDefinition) {
 		assert(false, "pascalGenerateDestructorImplementation is not supported in Oxygene")
