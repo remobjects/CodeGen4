@@ -456,12 +456,12 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		}
 	}
 
-	override func generateBlockType(_ block: CGBlockTypeDefinition) {
-		generateIdentifier(block.Name)
-		pascalGenerateGenericParameters(block.GenericParameters)
+	override func generateBlockType(_ type: CGBlockTypeDefinition) {
+		pascalGenerateTypeName(type)
+		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
-		pascalGenerateTypeVisibilityPrefix(block.Visibility)
-		pascalGenerateInlineBlockType(block)
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		pascalGenerateInlineBlockType(type)
 		AppendLine(";")
 	}
 
@@ -482,7 +482,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
-		generateIdentifier(type.Name)
+		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
@@ -495,7 +495,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateMappedTypeStart(_ type: CGMappedTypeDefinition) {
-		generateIdentifier(type.Name)
+		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
@@ -552,7 +552,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		Append("finalizer")
 		if implementation {
 			Append(" ")
-			generateIdentifier(type.Name)
+			pascalGenerateTypeNameForImplementation(type)
 		}
 		pascalGenerateSecondHalfOfMethodHeader(method, implementation: implementation)
 	}
