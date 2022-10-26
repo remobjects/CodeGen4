@@ -1141,7 +1141,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
-		generateIdentifier(type.Name)
+		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
@@ -1157,7 +1157,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
-		generateIdentifier(type.Name)
+		pascalGenerateTypeName(type)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("enum (")
@@ -1181,8 +1181,24 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}
 
-	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
+	func pascalGenerateTypeName(_ type: CGTypeDefinition) {
 		generateIdentifier(type.Name)
+		if let currentNestedTypeParent = currentNestedTypeParent {
+			Append("nested in ")
+			generateIdentifier(currentNestedTypeParent.Name)
+		}
+	}
+
+	func pascalGenerateTypeNameForImplementation(_ type: CGTypeDefinition) {
+		if let currentNestedTypeParent = currentNestedTypeParent {
+			generateIdentifier(currentNestedTypeParent.Name)
+			Append(".")
+		}
+		generateIdentifier(type.Name)
+	}
+
+	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
+		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
@@ -1205,7 +1221,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateStructTypeStart(_ type: CGStructTypeDefinition) {
-		generateIdentifier(type.Name)
+		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
@@ -1227,18 +1243,24 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateNestedTypes(type)
 	}
 
+	var currentNestedType: CGNestedTypeDefinition?
+	var currentNestedTypeParent: CGTypeDefinition?
+
 	internal func pascalGenerateNestedTypes(_ type: CGTypeDefinition) {
+		currentNestedTypeParent = type
 		for m in type.Members {
 			if let nestedType = m as? CGNestedTypeDefinition {
 				AppendLine()
-				nestedType.`Type`.Name = nestedType.Name+" nested in "+type.Name // Todo: nasty hack.
+				currentNestedType = nestedType
 				generateTypeDefinition(nestedType.`Type`)
 			}
 		}
+		currentNestedTypeParent = nil
+		currentNestedType = nil
 	}
 
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
-		generateIdentifier(type.Name)
+		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		pascalGenerateTypeVisibilityPrefix(type.Visibility)
@@ -1446,7 +1468,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append(methodKeyword)
 		Append(" ")
 		if let type = type, implementation && !(type is CGGlobalTypeDefinition) {
-			generateIdentifier(type.Name)
+			pascalGenerateTypeNameForImplementation(type)
 			pascalGenerateGenericParameters(type.GenericParameters)
 			Append(".")
 		}
@@ -1470,7 +1492,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		Append("constructor")
 		Append(" ")
 		if implementation {
-			generateIdentifier(type.Name)
+			pascalGenerateTypeNameForImplementation(type)
 			Append(".")
 		}
 		if length(method.Name) > 0 {

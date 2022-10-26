@@ -427,11 +427,15 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	//
 
 	override func pascalGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind) {
-		switch visibility {
-			case .Unspecified: break /* no-op */
-			case .Unit: Append("unit ")
-			case .Assembly: Append("assembly ")
-			case .Public: Append("public ")
+		if let currentNestedType = currentNestedType {
+			pascalGenerateMemberVisibilityKeyword(currentNestedType.Visibility)
+		} else {
+			switch visibility {
+				case .Unspecified: break /* no-op */
+				case .Unit: Append("unit ")
+				case .Assembly: Append("assembly ")
+				case .Public: Append("public ")
+			}
 		}
 	}
 
