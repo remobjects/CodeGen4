@@ -1184,7 +1184,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	func pascalGenerateTypeName(_ type: CGTypeDefinition) {
 		generateIdentifier(type.Name)
 		if let currentNestedTypeParent = currentNestedTypeParent {
-			Append("nested in ")
+			Append(" nested in ")
 			generateIdentifier(currentNestedTypeParent.Name)
 		}
 	}

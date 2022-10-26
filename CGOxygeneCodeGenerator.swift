@@ -429,6 +429,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	override func pascalGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind) {
 		if let currentNestedType = currentNestedType {
 			pascalGenerateMemberVisibilityKeyword(currentNestedType.Visibility)
+			Append(" ")
 		} else {
 			switch visibility {
 				case .Unspecified: break /* no-op */
