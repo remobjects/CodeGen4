@@ -148,6 +148,7 @@ public enum CGMemberVirtualityKind {
 	case Abstract
 	case Override
 	case Final
+	case Dynamic // Delphi only
 }
 
 public __abstract class CGMemberDefinition: CGEntity {
