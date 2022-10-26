@@ -1183,15 +1183,27 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGenerateTypeName(_ type: CGTypeDefinition) {
 		generateIdentifier(type.Name)
-		if let currentNestedTypeParent = currentNestedTypeParent {
+		if currentNestedTypeParent.Count > 0, let parent = currentNestedTypeParent.Peek() {
 			Append(" nested in ")
-			generateIdentifier(currentNestedTypeParent.Name)
+			if currentNestedTypeParent.Count > 1 {
+				helpGenerateCommaSeparatedList(currentNestedTypeParent.ToArray().Reverse(), separator: { self.Append(".") }) { t in
+					self.generateIdentifier(t.Name)
+				}
+			} else {
+				generateIdentifier(parent.Name)
+			}
 		}
 	}
 
 	func pascalGenerateTypeNameForImplementation(_ type: CGTypeDefinition) {
-		if let currentNestedTypeParent = currentNestedTypeParent {
-			generateIdentifier(currentNestedTypeParent.Name)
+		if currentNestedTypeParent.Count > 0, let parent = currentNestedTypeParent.Peek() {
+			if currentNestedTypeParent.Count > 1 {
+				helpGenerateCommaSeparatedList(currentNestedTypeParent.ToArray().Reverse(), separator: { self.Append(".") }) { t in
+					self.generateIdentifier(t.Name)
+				}
+			} else {
+				generateIdentifier(parent.Name)
+			}
 			Append(".")
 		}
 		generateIdentifier(type.Name)
@@ -1244,19 +1256,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	var currentNestedType: CGNestedTypeDefinition?
-	var currentNestedTypeParent: CGTypeDefinition?
+	var currentNestedTypeParent = Stack<CGTypeDefinition>()
 
 	internal func pascalGenerateNestedTypes(_ type: CGTypeDefinition) {
-		currentNestedTypeParent = type
+		currentNestedTypeParent.Push(type)
 		for m in type.Members {
 			if let nestedType = m as? CGNestedTypeDefinition {
 				AppendLine()
 				currentNestedType = nestedType
 				generateTypeDefinition(nestedType.`Type`)
+				currentNestedType = nil
 			}
 		}
-		currentNestedTypeParent = nil
-		currentNestedType = nil
+		currentNestedTypeParent.Pop()
 	}
 
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
@@ -1656,8 +1668,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	func pascalGenerateNestedTypeImplementation(_ nestedType: CGNestedTypeDefinition, type: CGTypeDefinition) {
-		nestedType.`Type`.Name = type.Name+"."+nestedType.Name // Todo: nasty hack.
+		currentNestedTypeParent.Push(type)
 		pascalGenerateTypeImplementation(nestedType.`Type`)
+		currentNestedTypeParent.Pop()
 	}
 
 	override func generateNestedTypeDefinition(_ member: CGNestedTypeDefinition, type: CGTypeDefinition) {
