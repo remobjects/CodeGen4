@@ -1265,6 +1265,16 @@
 			switch scope {
 				case .Assembly: Append("assembby:")
 				case .Module: Append("module:")
+				case .Global: Append("global:")
+				case .Result: Append("result:")
+				case .Parameter: Append("param:")
+				case .Field: Append("field:")
+				case .Getter: Append("get:")
+				case .Setter: Append("set:")
+				case .Type: Append("type:")
+				case .Method: Append("method:")
+				case .Event: Append("event:")
+				case .Property: Append("property:")
 			}
 		}
 	}

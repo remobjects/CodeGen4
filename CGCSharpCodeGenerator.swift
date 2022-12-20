@@ -839,6 +839,25 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
+	override func generateAttributeScope(_ attribute: CGAttribute) {
+		if let scope = attribute.Scope {
+			switch scope {
+				case .Assembly: Append("assembby:")
+				case .Module: Append("module:")
+				case .Global: Append("/*global:*/")
+				case .Result: Append("result:")
+				case .Parameter: Append("param:")
+				case .Field: Append("field:")
+				case .Getter: Append("/*get:*/")
+				case .Setter: Append("/*set:*/")
+				case .Type: Append("type:")
+				case .Method: Append("method:")
+				case .Event: Append("event:")
+				case .Property: Append("property:")
+			}
+		}
+	}
+
 	func cSharpGenerateTypeVisibilityPrefix(_ visibility: CGTypeVisibilityKind) {
 		switch visibility {
 			case .Unspecified: break /* no-op */

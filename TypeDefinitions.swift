@@ -538,6 +538,16 @@ public class CGAttribute: CGEntity {
 }
 
 public enum CGAttributeScopeKind {
-	case Module
 	case Assembly
+	case Module
+	case Global // Oxygene only
+	case Result
+	case Parameter
+	case Field
+	case Getter
+	case Setter
+	case Type // C# only
+	case Method // C# only
+	case Event // C# only
+	case Property // C# only
 }
