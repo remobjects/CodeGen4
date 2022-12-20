@@ -370,7 +370,7 @@ public class CGPropertyValueExpression: CGExpression { /* "value" or "newValue" 
 public class CGLiteralExpression: CGExpression {
 }
 
-public __abstract class CGLanguageAgnosticLiteralExpression: CGExpression {
+public __abstract class CGLanguageAgnosticLiteralExpression: CGLiteralExpression {
 	internal __abstract func StringRepresentation() -> String
 }
 
