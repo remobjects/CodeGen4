@@ -639,10 +639,12 @@
 			AppendLine("except")
 			incIndent()
 			for b in catchBlocks {
-				if let name = b.Name, let type = b.`Type` {
+				if let type = b.`Type` {
 					Append("on ")
-					generateIdentifier(name)
-					Append(": ")
+					if let name = b.Name {
+						generateIdentifier(name)
+						Append(": ")
+					}
 					generateTypeReference(type)
 					Append(" do ")
 					var b1 = false;
