@@ -402,33 +402,24 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 		//todo: override for Oxygene to get rid of the double try, once tested
-		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
-			AppendLine("try")
-			incIndent()
-		}
-		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
+		let hasFinally = statement.FinallyStatements?.Count > 0
+		let hasCatch = statement.CatchBlocks?.Count > 0
+		if hasFinally || hasCatch {
 			AppendLine("try")
 			incIndent()
 		}
 		generateStatements(statement.Statements)
-		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
-			decIndent()
-			AppendLine("finally")
-			incIndent()
-			generateStatements(finallyStatements)
-			decIndent()
-			Append("end")
-			generateStatementTerminator()
-		}
 		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			decIndent()
 			AppendLine("except")
 			incIndent()
 			for b in catchBlocks {
-				if let name = b.Name, let type = b.`Type` {
+				if let type = b.`Type` {
 					Append("on ")
-					generateIdentifier(name)
-					Append(": ")
+					if let name = b.Name {
+						generateIdentifier(name)
+						Append(": ")
+					}
 					generateTypeReference(type)
 					AppendLine(" do begin")
 					incIndent()
@@ -441,10 +432,16 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					generateStatements(b.Statements)
 				}
 			}
-			decIndent()
-			Append("end")
-			generateStatementTerminator()
 		}
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
+			decIndent()
+			AppendLine("finally")
+			incIndent()
+			generateStatements(finallyStatements)
+		}
+		decIndent()
+		Append("end")
+		generateStatementTerminator()
 	}
 
 	override func generateReturnStatement(_ statement: CGReturnStatement) {
