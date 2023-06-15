@@ -848,6 +848,8 @@
 			generatePropertyValueExpression(expression)
 		} else if let expression = expression as? CGAwaitExpression {
 			generateAwaitExpression(expression)
+		} else if let expression = expression as? CGLocalMethodStatement {
+			generateLocalMethodStatement(expression)
 		} else if let expression = expression as? CGAnonymousMethodExpression {
 			generateAnonymousMethodExpression(expression)
 		} else if let expression = expression as? CGAnonymousTypeExpression {
