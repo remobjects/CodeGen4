@@ -282,9 +282,16 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	override func generateTypeCastExpression(_ cast: CGTypeCastExpression) {
 		if cast.ThrowsException {
 			//dynamic_cast<MyClass *>(ptr)
-			Append("dynamic_cast<")
-			generateTypeReference(cast.TargetType)
-			Append(">(")
+			if (cast.CastKind == .Interface) {
+				Append("interface_cast<")
+				generateTypeReference(cast.TargetType, ignoreNullability: true)
+				Append(">(")
+			}
+			else {
+				Append("dynamic_cast<")
+				generateTypeReference(cast.TargetType)
+				Append(">(")
+			}
 			generateExpression(cast.Expression)
 			Append(")")
 		} else {
