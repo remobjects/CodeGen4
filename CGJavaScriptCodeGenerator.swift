@@ -39,7 +39,11 @@
 			generateTypeReference(type)
 			Append(" ")
 		} else {
-			Append("var ")
+			if (statement.Constant) {
+				Append("const ")
+			} else {
+				Append("var ")
+			}
 		}
 		generateIdentifier(statement.Name)
 		if let value = statement.Value {
