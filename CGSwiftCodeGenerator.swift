@@ -942,7 +942,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func swiftGenerateMemberTypeVisibilityPrefix(_ visibility: CGMemberVisibilityKind, virtuality: CGMemberVirtualityKind, appendSpace: Boolean = true) {
+	func swiftGenerateMemberTypeVisibilityPrefix(_ visibility: CGMemberVisibilityKind, virtuality: CGMemberVirtualityKind, member: CGMemberDefinition? = nil, appendSpace: Boolean = true) {
 		switch visibility {
 			case .Unspecified: break /* no-op */
 			case .Private: Append("private")
@@ -955,18 +955,28 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			case .Protected: fallthrough
 			case .Published: fallthrough
 			case .Public:
-				if virtuality == .Virtual || virtuality == .Override {
-					Append("open")
-				} else {
+				if member is CGConstructorDefinition || (virtuality != .Virtual && virtuality != .Override) {
 					Append("public")
+				} else {
+					Append("open")
 				}
 		}
 		switch virtuality {
 			case .None: break;
 			case .Virtual: break; // handled above, and implied for non-pubic
+			case .Dynamic: break; // handled above, and implied for non-pubic
 			case .Abstract: if Dialect == CGSwiftCodeGeneratorDialect.Silver { Append(" __abstract") }
-			case .Override: Append(" override")
+			case .Override: if let ctor = member as? CGConstructorDefinition {
+				if !ctor.Required {
+					Append(" override")
+				}
+			} else {
+				Append(" override")
+			}
 			case .Final: Append(" final")
+		}
+		if let ctor = member as? CGConstructorDefinition, ctor.Required {
+			Append(" required")
 		}
 		if appendSpace {
 			Append(" ")
@@ -1219,9 +1229,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
 		if type is CGInterfaceTypeDefinition {
 		} else {
-			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility, virtuality: ctor.Virtuality)
+			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility, virtuality: ctor.Virtuality, member: ctor)
 		}
 		Append("init")
+		if ctor.Failable {
+			Append("?")
+		}
 		switch ctor.Nullability {
 			case .NullableUnwrapped: Append("!")
 			case .NullableNotUnwrapped: Append("?")

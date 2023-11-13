@@ -255,6 +255,8 @@ public class CGMethodDefinition: CGMethodLikeMemberDefinition {
 
 public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 	public var Nullability = CGTypeNullabilityKind.NotNullable /* Swift only. currently. */
+	public var Required = false /* Swift only. currently. */
+	public var Failable = false /* Swift only. currently. */
 
 	public init() {
 		super.init("")
