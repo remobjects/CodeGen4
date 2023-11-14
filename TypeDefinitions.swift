@@ -23,6 +23,11 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public init(_ name: String) {
 		Name = name
 	}
+
+	@ToString func ToString() -> String {
+		return Name;
+	}
+
 }
 
 public final class CGGlobalTypeDefinition : CGTypeDefinition {
@@ -48,6 +53,7 @@ public class CGBlockTypeDefinition : CGTypeDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var IsPlainFunctionPointer = false
+	public var Throws = false /* Swift and Java only */
 }
 
 public class CGEnumTypeDefinition : CGTypeDefinition {
@@ -58,6 +64,9 @@ public __abstract class CGClassOrStructTypeDefinition : CGTypeDefinition {
 	public var Ancestors: List<CGTypeReference>
 	public var ImplementedInterfaces: List<CGTypeReference>
 	public var Partial = false
+
+	//public var PublicInvariants: List<CGInvariant>?
+	//public var PrivateInvariants: List<CGInvariant>?
 
 	public init(_ name: String) {
 		super.init(name)

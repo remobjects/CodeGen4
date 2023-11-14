@@ -1035,7 +1035,12 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				Append("Any?")
 			}
 		}
-		Append(") -> ")
+		Append(") ")
+		if block.Throws {
+			Append("throws ")
+
+		}
+		Append("-> ")
 		if let returnType = block.ReturnType, !returnType.IsVoid {
 			generateTypeReference(returnType)
 		} else {
