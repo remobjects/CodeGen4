@@ -1829,7 +1829,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append(";")
 
-		if isUnified && (property.Visibility != .Public){
+		if isUnified {
 			Append(" ")
 			pascalGenerateMemberVisibilityKeyword(property.Visibility)
 			Append(";")
