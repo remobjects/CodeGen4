@@ -1011,6 +1011,19 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 	}
 
+	override func generateCombinedInterfaceType(_ type: CGCombinedInterfaceDefinition) {
+		swiftGenerateTypeVisibilityPrefix(type.Visibility)
+		Append("typealias ")
+		generateIdentifier(type.Name)
+		swiftGenerateGenericParameters(type.GenericParameters)
+		Append(" = ")
+		helpGenerateCommaSeparatedList(type.Interfaces, separator: " & ") {
+			self.generateTypeReference($0)
+		}
+		AppendLine()
+	}
+
+
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
 		swiftGenerateTypeVisibilityPrefix(block.Visibility)
 		Append("typealias ")

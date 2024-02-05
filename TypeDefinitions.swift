@@ -49,6 +49,15 @@ public class CGTypeAliasDefinition : CGTypeDefinition {
 	}
 }
 
+public class CGCombinedInterfaceDefinition : CGTypeDefinition {
+	public var Interfaces: List<CGTypeReference>
+
+	public init(_ name: String, _ interfaces: List<CGTypeReference>) {
+		super.init(name)
+		Interfaces = interfaces
+	}
+}
+
 public class CGBlockTypeDefinition : CGTypeDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?

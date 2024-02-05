@@ -1168,6 +1168,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		generateStatementTerminator()
 	}
 
+	override func generateCombinedInterfaceType(_ type: CGCombinedInterfaceDefinition) {
+		pascalGenerateTypeName(type)
+		pascalGenerateGenericParameters(type.GenericParameters)
+		Append(" = ")
+		pascalGenerateTypeVisibilityPrefix(type.Visibility)
+		helpGenerateCommaSeparatedList(type.Interfaces, separator: " and ") {
+			self.generateTypeReference($0)
+		}
+		generateStatementTerminator()
+	}
+
 	override func generateBlockType(_ type: CGBlockTypeDefinition) {
 		assert(false, "generateBlockType is not supported in base Pascal, only Oxygene")
 	}

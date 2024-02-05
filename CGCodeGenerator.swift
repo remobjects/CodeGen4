@@ -1298,6 +1298,8 @@
 
 		if let type = type as? CGTypeAliasDefinition {
 			generateAliasType(type)
+		} else if let type = type as? CGCombinedInterfaceDefinition {
+			generateCombinedInterfaceType(type)
 		} else if let type = type as? CGBlockTypeDefinition {
 			generateBlockType(type)
 		} else if let type = type as? CGEnumTypeDefinition {
@@ -1336,6 +1338,11 @@
 	internal func generateAliasType(_ type: CGTypeAliasDefinition) {
 		// descendant must override
 		assert(false, "generateAliasType not implemented")
+	}
+
+	internal func generateCombinedInterfaceType(_ type: CGCombinedInterfaceDefinition) {
+		// descendant must override
+		assert(false, "generateCombinedInterfaceType not implemented")
 	}
 
 	internal func generateBlockType(_ type: CGBlockTypeDefinition) {
@@ -1742,6 +1749,10 @@
 
 	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
 		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: true, callback: callback)
+	}
+
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: String!, callback: (T) -> ()) {
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(separator) }, wrapWhenItExceedsLineLength: true, callback: callback)
 	}
 
 	var lastStartLocation: Integer?
