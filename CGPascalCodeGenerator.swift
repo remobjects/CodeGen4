@@ -27,6 +27,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal var isUnified: Boolean { return false }
+	internal var groupUnified: Boolean { return false }
 	internal var supportsInterfaceVisibilities: Boolean { return false }
 
 	//
@@ -1342,7 +1343,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				if m.Visibility == visibility{
 					if first {
 						decIndent()
-						if visibility != CGMemberVisibilityKind.Unspecified {
+						if visibility != .Unspecified {
 							pascalGenerateMemberVisibilityKeyword(visibility)
 							AppendLine()
 						}
@@ -1357,12 +1358,26 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	//override func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
+		//if member is CGNestedTypeDefinition {
+			//return true
+		//}
+		//return super.memberIsSingleLine(member)
+	//}
+
+	override func memberNeedsSpace(_ member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+		if lastMember is CGNestedTypeDefinition {
+			return false;
+		}
+		return super.memberNeedsSpace(member, afterMember: lastMember)
+	}
+
 	override func generateTypeMembers(_ type: CGTypeDefinition) {
-		if isUnified {
+		if isUnified && !groupUnified {
 			if type.Members.Count > 0 {
 				if !(type is CGInterfaceTypeDefinition) {
 					decIndent()
-					AppendLine("private")
+					AppendLine("public")
 					incIndent()
 					AppendLine()
 				}
@@ -1371,20 +1386,20 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				AppendLine()
 			}
 		} else {
-			if type is CGInterfaceTypeDefinition {
+			if type is CGInterfaceTypeDefinition && !type.Members.Any({ $0.Visibility != .Public }) {
 				generateTypeMembers(type, forVisibility: nil)
 			} else {
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unspecified)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
-				generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
+				generateTypeMembers(type, forVisibility: .Unspecified)
+				generateTypeMembers(type, forVisibility: .Private)
+				generateTypeMembers(type, forVisibility: .Unit)
+				generateTypeMembers(type, forVisibility: .UnitOrProtected)
+				generateTypeMembers(type, forVisibility: .UnitAndProtected)
+				generateTypeMembers(type, forVisibility: .Assembly)
+				generateTypeMembers(type, forVisibility: .AssemblyOrProtected)
+				generateTypeMembers(type, forVisibility: .AssemblyAndProtected)
+				generateTypeMembers(type, forVisibility: .Protected)
+				generateTypeMembers(type, forVisibility: .Public)
+				generateTypeMembers(type, forVisibility: .Published)
 			}
 		}
 	}
@@ -1490,7 +1505,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if let conversion = method.CallingConvention {
 				pascalGenerateCallingConversion(conversion);
 			}
-
 		}
 
 		AppendLine()
@@ -1840,22 +1854,31 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		Append(";")
 
-		if isUnified && (type is CGInterfaceTypeDefinition) && (supportsInterfaceVisibilities) && (property.Visibility != .Public){
-			Append(" ")
-			pascalGenerateMemberVisibilityKeyword(property.Visibility)
-			Append(";")
+		if isUnified && !groupUnified {
+			//if type is CGInterfaceTypeDefinition {
+				//if supportsInterfaceVisibilities && property.Visibility != .Public {
+					//Append(" ")
+					//pascalGenerateMemberVisibilityKeyword(property.Visibility)
+					//Append(";")
+				//}
+			//} else {
+				if property.Visibility != .Public {
+					Append(" ")
+					pascalGenerateMemberVisibilityKeyword(property.Visibility)
+					Append(";")
+				}
+			//}
 		}
 		if property.Default {
 			Append(" default;")
 		}
 		pascalGenerateImplementedInterface(property)
 		pascalGenerateVirtualityModifiders(property)
-		AppendLine();
 
 		if !definitionOnly && isUnified && !(type is CGInterfaceTypeDefinition && !property.IsShortcutProperty) {
-			AppendLine();
 			pascalGeneratePropertyAccessorDefinition(property, type: type);
 		}
+		AppendLine();
 	}
 
 	func pascalGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -1863,6 +1886,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			var isAppendLineNeeded: Boolean = false;
 
 			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
+				AppendLine();
 				generateMethodDefinition(getterMethod, type: type);
 				isAppendLineNeeded = true;
 			}

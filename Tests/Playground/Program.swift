@@ -7,8 +7,19 @@ print("CodeGen4 Playground")
 
 var unit = CGCodeUnit()
 
+var cls1 = CGClassTypeDefinition("Nested1")
+var cls2 = CGClassTypeDefinition("Nested2")
+var cls3 = CGClassTypeDefinition("Nested3")
+//cls1.Members.Add(CGMethodDefinition("NestedMethod"))
+
+
 var cls = CGClassTypeDefinition("DotTest")
 //cls.Ancestors.Add("Foo".AsTypeReference())
+
+cls.Members.Add(CGNestedTypeDefinition(cls1))
+cls.Members.Add(CGNestedTypeDefinition(cls2))
+cls.Members.Add(CGNestedTypeDefinition(cls3))
+
 
 var td = CGMethodDefinition("TestDot")
 // Simple expressions
@@ -73,6 +84,26 @@ var p2 = CGPropertyDefinition("Test")
 p2.Type = "String".AsTypeReference()
 cls.Members.Add(p2)
 
+for var i = 0; i < 10; i++ {
+	var p4 = CGPropertyDefinition("Test"+i)
+	p4.Type = "String".AsTypeReference()
+	p4.Visibility = .Private
+	cls.Members.Add(p4)
+}
+
+for var i = 0; i < 10; i++ {
+	var p4 = CGFieldDefinition("fTest"+i)
+	p4.Type = "String".AsTypeReference()
+	cls.Members.Add(p4)
+}
+
+for var i = 0; i < 10; i++ {
+	var p4 = CGPropertyDefinition("PublicTest"+i)
+	p4.Type = "String".AsTypeReference()
+	p4.Visibility = .Public
+	cls.Members.Add(p4)
+}
+
 var p3 = CGPropertyDefinition("Test")
 p3.Type = "String".AsTypeReference()
 //p3.GetStatements = List<CGStatement>()
@@ -80,23 +111,31 @@ p3.Type = "String".AsTypeReference()
 
 cls.Members.Add(p3)
 
+//unit.Types.Add(cls)
 unit.Types.Add(intf)
 
 var cg = CGOxygeneCodeGenerator(style: .Unified)
-cg.QuoteStyle = .CodeDomSafe
-//var cg = CGDelphiCodeGenerator()
-//var cg = CGVisualBasicNetCodeGenerator()
+//var cg = CGOxygeneCodeGenerator(style: .Standard)
+//cg.QuoteStyle = .CodeDomSafe
+////var cg = CGDelphiCodeGenerator()
+////var cg = CGVisualBasicNetCodeGenerator()
 print(cg.GenerateUnit(unit, definitionOnly: false))
 
-var cgm = CGVisualBasicNetCodeGenerator(dialect: .Mercury)
-//var cg = CGDelphiCodeGenerator()
-//var cg = CGVisualBasicNetCodeGenerator()
-print(cgm.GenerateUnit(unit, definitionOnly: false))
+//var cgm = CGVisualBasicNetCodeGenerator(dialect: .Mercury)
+////var cg = CGDelphiCodeGenerator()
+////var cg = CGVisualBasicNetCodeGenerator()
+//print(cgm.GenerateUnit(unit, definitionOnly: false))
 
-var cgcs = CGCSharpCodeGenerator(dialect: .Hydrogene)
-//var cg = CGDelphiCodeGenerator()
-//var cg = CGVisualBasicNetCodeGenerator()
-print(cgcs.GenerateUnit(unit, definitionOnly: false))
+//var cgcs = CGCSharpCodeGenerator(dialect: .Hydrogene)
+////var cg = CGDelphiCodeGenerator()
+////var cg = CGVisualBasicNetCodeGenerator()
+//print(cgcs.GenerateUnit(unit, definitionOnly: false))
 
 //var cg = CGJavaCodeGenerator()
 //var code = cg.GenerateUnit(unit)
+
+//var cgw = CGWLanguageCodeGenerator()
+//cgw.QuoteStyle = .CodeDomSafe
+//var cg = CGDelphiCodeGenerator()
+//var cg = CGVisualBasicNetCodeGenerator()
+//print(cgw.GenerateUnit(unit, definitionOnly: false))

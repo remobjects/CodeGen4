@@ -347,7 +347,7 @@
 	}
 
 	internal func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
-		// reasoablew default, works for al current languages
+		// reasonable default, works for all current languages
 		if member is CGFieldDefinition {
 			return true
 		}
