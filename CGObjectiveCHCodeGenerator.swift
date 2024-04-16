@@ -92,8 +92,8 @@
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		Append("@protocol ")
 		generateIdentifier(type.Name)
-		objcGenerateAncestorList(type)
-		AppendLine()
+		//objcGenerateAncestorList(type)
+		//AppendLine()
 		AppendLine()
 	}
 
