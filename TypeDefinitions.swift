@@ -371,6 +371,24 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		SetExpression = setExpression
 	}
 
+	internal var HasGetterMethod: Bool {
+		if let getStatements = GetStatements, let type = `Type` {
+			return true
+		} else if let getExpression = GetExpression, let type = `Type` {
+			return true
+		}
+		return false
+	}
+
+	internal var HasSetterMethod: Bool {
+		if let setStatements = GetStatements, let type = `Type` {
+			return true
+		} else if let setExpression = SetExpression, let type = `Type` {
+			return true
+		}
+		return false
+	}
+
 	internal func GetterMethodDefinition(`prefix`: String = "get__") -> CGMethodDefinition? {
 		if let getStatements = GetStatements, let type = `Type` {
 			let method = CGMethodDefinition(`prefix`+Name, getStatements)

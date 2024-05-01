@@ -80,9 +80,14 @@ var ctor = CGConstructorDefinition()
 ctor.Name = "withFoo";
 cls.Members.Add(ctor)
 
-var p2 = CGPropertyDefinition("Test")
+var p2 = CGPropertyDefinition("TestWithGetterAndSetter")
 p2.Type = "String".AsTypeReference()
 cls.Members.Add(p2)
+
+p2.GetStatements = List<CGStatement>()
+p2.GetStatements?.Add(CGMethodCallExpression(nil, "Foo"))
+p2.SetStatements = List<CGStatement>()
+p2.SetStatements?.Add(CGMethodCallExpression(nil, "Foo"))
 
 for var i = 0; i < 10; i++ {
 	var p4 = CGPropertyDefinition("Test"+i)
@@ -108,7 +113,6 @@ var p3 = CGPropertyDefinition("Test")
 p3.Type = "String".AsTypeReference()
 //p3.GetStatements = List<CGStatement>()
 //p3.SetStatements = List<CGStatement>()
-
 cls.Members.Add(p3)
 
 //unit.Types.Add(cls)

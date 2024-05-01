@@ -1876,9 +1876,15 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		pascalGenerateVirtualityModifiders(property)
 
 		if !definitionOnly && isUnified && !(type is CGInterfaceTypeDefinition && !property.IsShortcutProperty) {
-			pascalGeneratePropertyAccessorDefinition(property, type: type);
+			if property.HasGetterMethod || property.HasSetterMethod {
+				AppendLine();
+				pascalGeneratePropertyAccessorDefinition(property, type: type);
+			} else {
+				AppendLine();
+			}
+		} else {
+			AppendLine();
 		}
-		AppendLine();
 	}
 
 	func pascalGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {

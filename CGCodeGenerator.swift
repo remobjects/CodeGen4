@@ -333,6 +333,9 @@
 	//
 
 	internal func memberNeedsSpace(_ member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
+		if typeOf(member) != typeOf(lastMember) {
+			return true;
+		}
 		if memberIsSingleLine(member) && memberIsSingleLine(lastMember) {
 			return false;
 		}
@@ -352,7 +355,7 @@
 			return true
 		}
 		if let property = member as? CGPropertyDefinition {
-			return property.GetStatements == nil && property.SetStatements == nil && property.GetExpression == nil && property.SetExpression == nil
+			return !property.HasGetterMethod && !property.HasSetterMethod
 		}
 		return false
 	}
