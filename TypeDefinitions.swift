@@ -371,7 +371,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		SetExpression = setExpression
 	}
 
-	internal var HasGetterMethod: Bool {
+	internal var HasGetterMethod: Boolean {
 		if let getStatements = GetStatements, let type = `Type` {
 			return true
 		} else if let getExpression = GetExpression, let type = `Type` {
@@ -380,7 +380,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 		return false
 	}
 
-	internal var HasSetterMethod: Bool {
+	internal var HasSetterMethod: Boolean {
 		if let setStatements = GetStatements, let type = `Type` {
 			return true
 		} else if let setExpression = SetExpression, let type = `Type` {
