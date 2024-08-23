@@ -1234,7 +1234,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
 		cSharpGenerateMemberTypeVisibilityPrefix(field.Visibility)
-		cSharpGenerateStaticPrefix(field.Static && !type.Static)
+		cSharpGenerateStaticPrefix(field.Static && !type.Static && !field.Constant)
 		var fixedArrayType: Boolean = false
 		if let arr = field.Type as? CGArrayTypeReference {
 			if let bounds = arr.Bounds, bounds.Count == 1 {
