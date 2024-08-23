@@ -150,7 +150,7 @@
 	override func generateMethodCallExpression(_ method: CGMethodCallExpression) {
 		javascriptGenerateCallSiteForExpression(method)
 		generateIdentifier(method.Name)
-//		generateGenericArguments(method.GenericArguments)
+//        generateGenericArguments(method.GenericArguments)
 		Append("(")
 		javascriptGenerateCallParameters(method.Parameters)
 		Append(")")
@@ -226,7 +226,7 @@
 					AppendLine(")")
 					AppendLine("{")
 				} else {
-					AppendLine("__catch ")
+					AppendLine("catch ")
 					AppendLine("{")
 				}
 				incIndent()
