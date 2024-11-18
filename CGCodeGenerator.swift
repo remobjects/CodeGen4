@@ -1124,7 +1124,7 @@
 		assert(false, "generateStringLiteralExpression not implemented")
 	}
 
-	internal func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
+	func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		// descendant must override
 		assert(false, "generateCharacterLiteralExpression not implemented")
 	}
