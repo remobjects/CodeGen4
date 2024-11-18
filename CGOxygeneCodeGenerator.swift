@@ -396,17 +396,21 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
+		generateStringLiteralExpression(expression, style: QuoteStyle)
+	}
+
+	func generateStringLiteralExpression(_ expression: CGStringLiteralExpression, style quoteStyle: CGOxygeneStringQuoteStyle) {
 		let SINGLE: Char = "'"
 		let DOUBLE: Char = "\""
 		let quoteChar: Char
-		switch QuoteStyle {
+		switch quoteStyle {
 			case .Single: quoteChar = SINGLE
 			case .Double: quoteChar = DOUBLE
 			case .CodeDomSafe: fallthrough
 			case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
 			case .SmartDouble: quoteChar = expression.Value.Contains(DOUBLE) && !expression.Value.Contains(SINGLE) ? SINGLE : DOUBLE
 		}
-		if QuoteStyle == .CodeDomSafe && length(expression.Value) == 1 {
+		if quoteStyle == .CodeDomSafe && length(expression.Value) == 1 {
 			let ch = expression.Value[0]
 			switch ord(ch) {
 				case 34:
