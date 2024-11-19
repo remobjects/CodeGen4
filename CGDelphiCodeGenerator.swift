@@ -567,54 +567,6 @@
 //        }
 //    }
 
-	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
-		Append("case ")
-		generateExpression(statement.Expression)
-		AppendLine(" of")
-		incIndent()
-		for c in statement.Cases {
-			helpGenerateCommaSeparatedList(c.CaseExpressions) {
-				self.generateExpression($0)
-			}
-			Append(": ")
-			var b = false;
-//            if (c.Statements.Count == 1) && !(c.Statements[0] is CGBeginEndBlockStatement) { b = true}
-			if b {
-				/*optimization: generate code like
-					case x of
-						x:  single_line_statement;
-					instead of
-					case x of
-						x: begin
-							 single_line_statement;
-						end;
-				*/
-				generateStatementSkippingOuterBeginEndBlock(c.Statements[0])
-			}
-			else {
-				AppendLine("begin")
-				incIndent()
-				incIndent()
-				generateStatementsSkippingOuterBeginEndBlock(c.Statements)
-				decIndent()
-				Append("end")
-				generateStatementTerminator()
-				decIndent()
-			}
-		}
-		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
-			AppendLine("else begin")
-			incIndent()
-			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
-			decIndent()
-			Append("end")
-			generateStatementTerminator()
-		}
-		decIndent()
-		Append("end")
-		generateStatementTerminator()
-	}
-
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
 		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("try")

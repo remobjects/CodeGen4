@@ -367,14 +367,19 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			helpGenerateCommaSeparatedList(c.CaseExpressions) {
 				self.generateExpression($0)
 			}
-			AppendLine(": begin")
-			incIndent()
-			incIndent()
-			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
-			decIndent()
-			Append("end")
-			generateStatementTerminator()
-			decIndent()
+			Append(": ")
+			if c.Statements.Count == 1 {
+				generateStatement(c.Statements.First())
+			} else {
+				AppendLine(": begin")
+				incIndent()
+				incIndent()
+				generateStatementsSkippingOuterBeginEndBlock(c.Statements)
+				decIndent()
+				Append("end")
+				generateStatementTerminator()
+				decIndent()
+			}
 		}
 		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			AppendLine("else begin")
