@@ -374,7 +374,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				AppendLine(": begin")
 				incIndent()
 				incIndent()
-				generateStatementsSkippingOuterBeginEndBlock(c.Statements)
+				generateStatements(c.Statements)
 				decIndent()
 				Append("end")
 				generateStatementTerminator()
@@ -382,12 +382,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			}
 		}
 		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
-			AppendLine("else begin")
-			incIndent()
-			generateStatementsSkippingOuterBeginEndBlock(defaultStatements)
-			decIndent()
-			Append("end")
-			generateStatementTerminator()
+			Append("else ")
+			if defaultStatements.Count == 1 {
+				generateStatement(defaultStatements.First())
+			} else {
+				AppendLine("else begin")
+				incIndent()
+				generateStatements(defaultStatements)
+				decIndent()
+				Append("end")
+				generateStatementTerminator()
+			}
 		}
 		decIndent()
 		Append("end")
