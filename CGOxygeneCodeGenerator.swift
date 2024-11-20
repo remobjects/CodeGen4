@@ -399,7 +399,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		generateStringLiteralExpression(expression, style: QuoteStyle)
 	}
 
-	func generateStringLiteralExpression(_ expression: CGStringLiteralExpression, style quoteStyle: CGOxygeneStringQuoteStyle) {
+	public func generateStringLiteralExpression(_ expression: CGStringLiteralExpression, style quoteStyle: CGOxygeneStringQuoteStyle) {
 		let SINGLE: Char = "'"
 		let DOUBLE: Char = "\""
 		let quoteChar: Char

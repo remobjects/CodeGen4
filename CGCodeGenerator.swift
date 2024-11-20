@@ -1119,12 +1119,12 @@
 		generateIdentifier(expression.ValueName)
 	}
 
-	func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
+	public func generateStringLiteralExpression(_ expression: CGStringLiteralExpression) {
 		// descendant must override
 		assert(false, "generateStringLiteralExpression not implemented")
 	}
 
-	func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
+	public func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		// descendant must override
 		assert(false, "generateCharacterLiteralExpression not implemented")
 	}
