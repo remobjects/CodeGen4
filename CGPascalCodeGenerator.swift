@@ -1041,11 +1041,18 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
+		if let elementType = array.ElementType {
+			generateTypeReference(elementType)
+			Append("(")
+		}
 		Append("[")
 		helpGenerateCommaSeparatedList(array.Elements) { e in
 			self.generateExpression(e)
 		}
 		Append("]")
+		if let elementType = array.ElementType {
+			Append(")")
+		}
 	}
 
 	override func generateSetLiteralExpression(_ expression: CGSetLiteralExpression) {

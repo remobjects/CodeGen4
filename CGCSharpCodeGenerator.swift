@@ -771,7 +771,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
-		Append("new[] ")
+		Append("new ")
+		if let elementType = array.ElementType {
+			generateTypeReference(elementType)
+		}
+		Append("[] ")
 		Append("{")
 		for e in 0 ..< array.Elements.Count {
 			if e > 0 {
