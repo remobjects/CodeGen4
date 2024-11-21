@@ -1042,6 +1042,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
 		if let elementType = array.ElementType {
+			Append("array of ")
 			generateTypeReference(elementType)
 			Append("(")
 		}
