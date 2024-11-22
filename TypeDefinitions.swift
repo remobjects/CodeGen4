@@ -17,6 +17,7 @@ public __abstract class CGTypeDefinition : CGEntity {
 	public var Sealed = false
 	public var Abstract = false
 	public var Comment: CGCommentStatement?
+	public var XmlDocumentation: CGXmlDocumentationStatement?
 	public var Attributes = List<CGAttribute>()
 	public var Condition: CGConditionalDefine?
 
@@ -179,6 +180,7 @@ public __abstract class CGMemberDefinition: CGEntity {
 	public var Locked = false /* Oxygene only */
 	public var LockedOn: CGExpression? /* Oxygene only */
 	public var Comment: CGCommentStatement?
+	public var XmlDocumentation: CGXmlDocumentationStatement?
 	public var Attributes = List<CGAttribute>()
 	public var Condition: CGConditionalDefine?
 	public var ThrownExceptions: List<CGTypeReference>? // nil means unknown; empty list means known to not throw.

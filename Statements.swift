@@ -23,6 +23,9 @@ public class CGRawStatement : CGBaseMultilineStatement { // not language-agnosti
 public class CGCommentStatement : CGBaseMultilineStatement {
 }
 
+public class CGXmlDocumentationStatement : CGBaseMultilineStatement {
+}
+
 public class CGSingleLineCommentStatement : CGStatement {
 	public let Comment: String
 

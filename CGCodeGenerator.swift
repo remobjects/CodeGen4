@@ -319,6 +319,11 @@
 		Append("// ")
 	}
 
+	internal func generateXmlDocumentationPrefix() {
+		// descendant may override, but this will work for all current languages we support.
+		Append("/// ")
+	}
+
 	internal func generateImport(_ `import`: CGImport) {
 		// descendant must override this or generateImports()
 		assert(false, "generateImport not implemented")
@@ -520,7 +525,9 @@
 		statement.startLocation = currentLocation;
 
 		// descendant should not override
-		if let commentStatement = statement as? CGCommentStatement {
+		if let commentStatement = statement as? CGXmlDocumentationStatement {
+			generateXmlDocumentationStatement(commentStatement)
+		} else if let commentStatement = statement as? CGCommentStatement {
 			generateCommentStatement(commentStatement)
 		} else if let commentStatement = statement as? CGSingleLineCommentStatement {
 			generateSingleLineCommentStatement(commentStatement)
@@ -599,6 +606,15 @@
 		if let commentStatement = commentStatement {
 			for line in commentStatement.Lines {
 				generateSingleLineCommentPrefix()
+				AppendLine(line)
+			}
+		}
+	}
+
+	internal func generateXmlDocumentationStatement(_ xmlDocumentationStatement: CGXmlDocumentationStatement?) {
+		if let xmlDocumentationStatement = xmlDocumentationStatement {
+			for line in xmlDocumentationStatement.Lines {
+				generateXmlDocumentationPrefix()
 				AppendLine(line)
 			}
 		}
@@ -1297,6 +1313,7 @@
 
 		type.startLocation = currentLocation;
 		generateCommentStatement(type.Comment)
+		generateXmlDocumentationStatement(type.XmlDocumentation)
 		generateAttributes(type.Attributes)
 
 		if let type = type as? CGTypeAliasDefinition {
@@ -1466,6 +1483,7 @@
 		}
 		member.startLocation = currentLocation;
 		generateCommentStatement(member.Comment)
+		generateXmlDocumentationStatement(member.XmlDocumentation)
 		generateAttributes(member.Attributes)
 
 		if let member = member as? CGConstructorDefinition {
