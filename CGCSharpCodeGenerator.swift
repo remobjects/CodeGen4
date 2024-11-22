@@ -709,6 +709,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 				Append(" ")
 				generateIdentifier(name)
 			}
+			generateGenericArguments(expression.GenericArguments)
 			Append("(")
 			cSharpGenerateCallParameters(expression.Parameters)
 			Append(")")

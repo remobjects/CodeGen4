@@ -629,6 +629,7 @@ public class CGNewInstanceExpression : CGExpression {
 	public var `Type`: CGExpression
 	public var ConstructorName: String? // can optionally be provided for languages that support named .ctors (Elements, Objectice-C, Swift)
 	public var Parameters: List<CGCallParameter>
+	public var GenericArguments: List<CGTypeReference>?
 	public var ArrayBounds: List<CGExpression>? // for array initialization.
 	public var PropertyInitializers = List<CGPropertyInitializer>() // for Oxygene and C# extended .ctor calls
 

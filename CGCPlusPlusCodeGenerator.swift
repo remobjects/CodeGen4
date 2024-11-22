@@ -510,6 +510,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateExpression(expression.`Type`, ignoreNullability: true)
+		generateGenericArguments(expression.GenericArguments)
 		Append("(")
 		cppGenerateCallParameters(expression.Parameters)
 		Append(")")

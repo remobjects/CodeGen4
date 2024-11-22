@@ -763,6 +763,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			}
 			Append(")")
 		} else {
+			generateGenericArguments(expression.GenericArguments)
 			Append("(")
 			if let ctorName = expression.ConstructorName {
 				swiftGenerateCallParameters(expression.Parameters, firstParamName: removeWithPrefix(ctorName))

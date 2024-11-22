@@ -129,6 +129,7 @@
 		{
 			Append("new ")
 			generateExpression(expression.`Type`)
+			//generateGenericArguments(expression.GenericArguments)
 			Append("(")
 			javascriptGenerateCallParameters(expression.Parameters)
 			Append(")")

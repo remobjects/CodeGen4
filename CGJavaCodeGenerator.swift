@@ -584,6 +584,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("new ")
 		generateExpression(expression.`Type`)
+		generateGenericArguments(expression.GenericArguments)
 		Append("(")
 		javaGenerateCallParameters(expression.Parameters)
 		Append(")")

@@ -840,6 +840,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("New ")
 		generateExpression(expression.`Type`)
+		generateGenericArguments(expression.GenericArguments)
 		/*if let bounds = expression.ArrayBounds, bounds.Count > 0 {
 			Append("[")
 			helpGenerateCommaSeparatedList(bounds) { boundExpression in

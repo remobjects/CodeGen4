@@ -378,6 +378,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 				Append(" ")
 				generateIdentifier(name)
 			}
+			generateGenericArguments(expression.GenericArguments)
 			Append("(")
 			pascalGenerateCallParameters(expression.Parameters)
 

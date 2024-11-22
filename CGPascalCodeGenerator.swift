@@ -928,6 +928,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		} else {
 			Append("Create")
 		}
+		generateGenericArguments(expression.GenericArguments)
 		Append("(")
 		pascalGenerateCallParameters(expression.Parameters)
 		Append(")")
