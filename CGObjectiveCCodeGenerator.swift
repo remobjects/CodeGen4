@@ -456,6 +456,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	override func generateNewInstanceExpression(_ expression: CGNewInstanceExpression) {
 		Append("[[")
 		generateExpression(expression.`Type`, ignoreNullability:true)
+		generateGenericArguments(expression.GenericArguments)
 		Append(" alloc] init")
 		if let name = expression.ConstructorName {
 			generateIdentifier(uppercaseFirstLetter(name))
