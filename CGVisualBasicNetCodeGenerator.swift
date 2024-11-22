@@ -121,6 +121,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		Append("' ")
 	}
 
+	override func generateXmlDocumentationPrefix() {
+		Append("''' ")
+	}
+
 	//done 21-5-2020
 	override func generateInlineComment(_ comment: String) {
 		if Dialect == .Mercury {
