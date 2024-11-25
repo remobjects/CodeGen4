@@ -158,7 +158,7 @@
 		generateIdentifier(type.Name)
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members) { m in
+		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {

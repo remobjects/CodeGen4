@@ -52,7 +52,7 @@
 		AppendLine(")")
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members) { m in
+		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateIdentifier(type.Name+"_"+member.Name) // Obj-C enums must be unique
 				if let value = member.Value {
