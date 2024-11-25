@@ -985,7 +985,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members, separator: { self.AppendLine(",") } ) {m in
+		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) {m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateAttributes(member.Attributes, inline: true)
 				self.generateIdentifier(member.Name)

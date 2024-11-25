@@ -22,6 +22,7 @@
 	public var omitNamespacePrefixes: Boolean = false
 	public var splitLinesLongerThan: Integer = 2048
 	public var preserveUnicodeCharactersInStringLiterals: Boolean = false
+	public var wrapEnums: Boolean = false
 
 	public final func GenerateUnit(_ unit: CGCodeUnit) -> String { // overload for VC# compastibility
 		return GenerateUnit(unit, definitionOnly: false)
@@ -410,7 +411,7 @@
 		if let keywords = keywords {
 			if name.Contains(".") {
 				let parts = name.Split(".")
-				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, wrapWhenItExceedsLineLength: false, callback: { part in self.generateIdentifier(part, escaped: true) })
+				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, wrapMode: WrapMode.Never, callback: { part in self.generateIdentifier(part, escaped: true) })
 			} else {
 				var checkName = name
 				if !keywordsAreCaseSensitive {
@@ -1771,26 +1772,34 @@
 	//
 
 	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapWhenItExceedsLineLength: true, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapMode: WrapMode.IfExceedsLength, callback: callback)
+	}
+
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, wrapMode: WrapMode, callback: (T) -> ()) {
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapMode: WrapMode.IfExceedsLength, callback: callback)
+	}
+
+	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, wrapAlways: Boolean, callback: (T) -> ()) {
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(", ") }, wrapMode: wrapAlways ? WrapMode.Always : WrapMode.IfExceedsLength, callback: callback)
 	}
 
 	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: separator, wrapWhenItExceedsLineLength: true, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: separator, wrapMode: WrapMode.IfExceedsLength, callback: callback)
 	}
 
 	@inline(__always) func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: String!, callback: (T) -> ()) {
-		helpGenerateCommaSeparatedList(list, separator: { self.Append(separator) }, wrapWhenItExceedsLineLength: true, callback: callback)
+		helpGenerateCommaSeparatedList(list, separator: { self.Append(separator) }, wrapMode: WrapMode.IfExceedsLength, callback: callback)
 	}
 
 	var lastStartLocation: Integer?
-	func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), wrapWhenItExceedsLineLength: Boolean, callback: (T) -> ()) {
+	func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), wrapMode: WrapMode, callback: (T) -> ()) {
 		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
 		lastStartLocation = nil
 		var first = true
 		for i in list {
 			if !first {
 				separator()
-				if wrapWhenItExceedsLineLength && currentLocation.virtualColumn > splitLinesLongerThan {
+				if (wrapMode == .IfExceedsLength && currentLocation.virtualColumn > splitLinesLongerThan) || wrapMode == .Always {
 					AppendLine()
 					AppendIndentToVirtualColumn(startLocation)
 				}
@@ -1938,4 +1947,10 @@
 		generateStatement(statement);
 		return currentCode.ToString()
 	}
+}
+
+public enum WrapMode {
+	case Never
+	case IfExceedsLength
+	case Always
 }
