@@ -604,6 +604,9 @@
 
 	internal func generateCommentStatement(_ commentStatement: CGCommentStatement?) {
 		if let commentStatement = commentStatement {
+			if !atStart {
+				AppendLine()
+			}
 			for line in commentStatement.Lines {
 				generateSingleLineCommentPrefix()
 				AppendLine(line)
@@ -613,6 +616,9 @@
 
 	internal func generateXmlDocumentationStatement(_ xmlDocumentationStatement: CGXmlDocumentationStatement?) {
 		if let xmlDocumentationStatement = xmlDocumentationStatement {
+			if !atStart {
+				AppendLine()
+			}
 			for line in xmlDocumentationStatement.Lines {
 				generateXmlDocumentationPrefix()
 				AppendLine(line)
