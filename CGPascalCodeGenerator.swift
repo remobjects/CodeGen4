@@ -1892,7 +1892,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" default;")
 		}
 		pascalGenerateImplementedInterface(property)
-		pascalGenerateVirtualityModifiders(property)
+		if !(self is CGDelphiCodeGenerator) {
+			pascalGenerateVirtualityModifiders(property)
+		}
 
 		if !definitionOnly && isUnified && !(type is CGInterfaceTypeDefinition && !property.IsShortcutProperty) {
 			if property.HasGetterMethod || property.HasSetterMethod {
