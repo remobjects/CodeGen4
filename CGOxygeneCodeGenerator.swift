@@ -537,7 +537,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func pascalGenerateConstructorHeader(_ ctor: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false) {
-		if ctor.Static {
+		if ctor.Static && !type?.Static {
 			Append("class ")
 		}
 
@@ -583,7 +583,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	}
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {
-		if event.Static {
+		if event.Static && !type?.Static {
 			Append("class ")
 		}
 		Append("event ")

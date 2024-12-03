@@ -1170,12 +1170,6 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	__abstract func pascalGenerateMemberVisibilityKeyword(_ visibility: CGMemberVisibilityKind)
 
-	func swiftGenerateStaticPrefix(isStatic: Boolean) {
-		if isStatic {
-			Append("static ")
-		}
-	}
-
 	override func generateAliasType(_ type: CGTypeAliasDefinition) {
 		pascalGenerateTypeName(type)
 		pascalGenerateGenericParameters(type.GenericParameters)
@@ -1533,7 +1527,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if type is CGInterfaceTypeDefinition && method.Optional {
 			Append("[Optional] ")
 		}
-		if method.Static {
+		if method.Static && !type?.Static {
 			Append("class ")
 		}
 
@@ -1557,7 +1551,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	internal func pascalGenerateConstructorHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false) {
-		if method.Static {
+		if method.Static && !type?.Static {
 			Append("class ")
 		}
 
@@ -1738,7 +1732,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateFieldDefinition(_ field: CGFieldDefinition, type: CGTypeDefinition) {
-		if field.Static {
+		if field.Static && !type?.Static {
 			Append("class ")
 		}
 		if field.Constant, let initializer = field.Initializer {
@@ -1778,7 +1772,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
-		if property.Static {
+		if property.Static && !type?.Static {
 			Append("class ")
 		}
 		Append("property ")
