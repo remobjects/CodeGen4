@@ -276,6 +276,7 @@ public enum CGUnaryOperatorKind {
 	case Minus
 	case Not
 	case AddressOf
+	case AddressOfBlock
 	case ForceUnwrapNullable
 	case BitwiseNot
 }
