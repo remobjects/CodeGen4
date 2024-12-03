@@ -695,6 +695,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			case .BitwiseNot: if inConditionExpression { Append("NOT ") } else { Append("not ") }
 			case .Not: if inConditionExpression { Append("NOT ") } else { Append("not ") }
 			case .AddressOf: Append("@")
+			case .AddressOfBlock: Append("@")
 			case .ForceUnwrapNullable: Append("{ NOT SUPPORTED }")
 		}
 	}

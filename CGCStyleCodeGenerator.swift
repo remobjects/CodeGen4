@@ -237,7 +237,8 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 			case .Not: Append("!")
 			case .BitwiseNot: Append("~")
 			case .AddressOf: Append("&")
-			case .ForceUnwrapNullable: // no-op
+			case .AddressOfBlock: break // no-op
+			case .ForceUnwrapNullable: break // no-op
 		}
 	}
 
