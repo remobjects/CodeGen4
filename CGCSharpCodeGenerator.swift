@@ -1107,10 +1107,10 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			if method.Optional {
 				Append("[Optional] ")
 			}
-			cSharpGenerateStaticPrefix(method.Static && !type.Static)
+			cSharpGenerateStaticPrefix(method.Static || type.Static)
 		} else {
 			cSharpGenerateMemberTypeVisibilityPrefix(method.Visibility)
-			cSharpGenerateStaticPrefix(method.Static && !type.Static)
+			cSharpGenerateStaticPrefix(method.Static || type.Static)
 			if method.Awaitable {
 				Append("async ")
 			}
