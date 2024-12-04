@@ -29,6 +29,13 @@
 	}
 
 	public final func GenerateUnit(_ unit: CGCodeUnit, definitionOnly: Boolean /*= false*/) -> String {
+		// extra initialization
+		indent = 0
+		atStart = true
+		currentLocation.column = 0
+		currentLocation.virtualColumn = 0
+		currentLocation.offset = 0
+		// end extra initialization
 
 		currentUnit = unit
 		currentCode = StringBuilder()
@@ -38,6 +45,18 @@
 		return currentCode.ToString()
 	}
 
+	// VB uses different order: Directives, Import, Header
+	internal func generateType(_ type: CGTypeDefinition) {
+		generateHeader()
+		generateDirectives()
+		generateImports()
+		if type is CGGlobalTypeDefinition {
+			generateGlobals()
+		} else {
+			generateTypeDefinition(type)
+		}
+		generateFooter()
+	}
 	//
 	// Additional public APIs used by IDE Smarts & Co
 	//
@@ -48,15 +67,7 @@
 		currentCode = StringBuilder()
 		definitionOnly = false
 
-		generateHeader()
-		generateDirectives()
-		generateImports()
-		if type is CGGlobalTypeDefinition {
-			generateGlobals()
-		} else {
-			generateTypeDefinition(type)
-		}
-		generateFooter()
+		generateType(type)
 
 		return currentCode.ToString()
 	}
@@ -625,6 +636,17 @@
 				AppendLine(line)
 			}
 		}
+	}
+
+	internal func isXmlDocumentationPresent(_ xmlDocumentationStatement: CGXmlDocumentationStatement?) -> Boolean {
+		if let xmlDocumentationStatement = xmlDocumentationStatement {
+			for line in xmlDocumentationStatement.Lines {
+				if !String.IsNullOrEmpty(line) {
+					return true;
+				}
+			}
+		}
+		return false
 	}
 
 	internal func generateSingleLineCommentStatement(_ commentStatement: CGSingleLineCommentStatement?) {

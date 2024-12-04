@@ -571,6 +571,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateParameterDefinition(_ param: CGParameterDefinition) {
+		var isXMLDocPresent = self.isXmlDocumentationPresent(param.XmlDocumentation);
+		if isXMLDocPresent {
+			self.incIndent();
+		}
+		self.generateXmlDocumentationStatement(param.XmlDocumentation)
 		switch param.Modifier {
 			case .Var: Append("ref ")
 			case .Const: Append("const ") //todo: Oxygene ony?
@@ -586,6 +591,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if let defaultValue = param.DefaultValue {
 			Append(" = ")
 			generateExpression(defaultValue)
+		}
+		if isXMLDocPresent {
+			self.decIndent();
 		}
 	}
 
@@ -987,6 +995,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		incIndent()
 		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) {m in
 			if let member = m as? CGEnumValueDefinition {
+				self.generateXmlDocumentationStatement(member.XmlDocumentation)
 				self.generateAttributes(member.Attributes, inline: true)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {

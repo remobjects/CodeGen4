@@ -58,14 +58,44 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	var Loops: Stack<String> = Stack<String>()
 	var InLoop: Integer = 0
 
+	internal func generateVBheaderComment() {
+		if let comment = currentUnit.HeaderComment, comment.Lines.Count > 0 {
+			generateStatement(comment)
+			AppendLine()
+		}
+	}
+
 	//done
+	override func generateType(_ type: CGTypeDefinition) {
+		// from https://learn.microsoft.com/en-us/dotnet/visual-basic/programming-guide/program-structure/structure-of-a-visual-basic-program
+		generateVBheaderComment()
+		generateDirectives()
+		generateImports()
+		generateHeader()
+		if type is CGGlobalTypeDefinition {
+			generateGlobals()
+		} else {
+			generateTypeDefinition(type)
+		}
+		generateFooter()
+	}
+
+
+	override func generateAll() {
+		// from https://learn.microsoft.com/en-us/dotnet/visual-basic/programming-guide/program-structure/structure-of-a-visual-basic-program
+		generateVBheaderComment()
+		generateDirectives()
+		generateImports()
+		generateHeader()
+		generateForwards()
+		generateGlobals()
+		generateAttributes()
+		generateTypeDefinitions()
+		generateFooter()
+	}
 
 	override func generateDirectives() {
 		super.generateDirectives()
-
-		if currentUnit.Imports.Count > 0 {
-			AppendLine()
-		}
 
 		// VB.NET-specific
 		if Dialect == .Standard {
@@ -81,6 +111,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append("Namespace")
 			Append(" ")
 			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
+			incIndent()
 			AppendLine()
 			AppendLine()
 		}
@@ -89,7 +120,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done
 	override func generateFooter() {
 		if let namespace = currentUnit.Namespace {
-			AppendLine()
+			if currentLocation.column != 0 {
+				// we don't need 2 CRLF before `End Namespace`
+				AppendLine()
+			}
+			decIndent()
 			Append("End Namespace")
 			AppendLine()
 		}
@@ -105,15 +140,16 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 21-5-2020
 	override func generateImport(_ imp: CGImport) {
-		if imp.StaticClass != nil {
-			Append("Imports ")
-			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
-			AppendLine()
-		} else {
-			Append("Imports ")
-			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
-			AppendLine()
-		}
+		/* from https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/imports-statement-net-namespace-and-type
+
+		Imports [ aliasname = ] namespace
+		' -or-
+		Imports [ aliasname = ] namespace.element
+
+		*/
+		Append("Imports ")
+		generateIdentifier(imp.Name, alwaysEmitNamespace: true)
+		AppendLine()
 	}
 
 	//done
@@ -334,17 +370,32 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
+		/* https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/try-catch-finally-statement
+
+			Try
+				[ tryStatements ]
+				[ Exit Try ]
+			[ Catch [ exception [ As type ] ] [ When expression ]
+				[ catchStatements ]
+				[ Exit Try ] ]
+			[ Catch ... ]
+			[ Finally
+				[ finallyStatements ] ]
+			End Try
+
+		*/
 		let finallyStatements = statement.FinallyStatements
 		let catchBlocks = statement.CatchBlocks
 		if (finallyStatements.Count + catchBlocks.Count) > 0 {
 			AppendLine("Try")
-			incIndent()
 		}
+		incIndent()
 		generateStatements(statement.Statements)
+		decIndent()
 		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
-			AppendLine("Catch ")
 			for b in catchBlocks {
 				if let name = b.Name, let type = b.`Type` {
+					Append("Catch ")
 					generateIdentifier(name)
 					Append(" As ")
 					generateTypeReference(type)
@@ -358,10 +409,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					decIndent()
 				} else {
 					assert(catchBlocks.Count == 1, "Can only have a single Catch block, if there is no type filter")
+					AppendLine("Catch ")
+					incIndent()
 					generateStatements(b.Statements)
+					decIndent()
 				}
 			}
-			decIndent()
 		}
 		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
 			AppendLine("Finally")
@@ -369,7 +422,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			generateStatements(finallyStatements)
 			decIndent()
 		}
-		AppendLine("End Try")
+		if (finallyStatements.Count + catchBlocks.Count) > 0 {
+			AppendLine("End Try")
+		}
 	}
 
 	//done
@@ -456,9 +511,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if let callSite = statement.CallSite {
 			if callSite is CGInheritedExpression {
 				generateExpression(callSite)
-				Append(" ")
+				Append(".")
 			} else if callSite is CGSelfExpression {
-				// no-op
+				generateExpression(callSite)
+				Append(".")
 			} else {
 				assert(false, "Unsupported call site for constructor call.")
 			}
@@ -515,7 +571,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			}
 			if let name = param.Name {
 				generateIdentifier(name)
-				Append(": ")
+				Append(":=")
 			}
 			generateExpression(param.Value)
 		}
@@ -959,9 +1015,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	// Type Definitions
 	//
 
-	//done
-	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
-		Append("<")
+	func vb_generateAttribute(_ attribute: CGAttribute) {
 		generateAttributeScope(attribute)
 		generateTypeReference(attribute.`Type`)
 		if let parameters = attribute.Parameters, parameters.Count > 0 {
@@ -969,6 +1023,12 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			vbGenerateAttributeParameters(parameters)
 			Append(")")
 		}
+	}
+
+	//done
+	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
+		Append("<")
+		vb_generateAttribute(attribute)
 		Append(">")
 		if let comment = attribute.Comment {
 			Append(" ")
@@ -1039,7 +1099,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	func vbGenerateVirtualityPrefix(_ member: CGMemberDefinition) {
 		switch member.Virtuality {
 			//case .None
-			case .Virtual: Append("MustOverride ")
+			case .Virtual: Append("Overridable ")
 			case .Abstract: Append("MustOverride ")
 			case .Override: Append("Overrides ")
 			case .Final: Append("NotOverridable ")
@@ -1056,6 +1116,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	}
 
 	func generateParameterDefinition(_ param: CGParameterDefinition, emitExternal: Boolean, externalName: String? = nil) {
+		//self.generateXmlDocumentationStatement(param.XmlDocumentation)
 		if Dialect == .Mercury {
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
@@ -1065,12 +1126,30 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				case .In:
 			}
 		} else {
+			/* from https://learn.microsoft.com/en-us/dotnet/visual-basic/programming-guide/language-features/procedures/sub-procedures
+
+				The syntax for each parameter in the parameter list is as follows:
+				```
+				[Optional] [ByVal | ByRef] [ParamArray] parameterName As DataType
+				```
+				If the parameter is optional, you must also supply a default value as part of its declaration. The syntax for specifying a default value is as follows:
+				```
+				Optional [ByVal | ByRef]  parameterName As DataType = defaultValue
+				```
+			*/
+			if let defaultValue = param.DefaultValue {
+				Append("Optional ")
+			}
+			/* from https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/modifiers/byval
+
+			   Because it is the default, you do not have to explicitly specify the ByVal keyword in method signatures.
+			*/
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
-				case .Const: Append("<In> ByRef ")
-				case .Out: Append("<Out> ByRef ")
+				case .Const: break /* no-op */
+				case .Out: Append("ByRef ")
 				case .Params: Append("ParamArray ")
-				case .In:
+				case .In: break /* no-op */
 			}
 		}
 		if emitExternal, let externalName = externalName ?? param.ExternalName {
@@ -1228,6 +1307,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		incIndent()
 		for m in type.Members {
 			if let member = m as? CGEnumValueDefinition {
+				self.generateXmlDocumentationStatement(member.XmlDocumentation)
 				self.generateAttributes(member.Attributes, inline: true)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
@@ -1241,29 +1321,101 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine("End Enum ")
 	}
 
+	func vbGetClassIdent(_ type: CGClassTypeDefinition) -> String {
+		if Dialect == .Mercury {
+			return "Class"
+		}
+		else {
+			if type.Static {
+				return "Module"
+			}
+			else {
+				return "Class"
+			}
+		}
+	}
+
 	//done 22-5-2020
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
-		vbGenerateTypeVisibilityPrefix(type.Visibility)
-		vbGenerateStaticPrefix(type.Static)
-		vbGeneratePartialPrefix(type.Partial)
-		vbGenerateAbstractPrefix(type.Abstract)
-		vbGenerateSealedPrefix(type.Sealed)
-		Append("Class ")
-		generateIdentifier(type.Name)
-		vbGenerateGenericParameters(type.GenericParameters)
-		vbGenerateGenericConstraints(type.GenericParameters)
-		AppendLine()
-		incIndent()
-		vbGenerateAncestorList(type)
-		AppendLine()
+		if Dialect == .Mercury {
+			vbGenerateTypeVisibilityPrefix(type.Visibility)
+			vbGenerateStaticPrefix(type.Static)
+			vbGeneratePartialPrefix(type.Partial)
+			vbGenerateAbstractPrefix(type.Abstract)
+			vbGenerateSealedPrefix(type.Sealed)
+			Append("\(vbGetClassIdent(type)) ")
+			generateIdentifier(type.Name)
+			vbGenerateGenericParameters(type.GenericParameters)
+			vbGenerateGenericConstraints(type.GenericParameters)
+			AppendLine()
+			incIndent()
+			vbGenerateAncestorList(type)
+			if type.Members.Count > 0 { // don't generate extra CRLF
+			  AppendLine()
+			}
+		}
+		else {
+			if type.Static {
+				/* https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/module-statement
+
+				[ <attributelist> ] [ accessmodifier ]  Module name
+					[ statements ]
+				End Module
+				*/
+
+				if let parameters = type.GenericParameters, parameters.Count > 0 {
+					throw Exception("generic parameters aren't supported in static class \(type.Name)")
+				}
+				vbGenerateTypeVisibilityPrefix(type.Visibility)
+				Append("\(vbGetClassIdent(type)) ")
+				generateIdentifier(type.Name)
+				AppendLine()
+				incIndent()
+				if type.Members.Count > 0 { // don't generate extra CRLF
+				  AppendLine()
+				}
+			}
+			else {
+				/* from https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/class-statement
+				[ <attributelist> ] [ accessmodifier ] [ Shadows ] [ MustInherit | NotInheritable ] [ Partial ] _
+				Class name [ ( Of typelist ) ]
+					[ Inherits classname ]
+					[ Implements interfacenames ]
+					[ statements ]
+				End Class
+				*/
+
+				vbGenerateTypeVisibilityPrefix(type.Visibility)
+				// only one value: Abstract or Sealed is accepted!
+				if type.Abstract {
+					vbGenerateAbstractPrefix(type.Abstract)
+				}
+				else {
+					vbGenerateSealedPrefix(type.Sealed)
+				}
+				vbGeneratePartialPrefix(type.Partial)
+				Append("\(vbGetClassIdent(type)) ")
+				generateIdentifier(type.Name)
+				vbGenerateGenericParameters(type.GenericParameters)
+				vbGenerateGenericConstraints(type.GenericParameters)
+				AppendLine()
+				incIndent()
+				vbGenerateAncestorList(type)
+				if type.Members.Count > 0 { // don't generate extra CRLF
+				  AppendLine()
+				}
+			}
+		}
 	}
 
 	//done 22-5-2020
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		vbGenerateNestedTypes(type)
 		decIndent()
-		AppendLine()
-		AppendLine("End Class")
+		if type.Members.Count > 0 {  //don't generate extra CRLF
+			AppendLine()
+		}
+		AppendLine("End \(vbGetClassIdent(type))")
 	}
 
 	//done 22-5-2020
@@ -1279,14 +1431,18 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		AppendLine()
 		incIndent()
 		vbGenerateAncestorList(type)
-		AppendLine()
+		if type.Members.Count > 0 { // don't generate extra CRLF
+		  AppendLine()
+		}
 	}
 
 	//done 22-5-2020
 	override func generateStructTypeEnd(_ type: CGStructTypeDefinition) {
 		vbGenerateNestedTypes(type)
 		decIndent()
-		AppendLine()
+		if type.Members.Count > 0 { // don't generate extra CRLF
+		  AppendLine()
+		}
 		AppendLine("End Structure")
 	}
 
@@ -1497,12 +1653,20 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	internal func vbGenerateMethodHeader(_ methodName: String, method: CGMethodLikeMemberDefinition) {
-		vbGenerateMemberTypeVisibilityPrefix(method.Visibility)
-		vbGenerateVirtualityModifiders(method)
 		if method.Partial {
-			assert(false, "Visual Basic does not support Partial Methods")
+			if (method.Visibility != .Private) {
+				assert(false, "Visual Basic supports only private Partial Methods")
+			}
+
+			if let returnType = method.ReturnType, !returnType.IsVoid {
+				assert(false, "Visual Basic does not support Partial functions")
+			}
+
 			Append("Partial ")
 		}
+		vbGenerateMemberTypeVisibilityPrefix(method.Visibility)
+		vbGenerateVirtualityModifiders(method)
+
 		if method.Async {
 			Append("Async ")
 		}
@@ -1562,8 +1726,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done 22-5-2020
 	internal func vbGenerateMethodFooter(_ method: CGMethodLikeMemberDefinition) {
-		AppendLine()
 		if method.Locked {
+			AppendLine()
 			AppendLine("End SyncLock ")
 		}
 		AppendLine(vbKeywordForMethod(method, close: true))
@@ -1581,6 +1745,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		//}
 
 		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
+			incIndent();
 			for v in localVariables {
 				if let type = v.`Type` {
 					Append("Dim ")
@@ -1595,6 +1760,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					AppendLine()
 				}
 			}
+			decIndent()
 		}
 		if let localTypes = method.LocalTypes, localTypes.Count > 0 {
 			assert("Local type definitions are not supported in Visual Basic")
@@ -1612,9 +1778,11 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				vbGenerateMethodFooter(m)
 				AppendLine("")
 			}
+			AppendLine("")
 		}
-		AppendLine("")
+		incIndent()
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		decIndent()
 
 		//if let method = method as? CGMethodDefinition, let conditions = method.Postconditions, conditions.Count > 0 {
 			//AppendLine("Ensure")
@@ -1624,7 +1792,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			//AppendLine("End Ensure")
 		//}
 
-		AppendLine()
+		//AppendLine()
 	}
 
 	//done 22-5-2020
@@ -1672,6 +1840,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if !(type is CGInterfaceTypeDefinition) {
 			vbGenerateMemberTypeVisibilityPrefix(property.Visibility)
 			vbGenerateStaticPrefix(property.Static)
+			vbGenerateVirtualityPrefix(property)
 		}
 
 		if property.ReadOnly || (property.SetStatements == nil && property.SetExpression == nil && (property.GetStatements != nil || property.GetExpression != nil)) {

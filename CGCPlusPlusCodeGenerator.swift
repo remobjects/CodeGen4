@@ -58,6 +58,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		//        "switch", "template", "this", "thread_local", "throw", "true", "try", "typedef", "typeid",
 		//        "typename", "typeof", "undef", "union", "unsigned", "using", "uuidof", "virtual", "void",
 		//        "volatile", "wchar_t", "while", "xor", "xor_eq"].ToList() as! List<String>;
+		splitLinesLongerThan = 200;
 	}
 
 	public convenience init(dialect: CGCPlusPlusCodeGeneratorDialect) {
