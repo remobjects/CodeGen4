@@ -1185,12 +1185,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		cSharpGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
-		for s in ctor.Statements {
-			if let ctorCall = s as? CGConstructorCallStatement {
-				Append(" : ")
-				cSharpGenerateInlineConstructorCallStatement(ctorCall)
-				break
-			}
+		if let ctorCall = ctor.NestedConstrutorCall, ctorCall.Parameters.Count == 0 {
+			Append(" : ")
+			cSharpGenerateInlineConstructorCallStatement(ctorCall)
 		}
 
 		if ctor.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly {

@@ -1250,6 +1250,11 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		} else {
 			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility, virtuality: ctor.Virtuality, member: ctor)
 		}
+
+		if let ctorCall = ctor.NestedConstrutorCall, ctorCall.Parameters.Count == 0 {
+			Append("convenience ")
+		}
+
 		Append("init")
 		if ctor.Failable {
 			Append("?")

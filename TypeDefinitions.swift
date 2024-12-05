@@ -291,6 +291,14 @@ public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 	convenience public init(_ name: String, _ statements: CGStatement...) {
 		init(name, statements.ToList())
 	}
+
+	public var NestedConstrutorCall: CGConstructorCallStatement? {
+		for s in Statements {
+			if let ctorCall = s as? CGConstructorCallStatement {
+				return ctorCall
+			}
+		}
+	}
 }
 
 public class CGDestructorDefinition: CGMethodLikeMemberDefinition {
