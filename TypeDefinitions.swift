@@ -509,6 +509,7 @@ public class CGParameterDefinition : CGEntity {
 	public var Modifier: CGParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	public var Attributes = List<CGAttribute>()
+	public var XmlDocumentation: CGXmlDocumentationStatement?
 
 	public init(_ name: String) {
 		Name = name

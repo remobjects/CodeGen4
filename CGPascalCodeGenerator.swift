@@ -811,10 +811,20 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, implementation: Boolean) {
 		helpGenerateCommaSeparatedList(parameters, separator: { self.Append("; ") }) { param in
+			var isXMLDocPresent = self.isXmlDocumentationPresent(param.XmlDocumentation);
 			if !implementation {
+				if isXMLDocPresent {
+					self.incIndent();
+				}
+				self.generateXmlDocumentationStatement(param.XmlDocumentation)
 				self.generateAttributes(param.Attributes, inline: true)
 			}
 			self.generateParameterDefinition(param)
+			if !implementation {
+				if isXMLDocPresent {
+					self.decIndent();
+				}
+			}
 		}
 	}
 
@@ -1206,6 +1216,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
 			if let member = m as? CGEnumValueDefinition {
+				self.generateXmlDocumentationStatement(member.XmlDocumentation)
 				self.generateAttributes(member.Attributes, inline: true)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
@@ -1345,6 +1356,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	final func generateTypeMembers(_ type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
 		var first = true
+		var lastMember: CGMemberDefinition? = nil
 		for m in type.Members {
 			if visibility == CGMemberVisibilityKind.Private {
 				if let m = m as? CGPropertyDefinition {
@@ -1364,20 +1376,37 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 						first = false
 						incIndent()
 					}
+					if isUnified {
+						if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
+							AppendLine()
+						}
+					}
 					generateTypeMember(m, type: type)
+					lastMember = m;
 				}
 			} else {
+				if isUnified {
+					if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
+						AppendLine()
+					}
+				}
 				generateTypeMember(m, type: type)
+				lastMember = m;
 			}
 		}
 	}
 
-	//override func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
-		//if member is CGNestedTypeDefinition {
-			//return true
-		//}
-		//return super.memberIsSingleLine(member)
-	//}
+	override func memberIsSingleLine(_ member: CGMemberDefinition) -> Boolean {
+		if !isUnified {
+			return true;
+		}
+		if member is CGPropertyDefinition {
+			if groupUnified {
+				return true;
+			}
+		}
+		return super.memberIsSingleLine(member)
+	}
 
 	override func memberNeedsSpace(_ member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
 		if lastMember is CGNestedTypeDefinition {
@@ -1662,7 +1691,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
 		pascalGenerateImplementedInterfaceMethodResolution(method, type: type)
-		pascalGenerateMethodHeader(method, type: type, methodKeyword:pascalKeywordForMethod(method), implementation: false, includeVisibility: isUnified)
+		pascalGenerateMethodHeader(method, type: type, methodKeyword:pascalKeywordForMethod(method), implementation: false, includeVisibility: isUnified && !groupUnified)
 		if isUnified && !definitionOnly && !(type is CGInterfaceTypeDefinition) {
 			if (method.Virtuality != CGMemberVirtualityKind.Abstract) && !method.External && !method.Empty {
 				pascalGenerateMethodBody(method, type: type)
@@ -1678,7 +1707,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateConstructorDefinition(_ ctor: CGConstructorDefinition, type: CGTypeDefinition) {
-		pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: false, includeVisibility: isUnified)
+		pascalGenerateConstructorHeader(ctor, type: type, methodKeyword: "constructor", implementation: false, includeVisibility: isUnified && !groupUnified)
 		if isUnified && !definitionOnly {
 			if ctor.Virtuality != CGMemberVirtualityKind.Abstract && !ctor.External && !ctor.Empty {
 				pascalGenerateMethodBody(ctor, type: type)
@@ -1711,7 +1740,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
-		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: false, includeVisibility: isUnified)
+		pascalGenerateMethodHeader(customOperator, type: type, methodKeyword: "operator", implementation: false, includeVisibility: isUnified && !groupUnified)
 		if isUnified && !definitionOnly {
 			pascalGenerateMethodBody(customOperator, type: type)
 		}
@@ -1765,7 +1794,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		pascalGenerateImplementedInterface(field);
 
-		if isUnified {
+		if isUnified && !groupUnified{
 			Append("; ")
 			pascalGenerateMemberVisibilityKeyword(field.Visibility)
 		}
@@ -1891,7 +1920,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			pascalGenerateVirtualityModifiders(property)
 		}
 
-		if !definitionOnly && isUnified && !(type is CGInterfaceTypeDefinition && !property.IsShortcutProperty) {
+		if !definitionOnly && isUnified && !groupUnified && !(type is CGInterfaceTypeDefinition && !property.IsShortcutProperty) {
 			if property.HasGetterMethod || property.HasSetterMethod {
 				AppendLine();
 				pascalGeneratePropertyAccessorDefinition(property, type: type);
@@ -1905,15 +1934,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	func pascalGeneratePropertyAccessorDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
 		if !definitionOnly {
-			var isAppendLineNeeded: Boolean = false;
-
 			if let getStatements = property.GetStatements, let getterMethod = property.GetterMethodDefinition() {
-				AppendLine();
+				if isUnified {
+					AppendLine();
+				}
 				generateMethodDefinition(getterMethod, type: type);
-				isAppendLineNeeded = true;
 			}
 			if let setStatements = property.SetStatements, let setterMethod = property.SetterMethodDefinition() {
-				if isAppendLineNeeded && isUnified {
+				if isUnified {
 					AppendLine();
 				}
 				generateMethodDefinition(setterMethod, type: type);

@@ -29,6 +29,7 @@
 		"reintroduce", "repeat", "resourcestring", "result", "safecall", "saveregisters", "self", "set", "shl", "shr", "softfloat",
 		"specialize", "static", "stdcall", "stored", "strict", "string", "then", "threadvar", "to", "true", "try", "type", "unaligned",
 		"unimplemented", "unit", "until", "uses", "var", "varargs", "virtual", "while", "with", "write", "xor"].ToList() as! List<String>
+		splitLinesLongerThan = 200;
 	}
 
 	public var Version: Integer = 7
@@ -412,6 +413,7 @@
 		Append("(")
 		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
 			if let member = m as? CGEnumValueDefinition {
+				self.generateXmlDocumentationStatement(member.XmlDocumentation)
 				self.generateAttributes(member.Attributes, inline: true)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {

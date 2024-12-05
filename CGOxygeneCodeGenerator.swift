@@ -1,6 +1,7 @@
 ﻿public enum CGOxygeneCodeGeneratorStyle {
 	case Standard
 	case Unified
+	case GroupUnified
 }
 
 public enum CGOxygeneStringQuoteStyle {
@@ -45,7 +46,8 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	public var Style: CGOxygeneCodeGeneratorStyle = .Standard
 	public var QuoteStyle: CGOxygeneStringQuoteStyle = .SmartSingle
 
-	override var isUnified: Boolean { return Style == .Unified }
+	override var isUnified: Boolean { return (Style == .Unified) || (Style == .GroupUnified) }
+	override var groupUnified: Boolean { return Style == .GroupUnified }
 	override var supportsInterfaceVisibilities: Boolean { return true }
 
 	public convenience init(style: CGOxygeneCodeGeneratorStyle) {
@@ -356,10 +358,20 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 				param.startLocation = currentLocation
 			}
 
+			var isXMLDocPresent = self.isXmlDocumentationPresent(param.XmlDocumentation);
 			if !implementation {
+				if isXMLDocPresent {
+					self.incIndent();
+				}
+				self.generateXmlDocumentationStatement(param.XmlDocumentation)
 				self.generateAttributes(param.Attributes, inline: true)
 			}
 			generateParameterDefinition(param)
+			if !implementation {
+				if isXMLDocPresent {
+					self.decIndent();
+				}
+			}
 			param.endLocation = currentLocation
 		}
 	}
@@ -596,7 +608,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		if !definitionOnly {
 			//todo: add/remove/raise
 		}
-		if isUnified {
+		if isUnified && !groupUnified {
 			Append(" ")
 			pascalGenerateMemberVisibilityKeyword(event.Visibility)
 			Append(";")
