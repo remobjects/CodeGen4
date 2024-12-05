@@ -1251,7 +1251,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 			swiftGenerateMemberTypeVisibilityPrefix(ctor.Visibility, virtuality: ctor.Virtuality, member: ctor)
 		}
 
-		if let ctorCall = ctor.NestedConstrutorCall, ctorCall.Parameters.Count == 0 {
+		if let ctorCall = ctor.NestedConstrutorCall, ctorCall.CallSite is CGSelfExpression {
 			Append("convenience ")
 		}
 
