@@ -1194,7 +1194,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append("(")
 		cSharpGenerateDefinitionParameters(ctor.Parameters)
 		Append(")")
-		if let ctorCall = ctor.NestedConstrutorCall, ctorCall.Parameters.Count == 0 {
+		if let ctorCall = ctor.NestedConstrutorCall {
 			Append(" : ")
 			cSharpGenerateInlineConstructorCallStatement(ctorCall)
 		}
