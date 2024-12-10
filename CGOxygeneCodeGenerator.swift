@@ -15,7 +15,7 @@ public enum CGOxygeneStringQuoteStyle {
 public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 
 	public init() {
-		super.init()
+		super.init(dialect: .Oxygene)
 
 		// current as of Elements 8.1
 		keywords = ["abstract", "add", "and", "array", "as", "asc", "aspect", "assembly", "async", "autoreleasepool", "await",
@@ -134,15 +134,15 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
-	override func generateReturnStatement(_ statement: CGReturnStatement) {
-		if let value = statement.Value {
-			Append("exit ")
-			generateExpression(value)
-			AppendLine(";")
-		} else {
-			AppendLine("exit;")
-		}
-	}
+	//override func generateReturnStatement(_ statement: CGReturnStatement) {
+		//if let value = statement.Value {
+			//Append("exit ")
+			//generateExpression(value)
+			//AppendLine(";")
+		//} else {
+			//AppendLine("exit;")
+		//}
+	//}
 
 	override func generateYieldExpression(_ statement: CGYieldExpression) {
 		Append("yield ")

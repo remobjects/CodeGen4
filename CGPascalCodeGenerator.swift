@@ -2,8 +2,15 @@
 // Abstract base implementation for all Pascal-style languages (Oxygene, Delphi)
 //
 
+public enum CGPascalCodeGeneratorDialect {
+	case Standard
+	case Delphi2009
+	case Oxygene
+}
+
 public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	public var AlphaSortImplementationMembers: Boolean = false;
+	public var Dialect: CGPascalCodeGeneratorDialect = .Standard
 
 	override public init() {
 		super.init()
@@ -11,6 +18,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		useTabs = false
 		tabSize = 2
 		keywordsAreCaseSensitive = false
+	}
+
+	public convenience init(dialect: CGPascalCodeGeneratorDialect) {
+		init()
+		Dialect = dialect
 	}
 
 	public override var defaultFileExtension: String { return "pas" }
@@ -357,6 +369,20 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		// handled in base, Oxygene will override
 	}
 	*/
+	private func isOnelineStatement(_ list: List<CGStatement>) -> Boolean {
+		switch list.Count {
+			case 0: return true;
+			case 1:
+				if list[0] is CGReturnStatement {
+					return self.Dialect != .Standard
+				}
+				else {
+					return true
+				}
+			default:
+				return false;
+		}
+	}
 
 	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
 		Append("case ")
@@ -368,10 +394,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				self.generateExpression($0)
 			}
 			Append(": ")
-			if c.Statements.Count == 1 {
+			if isOnelineStatement(c.Statements) {
 				generateStatement(c.Statements.First())
 			} else {
-				AppendLine(": begin")
+				AppendLine("begin")
 				incIndent()
 				incIndent()
 				generateStatements(c.Statements)
@@ -383,10 +409,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
 			Append("else ")
-			if defaultStatements.Count == 1 {
+			if isOnelineStatement(defaultStatements) {
 				generateStatement(defaultStatements.First())
 			} else {
-				AppendLine("else begin")
+				AppendLine("begin")
 				incIndent()
 				generateStatements(defaultStatements)
 				decIndent()
@@ -456,13 +482,33 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateReturnStatement(_ statement: CGReturnStatement) {
-		if let value = statement.Value {
-			Append("result := ")
-			generateExpression(value)
-			generateStatementTerminator()
+		switch self.Dialect {
+			case .Delphi2009:
+				if let value = statement.Value {
+					Append("Exit(")
+					generateExpression(value)
+					AppendLine(");")
+				} else {
+					AppendLine("Exit;")
+				}
+			case .Oxygene:
+				if let value = statement.Value {
+					Append("exit ")
+					generateExpression(value)
+					AppendLine(";")
+				} else {
+					AppendLine("exit;")
+				}
+			default:
+				if let value = statement.Value {
+					Append("result := ")
+					generateExpression(value)
+					generateStatementTerminator()
+				}
+				Append("exit")
+				generateStatementTerminator()
 		}
-		Append("exit")
-		generateStatementTerminator()
+
 	}
 
 	override func generateThrowExpression(_ statement: CGThrowExpression) {
@@ -1053,18 +1099,22 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	*/
 
 	override func generateArrayLiteralExpression(_ array: CGArrayLiteralExpression) {
-		if let elementType = array.ElementType {
-			Append("array of ")
-			generateTypeReference(elementType)
-			Append("(")
+		if self.Dialect == .Oxygene {
+			if let elementType = array.ElementType {
+				Append("array of ")
+				generateTypeReference(elementType)
+				Append("(")
+			}
 		}
 		Append("[")
 		helpGenerateCommaSeparatedList(array.Elements) { e in
 			self.generateExpression(e)
 		}
 		Append("]")
-		if let elementType = array.ElementType {
-			Append(")")
+		if self.Dialect == .Oxygene {
+			if let elementType = array.ElementType {
+				Append(")")
+			}
 		}
 	}
 
@@ -1916,7 +1966,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" default;")
 		}
 		pascalGenerateImplementedInterface(property)
-		if !(self is CGDelphiCodeGenerator) {
+		if self.Dialect == .Oxygene {
 			pascalGenerateVirtualityModifiders(property)
 		}
 
