@@ -1969,11 +1969,14 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
-	/*
-	override func generateNamedTypeReference(_ type: CGNamedTypeReference) {
-		// handled in base
+
+	override func generateNamedTypeReference(_ type: CGNamedTypeReference, ignoreNullability: Boolean = false) {
+		super.generateNamedTypeReference(type, ignoreNullability: ignoreNullability)
+		if !ignoreNullability {
+			vbGenerateSuffixForNullability(type)
+		}
 	}
-	*/
+
 
 	//done 21-5-2020
 	override func generateGenericArguments(_ genericArguments: List<CGTypeReference>?) {
@@ -2018,6 +2021,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			case .Void: Append("")
 			case .Object: Append("Object")
 			case .Class: Append("")
+		}
+		if !ignoreNullability {
+			vbGenerateSuffixForNullability(type)
 		}
 	}
 
