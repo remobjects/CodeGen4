@@ -130,8 +130,31 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+
+	private func generateInteropServices() {
+		var lname = "System.Runtime.InteropServices";
+		if currentUnit.Imports.Count > 0 {
+			for i in currentUnit.Imports {
+				if i.Name == lname {
+					return
+				}
+			}
+		}
+		if currentUnit.FileImports.Count > 0 {
+			for i in currentUnit.FileImports {
+				if i.Name == lname {
+					return
+				}
+			}
+		}
+		currentUnit.Imports.Add(CGImport(lname));
+	}
+
 	//done
 	override func generateImports() {
+		if self.Dialect == .Standard {
+			generateInteropServices()
+		}
 		super.generateImports()
 		if currentUnit.Imports.Count > 0 {
 			AppendLine()
@@ -308,6 +331,17 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done
 	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
+		/*
+		https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/select-case-statement
+
+		Select [ Case ] testexpression
+			[ Case expressionlist
+				[ statements ] ]
+			[ Case Else
+				[ elsestatements ] ]
+		End Select
+
+		*/
 		InLoop = InLoop + 1 //misuse because you can break here in a lot of languages
 		Loops.Push("")
 		Append("Select Case ")
@@ -320,7 +354,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			helpGenerateCommaSeparatedList(c.CaseExpressions) {
 				self.generateExpression($0)
 			}
-			AppendLine(":")
+			AppendLine()
 			incIndent()
 			generateStatementsSkippingOuterBeginEndBlock(c.Statements)
 			decIndent()
@@ -475,6 +509,23 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append("Continue ")
 			AppendLine(f)
 		}
+	}
+
+	override func valueForLanguageAgnosticLiteralExpression(_ expression: CGLanguageAgnosticLiteralExpression) -> String {
+		if (self.Dialect == .Standard) && (expression is CGBooleanLiteralExpression) {
+			/* from https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/data-types/boolean-data-type
+
+			Holds values that can be only True or False. The keywords True and False correspond to the two states of
+			Boolean variables.
+			*/
+			if (expression as! CGBooleanLiteralExpression).Value {
+				return "True"
+			}
+			else {
+				return "False"
+			}
+		}
+		return super.valueForLanguageAgnosticLiteralExpression(expression)
 	}
 
 	//added and done, 21-5-2020
@@ -1146,8 +1197,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			*/
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
-				case .Const: break /* no-op */
-				case .Out: Append("ByRef ")
+				case .Const: Append("<In> ")
+				case .Out: Append("<Out> ByRef ")
 				case .Params: Append("ParamArray ")
 				case .In: break /* no-op */
 			}
@@ -1338,9 +1389,9 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	//done 22-5-2020
 	override func generateClassTypeStart(_ type: CGClassTypeDefinition) {
 		if Dialect == .Mercury {
+			vbGeneratePartialPrefix(type.Partial)
 			vbGenerateTypeVisibilityPrefix(type.Visibility)
 			vbGenerateStaticPrefix(type.Static)
-			vbGeneratePartialPrefix(type.Partial)
 			vbGenerateAbstractPrefix(type.Abstract)
 			vbGenerateSealedPrefix(type.Sealed)
 			Append("\(vbGetClassIdent(type)) ")
@@ -1384,7 +1435,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 					[ statements ]
 				End Class
 				*/
-
+				vbGeneratePartialPrefix(type.Partial)
 				vbGenerateTypeVisibilityPrefix(type.Visibility)
 				// only one value: Abstract or Sealed is accepted!
 				if type.Abstract {
@@ -1393,7 +1444,6 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				else {
 					vbGenerateSealedPrefix(type.Sealed)
 				}
-				vbGeneratePartialPrefix(type.Partial)
 				Append("\(vbGetClassIdent(type)) ")
 				generateIdentifier(type.Name)
 				vbGenerateGenericParameters(type.GenericParameters)
