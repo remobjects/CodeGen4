@@ -7,7 +7,11 @@ public enum CGTypeVisibilityKind {
 	case Public
 }
 
-public __abstract class CGTypeDefinition : CGEntity {
+public protocol ICGHasCondition {
+	var Condition: CGConditionalDefine? { get }
+}
+
+public __abstract class CGTypeDefinition : CGEntity, ICGHasCondition {
 	public var GenericParameters = List<CGGenericParameterDefinition>()
 	public var Name: String
 	public var Members = List<CGMemberDefinition>()
@@ -170,7 +174,7 @@ public enum CGMemberVirtualityKind {
 	case Dynamic // Delphi only
 }
 
-public __abstract class CGMemberDefinition: CGEntity {
+public __abstract class CGMemberDefinition: CGEntity, ICGHasCondition {
 	public var Name: String
 	public var Visibility: CGMemberVisibilityKind = .Private
 	public var Virtuality: CGMemberVirtualityKind = .None
@@ -567,7 +571,7 @@ public enum CGGenericConstraintTypeKind {
 	case Interface
 }
 
-public class CGAttribute: CGEntity {
+public class CGAttribute: CGEntity, ICGHasCondition {
 	public var `Type`: CGTypeReference
 	public var Parameters: List<CGCallParameter>?
 	public var Comment: CGSingleLineCommentStatement?

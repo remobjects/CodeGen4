@@ -48,7 +48,7 @@ public class CGCodeUnit {
 	}
 }
 
-public class CGCompilerDirective {
+public class CGCompilerDirective : ICGHasCondition {
 	public var Directive: String /* will not be language agnostic */
 	public var Condition: CGConditionalDefine?
 
@@ -61,7 +61,7 @@ public class CGCompilerDirective {
 	}
 }
 
-public class CGImport {
+public class CGImport : ICGHasCondition {
 	public var Namespace: CGNamespaceReference?
 	public var StaticClass: CGNamedTypeReference?
 	public var Condition: CGConditionalDefine?
@@ -119,28 +119,34 @@ public __abstract class CGGlobalDefinition {
 	public var RawFooter: List<String>?
 }
 
-public class CGGlobalFunctionDefinition : CGGlobalDefinition {
+public class CGGlobalFunctionDefinition : CGGlobalDefinition, ICGHasCondition {
 	public let Function: CGMethodDefinition
 
 	public init(_ function: CGMethodDefinition) {
 		Function = function
 	}
+
+	public var Condition: CGConditionalDefine? { Function.Condition }
 }
 
-public class CGGlobalVariableDefinition : CGGlobalDefinition {
+public class CGGlobalVariableDefinition : CGGlobalDefinition, ICGHasCondition {
 	public let Variable: CGFieldDefinition
 
 	public init(_ variable: CGFieldDefinition) {
 		Variable = variable
 	}
+
+	public var Condition: CGConditionalDefine? { Variable.Condition }
 }
 
-public class CGGlobalPropertyDefinition : CGGlobalDefinition {
+public class CGGlobalPropertyDefinition : CGGlobalDefinition, ICGHasCondition {
 	public let Property: CGPropertyDefinition
 
 	public init(_ property: CGPropertyDefinition) {
 		Property = property
 	}
+
+	public var Condition: CGConditionalDefine? { Property.Condition }
 }
 
 public class CGInvariant {
