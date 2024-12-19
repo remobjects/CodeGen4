@@ -1548,7 +1548,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if includeVisibility {
 				Append(" ")
 				pascalGenerateMemberVisibilityKeyword(method.Visibility)
-				Append(";")
+				if (method.Visibility != CGMemberVisibilityKind.Unspecified){
+				    Append(";")
+                }
 			}
 
 			pascalGenerateImplementedInterface(method)
