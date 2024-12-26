@@ -287,8 +287,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				Append("interface_cast<")
 				generateTypeReference(cast.TargetType, ignoreNullability: true)
 				Append(">(")
-			}
-			else {
+			} else {
 				Append("dynamic_cast<")
 				generateTypeReference(cast.TargetType)
 				Append(">(")
@@ -474,14 +473,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				case .Unspecified:
 					if let typeref = expression.CallSite as? CGTypeReferenceExpression {
 						Append("::")
-					}
-					else if let typeref = expression.CallSite as? CGInheritedExpression {
+					} else if let typeref = expression.CallSite as? CGInheritedExpression {
 						Append("::")
-					}
-					else if let typeref = expression.CallSite as? CGSelfExpression {
+					} else if let typeref = expression.CallSite as? CGSelfExpression {
 						Append(".")
-					}
-					else {
+					} else {
 						Append(".")
 					}
 			}
@@ -577,8 +573,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					Append("OPENARRAY(")
 					generateTypeReference(ltype)
 					Append(", (")
-				}
-				else {
+				} else {
 					// array of const
 					Append("ARRAYOFCONST((")
 				}
@@ -730,8 +725,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				case .Register:         Append("__fastcall ")
 				default:
 			}
-		}
-		else if isVC(){
+		} else if isVC(){
 			switch callingConvention {
 				case .CDecl:         Append("__cdecl ")
 				case .ClrCall:         Append("__clrcall ")
@@ -741,8 +735,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				case .VectorCall:     Append("__vectorcall ")
 				default:
 			}
-		}
-		else if isStandard() {
+		} else if isStandard() {
 			// only cdecl is used be default;
 		}
 	}
@@ -756,8 +749,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			if method.Static {
 				if isCBuilder()    {
 					Append("__classmethod ")
-				}
-				else
+				} else
 				{
 					Append("static ")
 				}
@@ -766,8 +758,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if header {
 			if isInterface && isCBuilder(){
 				Append("virtual ");
-			}
-			else if !isGlobal {
+			} else if !isGlobal {
 				// virtuality isn't supported for globals
 				switch (method.Virtuality) {
 					case .Virtual:       Append("virtual ");
@@ -803,8 +794,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 			if let lname = method.Name, lname != "" {
 				generateIdentifier(uppercaseFirstLetter(lname))
-			}
-			else {
+			} else {
 				generateIdentifier(uppercaseFirstLetter(type.Name))
 			}
 		} else if isDtor {
@@ -1054,7 +1044,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		generateTypeReference(type.`Type`)
 		if type.Reference {
 			Append("&")
-		}        else {
+		} else {
 			Append("*")
 		}
 	}

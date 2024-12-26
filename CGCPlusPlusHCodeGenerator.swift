@@ -24,6 +24,7 @@
 
 	func cppGenerateHeaderGlobals(){
 		var lastGlobal: CGGlobalDefinition? = nil
+		var list = List<CGGlobalDefinition>()
 		for g in currentUnit.Globals {
 			var visibility: CGMemberVisibilityKind = .Unspecified;
 			 if let method = g as? CGGlobalFunctionDefinition {
@@ -34,12 +35,16 @@
 			}
 			// skip .Unit & .Private visibility - they will be put into .cpp
 			if !((visibility == .Unit)||(visibility == .Private)){
-				if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
-					AppendLine()
-				}
-				generateGlobal(g)
-				lastGlobal = g;
+				list.Add(g)
 			}
+		}
+		for index in (0 ..< list.Count) {
+			var g = list[index]
+			if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
+				AppendLine()
+			}
+			generateGlobal(list, index)
+			lastGlobal = g
 		}
 		if lastGlobal != nil {
 			AppendLine()
@@ -49,14 +54,14 @@
 	func cppHgenerateImports(){
 		var needLF = false;
 		if currentUnit.Imports.Count > 0 {
-			for i in currentUnit.Imports {
-				generateImport(i)
+			for index in (0 ..< currentUnit.Imports.Count) {
+				generateImport(currentUnit.Imports, index)
 			}
 			needLF = true;
 		}
 		if currentUnit.ImplementationImports.Count > 0 {
-			for i in currentUnit.ImplementationImports {
-				generateImport(i)
+			for index in (0 ..< currentUnit.ImplementationImports.Count) {
+				generateImport(currentUnit.ImplementationImports, index)
 			}
 			needLF = true;
 		}
@@ -349,20 +354,20 @@
 		AppendLine("};")
 	}
 
-	internal final func cppHGenerateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition, lastVisibility: CGMemberVisibilityKind) {
-		if let type = type as? CGInterfaceTypeDefinition {
-		}
-		else {
-			if var mVisibility = member.Visibility {
-				if (mVisibility != lastVisibility) {
-					decIndent();
-					cppHGenerateMemberVisibilityPrefix(mVisibility)
-					incIndent();
-				}
-			}
-		}
-		generateTypeMember(member, type: type);
-	}
+	//internal final func cppHGenerateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition, lastVisibility: CGMemberVisibilityKind) {
+		//if let type = type as? CGInterfaceTypeDefinition {
+			//// none
+		//} else {
+			//if var mVisibility = member.Visibility {
+				//if (mVisibility != lastVisibility) {
+					//decIndent();
+					//cppHGenerateMemberVisibilityPrefix(mVisibility)
+					//incIndent();
+				//}
+			//}
+		//}
+		//generateTypeMember(member, type: type);
+	//}
 
 	func cppHGenerateMemberVisibilityPrefix(_ visibility: CGMemberVisibilityKind) {
 		switch visibility {
@@ -382,8 +387,7 @@
 			cppHGenerateMemberVisibilityPrefix(CGMemberVisibilityKind.Public);
 			incIndent();
 			super.generateTypeMembers(type);
-		}
-		else {
+		} else {
 //            var lastMember: CGMemberDefinition? = nil
 //            var lastVisibility: CGMemberVisibilityKind = CGMemberVisibilityKind.Unspecified;
 //            for m in type.Members {
@@ -394,17 +398,17 @@
 //                lastMember = m;
 //                lastVisibility = m.Visibility;
 //            }
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unspecified)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
-			generateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unspecified)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Private)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Unit)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitOrProtected)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.UnitAndProtected)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Assembly)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyOrProtected)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.AssemblyAndProtected)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Protected)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Public)
+			cppGenerateTypeMembers(type, forVisibility: CGMemberVisibilityKind.Published)
 		}
 	}
 
@@ -427,30 +431,42 @@
 		}
 	}
 
-	final func generateTypeMembers(_ type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
+	private func cppGenerateTypeMembers(inout list: List<CGMemberDefinition>!, type: CGTypeDefinition, inout first: Boolean) {
+		for index in (0 ..< list.Count) {
+			if first {
+				decIndent()
+				if list[index].Visibility != CGMemberVisibilityKind.Unspecified {
+					cppHGenerateMemberVisibilityPrefix(list[index].Visibility)
+				}
+				first = false
+				incIndent()
+			}
+			generateTypeMember(list, index, type: type)
+		}
+		list.RemoveAll()
+	}
+
+	final func cppGenerateTypeMembers(_ type: CGTypeDefinition, forVisibility visibility: CGMemberVisibilityKind?) {
 		var first = true
-		for m in type.Members {
+		var list = List<CGMemberDefinition>()
+		for index in (0 ..< type.Members.Count) {
+			var m = type.Members[index]
 			if visibility == CGMemberVisibilityKind.Private {
 				if let m = m as? CGPropertyDefinition {
+					cppGenerateTypeMembers(list: &list, type: type, first: &first)
 					cppGeneratePropertyAccessorDefinition(m, type: type)
 				}
 			}
 			if let visibility = visibility {
 				if m.Visibility == visibility {
-					if first {
-						decIndent()
-						if visibility != CGMemberVisibilityKind.Unspecified {
-							cppHGenerateMemberVisibilityPrefix(visibility)
-						}
-						first = false
-						incIndent()
-					}
-					generateTypeMember(m, type: type)
+					list.Add(m)
 				}
 			} else {
-				generateTypeMember(m, type: type)
+				generateTypeMember(type.Members, index, type: type)
 			}
 		}
+		cppGenerateTypeMembers(list: &list, type: type, first: &first)
+
 	}
 
 }

@@ -4,11 +4,13 @@
 	internal var tabSize = 2
 	internal var useTabs = false
 	internal var definitionOnly = false
+	internal final var StatementTerminator = ";"
 
 	internal var keywords: List<String>?
 	internal var keywordsAreCaseSensitive = true // keywords List must be lowercase when this is set to false
 
 	internal var codeCompletionMode = false
+	internal var combineConditions = true /* debug option */
 
 	override public init() {
 	}
@@ -239,35 +241,88 @@
 
 	internal func generateDirectives() {
 		if currentUnit.Directives.Count > 0 {
-			for d in currentUnit.Directives {
-				generateDirective(d)
+			for index in (0 ..< currentUnit.Directives.Count) {
+				generateDirective(currentUnit.Directives, index)
 			}
 			AppendLine()
 		}
 	}
 
+	internal func compareCondition(_ a: CGConditionalDefine?,_ b: CGConditionalDefine?) -> Boolean {
+		if (a == nil) && (b == nil) {
+			return false
+		}
+		if ((a != nil) && (b == nil)) || ((a == nil) && (b != nil)) {
+			return false
+		}
+		var name_a: String = ""
+		var unary_a: Boolean = false
+		var name_b: String = ""
+		var unary_b: Boolean = false
+
+		var exp: CGExpression? = nil
+
+		if let a = a as? CGConditionalDefine {
+			exp = a.Expression
+		}
+
+		if exp is CGUnaryOperatorExpression {
+			if let exp1 = exp as! CGUnaryOperatorExpression {
+				unary_a = true
+				exp = exp1.Value
+			}
+		}
+		if let exp1 = exp as! CGNamedIdentifierExpression {
+			name_a = exp1.Name
+		} else {
+			// non standard case
+			return false
+		}
+
+
+		if let b = b as? CGConditionalDefine {
+			exp = b.Expression
+		}
+
+		if exp is CGUnaryOperatorExpression {
+			if let exp1 = exp as! CGUnaryOperatorExpression {
+				unary_b = true
+				exp = exp1.Value
+			}
+		}
+		if let exp1 = exp as! CGNamedIdentifierExpression {
+			name_b = exp1.Name
+		} else {
+			// non standard case
+			return false
+		}
+		return (name_a? == name_b?) && (unary_a == unary_b)
+	}
+
+	internal func SameCondition<T>(_ list: List<T>,_ index: Int32) -> Boolean {
+		if !combineConditions {
+			return false
+		}
+		// 1st item or last item
+		if (index == -1) || (index == list.Count - 1) {
+			return false
+		}
+		var a: CGConditionalDefine? = (list[index] as! ICGHasCondition).Condition
+		var b: CGConditionalDefine? = (list[index + 1] as! ICGHasCondition).Condition
+		return compareCondition(a, b)
+	}
+
+
 	internal func generateImports() {
 		if currentUnit.Imports.Count > 0 {
-			for i in currentUnit.Imports {
-				if let condition = i.Condition {
-					generateConditionStart(condition)
-				}
-				generateImport(i)
-				if let condition = i.Condition {
-					generateConditionEnd(condition)
-				}
+			for index in (0 ..< currentUnit.Imports.Count) {
+				generateImport(currentUnit.Imports, index)
 			}
 			AppendLine()
 		}
 		if currentUnit.FileImports.Count > 0 {
-			for i in currentUnit.FileImports {
-				if let condition = i.Condition {
-					generateConditionStart(condition)
-				}
-				generateFileImport(i)
-				if let condition = i.Condition {
-					generateConditionEnd(condition)
-				}
+			for index in (0 ..< currentUnit.FileImports.Count) {
+				generateFileImport(currentUnit.FileImports, index)
 			}
 			AppendLine()
 		}
@@ -280,8 +335,8 @@
 
 	internal func generateTypeDefinitions(_ Types : List<CGTypeDefinition>) {
 		// descendant should not usually override
-		for t in Types {
-			generateTypeDefinition(t)
+		for index in (0 ..< Types.Count) {
+			generateTypeDefinition(Types, index)
 			AppendLine()
 		}
 	}
@@ -289,12 +344,13 @@
 	internal func generateGlobals() {
 
 		var lastGlobal: CGGlobalDefinition? = nil
-		for g in currentUnit.Globals {
+		for index in (0 ..< currentUnit.Globals.Count) {
+			var g = currentUnit.Globals[index]
 			if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
 				AppendLine()
 			}
-			generateGlobal(g)
-			lastGlobal = g;
+			generateGlobal(currentUnit.Globals, index)
+			lastGlobal = g
 		}
 		if lastGlobal != nil {
 			AppendLine()
@@ -304,8 +360,8 @@
 	internal func generateAttributes() {
 
 		var hadAttributes = false
-		for a in currentUnit.Attributes {
-			generateAttribute(a)
+		for index in (0 ..< currentUnit.Attributes.Count) {
+			generateAttribute(currentUnit.Attributes, index)
 			hadAttributes = true
 		}
 		if hadAttributes {
@@ -313,16 +369,20 @@
 		}
 	}
 
-
-	internal final func generateDirective(_ directive: CGCompilerDirective) {
+	internal final func generateDirective(_ list: List<CGCompilerDirective>, _ index: Integer) {
+		var directive = list[index]
 		if let condition = directive.Condition {
-			generateConditionStart(condition)
-			incIndent()
+			if !SameCondition(list, index - 1) {
+				generateConditionStart(condition)
+				incIndent()
+			}
 		}
 		AppendLine(directive.Directive)
 		if let condition = directive.Condition {
-			decIndent()
-			generateConditionEnd(condition)
+			if !SameCondition(currentUnit.Imports, index) {
+				decIndent()
+				generateConditionEnd(condition)
+			}
 		}
 	}
 
@@ -341,8 +401,23 @@
 		assert(false, "generateImport not implemented")
 	}
 
+	internal final func generateImport(_ list: List<CGImport>,_ index: Integer) {
+		var i = list[index]
+		generateConditionStart(list, index)
+		generateImport(i)
+		generateConditionEnd(list, index)
+	}
+
+
 	internal func generateFileImport(_ `import`: CGImport) {
 		// descendant should override if it supports file imports
+	}
+
+	internal final func generateFileImport(_ list: List<CGImport>,_ index: Integer) {
+		var i = list[index]
+		generateConditionStart(list, index)
+		generateFileImport(i)
+		generateConditionEnd(list, index)
 	}
 
 	//
@@ -351,17 +426,17 @@
 
 	internal func memberNeedsSpace(_ member: CGMemberDefinition, afterMember lastMember: CGMemberDefinition) -> Boolean {
 		if typeOf(member) != typeOf(lastMember) {
-			return true;
+			return true
 		}
 		if memberIsSingleLine(member) && memberIsSingleLine(lastMember) {
-			return false;
+			return false
 		}
 		return true
 	}
 
 	internal func globalNeedsSpace(_ global: CGGlobalDefinition, afterGlobal lastGlobal: CGGlobalDefinition) -> Boolean {
 		if globalIsSingleLine(global) && globalIsSingleLine(lastGlobal) {
-			return false;
+			return false
 		}
 		return true
 	}
@@ -458,7 +533,7 @@
 				Append(invariantCommentSeparator)
 				generateStringLiteralExpression(message.AsLiteralExpression())
 			}
-			generateStatementTerminator();
+			generateStatementTerminator()
 		}
 	}
 
@@ -476,8 +551,10 @@
 	internal final func generateStatements(variables statements: List<CGVariableDeclarationStatement>?) {
 		// descendant should not override
 		if let statements = statements {
-			for g in statements {
-				generateStatement(g)
+			for index in (0 ..< statements.Count) {
+				generateConditionStart(statements, index)
+				generateStatement(statements[index])
+				generateConditionEnd(statements, index)
 			}
 		}
 	}
@@ -534,7 +611,7 @@
 
 	internal final func generateStatement(_ statement: CGStatement) {
 
-		statement.startLocation = currentLocation;
+		statement.startLocation = currentLocation
 
 		// descendant should not override
 		if let commentStatement = statement as? CGXmlDocumentationStatement {
@@ -609,7 +686,7 @@
 		}
 
 		//if !assigned(statement.endLocation) {
-			statement.endLocation = currentLocation;
+			statement.endLocation = currentLocation
 		//} // 72543: Silver: cannot check if nullable struct is assigned
 
 	}
@@ -642,7 +719,7 @@
 		if let xmlDocumentationStatement = xmlDocumentationStatement {
 			for line in xmlDocumentationStatement.Lines {
 				if !String.IsNullOrEmpty(line) {
-					return true;
+					return true
 				}
 			}
 		}
@@ -680,6 +757,15 @@
 		// descendant must override this
 		assert(false, "generateConditionStart not implemented")
 	}
+
+	internal func generateConditionStart<T>(_ list: List<T>,_ index: Integer) {
+		if let condition = (list[index] as! ICGHasCondition).Condition {
+			if !SameCondition(list, index - 1) {
+				generateConditionStart(condition)
+			}
+		}
+	}
+
 	internal func generateConditionElse() {
 		// descendant must override this
 		assert(false, "generateConditionElse not implemented")
@@ -687,6 +773,14 @@
 	internal func generateConditionEnd(_ condition: CGConditionalDefine) {
 		// descendant must override this
 		assert(false, "generateConditionEnd not implemented")
+	}
+
+	internal func generateConditionEnd<T>(_ list: List<T>, _ index: Integer) {
+		if let condition = (list[index] as! ICGHasCondition).Condition {
+			if !SameCondition(list, index) {
+				generateConditionEnd(condition)
+			}
+		}
 	}
 
 	internal func generateConditionalBlockStatement(_ statement: CGConditionalBlockStatement) {
@@ -756,19 +850,19 @@
 	internal func generateAutoReleasePoolStatement(_ statement: CGAutoReleasePoolStatement) {
 		// descendant must override this
 		assert(false, "generateAutoReleasePoolStatement not implemented")
-		generateStatement(statement.NestedStatement); // as fallback code
+		generateStatement(statement.NestedStatement) // as fallback code
 	}
 
 	internal func generateCheckedStatement(_ statement: CGCheckedStatement) {
 		// descendant must override this
 		assert(false, "generateCheckedStatement not implemented")
-		generateStatement(statement.NestedStatement); // as fallback code
+		generateStatement(statement.NestedStatement) // as fallback code
 	}
 
 	internal func generateUnsafeStatement(_ statement: CGCUnsafeStatement) {
 		// descendant must override this
 		assert(false, "generateUnsafeStatement not implemented")
-		generateStatement(statement.NestedStatement); // as fallback code
+		generateStatement(statement.NestedStatement) // as fallback code
 	}
 
 	internal func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
@@ -837,7 +931,7 @@
 	}
 
 	internal func generateStatementTerminator() {
-		AppendLine(";")
+		AppendLine(StatementTerminator)
 	}
 
 	internal func generateExpressionStatement(_ expression: CGExpression) {
@@ -860,7 +954,7 @@
 	internal final func generateExpression(_ expression: CGExpression) {
 		// descendant should not override
 
-		expression.startLocation = currentLocation;
+		expression.startLocation = currentLocation
 
 		if let rawExpression = expression as? CGRawExpression {
 			helpGenerateCommaSeparatedList(rawExpression.Lines, separator: { self.AppendLine() }) { line in
@@ -966,7 +1060,7 @@
 		}
 
 		//if !assigned(expression.endLocation) {
-			expression.endLocation = currentLocation;
+			expression.endLocation = currentLocation
 		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 
@@ -1254,8 +1348,22 @@
 	//
 	// Globals
 	//
+	internal func generateGlobal(_ list: List<CGGlobalDefinition>,_ index: Integer) {
+		var global = list[index]
+		var member: CGMemberDefinition? = nil
 
-	internal func generateGlobal(_ global: CGGlobalDefinition) {
+		if let global = global as? CGGlobalFunctionDefinition {
+			member = global.Function
+		} else if let global = global as? CGGlobalVariableDefinition {
+			member = global.Variable
+		} else if let global = global as? CGGlobalPropertyDefinition {
+			member = global.Property
+		} else {
+			assert(false, "unsupported global found: \(typeOf(global).ToString())")
+		}
+
+		generateConditionStart(list, index)
+
 		if let rawHeader = global.RawHeader, rawHeader.Count > 0 {
 			AppendLine()
 			for s in rawHeader {
@@ -1264,15 +1372,7 @@
 			AppendLine()
 		}
 
-		if let global = global as? CGGlobalFunctionDefinition {
-			generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
-		} else if let global = global as? CGGlobalVariableDefinition {
-			generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
-		} else if let global = global as? CGGlobalPropertyDefinition {
-			generateTypeMember(global.Property, type: CGGlobalTypeDefinition.GlobalType)
-		} else {
-			assert(false, "unsupported global found: \(typeOf(global).ToString())")
-		}
+		generateTypeMember_skip_condition(member?, type: CGGlobalTypeDefinition.GlobalType)
 
 		if let rawFooter = global.RawFooter, rawFooter.Count > 0 {
 			AppendLine()
@@ -1281,7 +1381,10 @@
 			}
 			AppendLine()
 		}
+
+		generateConditionEnd(list, index)
 	}
+
 
 	//
 	// Type Definitions
@@ -1293,21 +1396,23 @@
 
 	func generateAttributes(_ attributes: List<CGAttribute>?, inline: Boolean) {
 		if let attributes = attributes, attributes.Count > 0 {
-			for a in attributes {
+			for index in (0 ..< attributes.Count) {
+				var a = attributes[index]
 				if let condition = a.Condition {
-					generateConditionStart(condition)
-					generateAttribute(a, inline: false)
-					generateConditionEnd(condition)
+					generateAttribute(attributes, index, inline: false)
 				} else {
-					generateAttribute(a, inline: inline)
+					generateAttribute(attributes, index, inline: inline)
 				}
 			}
 		}
 	}
 
 	final func generateAttribute(_ attribute: CGAttribute) {
-		// descendant must override
-		generateAttribute(attribute, inline: false);
+		generateAttribute(attribute, inline: false)
+	}
+
+	final func generateAttribute(_ list: List<CGAttribute>,_ index: Integer) {
+		generateAttribute(list, index, inline: false)
 	}
 
 	func generateAttributeScope(_ attribute: CGAttribute) {
@@ -1329,18 +1434,19 @@
 		}
 	}
 
+	internal func generateAttribute(_ list: List<CGAttribute>,_ index: Integer, inline: Boolean) {
+		var attribute = list[index]
+		generateConditionStart(list, index)
+		generateAttribute(attribute, inline: inline)
+		generateConditionEnd(list, index)
+	}
 	internal func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
 		// descendant must override
 		assert(false, "generateAttribute not implemented")
 	}
 
-	internal final func generateTypeDefinition(_ type: CGTypeDefinition) {
-
-		if let condition = type.Condition {
-			generateConditionStart(condition)
-		}
-
-		type.startLocation = currentLocation;
+	internal final func generateTypeDefinition_skip_condition(_ type: CGTypeDefinition) {
+		type.startLocation = currentLocation
 		generateCommentStatement(type.Comment)
 		generateXmlDocumentationStatement(type.XmlDocumentation)
 		generateAttributes(type.Attributes)
@@ -1370,13 +1476,29 @@
 		}
 
 		if !assigned(type.endLocation) {
-			type.endLocation = currentLocation;
+			type.endLocation = currentLocation
 		} // 72543: Silver: cannot check if nullable struct is assigned
+	}
+
+
+	internal final func generateTypeDefinition(_ type: CGTypeDefinition) {
+
+		if let condition = type.Condition {
+			generateConditionStart(condition)
+		}
+
+		generateTypeDefinition_skip_condition(type)
 
 		if let condition = type.Condition {
 			generateConditionEnd(condition)
 		}
 
+	}
+
+	internal final func generateTypeDefinition(_ list: List<CGTypeDefinition>,_ index: Integer) {
+		generateConditionStart(list, index)
+		generateTypeDefinition_skip_condition(list[index])
+		generateConditionEnd(list, index)
 	}
 
 	internal func generateInlineComment(_ comment: String) {
@@ -1442,12 +1564,13 @@
 	internal func generateTypeMembers(_ type: CGTypeDefinition) {
 
 		var lastMember: CGMemberDefinition? = nil
-		for m in type.Members {
+		for index in (0 ..< type.Members.Count) {
+			var m = type.Members[index]
 			if let lastMember = lastMember, memberNeedsSpace(m, afterMember: lastMember) && !definitionOnly {
 				AppendLine()
 			}
-			generateTypeMember(m, type: type)
-			lastMember = m;
+			generateTypeMember(type.Members, index, type: type)
+			lastMember = m
 		}
 	}
 
@@ -1504,13 +1627,8 @@
 	//
 	// Type members
 	//
-
-	internal final func generateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition) {
-
-		if let condition = member.Condition {
-			generateConditionStart(condition)
-		}
-		member.startLocation = currentLocation;
+	private final func generateTypeMember_skip_condition(_ member: CGMemberDefinition, type: CGTypeDefinition) {
+		member.startLocation = currentLocation
 		generateCommentStatement(member.Comment)
 		generateXmlDocumentationStatement(member.XmlDocumentation)
 		generateAttributes(member.Attributes)
@@ -1543,16 +1661,31 @@
 
 		//72543: Silver: cannot check if nullable struct is assigned
 		/*if member.endLocation != nil {
-			member.endLocation = currentLocation;
+			member.endLocation = currentLocation
 		}
 		if !assigned(member.endLocation) {
-			member.endLocation = currentLocation;
+			member.endLocation = currentLocation
 		}*/
-		member.endLocation = currentLocation;
+		member.endLocation = currentLocation
+	}
+
+
+	internal final func generateTypeMember(_ member: CGMemberDefinition, type: CGTypeDefinition) {
+
+		if let condition = member.Condition {
+			generateConditionStart(condition)
+		}
+		generateTypeMember_skip_condition(member, type: type)
 
 		if let condition = member.Condition {
 			generateConditionEnd(condition)
 		}
+	}
+
+	internal final func generateTypeMember(_ list: List<CGMemberDefinition>, _ index: Integer, type: CGTypeDefinition) {
+		generateConditionStart(list, index)
+		generateTypeMember_skip_condition(list[index], type: type)
+		generateConditionEnd(list, index)
 	}
 
 	internal func generateConstructorDefinition(_ member: CGConstructorDefinition, type: CGTypeDefinition) {
@@ -1622,7 +1755,7 @@
 
 	internal final func generateTypeReference(_ type: CGTypeReference, ignoreNullability: Boolean) {
 
-		type.startLocation = currentLocation;
+		type.startLocation = currentLocation
 		//Append("["+type+"|"+Int32(type.ActualNullability).description+"]")
 
 		// descendant should not override
@@ -1665,7 +1798,7 @@
 		}
 
 		//if !assigned(type.endLocation) {
-			type.endLocation = currentLocation;
+			type.endLocation = currentLocation
 		//} // 72543: Silver: cannot check if nullable struct is assigned
 	}
 
@@ -1959,14 +2092,14 @@
 	public final func ExpressionToString(_ expression: CGExpression) -> String {
 		currentCode = StringBuilder()
 
-		generateExpression(expression);
+		generateExpression(expression)
 		return currentCode.ToString()
 	}
 
 	public final func StatementToString(_ statement: CGStatement) -> String {
 		currentCode = StringBuilder()
 
-		generateStatement(statement);
+		generateStatement(statement)
 		return currentCode.ToString()
 	}
 }

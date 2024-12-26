@@ -346,12 +346,13 @@ public class CGLocalMethodStatement : CGAnonymousMethodExpression {
 
 /* Operator statements */
 
-public class CGVariableDeclarationStatement: CGStatement {
+public class CGVariableDeclarationStatement: CGStatement, ICGHasCondition {
 	public var Name: String
 	public var `Type`: CGTypeReference?
 	public var Value: CGExpression?
 	public var Constant = false
 	public var ReadOnly = false
+	public var Condition: CGConditionalDefine?
 
 	public init(_ name: String, _ type: CGTypeReference?, _ value: CGExpression? = nil) {
 		Name = name

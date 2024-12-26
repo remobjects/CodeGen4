@@ -32,34 +32,27 @@
 		splitLinesLongerThan = 200;
 	}
 
-	public var Version: Integer = 7
-
-	public convenience init(version: Integer) {
-		init()
-		Version = version
-	}
-
 	override func escapeIdentifier(_ name: String) -> String {
-		if Version > 9 {
+		if self.Dialect == .Delphi2009 {
 			return super.escapeIdentifier(name)
 		} else {
 			return name
 		}
 	}
 
-	override func generateHeader() {
-		Append("unit ")
-		if let fileName = currentUnit.FileName {
-			Append(fileName)
-		} else if let namespace = currentUnit.Namespace {
-			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
-		} else {
-			Append("{unit name unknown}")
-		}
-		AppendLine(";")
-		AppendLine()
-		super.generateHeader()
-	}
+	//override func generateHeader() {
+		//Append("unit ")
+		//if let fileName = currentUnit.FileName {
+			//Append(fileName)
+		//} else if let namespace = currentUnit.Namespace {
+			//generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
+		//} else {
+			//Append("{unit name unknown}")
+		//}
+		//AppendLine(";")
+		//AppendLine()
+		//super.generateHeader()
+	//}
 
 	internal func generateForwards(_ Types : List<CGTypeDefinition>) {
 		if Types.Count > 0 {
@@ -69,28 +62,27 @@
 			if AlphaSortImplementationMembers {
 				t.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
 			}
+			var list = List<CGTypeDefinition>()
 			for type in t {
 				if let type = type as? CGInterfaceTypeDefinition {
-					if let condition = type.Condition {
-						generateConditionStart(condition)
-					}
-					AppendLine(type.Name + " = interface;")
-					if let condition = type.Condition {
-						generateConditionEnd(condition)
-					}
+					list.Add(type)
 				}
 			}
 
 			for type in t {
 				if let type = type as? CGClassTypeDefinition {
-					if let condition = type.Condition {
-						generateConditionStart(condition)
-					}
-					AppendLine(type.Name + " = class;")
-					if let condition = type.Condition {
-						generateConditionEnd(condition)
-					}
+					list.Add(type)
 				}
+			}
+
+			for index in (0 ..< list.Count) {
+				generateConditionStart(list, index)
+				if let type = list[index] as? CGInterfaceTypeDefinition {
+					AppendLine(type.Name + " = interface;")
+				} else if let type = list[index] as? CGClassTypeDefinition {
+					AppendLine(type.Name + " = class;")
+				}
+				generateConditionEnd(list, index)
 			}
 			AppendLine()
 		}
@@ -113,7 +105,59 @@
 	}
 
 	override func pascalGenerateMemberVisibilityKeyword(_ visibility: CGMemberVisibilityKind) {
-		if Version > 11 {
+		/* https://docwiki.embarcadero.com/RADStudio/Sydney/en/Classes_and_Objects_(Delphi)
+
+			#Private, Protected, and Public Members
+
+			A private member is invisible outside of the unit or program where its class is declared. In other words, a private method
+			cannot be called from another module, and a private field or property cannot be read or written to from another module.
+			By placing related class declarations in the same module, you can give each class access to the private members of another
+			class without making those members more widely accessible. For a member to be visible only inside its class, it needs to be
+			declared strict private.
+
+			A protected member is visible anywhere in the module where its class is declared and from any descendent class, regardless of
+			the module where the descendent class appears. A protected method can be called, and a protected field or property read or
+			written to, from the definition of any method belonging to a class that descends from the one where the protected member is
+			declared. Members that are intended for use only in the implementation of derived classes are usually protected.
+
+			A public member is visible wherever its class can be referenced.
+
+			#Strict Visibility Specifiers
+
+			In addition to private and protected visibility specifiers, the Delphi compiler supports additional visibility settings with
+			greater access constraints. These settings are strict private and strict protected visibility.
+
+			Class members with strict private visibility are accessible only within the class in which they are declared. They are not
+			visible to procedures or functions declared within the same unit. Class members with strict protected visibility are visible
+			within the class in which they are declared, and within any descendent class, regardless of where it is declared. Furthermore,
+			when instance members (those declared without the class or class var keywords) are declared strict private or strict protected,
+			they are inaccessible outside of the instance of a class in which they appear. An instance of a class cannot access strict private
+			or strict protected instance members in other instances of the same class.
+
+			#Published Members
+
+			Published members have the same visibility as public members. The difference is that run-time type information (RTTI) is generated
+			for published members. RTTI allows an application to query the fields and properties of an object dynamically and to locate its methods.
+			RTTI is used to access the values of properties when saving and loading form files, to display properties in the Object Inspector, and
+			to associate specific methods (called event handlers) with specific properties (called events).
+
+			Published properties are restricted to certain data types. Ordinal, string, class, interface, variant, and method-pointer types can be
+			published. So can set types, provided the upper and lower bounds of the base type have ordinal values from 0 through 31. (In other words,
+			the set must fit in a byte, word, or double word.) Any real type except Real48 can be published. Properties of an array type (as distinct
+			from array properties, discussed below) cannot be published.
+
+			Some properties, although publishable, are not fully supported by the streaming system. These include properties of record types, array
+			properties of all publishable types, and properties of enumerated types that include anonymous values. If you publish a property of this
+			kind, the Object Inspector will not display it correctly, nor will the property's value be preserved when objects are streamed to disk.
+
+			All methods are publishable, but a class cannot publish two or more overloaded methods with the same name. Fields can be published only
+			if they are of a class or interface type.
+
+			A class cannot have published members unless it is compiled in the {$M+} state or descends from a class compiled in the {$M+} state.
+			Most classes with published members derive from Classes.TPersistent, which is compiled in the {$M+} state, so it is seldom necessary
+			to use the $M directive.
+		*/
+		if Dialect == .Delphi2009 {
 			switch visibility {
 				case .Unspecified: break /* no-op */
 				case .Private: Append("strict private")
@@ -134,9 +178,9 @@
 				case .Unit: Append("private")
 				case .UnitAndProtected: fallthrough
 				case .AssemblyAndProtected: fallthrough
-				case .Protected: Append("protected")
 				case .UnitOrProtected: fallthrough
 				case .AssemblyOrProtected: fallthrough
+				case .Protected: Append("protected")
 				case .Assembly: fallthrough
 				case .Published: Append("published")
 				case .Public: Append("public")
@@ -225,8 +269,8 @@
 
 	final func delphiGenerateImplementationDirectives() {
 		if currentUnit.ImplementationDirectives.Count > 0 {
-			for d in currentUnit.ImplementationDirectives {
-				generateDirective(d)
+			for index in (0 ..< currentUnit.ImplementationDirectives.Count) {
+				generateDirective(currentUnit.ImplementationDirectives, index)
 			}
 			AppendLine()
 		}
@@ -236,89 +280,84 @@
 	final func delphiGenerateGlobalImplementations() {
 		// step1: generate global consts and vars
 		needCR = false;
+		var list = List<CGGlobalDefinition>()
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
 				if (global.Variable.Visibility == .Private)||(global.Variable.Visibility == .Unit)  {
-					generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
-					needCR = true;
+					list.Add(global)
 				}
-			}
-			else if let global = g as? CGGlobalFunctionDefinition {
+			} else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed at step2
-			}
-			else if let global = g as? CGGlobalPropertyDefinition {
+			} else if let global = g as? CGGlobalPropertyDefinition {
 				// skip global properties
-				Append("// global proerties are not supported.")
-			}
-			else {
+				Append("// global properties are not supported.")
+			} else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}
 		}
+
+		for index in (0 ..< list.Count) {
+			generateGlobal(list, index)
+			needCR = true;
+		}
+
 		if needCR {    AppendLine();}
+
+		list.RemoveAll()
 		// step2: generate global methods
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
 				// already processed in step1
-			}
-			else if let global = g as? CGGlobalFunctionDefinition {
-				pascalGenerateMethodImplementation(global.Function, type: CGGlobalTypeDefinition.GlobalType)
-			}
-			else if let global = g as? CGGlobalPropertyDefinition {
+			} else if let global = g as? CGGlobalFunctionDefinition {
+				list.Add(global)
+			} else if let global = g as? CGGlobalPropertyDefinition {
 				// skip global properties
 				Append("// global proerties are not supported.")
-			}
-			else {
+			} else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}
+		}
+		for index in (0 ..< list.Count) {
+			generateGlobal(list, index)
 		}
 	}
 
 	final func delphiGenerateGlobalInterfaceVariables() {
 		// generate global consts and vars
-		needCR = false;
+		var list = List<CGGlobalDefinition>();
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
 				if global.Variable.Visibility != CGMemberVisibilityKind.Private {
-					if let rawHeader = global.RawHeader, rawHeader.Count > 0 {
-						AppendLine()
-						for s in rawHeader {
-							AppendLine(s)
-						}
-					}
-					generateTypeMember(global.Variable, type: CGGlobalTypeDefinition.GlobalType)
-					if let rawFooter = global.RawFooter, rawFooter.Count > 0 {
-						for s in rawFooter {
-							AppendLine(s)
-						}
-						AppendLine()
-					}
-					needCR = true;
+					list.Add(global)
 				}
-
-			}
-			else if let global = g as? CGGlobalFunctionDefinition {
+			} else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed in delphiGenerateGlobalInterfaceMethods
-			}
-			   else {
+			} else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}
+		}
+		for index in (0 ..< list.Count) {
+			generateGlobal(list, index)
 		}
 	}
 
 	final func delphiGenerateGlobalInterfaceMethods() {
 		// generate global methods
+		var list = List<CGGlobalDefinition>()
 		for g in currentUnit.Globals {
 			if let global = g as? CGGlobalVariableDefinition {
 				// already processed in delphiGenerateGlobalInterfaceVariables
-			}
-			else if let global = g as? CGGlobalFunctionDefinition {
+			} else if let global = g as? CGGlobalFunctionDefinition {
 				if global.Function.Visibility != CGMemberVisibilityKind.Private {
-					generateTypeMember(global.Function, type: CGGlobalTypeDefinition.GlobalType)
+					list.Add(global)
 				}
-			}
-			else {
+			} else {
 				assert(false, "unsupported global found: \(typeOf(g).ToString())")
 			}
+		}
+
+		for index in (0 ..< list.Count) {
+			generateGlobal(list, index)
 		}
 
 	}
@@ -609,8 +648,7 @@
 						incIndent()
 						generateStatementSkippingOuterBeginEndBlock(b.Statements[0])
 						decIndent()
-					}
-					else {
+					} else {
 						AppendLine("begin")
 						incIndent()
 						generateStatements(b.Statements)
@@ -658,12 +696,12 @@
 		}
 	}
 
-	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
-		var x = ord(expression.Value)
-		if (x >= 32) && (x < 127) {
-			Append("'"+expression.Value+"'");
-		} else {
-			super.generateCharacterLiteralExpression(expression);
-		}
-	}
+	//override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
+		//var x = ord(expression.Value)
+		//if (x >= 32) && (x < 127) {
+			//Append("'"+expression.Value+"'");
+		//} else {
+			//super.generateCharacterLiteralExpression(expression);
+		//}
+	//}
 }

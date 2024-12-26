@@ -124,9 +124,7 @@
 			}
 			Append("}")
 
-		}
-		else
-		{
+		} else {
 			Append("new ")
 			generateExpression(expression.`Type`)
 			//generateGenericArguments(expression.GenericArguments)

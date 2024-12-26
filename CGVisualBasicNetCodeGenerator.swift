@@ -193,6 +193,43 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	override func generateConditionStart(_ condition: CGConditionalDefine) {
+		/* https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/directives/if-then-else-directives
+
+		#If expression Then
+			statements
+		[ #ElseIf expression Then
+			[ statements ]
+		...
+		#ElseIf expression Then
+			[ statements ] ]
+		[ #Else
+			[ statements ] ]
+		#End If
+
+		*/
+		Append("#If ")
+		generateExpression(condition.Expression)
+		AppendLine(" Then")
+	}
+
+	override func generateConditionElse() {
+		AppendLine("#Else")
+	}
+
+	override func generateConditionEnd(_ condition: CGConditionalDefine) {
+		AppendLine("#End If")
+	}
+
+	internal override func assert(_ message: String) {
+		if Dialect != .Mercury && !failOnAsserts {
+			AppendLine("' \(message)")
+		}
+		else {
+			super.assert(message)
+		}
+	}
+
 	//
 	// Statements
 	//
@@ -520,8 +557,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			*/
 			if (expression as! CGBooleanLiteralExpression).Value {
 				return "True"
-			}
-			else {
+			} else {
 				return "False"
 			}
 		}
@@ -789,8 +825,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		if Dialect == .Mercury {
 			generateExpression(expression.PointerExpression)
 			Append(".Dereference^")
-		}
-		else {
+		} else {
 			assert(false, "Visual Basic does not support pointers")
 		}
 	}
@@ -1375,12 +1410,10 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 	func vbGetClassIdent(_ type: CGClassTypeDefinition) -> String {
 		if Dialect == .Mercury {
 			return "Class"
-		}
-		else {
+		} else {
 			if type.Static {
 				return "Module"
-			}
-			else {
+			} else {
 				return "Class"
 			}
 		}
@@ -1404,8 +1437,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			if type.Members.Count > 0 { // don't generate extra CRLF
 			  AppendLine()
 			}
-		}
-		else {
+		} else {
 			if type.Static {
 				/* https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/module-statement
 
@@ -1425,8 +1457,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				if type.Members.Count > 0 { // don't generate extra CRLF
 				  AppendLine()
 				}
-			}
-			else {
+			} else {
 				/* from https://learn.microsoft.com/en-us/dotnet/visual-basic/language-reference/statements/class-statement
 				[ <attributelist> ] [ accessmodifier ] [ Shadows ] [ MustInherit | NotInheritable ] [ Partial ] _
 				Class name [ ( Of typelist ) ]
@@ -1440,8 +1471,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				// only one value: Abstract or Sealed is accepted!
 				if type.Abstract {
 					vbGenerateAbstractPrefix(type.Abstract)
-				}
-				else {
+				} else {
 					vbGenerateSealedPrefix(type.Sealed)
 				}
 				Append("\(vbGetClassIdent(type)) ")
@@ -1498,12 +1528,16 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 
 	internal func vbGenerateNestedTypes(_ type: CGTypeDefinition) {
+		var list = List<CGTypeDefinition>()
 		for m in type.Members {
 			if let nestedType = m as? CGNestedTypeDefinition {
-				AppendLine()
 				nestedType.`Type`.Name = nestedType.Name // Todo: nasty hack.
-				generateTypeDefinition(nestedType.`Type`)
+				list.Add(nestedType.`Type`)
 			}
+		}
+		for index in (0 ..< list.Count) {
+			AppendLine()
+			generateTypeDefinition(list, index)
 		}
 	}
 	//done 22-5-2020
