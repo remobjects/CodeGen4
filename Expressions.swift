@@ -675,6 +675,9 @@ public class CGLocalVariableAccessExpression : CGExpression {
 	}
 }
 
+public class CGParameterAccessExpression : CGLocalVariableAccessExpression {
+}
+
 public enum CGCallSiteKind {
 	case Unspecified
 	case Static
