@@ -17,6 +17,7 @@
 
 	func cppGenerateCPPGlobals(){
 		var lastGlobal: CGGlobalDefinition? = nil
+		var list = List<CGGlobalDefinition>()
 		for g in currentUnit.Globals {
 			var visibility: CGMemberVisibilityKind = .Unspecified;
 			 if let method = g as? CGGlobalFunctionDefinition {
@@ -27,12 +28,18 @@
 			}
 			// generate only .Unit & .Private visibility
 			if ((visibility == .Unit)||(visibility == .Private)){
-				if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
-					AppendLine()
-				}
-				generateGlobal(g)
-				lastGlobal = g;
+				list.Add(g)
 			}
+		}
+
+		for index in (0 ..< list.Count) {
+			var g = list[index]
+			if let lastGlobal = lastGlobal, globalNeedsSpace(g, afterGlobal: lastGlobal) {
+				AppendLine()
+			}
+
+			generateGlobal(list, index)
+			lastGlobal = g
 		}
 		if lastGlobal != nil {
 			AppendLine()
@@ -88,8 +95,8 @@
 
 	override func generateDirectives() {
 		if currentUnit.ImplementationDirectives.Count > 0 {
-			for d in currentUnit.ImplementationDirectives {
-				generateDirective(d)
+			for index in (0 ..< currentUnit.ImplementationDirectives.Count) {
+				generateDirective(currentUnit.ImplementationDirectives, index)
 			}
 			AppendLine()
 		}

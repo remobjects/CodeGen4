@@ -530,9 +530,9 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	// Type Members
 	//
 
-	override func pascalKeywordForMethod(_ method: CGMethodDefinition) -> String {
-		return "method"
-	}
+	//override func pascalKeywordForMethod(_ method: CGMethodDefinition) -> String {
+		//return "method"
+	//}
 
 	override func pascalGenerateVirtualityModifiders(_ member: CGMemberDefinition) {
 		switch member.Virtuality {
@@ -585,13 +585,13 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 	override func generateFinalizerDefinition(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: false)
 		if isUnified && !definitionOnly {
-			pascalGenerateMethodBody(finalizer, type: type)
+			pascalGenerateMethodBody(finalizer, type: type, allowLocalVariables: false)
 		}
 	}
 
 	override func pascalGenerateFinalizerImplementation(_ finalizer: CGFinalizerDefinition, type: CGTypeDefinition) {
 		pascalGenerateFinalizerHeader(finalizer, type: type, implementation: true)
-		pascalGenerateMethodBody(finalizer, type: type)
+		pascalGenerateMethodBody(finalizer, type: type, allowLocalVariables: !isUnified)
 	}
 
 	override func generateEventDefinition(_ event: CGEventDefinition, type: CGTypeDefinition) {

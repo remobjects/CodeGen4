@@ -302,6 +302,7 @@ public class CGConstructorDefinition: CGMethodLikeMemberDefinition {
 				return ctorCall
 			}
 		}
+		return nil
 	}
 }
 
@@ -409,6 +410,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 			method.ReturnType = type
 			method.Parameters = Parameters
 			method.Static = Static
+			method.Condition = Condition
 			return method
 		} else if let getExpression = GetExpression, let type = `Type` {
 			let method = CGMethodDefinition(`prefix`+Name)
@@ -416,6 +418,7 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 			method.Parameters = Parameters
 			method.Statements.Add(getExpression.AsReturnStatement())
 			method.Static = Static
+			method.Condition = Condition
 			return method
 		}
 		return nil
@@ -428,12 +431,14 @@ public class CGPropertyDefinition: CGFieldOrPropertyDefinition {
 			let method = CGMethodDefinition(`prefix`+Name, setStatements)
 			method.Parameters.Add(Parameters)
 			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
+			method.Condition = Condition
 			return method
 		} else if let setExpression = SetExpression, let type = `Type` {
 			let method = CGMethodDefinition(`prefix`+Name)
 			method.Parameters.Add(Parameters)
 			method.Parameters.Add(CGParameterDefinition(MAGIC_VALUE_PARAMETER_NAME, type))
 			method.Statements.Add(CGAssignmentStatement(setExpression, CGLocalVariableAccessExpression(MAGIC_VALUE_PARAMETER_NAME)))
+			method.Condition = Condition
 			return method
 		}
 		return nil
@@ -461,6 +466,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 		if let addStatements = AddStatements, let type = `Type` {
 			let method = CGMethodDefinition("add__"+Name, addStatements)
 			method.Parameters.Add(CGParameterDefinition("___value", type))
+			method.Condition = Condition
 			return method
 		}
 		return nil
@@ -470,6 +476,7 @@ public class CGEventDefinition: CGFieldLikeMemberDefinition {
 		if let removeStatements = RemoveStatements, let type = `Type` {
 			let method = CGMethodDefinition("remove__"+Name, removeStatements)
 			method.Parameters.Add(CGParameterDefinition("___value", type))
+			method.Condition = Condition
 			return method
 		}
 		return nil

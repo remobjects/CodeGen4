@@ -37,8 +37,8 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	override func generateHeader() {
 
 		super.generateHeader()
-		for i in currentUnit.Imports {
-			generateImport(i)
+		for index in (0 ..< currentUnit.Imports.Count) {
+			generateImport(currentUnit.Imports, index)
 		}
 		AppendLine()
 		if let namespace = currentUnit.Namespace {
