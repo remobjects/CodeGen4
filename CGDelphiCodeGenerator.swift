@@ -303,23 +303,8 @@
 
 		if needCR {    AppendLine();}
 
-		list.RemoveAll()
 		// step2: generate global methods
-		for g in currentUnit.Globals {
-			if let global = g as? CGGlobalVariableDefinition {
-				// already processed in step1
-			} else if let global = g as? CGGlobalFunctionDefinition {
-				list.Add(global)
-			} else if let global = g as? CGGlobalPropertyDefinition {
-				// skip global properties
-				Append("// global proerties are not supported.")
-			} else {
-				assert(false, "unsupported global found: \(typeOf(g).ToString())")
-			}
-		}
-		for index in (0 ..< list.Count) {
-			generateGlobal(list, index)
-		}
+		pascalGenerateGlobalImplementations()
 	}
 
 	final func delphiGenerateGlobalInterfaceVariables() {
@@ -446,29 +431,29 @@
 		}
 	}
 
-	override func generateEnumType(_ type: CGEnumTypeDefinition) {
-		generateIdentifier(type.Name)
-		Append(" = ")
-		Append("(")
-		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
-			if let member = m as? CGEnumValueDefinition {
-				self.generateXmlDocumentationStatement(member.XmlDocumentation)
-				self.generateAttributes(member.Attributes, inline: true)
-				self.generateIdentifier(member.Name)
-				if let value = member.Value {
-					self.Append(" = ")
-					self.generateExpression(value)
-				}
-			}
-		}
+	//override func generateEnumType(_ type: CGEnumTypeDefinition) {
+		//generateIdentifier(type.Name)
+		//Append(" = ")
+		//Append("(")
+		//helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
+			//if let member = m as? CGEnumValueDefinition {
+				//self.generateXmlDocumentationStatement(member.XmlDocumentation)
+				//self.generateAttributes(member.Attributes, inline: true)
+				//self.generateIdentifier(member.Name)
+				//if let value = member.Value {
+					//self.Append(" = ")
+					//self.generateExpression(value)
+				//}
+			//}
+		//}
 
-		Append(")")
-		if let baseType = type.BaseType {
-			Append(" of ")
-			generateTypeReference(baseType)
-		}
-		generateStatementTerminator()
-	}
+		//Append(")")
+		//if let baseType = type.BaseType {
+			//Append(" of ")
+			//generateTypeReference(baseType)
+		//}
+		//generateStatementTerminator()
+	//}
 
 	override func generateInterfaceTypeStart(_ type: CGInterfaceTypeDefinition) {
 		generateIdentifier(type.Name)

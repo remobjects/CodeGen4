@@ -160,6 +160,47 @@ public extension CGMethodDefinition {
 	}
 }
 
+public extension CGParameterDefinition {
+	public func AsExpression() -> CGParameterAccessExpression {
+		return CGParameterAccessExpression(self.Name)
+	}
+	public func AsCallParameter() -> CGCallParameter {
+		return self.AsExpression().AsCallParameter()
+	}
+	public func AsCallParameter(_ name: String?) -> CGCallParameter {
+		return self.AsExpression().AsCallParameter(name)
+	}
+}
+
+public extension CGVariableDeclarationStatement {
+	public func AsExpression() -> CGLocalVariableAccessExpression {
+		return CGLocalVariableAccessExpression(self.Name)
+	}
+	public func AsCallParameter() -> CGCallParameter {
+		return self.AsExpression().AsCallParameter()
+	}
+	public func AsCallParameter(_ name: String?) -> CGCallParameter {
+		return self.AsExpression().AsCallParameter(name)
+	}
+}
+
+public extension CGFieldDefinition {
+	public func AsExpression() -> CGFieldAccessExpression {
+		return AsExpression(nil)
+	}
+
+	public func AsExpression(_ callSite: CGExpression?) -> CGFieldAccessExpression {
+		return CGFieldAccessExpression(callSite, self.Name)
+	}
+
+	public func AsCallParameter() -> CGCallParameter {
+		return self.AsExpression().AsCallParameter()
+	}
+	public func AsCallParameter(_ name: String?) -> CGCallParameter {
+		return self.AsExpression().AsCallParameter(name)
+	}
+}
+
 @if(defined("TOFFEE") && exists(Swift.Array))
 public extension Swift.Array {
 	public func ToList() -> List<T> {

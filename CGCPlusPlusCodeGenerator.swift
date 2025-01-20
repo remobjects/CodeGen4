@@ -793,21 +793,21 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				Append("::")
 			}
 			if let lname = method.Name, lname != "" {
-				generateIdentifier(uppercaseFirstLetter(lname))
+				generateIdentifier(lname)
 			} else {
-				generateIdentifier(uppercaseFirstLetter(type.Name))
+				generateIdentifier(type.Name)
 			}
 		} else if isDtor {
 			if !header {
 				if let namespace = currentUnit.Namespace {
 					generateIdentifier(namespace.Name)
 					Append("::")
-					generateIdentifier(uppercaseFirstLetter(type.Name))
+					generateIdentifier(type.Name)
 					Append("::")
 				}
 			}
 			Append("~")
-			generateIdentifier(uppercaseFirstLetter(type.Name));
+			generateIdentifier(type.Name);
 		} else {
 			if !header {
 				if !(isGlobal && (method.Visibility == .Private)) {

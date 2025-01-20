@@ -34,6 +34,7 @@
 		// extra initialization
 		indent = 0
 		atStart = true
+		isNewLine = true
 		currentLocation.column = 0
 		currentLocation.virtualColumn = 0
 		currentLocation.offset = 0
@@ -693,7 +694,7 @@
 
 	internal func generateCommentStatement(_ commentStatement: CGCommentStatement?) {
 		if let commentStatement = commentStatement {
-			if !atStart {
+			if !isNewLine {
 				AppendLine()
 			}
 			for line in commentStatement.Lines {
@@ -705,7 +706,7 @@
 
 	internal func generateXmlDocumentationStatement(_ xmlDocumentationStatement: CGXmlDocumentationStatement?) {
 		if let xmlDocumentationStatement = xmlDocumentationStatement {
-			if !atStart {
+			if !isNewLine {
 				AppendLine()
 			}
 			for line in xmlDocumentationStatement.Lines {
@@ -761,6 +762,9 @@
 	internal func generateConditionStart<T>(_ list: List<T>,_ index: Integer) {
 		if let condition = (list[index] as! ICGHasCondition).Condition {
 			if !SameCondition(list, index - 1) {
+				if !isNewLine {
+					AppendLine()
+				}
 				generateConditionStart(condition)
 			}
 		}
@@ -1991,9 +1995,10 @@
 	//
 
 	private var currentCode: StringBuilder!
-	private var indent: Int32 = 0
+	internal private(set) var indent: Int32 = 0
 	private var atStart = true
 	internal var inConditionExpression = false
+	private var isNewLine = true
 
 	internal var positionedAfterPeriod: Boolean {
 		let length = currentCode.Length
@@ -2004,6 +2009,7 @@
 
 	@discardableResult internal final func Append(_ line: String) -> StringBuilder {
 		if length(line) > 0 {
+			isNewLine = false
 			if atStart {
 				AppendIndent()
 				atStart = false
@@ -2033,6 +2039,7 @@
 		currentLocation.virtualColumn = 0
 		currentLocation.offset = currentCode.Length
 		atStart = true
+		isNewLine = true
 		return currentCode
 	}
 

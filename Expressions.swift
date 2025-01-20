@@ -701,6 +701,12 @@ public __abstract class CGMemberAccessExpression : CGExpression {
 public class CGFieldAccessExpression : CGMemberAccessExpression {
 }
 
+public class CGMethodAccessExpression : CGFieldAccessExpression {
+	// reference to getter/setter methods in properties
+	// should be generated w/o `(parameters)` part
+	// can be used in delphi and other places
+}
+
 public class CGEventAccessExpression : CGFieldAccessExpression {
 }
 

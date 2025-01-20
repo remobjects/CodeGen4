@@ -749,7 +749,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 
 	//done
 	override func generatePropertyValueExpression(_ expression: CGPropertyValueExpression) {
-		Append("value")
+		Append("Value")
 	}
 
 	//done 21-5-2020

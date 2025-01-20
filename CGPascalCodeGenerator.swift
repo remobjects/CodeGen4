@@ -949,23 +949,40 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	internal func pascalParameterPerLine(_ parameters: List<CGParameterDefinition>) -> Boolean {
+		for param in parameters {
+			if self.isXmlDocumentationPresent(param.XmlDocumentation) {
+				return true
+			}
+			if let attr = param.Attributes, attr.Count > 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	func pascalGenerateDefinitionParameters(_ parameters: List<CGParameterDefinition>, implementation: Boolean) {
-		helpGenerateCommaSeparatedList(parameters, separator: { self.Append("; ") }) { param in
-			var isXMLDocPresent = self.isXmlDocumentationPresent(param.XmlDocumentation)
+		var temp_offset = self.currentLocation.virtualColumn
+		var temp_indent = self.indent
+		var parPerLine = !implementation && pascalParameterPerLine(parameters)
+		if parPerLine {
+			self.incIndent(step: -indent + temp_offset / self.tabSize);
+		}
+		helpGenerateCommaSeparatedList(parameters, separator: {
+									if parPerLine {
+										self.generateStatementTerminator()
+									} else {
+										self.Append(self.StatementTerminator+" ")
+									}
+								})
+		{ param in
 			if !implementation {
-				if isXMLDocPresent {
-					self.incIndent()
-				}
 				self.generateXmlDocumentationStatement(param.XmlDocumentation)
 				self.generateAttributes(param.Attributes, inline: true)
 			}
 			self.generateParameterDefinition(param)
-			if !implementation {
-				if isXMLDocPresent {
-					self.decIndent()
-				}
-			}
 		}
+		self.incIndent(step: -self.indent + temp_indent);
 	}
 
 	func pascalGenerateGenericParameters(_ parameters: List<CGGenericParameterDefinition>?) {
@@ -1357,13 +1374,35 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		assert(false, "generateBlockType is not supported in base Pascal, only Oxygene")
 	}
 
+	internal func pascalMemberPerLine(_ members: List<CGMemberDefinition>) -> Boolean {
+		for item in members {
+			if self.isXmlDocumentationPresent(item.XmlDocumentation) {
+				return true
+			}
+			if let attr = item.Attributes, attr.Count > 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		pascalGenerateTypeName(type)
 		Append(" = ")
-		pascalGenerateTypeVisibilityPrefix(type.Visibility)
-		Append("enum (")
+		if Dialect == .Oxygene {
+			pascalGenerateTypeVisibilityPrefix(type.Visibility)
+			Append("enum ")
+		}
+		Append("(")
 
-		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
+		var temp_offset = self.currentLocation.virtualColumn
+		var temp_indent = self.indent
+		var memberPerLine = pascalMemberPerLine(type.Members)
+		if memberPerLine {
+			self.incIndent(step: -indent + temp_offset / self.tabSize);
+		}
+
+		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums || memberPerLine) { m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateXmlDocumentationStatement(member.XmlDocumentation)
 				self.generateAttributes(member.Attributes, inline: true)
@@ -1373,8 +1412,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					self.generateExpression(value)
 				}
 			}
-		}
 
+		}
+		if memberPerLine {
+			self.incIndent(step: -self.indent + temp_indent);
+		}
 		Append(")")
 		if let baseType = type.BaseType {
 			Append(" of ")
@@ -1805,12 +1847,8 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			generateIdentifier(list[index].Name)
 			Append(": ")
 			generateTypeReference(list[index].`Type`?)
-			if let val = list[index].Value {
-				if Dialect == .Oxygene {
-					Append(" := ")
-				} else {
-					Append(" = ")
-				}
+			if Dialect == .Oxygene, let val = list[index].Value {
+				Append(" := ")
 				generateExpressionStatement(val)
 			} else {
 				generateStatementTerminator()
@@ -1907,33 +1945,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				}
 			}
 		}
-		/*
-		if let localVariables = method.LocalVariables, localVariables.Count > 0 {
+		if allowLocalVariables, let localVariables = method.LocalVariables, localVariables.Count > 0 {
 			for v in localVariables {
-				if !allowLocalVariables {
-					Append("var ")
+				if let val = v.Value {
 					generateIdentifier(v.Name)
-					if let type = v.`Type` {
-						Append(": ")
-						generateTypeReference(type)
-						if let val = v.Value {
-							generateIdentifier(v.Name)
-							Append(" := ")
-							generateExpressionStatement(val)
-						}
-					}
-					generateStatementTerminator()
-				} else {
-					if let val = v.Value {
-						generateIdentifier(v.Name)
-						Append(" := ")
-						generateExpressionStatement(val)
-						//generateStatementTerminator()
-					}
+					Append(" := ")
+					generateExpressionStatement(val)
+					//generateStatementTerminator()
 				}
 			}
 		}
-		*/
+
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
 		decIndent()
 
