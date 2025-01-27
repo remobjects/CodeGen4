@@ -244,4 +244,13 @@
 		}
 	}
 
+	override func generateThrowExpression(_ statement: CGThrowExpression) {
+		if let value = statement.Exception {
+			Append("throw ")
+			generateExpression(value)
+		} else {
+			Append("throw")
+		}
+	}
+
 }
