@@ -212,17 +212,17 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
 			for b in catchBlocks {
+				Append("catch")
 				if let name = b.Name, let type = b.`Type` {
-					Append("catch (")
+					Append(" (")
 					generateTypeReference(type)
 					Append(" ")
 					generateIdentifier(name)
 					AppendLine(")")
-					AppendLine("{")
 				} else {
-					AppendLine("__catch ")
-					AppendLine("{")
+					AppendLine()
 				}
+				AppendLine("{")
 				incIndent()
 				generateStatements(b.Statements)
 				decIndent()
