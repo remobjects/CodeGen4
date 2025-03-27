@@ -896,7 +896,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	override func generateAttributeScope(_ attribute: CGAttribute) {
 		if let scope = attribute.Scope {
 			switch scope {
-				case .Assembly: Append("assembby:")
+				case .Assembly: Append("assembly:")
 				case .Module: Append("module:")
 				case .Global: Append("/*global:*/")
 				case .Result: Append("result:")
