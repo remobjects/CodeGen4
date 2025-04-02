@@ -186,6 +186,7 @@ public __abstract class CGMemberDefinition: CGEntity, ICGHasCondition {
 	public var Comment: CGCommentStatement?
 	public var XmlDocumentation: CGXmlDocumentationStatement?
 	public var Attributes = List<CGAttribute>()
+	public var InlineAttributes = true
 	public var Condition: CGConditionalDefine?
 	public var ThrownExceptions: List<CGTypeReference>? // nil means unknown; empty list means known to not throw.
 	public var ImplementsInterface: CGTypeReference?
@@ -520,6 +521,7 @@ public class CGParameterDefinition : CGEntity {
 	public var Modifier: CGParameterModifierKind = .In
 	public var DefaultValue: CGExpression?
 	public var Attributes = List<CGAttribute>()
+	public var InlineAttributes = true
 	public var XmlDocumentation: CGXmlDocumentationStatement?
 
 	public init(_ name: String) {

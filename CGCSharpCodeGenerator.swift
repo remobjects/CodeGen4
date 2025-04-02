@@ -981,6 +981,17 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 	}
 
+	internal func csMemberPerLine(_ members: List<CGMemberDefinition>) -> Boolean {
+		for item in members {
+			if self.isXmlDocumentationPresent(item.XmlDocumentation) {
+				return true
+			}
+			if let attr = item.Attributes, attr.Count > 0 {
+				return true
+			}
+		}
+		return false
+	}
 	override func generateEnumType(_ type: CGEnumTypeDefinition) {
 		cSharpGenerateTypeVisibilityPrefix(type.Visibility)
 		Append("enum ")
@@ -993,10 +1004,19 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		AppendLine()
 		AppendLine("{")
 		incIndent()
-		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) {m in
+		var temp_offset = self.currentLocation.virtualColumn
+		var temp_indent = self.indent
+		var memberPerLine = csMemberPerLine(type.Members)
+		if memberPerLine {
+			if temp_offset == 0 {
+				self.AppendIndentToVirtualColumn(temp_indent * tabSize)
+			}
+		}
+
+		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums || memberPerLine) {m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateXmlDocumentationStatement(member.XmlDocumentation)
-				self.generateAttributes(member.Attributes, inline: true)
+				self.generateAttributes(member.Attributes, inline: member.InlineAttributes)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
 					self.Append(" = ")

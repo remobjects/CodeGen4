@@ -1998,7 +1998,7 @@
 	internal private(set) var indent: Int32 = 0
 	private var atStart = true
 	internal var inConditionExpression = false
-	private var isNewLine = true
+	internal private(set) var isNewLine = true
 
 	internal var positionedAfterPeriod: Boolean {
 		let length = currentCode.Length

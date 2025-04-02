@@ -759,7 +759,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		if method.Lambda {
 			Append("(")
 			helpGenerateCommaSeparatedList(method.Parameters) { param in
-				self.generateAttributes(param.Attributes, inline: true)
+				self.generateAttributes(param.Attributes, inline: param.InlineAttributes)
 				self.generateParameterDefinition(param)
 			}
 			Append(") -> ")
@@ -978,7 +978,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		{ param in
 			if !implementation {
 				self.generateXmlDocumentationStatement(param.XmlDocumentation)
-				self.generateAttributes(param.Attributes, inline: true)
+				self.generateAttributes(param.Attributes, inline: param.InlineAttributes)
 			}
 			self.generateParameterDefinition(param)
 		}
@@ -1272,6 +1272,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	//}
 
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
+		if !inline && !isNewLine {
+			AppendLine()
+		}
 		Append("[")
 		generateAttributeScope(attribute)
 		generateTypeReference(attribute.`Type`)
@@ -1399,13 +1402,14 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		var temp_indent = self.indent
 		var memberPerLine = pascalMemberPerLine(type.Members)
 		if memberPerLine {
-			self.incIndent(step: -indent + temp_offset / self.tabSize);
+			self.incIndent(step: -indent + temp_offset / self.tabSize)
+			self.AppendIndentToVirtualColumn(-temp_offset%tabSize)
 		}
 
 		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums || memberPerLine) { m in
 			if let member = m as? CGEnumValueDefinition {
 				self.generateXmlDocumentationStatement(member.XmlDocumentation)
-				self.generateAttributes(member.Attributes, inline: true)
+				self.generateAttributes(member.Attributes, inline: member.InlineAttributes)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
 					self.Append(" = ")
@@ -1415,7 +1419,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		}
 		if memberPerLine {
-			self.incIndent(step: -self.indent + temp_indent);
+			self.incIndent(step: -self.indent + temp_indent)
 		}
 		Append(")")
 		if let baseType = type.BaseType {

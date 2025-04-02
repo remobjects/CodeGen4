@@ -764,7 +764,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			Append(vbKeywordForMethod(method, close: false))
 			Append("(")
 			helpGenerateCommaSeparatedList(method.Parameters) { param in
-				self.generateAttributes(param.Attributes, inline: true)
+				self.generateAttributes(param.Attributes, inline: param.InlineAttributes)
 				self.generateParameterDefinition(param)
 			}
 			Append(") ")
@@ -1394,7 +1394,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 		for m in type.Members {
 			if let member = m as? CGEnumValueDefinition {
 				self.generateXmlDocumentationStatement(member.XmlDocumentation)
-				self.generateAttributes(member.Attributes, inline: true)
+				self.generateAttributes(member.Attributes, inline: m.InlineAttributes)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
 					self.Append(" = ")

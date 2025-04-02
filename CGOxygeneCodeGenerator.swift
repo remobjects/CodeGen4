@@ -364,7 +364,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 					self.incIndent();
 				}
 				self.generateXmlDocumentationStatement(param.XmlDocumentation)
-				self.generateAttributes(param.Attributes, inline: true)
+				self.generateAttributes(param.Attributes, inline: param.InlineAttributes)
 			}
 			generateParameterDefinition(param)
 			if !implementation {

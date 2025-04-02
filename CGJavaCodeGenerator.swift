@@ -805,7 +805,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		incIndent()
 		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
 			if let member = m as? CGEnumValueDefinition {
-				self.generateAttributes(member.Attributes, inline: true)
+				self.generateAttributes(member.Attributes, inline: member.InlineAttributes)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
 					self.Append(" = ")
