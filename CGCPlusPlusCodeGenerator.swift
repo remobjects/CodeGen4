@@ -593,11 +593,11 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 				return;
 			}
 		}
-		Append("[")
+		Append("{")
 		helpGenerateCommaSeparatedList(array.Elements) { e in
 			self.generateExpression(e)
 		}
-		Append("]")
+		Append("}")
 	}
 
 	override func generateSetLiteralExpression(_ expression: CGSetLiteralExpression) {
