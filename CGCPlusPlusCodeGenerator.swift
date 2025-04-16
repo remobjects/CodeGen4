@@ -1039,6 +1039,8 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 					}
 				}
 			}
+		} else {
+			Append("[]")
 		}
 	}
 
