@@ -6,120 +6,142 @@ import RemObjects.CodeGen4
 print("CodeGen4 Playground")
 
 var unit = CGCodeUnit()
+unit.Namespace = CGNamespaceReference("UnitOne");
 
-var cls1 = CGClassTypeDefinition("Nested1")
-var cls2 = CGClassTypeDefinition("Nested2")
-var cls3 = CGClassTypeDefinition("Nested3")
+//var e = CGEnumTypeDefinition("MyEnum")
+//unit.Types.Add(e);
+//e.Members.Add(CGEnumValueDefinition("ValueA"))
+//e.Members.Add(CGEnumValueDefinition("ValueB"))
+//e.Members.Add(CGEnumValueDefinition("ValueC"))
+
+var cls1 = CGClassTypeDefinition("Test")
+var m = CGMethodDefinition("x")
+//var n = CGTypeNullabilityKind.Nullable
+//var t = "RemObjects.SDK.IMessage".AsTypeReference().copyWithNullability()
+var p = CGParameterDefinition("msg", CGPredefinedTypeReference.Object);
+cls1.Members.Add(m)
+m.Parameters.Add(p)
+unit.Types.Add(cls1);
+
+var v = CGVariableDeclarationStatement("foo", CGArrayTypeReference(CGPredefinedTypeReference.Double, RemObjects.Elements.RTL.List<CGArrayBounds>(CGArrayBounds(0, end: 5))));
+m.Statements.Add(v);
+
+//var cls2 = CGClassTypeDefinition("Nested2")
+//var cls3 = CGClassTypeDefinition("Nested3")
 //cls1.Members.Add(CGMethodDefinition("NestedMethod"))
 
 
-var cls = CGClassTypeDefinition("DotTest")
-//cls.Ancestors.Add("Foo".AsTypeReference())
+//var cls = CGClassTypeDefinition("DotTest")
+////cls.Ancestors.Add("Foo".AsTypeReference())
 
-cls.Members.Add(CGNestedTypeDefinition(cls1))
-cls.Members.Add(CGNestedTypeDefinition(cls2))
-cls.Members.Add(CGNestedTypeDefinition(cls3))
+//cls.Members.Add(CGNestedTypeDefinition(cls1))
+//cls.Members.Add(CGNestedTypeDefinition(cls2))
+//cls.Members.Add(CGNestedTypeDefinition(cls3))
 
 
-var td = CGMethodDefinition("TestDot")
-// Simple expressions
-var e1 = CGNamedIdentifierExpression("Named1")
-var m1 = CGMethodCallExpression(nil, "Methodcall", "value".AsNamedIdentifierExpression().AsCallParameter() )
-var arrayname = CGNamedIdentifierExpression("MyData")
-var ArrayParam = List<CGExpression>()
-ArrayParam.Add(CGIntegerLiteralExpression(1))
-var a1 = CGArrayElementAccessExpression(arrayname, ArrayParam)
+//var td = CGMethodDefinition("TestDot")
+//td.Visibility = .Public
+//// Simple expressions
+//var e1 = CGNamedIdentifierExpression("Named1")
+//var m1 = CGMethodCallExpression(nil, "Methodcall", "value".AsNamedIdentifierExpression().AsCallParameter() )
+//var arrayname = CGNamedIdentifierExpression("MyData")
+//var ArrayParam = List<CGExpression>()
+//ArrayParam.Add(CGIntegerLiteralExpression(1))
+//var a1 = CGArrayElementAccessExpression(arrayname, ArrayParam)
 
-var p = CGParameterDefinition("foo", "String".AsTypeReference())
-p.ExternalName = "bar"
-td.Parameters.Add(p);
+//var p = CGParameterDefinition("foo", "String".AsTypeReference())
+//p.ExternalName = "bar"
+//td.Parameters.Add(p);
 
-td.Statements.Add(CGCommentStatement("Simple Expressions"))
+//td.Statements.Add(CGCommentStatement("Simple Expressions"))
 
-td.Preconditions = List<CGInvariant>()
-td.Postconditions = List<CGInvariant>()
-td.Preconditions!.Add(CGInvariant(e1))
-td.Preconditions!.Add(CGInvariant(e1, "Foo"))
+//td.Preconditions = List<CGInvariant>()
+//td.Postconditions = List<CGInvariant>()
+//td.Preconditions!.Add(CGInvariant(e1))
+//td.Preconditions!.Add(CGInvariant(e1, "Foo"))
 
-td.Postconditions!.Add(CGBinaryOperatorExpression(CGPropertyAccessExpression(CGOldExpression.Old, "Foo"), 5.AsLiteralExpression(), CGBinaryOperatorKind.Equals).AsInvariant())
-td.Postconditions!.Add(e1.AsInvariant())
+//td.Postconditions!.Add(CGBinaryOperatorExpression(CGPropertyAccessExpression(CGOldExpression.Old, "Foo"), 5.AsLiteralExpression(), CGBinaryOperatorKind.Equals).AsInvariant())
+//td.Postconditions!.Add(e1.AsInvariant())
 
-td.Statements.Add(e1)
-td.Statements.Add(m1)
-td.Statements.Add(a1)
+//td.Statements.Add(e1)
+//td.Statements.Add(m1)
+//td.Statements.Add(a1)
 
-td.Statements.Add("xy".AsLiteralExpression())
-td.Statements.Add("x".AsLiteralExpression())
-td.Statements.Add("'".AsLiteralExpression())
-td.Statements.Add("\"".AsLiteralExpression())
-td.Statements.Add("\n".AsLiteralExpression())
-td.Statements.Add("\"\"".AsLiteralExpression())
+//td.Statements.Add("xy".AsLiteralExpression())
+//td.Statements.Add("x".AsLiteralExpression())
+//td.Statements.Add("'".AsLiteralExpression())
+//td.Statements.Add("\"".AsLiteralExpression())
+//td.Statements.Add("\n".AsLiteralExpression())
+//td.Statements.Add("\"\"".AsLiteralExpression())
 
-td.Statements.Add(CGVariableDeclarationStatement("x", CGPredefinedTypeReference.Double, CGFloatLiteralExpression(0.00000000000001)))
+//td.Statements.Add(CGVariableDeclarationStatement("x", CGPredefinedTypeReference.Double, CGFloatLiteralExpression(0.00000000000001)))
 
-td.Statements.Add(CGCommentStatement("Now Property Access?"))
-td.Statements.Add(CGCommentStatement("Would like to see: Methodcall(value).Named1.MyData[1];"))
+//td.Statements.Add(CGCommentStatement("Now Property Access?"))
+//td.Statements.Add(CGCommentStatement("Would like to see: Methodcall(value).Named1.MyData[1];"))
 
-var lpn = CGPropertyAccessExpression(m1, "Named1")
-var lpd = CGPropertyAccessExpression(lpn, "MyData")
-var lpa = CGArrayElementAccessExpression(lpd, 1.AsLiteralExpression())
-td.Statements.Add(lpa)
+//var lpn = CGPropertyAccessExpression(m1, "Named1")
+//var lpd = CGPropertyAccessExpression(lpn, "MyData")
+//var lpa = CGArrayElementAccessExpression(lpd, 1.AsLiteralExpression())
+//td.Statements.Add(lpa)
 
-var intf = CGInterfaceTypeDefinition("NestedInterface")
-intf.Members.Add(CGNestedTypeDefinition(cls))
-intf.Members.Add(td);
+//var intf = CGInterfaceTypeDefinition("NestedInterface")
+////intf.Members.Add(CGNestedTypeDefinition(cls))
+//intf.Members.Add(td);
+////td.Visibility = CGMemberVisibilityKind.Protected
 
-//var lp2 = CGPropertyAccessExpression(lpm, "Named1")
-//var lp3 = CGPropertyAccessExpression(lp2, "MyData")
-//td.Statements.Add(lp2)
-//td.Statements.Add(lp3)
+////var lp2 = CGPropertyAccessExpression(lpm, "Named1")
+////var lp3 = CGPropertyAccessExpression(lp2, "MyData")
+////td.Statements.Add(lp2)
+////td.Statements.Add(lp3)
 
-cls.Members.Add(td)
+//cls.Members.Add(td)
 
-var ctor = CGConstructorDefinition()
-ctor.Name = "withFoo";
-cls.Members.Add(ctor)
+//var ctor = CGConstructorDefinition()
+//ctor.Name = "withFoo";
+//cls.Members.Add(ctor)
 
-var p2 = CGPropertyDefinition("TestWithGetterAndSetter")
-p2.Type = "String".AsTypeReference()
-cls.Members.Add(p2)
+//var p2 = CGPropertyDefinition("TestWithGetterAndSetter")
+//p2.Type = "String".AsTypeReference()
+//cls.Members.Add(p2)
 
-p2.GetStatements = List<CGStatement>()
-p2.GetStatements?.Add(CGMethodCallExpression(nil, "Foo"))
-p2.SetStatements = List<CGStatement>()
-p2.SetStatements?.Add(CGMethodCallExpression(nil, "Foo"))
+//p2.GetStatements = List<CGStatement>()
+//p2.GetStatements?.Add(CGMethodCallExpression(nil, "Foo"))
+//p2.SetStatements = List<CGStatement>()
+//p2.SetStatements?.Add(CGMethodCallExpression(nil, "Foo"))
 
-for var i = 0; i < 10; i++ {
-	var p4 = CGPropertyDefinition("Test"+i)
-	p4.Type = "String".AsTypeReference()
-	p4.Visibility = .Private
-	cls.Members.Add(p4)
-}
+//for var i = 0; i < 10; i++ {
+	//var p4 = CGPropertyDefinition("Test"+i)
+	//p4.Type = "String".AsTypeReference()
+	//p4.Visibility = .Private
+	//cls.Members.Add(p4)
+//}
 
-for var i = 0; i < 10; i++ {
-	var p4 = CGFieldDefinition("fTest"+i)
-	p4.Type = "String".AsTypeReference()
-	cls.Members.Add(p4)
-}
+//for var i = 0; i < 10; i++ {
+	//var p4 = CGFieldDefinition("fTest"+i)
+	//p4.Type = "String".AsTypeReference()
+	//cls.Members.Add(p4)
+//}
 
-for var i = 0; i < 10; i++ {
-	var p4 = CGPropertyDefinition("PublicTest"+i)
-	p4.Type = "String".AsTypeReference()
-	p4.Visibility = .Public
-	cls.Members.Add(p4)
-}
+//for var i = 0; i < 10; i++ {
+	//var p4 = CGPropertyDefinition("PublicTest"+i)
+	//p4.Type = "String".AsTypeReference()
+	//p4.Visibility = .Public
+	//cls.Members.Add(p4)
+//}
 
-var p3 = CGPropertyDefinition("Test")
-p3.Type = "String".AsTypeReference()
-//p3.GetStatements = List<CGStatement>()
-//p3.SetStatements = List<CGStatement>()
-cls.Members.Add(p3)
+//var p3 = CGPropertyDefinition("Test")
+//p3.Type = "String".AsTypeReference()
+////p3.GetStatements = List<CGStatement>()
+////p3.SetStatements = List<CGStatement>()
+//cls.Members.Add(p3)
 
 //unit.Types.Add(cls)
-unit.Types.Add(intf)
+//unit.Types.Add(intf)
 
-var cg = CGOxygeneCodeGenerator(style: .Unified)
-//var cg = CGOxygeneCodeGenerator(style: .Standard)
+var cg = CGCPlusPlusCPPCodeGenerator()
+//var cg = CGSwiftCodeGenerator(dialect: .Silver)
+//var cg = CGOxygeneCodeGenerator(style: .Unified)
+cg.wrapEnums = true
 //cg.QuoteStyle = .CodeDomSafe
 ////var cg = CGDelphiCodeGenerator()
 ////var cg = CGVisualBasicNetCodeGenerator()

@@ -215,13 +215,21 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 		if statement.Constant {
 			Append("const ");
 		}
-		if let type = statement.`Type` {
+		if let array = statement.`Type` as? CGArrayTypeReference {
+			generateTypeReference(array.Type)
+			Append(" ")
+		}
+		else if let type = statement.`Type` {
 			generateTypeReference(type)
 			Append(" ")
 		} else {
 //            Append("id ")
 		}
 		generateIdentifier(statement.Name)
+		if let array = statement.`Type` as? CGArrayTypeReference {
+			generateArrayBounds(array)
+		}
+
 		if let value = statement.Value {
 			Append(" = ")
 			generateExpression(value)
@@ -1011,13 +1019,25 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 			}
 		}
 		generateTypeReference(type.`Type`)
+		generateArrayBounds(type)
+	}
+
+	func generateArrayBounds(_ type: CGArrayTypeReference) {
 		if let bounds = type.Bounds {
 			var count = bounds.Count
 			if count == 0 {
-				count = 1
-			}
-			for b in 0 ..< count {
 				Append("[]")
+			}
+			else {
+				for b in bounds {
+					if let end = b.End {
+						Append("[")
+						generateExpression(end)
+						Append("]")
+					} else {
+						Append("[]")
+					}
+				}
 			}
 		}
 	}
