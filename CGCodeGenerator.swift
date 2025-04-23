@@ -1960,7 +1960,9 @@
 				separator()
 				if (wrapMode == .IfExceedsLength && currentLocation.virtualColumn > splitLinesLongerThan) || wrapMode == .Always {
 					AppendLine()
-					AppendIndentToVirtualColumn(startLocation)
+					if (startLocation != 0){
+                        AppendIndentToVirtualColumn(startLocation)
+					}
 				}
 			} else {
 				first = false
