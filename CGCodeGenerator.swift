@@ -1954,19 +1954,23 @@
 	func helpGenerateCommaSeparatedList<T>(_ list: ISequence<T>, separator: () -> (), wrapMode: WrapMode, callback: (T) -> ()) {
 		let startLocation = lastStartLocation ?? currentLocation.virtualColumn
 		lastStartLocation = nil
+		var newLocation = currentLocation
 		var first = true
 		for i in list {
 			if !first {
-				separator()
-				if (wrapMode == .IfExceedsLength && currentLocation.virtualColumn > splitLinesLongerThan) || wrapMode == .Always {
-					AppendLine()
-					if (startLocation != 0){
-						AppendIndentToVirtualColumn(startLocation)
+				if (currentLocation.line != newLocation.line) || (currentLocation.column != newLocation.column){
+					separator()
+					if (wrapMode == .IfExceedsLength && currentLocation.virtualColumn > splitLinesLongerThan) || wrapMode == .Always {
+						AppendLine()
+						if (startLocation != 0){
+							AppendIndentToVirtualColumn(startLocation)
+						}
 					}
 				}
 			} else {
 				first = false
 			}
+			newLocation = currentLocation
 			callback(i)
 		}
 		lastStartLocation = startLocation // keep this as possible indent for the next round
