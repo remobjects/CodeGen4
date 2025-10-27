@@ -534,6 +534,20 @@ public class CGParameterDefinition : CGEntity {
 	}
 }
 
+/*
+https://www.php.net/manual/en/language.oop5.decon.php#example-300
+*/
+public enum CGPhpConstructorParameterVisibility {
+	case Unspecified
+	case Private
+	case Protected
+	case Public
+}
+
+public class CGPhpConstructorParameterDefinition : CGParameterDefinition {
+	public var Visibility: CGPhpConstructorParameterVisibility = .Unspecified
+}
+
 @Obsolete("Use CGParameterDefinition")
 public typealias CGAnonymousMethodParameterDefinition = CGParameterDefinition
 

@@ -83,6 +83,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CGGoCodeGenerator.swift">
       <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)CGPhpCodeGenerator.swift">
+      <VirtualFolder>Code Generation — C-Style Languages</VirtualFolder>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Code Definition">

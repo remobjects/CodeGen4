@@ -112,6 +112,11 @@ public class CGAnonymousMethodExpression: CGExpression {
 	public var ReturnType: CGTypeReference?
 	public var Statements: List<CGStatement>
 	public var LocalVariables: List<CGVariableDeclarationStatement>? // Legacy Delphi only.
+	// php: add possibility to use external variables.
+	// more info at
+	// - https://stackoverflow.com/questions/14138908/use-variables-inside-an-anonymous-function-which-is-defined-somewhere-else
+	// - https://www.php.net/manual/en/functions.anonymous.php
+	#warning "php: add possibility to use external variables"
 
 	public init(_ statements: List<CGStatement>) {
 		super.init()
@@ -339,6 +344,29 @@ public enum CGBinaryOperatorKind {
 	case AssignShr*/
 	case AddEvent
 	case RemoveEvent
+	#warning "add support for php operators"
+/*
+	https://www.w3schools.com/php/php_operators.asp
+	https://www.php.net/manual/en/language.operators.php
+
+	in php we have these operations in additional:
+
+	**      |Exponentiation |$x ** $y     |Result of raising $x to the $y'th power
+	===     |identical      |$x === $y    |Returns true if $x is equal to $y, and they are of the same type
+	!==     |not identical  |$x !== $y    |Returns true if $x is not equal to $y, or they are not of the same type
+	<=>     |spaceship      |$x <=> $y    |Returns an integer less than, equal to, or greater than zero, depending on
+										  |if $x is less than, equal to, or greater than $y.
+	.=      |Concatenation  |$x .= $y     |Appends $y to $x
+			|assignment     |
+	?:      |Ternary        |$x = expr1 ? expr2 : expr3     |Returns the value of $x.
+															|The value of $x is expr2 if expr1 = TRUE.
+															|The value of $x is expr3 if expr1 = FALSE
+	??      |Null coalescing|$x = expr1 ?? expr2    | Returns the value of $x.
+													| The value of $x is expr1 if expr1 exists, and is not NULL.
+													| If expr1 does not exist, or is NULL, the value of $x is expr2.
+
+	note: we currently don't use them in rodl cg4
+*/
 }
 
 

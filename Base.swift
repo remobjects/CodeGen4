@@ -35,7 +35,7 @@ public class CGCodeUnit {
 
 	public var ImplementationDirectives = List<CGCompilerDirective>() /* Pascal only */
 	public var ImplementationImports = List<CGImport>()  /* Pascal only */
-	public var Initialization: List<CGStatement>? /* Delphi only */
+	public var Initialization: List<CGStatement>? /* Delphi & JavaScript only */
 	public var Finalization: List<CGStatement>? /* Delphi only */
 
 	public init() {
@@ -84,6 +84,17 @@ public class CGImport : ICGHasCondition {
 	public init(_ staticClass: CGNamedTypeReference) {
 		StaticClass = staticClass
 	}
+}
+
+public enum CGPhpImportMode {
+	case Include            // https://www.php.net/manual/en/function.include.php
+	case IncludeOnce        // https://www.php.net/manual/en/function.include-once.php
+	case Require            // https://www.php.net/manual/en/function.require.php
+	case RequireOnce        // https://www.php.net/manual/en/function.require-once.php
+}
+
+public class CGPhpImport : CGImport {
+	public var Mode: CGPhpImportMode = .Include
 }
 
 public class CGNamespaceReference {

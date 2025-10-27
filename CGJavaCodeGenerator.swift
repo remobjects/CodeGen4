@@ -674,7 +674,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateSequenceTypeReference(_ sequence: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
-		assert(false, "generateSequenceTypeReference is not supported in Javar")
+		assert(false, "generateSequenceTypeReference is not supported in Java")
 	}
 
 	//
