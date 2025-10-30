@@ -127,6 +127,12 @@ public extension CGExpression {
 		}
 	}
 
+	public func AsCallParameter(_ Modifier: CGParameterModifierKind) -> CGCallParameter {
+		let result = CGCallParameter(self)
+		result.Modifier = Modifier
+		return result
+	}
+
 	public func AsEllipsisCallParameter() -> CGCallParameter {
 		let result = CGCallParameter(self)
 		result.EllipsisParameter = true
