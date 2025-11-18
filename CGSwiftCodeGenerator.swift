@@ -391,8 +391,14 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	override func generateTypeOfExpression(_ expression: CGTypeOfExpression) {
 		if let typeReferenceExpression = expression.Expression as? CGTypeReferenceExpression {
-			generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
-			Append(".self")
+			if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+				Append("typeOf(")
+				generateExpression(expression.Expression)
+				Append(")")
+			} else {
+				generateTypeReference(typeReferenceExpression.`Type`, ignoreNullability: true)
+				Append(".self")
+			}
 		} else {
 			Append("dynamicType(")
 			generateExpression(expression.Expression)
