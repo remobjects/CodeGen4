@@ -2083,7 +2083,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		pascalGenerateImplementedInterface(field)
 
-		if isUnified && !groupUnified{
+		if isUnified && !groupUnified && (field.Visibility != CGMemberVisibilityKind.Unspecified){
 			Append(StatementTerminator)
 			Append(" ")
 			pascalGenerateMemberVisibilityKeyword(field.Visibility)
