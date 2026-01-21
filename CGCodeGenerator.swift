@@ -273,11 +273,13 @@
 				exp = exp1.Value
 			}
 		}
-		if let exp1 = exp as! CGNamedIdentifierExpression {
-			name_a = exp1.Name
-		} else {
-			// non standard case
-			return false
+		if exp is CGNamedIdentifierExpression {
+			if let exp1 = exp as! CGNamedIdentifierExpression {
+				name_a = exp1.Name
+			} else {
+				// non standard case
+				return false
+			}
 		}
 
 
@@ -291,11 +293,13 @@
 				exp = exp1.Value
 			}
 		}
-		if let exp1 = exp as! CGNamedIdentifierExpression {
-			name_b = exp1.Name
-		} else {
-			// non standard case
-			return false
+		if exp is CGNamedIdentifierExpression {
+			if let exp1 = exp as! CGNamedIdentifierExpression {
+				name_b = exp1.Name
+			} else {
+				// non standard case
+				return false
+			}
 		}
 		return (name_a? == name_b?) && (unary_a == unary_b)
 	}
@@ -2121,4 +2125,5 @@ public enum WrapMode {
 	case Never
 	case IfExceedsLength
 	case Always
+
 }
