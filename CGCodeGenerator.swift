@@ -250,60 +250,35 @@
 	}
 
 	internal func compareCondition(_ a: CGConditionalDefine?,_ b: CGConditionalDefine?) -> Boolean {
-		if (a == nil) && (b == nil) {
-			return false
-		}
-		if ((a != nil) && (b == nil)) || ((a == nil) && (b != nil)) {
-			return false
-		}
-		var name_a: String = ""
-		var unary_a: Boolean = false
-		var name_b: String = ""
-		var unary_b: Boolean = false
-
-		var exp: CGExpression? = nil
-
-		if let a = a as? CGConditionalDefine {
-			exp = a.Expression
-		}
-
-		if exp is CGUnaryOperatorExpression {
-			if let exp1 = exp as! CGUnaryOperatorExpression {
-				unary_a = true
-				exp = exp1.Value
-			}
-		}
-
-		if exp is CGNamedIdentifierExpression {
-			if let exp1 = exp as! CGNamedIdentifierExpression {
-				name_a = exp1.Name
-			}
-		} else {
-			// non standard case
+		if (a == nil) || (b == nil) {
 			return false
 		}
 
+		var oldstate = SaveState()
+		__try
+		{
+			var s1: String! = nil
+			var s2: String! = nil
 
-		if let b = b as? CGConditionalDefine {
-			exp = b.Expression
-		}
-
-		if exp is CGUnaryOperatorExpression {
-			if let exp1 = exp as! CGUnaryOperatorExpression {
-				unary_b = true
-				exp = exp1.Value
+			if let a = a as? CGConditionalDefine {
+				s1 = ExpressionToString(a.Expression)
 			}
-		}
-
-		if exp is CGNamedIdentifierExpression {
-			if let exp1 = exp as! CGNamedIdentifierExpression {
-				name_b = exp1.Name
+			if let b = b as? CGConditionalDefine {
+				s2 = ExpressionToString(b.Expression)
 			}
-		} else {
-			// non standard case
-			return false
+
+			if String.IsNullOrEmpty(s1) || String.IsNullOrEmpty(s2) {
+				return false;
+			}
+
+			return s1.CompareTo(s2) == 0;
 		}
-		return (name_a? == name_b?) && (unary_a == unary_b)
+		__finally
+		{
+			RestoreState(oldstate)
+		}
+		return false;
+
 	}
 
 	internal func SameCondition<T>(_ list: List<T>,_ index: Int32) -> Boolean {
@@ -2120,6 +2095,53 @@
 
 		generateStatement(statement)
 		return currentCode.ToString()
+	}
+
+
+	private struct SavedState
+	{
+		var currentCode: StringBuilder!
+		var indent: Int32
+		var atStart: Boolean
+		var inConditionExpression: Boolean
+		var isNewLine: Boolean
+		var currentLocation: CGLocation
+		var lastStartLocation: Integer?
+	}
+
+	private final func SaveState() -> SavedState
+	{
+		var l_saved = SavedState()
+		l_saved.currentCode = currentCode
+		l_saved.indent = indent
+		l_saved.atStart = atStart
+		l_saved.inConditionExpression = inConditionExpression
+		l_saved.isNewLine = isNewLine
+		l_saved.currentLocation = currentLocation
+		l_saved.lastStartLocation = lastStartLocation
+
+		currentCode = StringBuilder()
+		indent = 0
+		atStart = true
+		inConditionExpression = false
+		isNewLine = true
+		currentLocation = CGLocation()
+		lastStartLocation = nil
+		return l_saved
+	}
+
+	private final func RestoreState(_ state: SavedState)
+	{
+		if state != nil
+		{
+			currentCode = state.currentCode
+			indent = state.indent
+			atStart = state.atStart
+			inConditionExpression = state.inConditionExpression
+			isNewLine = state.isNewLine
+			currentLocation = state.currentLocation
+			lastStartLocation = state.lastStartLocation
+		}
 	}
 }
 
