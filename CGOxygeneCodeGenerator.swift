@@ -608,10 +608,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		if !definitionOnly {
 			//todo: add/remove/raise
 		}
-		if isUnified && !groupUnified {
+		if isUnified && !groupUnified && (event.Visibility != .Unspecified) {
 			Append(" ")
 			pascalGenerateMemberVisibilityKeyword(event.Visibility)
-			Append(";")
+			Append(StatementTerminator)
 		}
 		pascalGenerateImplementedInterface(event)
 		pascalGenerateVirtualityModifiders(event)
