@@ -273,8 +273,11 @@
 				exp = exp1.Value
 			}
 		}
-		if let exp1 = exp as! CGNamedIdentifierExpression {
-			name_a = exp1.Name
+
+		if exp is CGNamedIdentifierExpression {
+			if let exp1 = exp as! CGNamedIdentifierExpression {
+				name_a = exp1.Name
+			}
 		} else {
 			// non standard case
 			return false
@@ -291,8 +294,11 @@
 				exp = exp1.Value
 			}
 		}
-		if let exp1 = exp as! CGNamedIdentifierExpression {
-			name_b = exp1.Name
+
+		if exp is CGNamedIdentifierExpression {
+			if let exp1 = exp as! CGNamedIdentifierExpression {
+				name_b = exp1.Name
+			}
 		} else {
 			// non standard case
 			return false
