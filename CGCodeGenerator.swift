@@ -477,7 +477,7 @@
 		}
 
 		if let keywords = keywords {
-			if name.Contains(".") {
+			if name.Contains(".") && !name.Contains("..") {
 				let parts = name.Split(".")
 				helpGenerateCommaSeparatedList(parts, separator: { self.Append(".") }, wrapMode: WrapMode.Never, callback: { part in self.generateIdentifier(part, escaped: true) })
 			} else {
