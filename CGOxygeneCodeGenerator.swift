@@ -420,8 +420,11 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 			case .Single: quoteChar = SINGLE
 			case .Double: quoteChar = DOUBLE
 			case .CodeDomSafe: fallthrough
-			case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
+			//case .SmartSingle: quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
 			case .SmartDouble: quoteChar = expression.Value.Contains(DOUBLE) && !expression.Value.Contains(SINGLE) ? SINGLE : DOUBLE
+			default:
+				// = .SmartSingle
+				quoteChar = expression.Value.Contains(SINGLE) && !expression.Value.Contains(DOUBLE) ? DOUBLE : SINGLE
 		}
 		if quoteStyle == .CodeDomSafe && length(expression.Value) == 1 {
 			let ch = expression.Value[0]
@@ -608,10 +611,10 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		if !definitionOnly {
 			//todo: add/remove/raise
 		}
-		if isUnified && !groupUnified {
+		if isUnified && !groupUnified && (event.Visibility != .Unspecified) {
 			Append(" ")
 			pascalGenerateMemberVisibilityKeyword(event.Visibility)
-			Append(";")
+			Append(StatementTerminator)
 		}
 		pascalGenerateImplementedInterface(event)
 		pascalGenerateVirtualityModifiders(event)

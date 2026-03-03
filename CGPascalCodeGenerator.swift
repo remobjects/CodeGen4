@@ -1726,12 +1726,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		if !implementation {
 
-			if includeVisibility {
+			if includeVisibility && (method.Visibility != .Unspecified) {
 				Append(" ")
 				pascalGenerateMemberVisibilityKeyword(method.Visibility)
-				if (method.Visibility != CGMemberVisibilityKind.Unspecified){
-					Append(StatementTerminator)
-				}
+				Append(StatementTerminator)
 			}
 
 			pascalGenerateImplementedInterface(method)
@@ -2090,7 +2088,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 		pascalGenerateImplementedInterface(field)
 
-		if isUnified && !groupUnified{
+		if isUnified && !groupUnified && (field.Visibility != .Unspecified){
 			Append(StatementTerminator)
 			Append(" ")
 			pascalGenerateMemberVisibilityKeyword(field.Visibility)
@@ -2203,7 +2201,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					//Append(StatementTerminator)
 				//}
 			//} else {
-				if property.Visibility != .Public {
+				if (property.Visibility != .Public) && (property.Visibility != .Unspecified) {
 					Append(" ")
 					pascalGenerateMemberVisibilityKeyword(property.Visibility)
 					Append(StatementTerminator)
