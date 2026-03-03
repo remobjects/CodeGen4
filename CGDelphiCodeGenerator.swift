@@ -229,6 +229,19 @@
 		}
 	}
 
+	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
+		decIndent()
+		Append("end")
+		if type.Deprecated {
+			Append(" deprecated")
+			if let message = type.DeprecationMessage, length(message) > 0 {
+				Append(" '\(message.FirstLine)'")
+			}
+		}
+		generateStatementTerminator()
+		pascalGenerateNestedTypes(type)
+	}
+
 	override func generateExtensionTypeStart(_ type: CGExtensionTypeDefinition) {
 		generateIdentifier(type.Name)
 		pascalGenerateGenericParameters(type.GenericParameters)

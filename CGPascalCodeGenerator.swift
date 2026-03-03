@@ -1786,6 +1786,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if let conversion = method.CallingConvention {
 				pascalGenerateCallingConversion(conversion)
 			}
+			if method.Deprecated && self is CGDelphiCodeGenerator {
+				Append(" deprecated")
+				if let message = method.DeprecationMessage, length(message) > 0 {
+					Append(" '\(message.FirstLine)'")
+				}
+				Append(StatementTerminator)
+			}
 		}
 
 		AppendLine()

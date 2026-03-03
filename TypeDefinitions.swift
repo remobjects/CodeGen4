@@ -24,6 +24,8 @@ public __abstract class CGTypeDefinition : CGEntity, ICGHasCondition {
 	public var XmlDocumentation: CGXmlDocumentationStatement?
 	public var Attributes = List<CGAttribute>()
 	public var Condition: CGConditionalDefine?
+	public var Deprecated: Boolean? /* Delphi only */
+	public var DeprecationMessage: String? /* Delphi only */
 
 	public init(_ name: String) {
 		Name = name
@@ -191,6 +193,8 @@ public __abstract class CGMemberDefinition: CGEntity, ICGHasCondition {
 	public var ThrownExceptions: List<CGTypeReference>? // nil means unknown; empty list means known to not throw.
 	public var ImplementsInterface: CGTypeReference?
 	public var ImplementsInterfaceMember: String?
+	public var Deprecated: Boolean? /* Delphi only */
+	public var DeprecationMessage: String? /* Delphi only */
 
 	public init(_ name: String) {
 		Name = name
