@@ -265,8 +265,28 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 		assert(false, "generateAwaitExpression is not supported in Objective-C")
 	}
 
-	override func generateAnonymousMethodExpression(_ expression: CGAnonymousMethodExpression) {
-		// todo
+	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
+		if let returnType = method.ReturnType {
+			Append("(returnType) (^") // Start of Objective-C block with return type
+		}
+
+		if method.Parameters.Count > 0 {
+			Append("(")
+			helpGenerateCommaSeparatedList(method.Parameters) { param in
+				self.generateIdentifier(param.Name)
+				if let type = param.`Type` {
+					self.Append(": ")
+					self.generateTypeReference(type)
+				}
+			}
+			Append(")")
+		}
+		AppendLine(") {")
+		incIndent()
+		generateStatements(variables: method.LocalVariables)
+		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
+		decIndent()
+		Append("}")
 	}
 
 	override func generateAnonymousTypeExpression(_ expression: CGAnonymousTypeExpression) {
