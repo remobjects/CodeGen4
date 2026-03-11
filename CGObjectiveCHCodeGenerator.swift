@@ -147,11 +147,11 @@
 			}
 			if let type = property.`Type` {
 				if type.IsClassType {
-					//switch type.StorageModifier {
-						//case .Strong: Append(", strong")
-						//case .Weak: Append(", weak")
-						//case .Unretained: Append(", unsafe_unretained")
-					//}
+					switch property.StorageModifier {
+						case .Strong: Append(", strong")
+						case .Weak: Append(", weak")
+						case .Unretained: Append(", unsafe_unretained")
+					}
 				} else {
 					//todo?
 				}
