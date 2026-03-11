@@ -266,14 +266,14 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
-		if let returnType = method.ReturnType {
-			generateTypeReference(returnType)
-			Append(" ")
-		} else {
-			Append("void ")
-		}
+		//if let returnType = method.ReturnType {
+			//generateTypeReference(returnType)
+			//Append(" ")
+		//} else {
+			//Append("void ")
+		//}
 
-		//if method.Parameters.Count > 0 {
+		if method.Parameters.Count > 0 {
 			Append("^(")
 			helpGenerateCommaSeparatedList(method.Parameters) { param in
 				if let type = param.`Type` {
@@ -284,9 +284,11 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				}
 				self.generateIdentifier(param.Name)
 			}
-			Append(")")
-		// }
-		AppendLine(" {")
+			Append(") ")
+		} else {
+			Append("^")
+		}
+		AppendLine("{")
 		incIndent()
 		generateStatements(variables: method.LocalVariables)
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
