@@ -273,7 +273,7 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 			Append("void ")
 		}
 
-		if method.Parameters.Count > 0 {
+		//if method.Parameters.Count > 0 {
 			Append("^(")
 			helpGenerateCommaSeparatedList(method.Parameters) { param in
 				if let type = param.`Type` {
@@ -285,8 +285,8 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 				self.generateIdentifier(param.Name)
 			}
 			Append(")")
-		}
-		AppendLine(") {")
+		// }
+		AppendLine(" {")
 		incIndent()
 		generateStatements(variables: method.LocalVariables)
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
