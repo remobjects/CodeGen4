@@ -266,22 +266,29 @@ public __abstract class CGObjectiveCCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateAnonymousMethodExpression(_ method: CGAnonymousMethodExpression) {
-		if let returnType = method.ReturnType {
-			Append("(returnType) (^") // Start of Objective-C block with return type
-		}
+		//if let returnType = method.ReturnType {
+			//generateTypeReference(returnType)
+			//Append(" ")
+		//} else {
+			//Append("void ")
+		//}
 
 		if method.Parameters.Count > 0 {
-			Append("(")
+			Append("^(")
 			helpGenerateCommaSeparatedList(method.Parameters) { param in
-				self.generateIdentifier(param.Name)
 				if let type = param.`Type` {
-					self.Append(": ")
 					self.generateTypeReference(type)
+					self.Append(" ")
+				} else {
+					self.Append("id ")
 				}
+				self.generateIdentifier(param.Name)
 			}
-			Append(")")
+			Append(") ")
+		} else {
+			Append("^")
 		}
-		AppendLine(") {")
+		AppendLine("{")
 		incIndent()
 		generateStatements(variables: method.LocalVariables)
 		generateStatementsSkippingOuterBeginEndBlock(method.Statements)
