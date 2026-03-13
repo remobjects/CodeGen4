@@ -253,6 +253,9 @@
 		if (a == nil) || (b == nil) {
 			return false
 		}
+		if (a == b) {
+			return true
+		}
 
 		var oldstate = SaveState()
 		__try
@@ -2132,16 +2135,13 @@
 
 	private final func RestoreState(_ state: SavedState)
 	{
-		if state != nil
-		{
-			currentCode = state.currentCode
-			indent = state.indent
-			atStart = state.atStart
-			inConditionExpression = state.inConditionExpression
-			isNewLine = state.isNewLine
-			currentLocation = state.currentLocation
-			lastStartLocation = state.lastStartLocation
-		}
+		currentCode = state.currentCode
+		indent = state.indent
+		atStart = state.atStart
+		inConditionExpression = state.inConditionExpression
+		isNewLine = state.isNewLine
+		currentLocation = state.currentLocation
+		lastStartLocation = state.lastStartLocation
 	}
 }
 

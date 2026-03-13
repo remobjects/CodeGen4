@@ -1232,8 +1232,8 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			*/
 			switch param.Modifier {
 				case .Var: Append("ByRef ")
-				case .Const: Append("<In> ")
-				case .Out: Append("<Out> ByRef ")
+				case .Const: Append("<InAttribute> ")
+				case .Out: Append("<OutAttribute> ByRef ")
 				case .Params: Append("ParamArray ")
 				case .In: break /* no-op */
 			}

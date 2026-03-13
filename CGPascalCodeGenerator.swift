@@ -27,6 +27,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	public override var defaultFileExtension: String { return "pas" }
 
+	public var IsStandard: Boolean { return Dialect == .Standard }
+	public var IsDelphi2009: Boolean { return Dialect == .Delphi2009 }
+	public var IsOxygene: Boolean { return Dialect == .Oxygene }
+
 	override func doGenerateMemberImplementation(_ member: CGMemberDefinition, type: CGTypeDefinition) {
 		pascalGenerateTypeMemberImplementation(member, type: type)
 	}
@@ -54,6 +58,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
 			} else {
 				Append("{unit name unknown}")
+			}
+			if currentUnit.Deprecated {
+				pascalGenerateDeprecated(currentUnit.DeprecationMessage)
 			}
 			AppendLine(";")
 			AppendLine()
@@ -401,12 +408,20 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
+		// https://docwiki.embarcadero.com/RADStudio/Florence/en/Declarations_and_Statements_(Delphi)#For_Statements
+		//
+		// for counter := initialValue to finalValue do statement
+		// for counter := initialValue downto finalValue do statement
+
 		Append("for ")
 		generateIdentifier(statement.LoopVariableName)
-		if let type = statement.LoopVariableType { //ToDo: classic Pascal cant do this?
+
+		// oxygene specific block
+		if let type = statement.LoopVariableType, IsOxygene {
 			Append(": ")
 			generateTypeReference(type)
 		}
+
 		Append(" := ")
 		generateExpression(statement.StartValue)
 		if statement.Direction == CGLoopDirectionKind.Forward {
@@ -415,18 +430,37 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(" downto ")
 		}
 		generateExpression(statement.EndValue)
-		if let step = statement.Step {
+
+		// oxygene specific block
+		if let step = statement.Step, IsOxygene {
 			Append(" step ")
 			generateExpression(step)
 		}
+
 		Append(" do")
 		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateForEachLoopStatement(_ statement: CGForEachLoopStatement) {
-		Append("for each ")
+		// https://docwiki.embarcadero.com/RADStudio/Florence/en/Declarations_and_Statements_(Delphi)#For_Statements
+		//
+		// Delphi supports for-element-in-collection style iteration over containers. The following container
+		// iteration patterns are recognized by the compiler:
+		// - for Element in ArrayExpr do Stmt;
+		// - for Element in StringExpr do Stmt;
+		// - for Element in SetExpr do Stmt;
+		// - for Element in CollectionExpr do Stmt;
+		// - for Element in Record do Stmt;
+
+		if IsOxygene {
+			Append("for each ")
+		}
+		else
+		{
+			Append("for ")
+		}
 		generateSingleNameOrTupleWithNames(statement.LoopVariableNames)
-		if let type = statement.LoopVariableType {
+		if let type = statement.LoopVariableType, IsOxygene {
 			Append(": ")
 			generateTypeReference(type)
 		}
@@ -437,6 +471,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateWhileDoLoopStatement(_ statement: CGWhileDoLoopStatement) {
+		// https://docwiki.embarcadero.com/RADStudio/Florence/en/Declarations_and_Statements_(Delphi)#While_Statements
+		//
+		// while expression do statement
 		Append("while ")
 		generateExpression(statement.Condition)
 		Append(" do")
@@ -444,6 +481,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	}
 
 	override func generateDoWhileLoopStatement(_ statement: CGDoWhileLoopStatement) {
+		// https://docwiki.embarcadero.com/RADStudio/Florence/en/Declarations_and_Statements_(Delphi)#Repeat_Statements
+		//
+		// The syntax of a repeat statement is:
+		//
+		//   repeat statement1; ...; statementn; until expression
+		//
+		// where expression returns a Boolean value. (The last semicolon before until is optional.)
+		// The repeat statement executes its sequence of constituent statements continually, testing
+		// expression after each iteration. When expression returns True, the repeat statement terminates.
+		// The sequence is always executed at least once, because expression is not evaluated until after
+		// the first iteration.
 		AppendLine("repeat")
 		incIndent()
 		generateStatementsSkippingOuterBeginEndBlock(statement.Statements)
@@ -462,21 +510,47 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		// handled in base, Oxygene will override
 	}
 	*/
-	private func isOnelineStatement(_ list: List<CGStatement>) -> Boolean {
-		switch list.Count {
-			case 0: return true
-			case 1:
-				if list[0] is CGReturnStatement {
-					return self.Dialect != .Standard
-				} else {
-					return true
-				}
-			default:
-				return false
+
+	override func generateStatementIndentedOrTrailingIfItsABeginEndBlock(_ statement: CGStatement) {
+		if let st = statement as? CGReturnStatement, IsStandard {
+			if !isNewLine {
+				Append(" ")
+			}
+			AppendLine("begin")
+			incIndent()
+			generateStatement(st)
+			decIndent()
+			Append("end")
+			generateStatementTerminator()
+		} else {
+			super.generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement)
+		}
+	}
+
+	internal func generateOneLineStatement(_ statement: CGStatement) {
+		if let st = statement as? CGReturnStatement, IsStandard {
+			AppendLine("begin")
+			incIndent()
+			generateStatement(st)
+			decIndent()
+			Append("end")
+			generateStatementTerminator()
+		} else {
+			generateStatement(statement)
 		}
 	}
 
 	override func generateSwitchStatement(_ statement: CGSwitchStatement) {
+		//https://docwiki.embarcadero.com/RADStudio/Florence/en/Declarations_and_Statements_(Delphi)#Case_Statements
+		//
+		//case selectorExpression of
+		//  caseList1: statement1;
+		//  ...
+		//  caselistn: statementn;
+		//else
+		//  statements;
+		//end
+
 		Append("case ")
 		generateExpression(statement.Expression)
 		AppendLine(" of")
@@ -486,33 +560,31 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				self.generateExpression($0)
 			}
 			Append(": ")
-			if isOnelineStatement(c.Statements) {
-				generateStatement(c.Statements.First())
+			if c.Statements.Count == 1 {
+				generateOneLineStatement(c.Statements.First())
 			} else {
-				AppendLine("begin")
-				incIndent()
-				incIndent()
 				generateStatements(c.Statements)
-				decIndent()
-				Append("end")
-				generateStatementTerminator()
-				decIndent()
 			}
+
 		}
+
+		// in Pascal/Delphi, `else` on the same indent as `case` keyword
+		if !IsOxygene {
+			decIndent();
+		}
+
 		if let defaultStatements = statement.DefaultCase, defaultStatements.Count > 0 {
-			Append("else ")
-			if isOnelineStatement(defaultStatements) {
-				generateStatement(defaultStatements.First())
-			} else {
-				AppendLine("begin")
-				incIndent()
-				generateStatements(defaultStatements)
-				decIndent()
-				Append("end")
-				generateStatementTerminator()
-			}
+			Append("else")
+			AppendLine();
+			incIndent()
+			generateStatements(defaultStatements)
+			decIndent()
 		}
-		decIndent()
+
+		// in Oxygene, `else` on the same indent as case items
+		if IsOxygene {
+			decIndent();
+		}
 		Append("end")
 		generateStatementTerminator()
 	}
@@ -1415,6 +1487,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 					self.Append(" = ")
 					self.generateExpression(value)
 				}
+				// delphi doesn't support deprecated for enum member :(
+				//if member.Deprecated {
+					//self.pascalGenerateDeprecated(member.DeprecationMessage, false, true)
+				//}
 			}
 
 		}
@@ -1422,6 +1498,9 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			self.incIndent(step: -self.indent + temp_indent)
 		}
 		Append(")")
+		if type.Deprecated {
+			self.pascalGenerateDeprecated(type.DeprecationMessage)
+		}
 		if let baseType = type.BaseType {
 			Append(" of ")
 			generateTypeReference(baseType)
@@ -1543,6 +1622,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 	override func generateInterfaceTypeEnd(_ type: CGInterfaceTypeDefinition) {
 		decIndent()
 		Append("end")
+		// delphi dosn't support `deprecated` for interfaces
+		//if type.Deprecated {
+			//pascalGenerateDeprecated(type.DeprecationMessage)
+		//}
 		generateStatementTerminator()
 		pascalGenerateNestedTypes(type)
 	}
@@ -1784,16 +1867,17 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if let conversion = method.CallingConvention {
 				pascalGenerateCallingConversion(conversion)
 			}
-			if method.Deprecated && self is CGDelphiCodeGenerator {
-				Append(" deprecated")
-				if let message = method.DeprecationMessage, length(message) > 0 {
-					Append(" '\(message.FirstLine)'")
-				}
+			if method.Deprecated {
+				pascalGenerateDeprecated(method.DeprecationMessage)
 				Append(StatementTerminator)
 			}
 		}
 
 		AppendLine()
+	}
+
+	internal func pascalGenerateDeprecated(_ message: String?) {
+		// only for Delphi
 	}
 
 	internal func pascalGenerateMethodHeader(_ method: CGMethodLikeMemberDefinition, type: CGTypeDefinition?, methodKeyword: String, implementation: Boolean, includeVisibility: Boolean = false, needTerminator: Boolean = true) {
@@ -2213,6 +2297,11 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			Append(StatementTerminator)
 		}
 		pascalGenerateImplementedInterface(property)
+		// delphi doesn't support deprecated for properties!
+		//if property.Deprecated {
+			//pascalGenerateDeprecated(property.DeprecationMessage)
+			//Append(StatementTerminator)
+		//}
 		if self.Dialect == .Oxygene {
 			pascalGenerateVirtualityModifiders(property)
 		}

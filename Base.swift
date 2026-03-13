@@ -37,6 +37,8 @@ public class CGCodeUnit {
 	public var ImplementationImports = List<CGImport>()  /* Pascal only */
 	public var Initialization: List<CGStatement>? /* Delphi & JavaScript only */
 	public var Finalization: List<CGStatement>? /* Delphi only */
+	public var Deprecated: Boolean? /* Delphi only */
+	public var DeprecationMessage: String? /* Delphi only */
 
 	public init() {
 	}

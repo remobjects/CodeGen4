@@ -364,7 +364,9 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDefaultExpression(_ expression: CGDefaultExpression) {
-
+		Append("default(")
+		generateTypeReference(expression.`Type`)
+		Append(")")
 	}
 
 	override func generateSelectorExpression(_ expression: CGSelectorExpression) {

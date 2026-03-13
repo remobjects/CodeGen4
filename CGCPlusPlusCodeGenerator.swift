@@ -281,7 +281,7 @@ public __abstract class CGCPlusPlusCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateDefaultExpression(_ expression: CGDefaultExpression) {
-		assert(false, "generateDefaultExpression is not supported in Objective-C")
+		assert(false, "generateDefaultExpression is not supported in C++")
 	}
 
 	override func generateSelectorExpression(_ expression: CGSelectorExpression) {

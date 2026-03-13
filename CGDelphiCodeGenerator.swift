@@ -34,7 +34,7 @@
 
 	override func escapeIdentifier(_ name: String) -> String {
 		if self.Dialect == .Delphi2009 {
-			return super.escapeIdentifier(name)
+			return "&\(name)"
 		} else {
 			return name
 		}
@@ -59,30 +59,62 @@
 			AppendLine("{ Forward declarations }")
 			var t = List<CGTypeDefinition>()
 			t.Add(Types)
-			if AlphaSortImplementationMembers {
-				t.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
-			}
 			var list = List<CGTypeDefinition>()
 			for type in t {
 				if let type = type as? CGInterfaceTypeDefinition {
 					list.Add(type)
-				}
-			}
-
-			for type in t {
-				if let type = type as? CGClassTypeDefinition {
+				} else if let type = type as? CGClassTypeDefinition {
 					list.Add(type)
 				}
 			}
-
+			// split types by used conditions:
+			// no condition => otherlist
+			// condition => dict
+			var dict = Dictionary<CGConditionalDefine, List<CGTypeDefinition>>()
+			let otherlist = List<CGTypeDefinition>()
 			for index in (0 ..< list.Count) {
-				generateConditionStart(list, index)
-				if let type = list[index] as? CGInterfaceTypeDefinition {
+				if let type = list[index] {
+					if let cond = type.Condition {
+						var l_detected: CGConditionalDefine? = nil
+						for index1 in (0 ..< dict.Keys.Count()) {
+							if let cond2 = dict.Keys.Item[index1] {
+								if compareCondition(cond2, cond) {
+									l_detected = cond2
+									break
+								}
+							}
+						}
+						if l_detected != nil {
+							dict[l_detected].Add(type)
+						} else {
+							dict.Add(cond, [type].ToList())
+						}
+					} else {
+						otherlist.Add(type)
+					}
+				}
+			}
+
+			otherlist.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
+			for it in dict {
+				it.Value.Sort({return $0.Name.CompareTo/*IgnoreCase*/($1.Name)})
+			}
+
+			for it in dict {
+				for t in it.Value {
+					t.Condition = it.Key
+				}
+				otherlist.Add(it.Value)
+			}
+
+			for index in (0 ..< otherlist.Count) {
+				generateConditionStart(otherlist, index)
+				if let type = otherlist[index] as? CGInterfaceTypeDefinition {
 					AppendLine(type.Name + " = interface;")
-				} else if let type = list[index] as? CGClassTypeDefinition {
+				} else if let type = otherlist[index] as? CGClassTypeDefinition {
 					AppendLine(type.Name + " = class;")
 				}
-				generateConditionEnd(list, index)
+				generateConditionEnd(otherlist, index)
 			}
 			AppendLine()
 		}
@@ -229,14 +261,25 @@
 		}
 	}
 
+	override func pascalGenerateDeprecated(_ message: String?) {
+		Append(" deprecated")
+		if IsDelphi2009 {
+			if let message = message, length(message) > 0 {
+				Append(" '\(message.FirstLine)'")
+			}
+		} else if IsStandard {
+			// Delphi 7 doesn't support messages, so we can use includes from eDefines.inc
+			if let message = message, length(message) > 0 {
+				Append(" {$IFDEF DELPHI2009UP}'\(message.FirstLine)'{$ENDIF}")
+			}
+		}
+	}
+
 	override func generateClassTypeEnd(_ type: CGClassTypeDefinition) {
 		decIndent()
 		Append("end")
 		if type.Deprecated {
-			Append(" deprecated")
-			if let message = type.DeprecationMessage, length(message) > 0 {
-				Append(" '\(message.FirstLine)'")
-			}
+			pascalGenerateDeprecated(type.DeprecationMessage)
 		}
 		generateStatementTerminator()
 		pascalGenerateNestedTypes(type)
@@ -393,21 +436,6 @@
 			generateTypeDefinitions(t)
 			decIndent()
 		}
-	}
-
-	override func generateForToLoopStatement(_ statement: CGForToLoopStatement) {
-		Append("for ")
-		generateIdentifier(statement.LoopVariableName)
-		Append(" := ")
-		generateExpression(statement.StartValue)
-		if statement.Direction == CGLoopDirectionKind.Forward {
-			Append(" to ")
-		} else {
-			Append(" downto ")
-		}
-		generateExpression(statement.EndValue)
-		Append(" do")
-		generateStatementIndentedOrTrailingIfItsABeginEndBlock(statement.NestedStatement)
 	}
 
 	override func generateSelfExpression(_ expression: CGSelfExpression) {
@@ -702,4 +730,22 @@
 			//super.generateCharacterLiteralExpression(expression);
 		//}
 	//}
+
+	override func pascalGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) -> Boolean {
+		if let callSite = expression.CallSite {
+			generateExpression(callSite)
+			if callSite is CGInheritedExpression {
+				Append(" ")
+			} else {
+				if (expression.Name != "") {
+					Append(".")
+				}
+			}
+		}
+		return true
+	}
+
+	override func generateOldExpression(_ expression: CGOldExpression) {
+		assert(false, "generateOldExpression not implemented")
+	}
 }
