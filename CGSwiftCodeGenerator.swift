@@ -236,8 +236,10 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 				if let name = b.Name, let type = b.Type {
 					Append(" catch let ")
 					generateIdentifier(name)
-					Append(": ")
-					generateTypeReference(type, ignoreNullability: true)
+					if Dialect == CGSwiftCodeGeneratorDialect.Silver {
+						Append(": ")
+						generateTypeReference(type, ignoreNullability: true)
+					}
 					AppendLine(" {")
 				} else {
 					AppendLine(" catch {")
