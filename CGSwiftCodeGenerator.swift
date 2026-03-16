@@ -219,39 +219,36 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generateTryFinallyCatchStatement(_ statement: CGTryFinallyCatchStatement) {
-		if Dialect == CGSwiftCodeGeneratorDialect.Silver {
-			AppendLine("__try {")
+		AppendLine("do {")
+		incIndent()
+		if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
+			AppendLine("defer {")
 			incIndent()
-			generateStatements(statement.Statements)
+			generateStatements(finallyStatements)
 			decIndent()
 			AppendLine("}")
-			if let finallyStatements = statement.FinallyStatements, finallyStatements.Count > 0 {
-				AppendLine("__finally {")
+		}
+		generateStatements(statement.Statements)
+		decIndent()
+		Append("}")
+		if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
+			for b in catchBlocks {
+				if let name = b.Name, let type = b.Type {
+					Append(" catch let ")
+					generateIdentifier(name)
+					Append(": ")
+					generateTypeReference(type, ignoreNullability: true)
+					AppendLine(" {")
+				} else {
+					AppendLine(" catch {")
+				}
 				incIndent()
-				generateStatements(finallyStatements)
+				generateStatements(b.Statements)
 				decIndent()
 				AppendLine("}")
 			}
-			if let catchBlocks = statement.CatchBlocks, catchBlocks.Count > 0 {
-				for b in catchBlocks {
-					if let name = b.Name, let type = b.Type {
-						Append("__catch ")
-						generateIdentifier(name)
-						Append(": ")
-						generateTypeReference(type, ignoreNullability: true)
-						AppendLine(" {")
-					} else {
-						AppendLine("__catch {")
-					}
-					incIndent()
-					generateStatements(b.Statements)
-					decIndent()
-					AppendLine("}")
-				}
-			}
-			//todo
 		} else {
-			assert(false, "generateTryFinallyCatchStatement is not supported in Swift, except in Silver")
+			AppendLine()
 		}
 	}
 
