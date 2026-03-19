@@ -682,6 +682,9 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 	//
 
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
+		if !isNewLine {
+			AppendLine()
+		}
 		Append("@")
 		generateAttributeScope(attribute)
 		generateTypeReference(attribute.`Type`)
@@ -805,6 +808,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		incIndent()
 		helpGenerateCommaSeparatedList(type.Members, wrapAlways: wrapEnums) { m in
 			if let member = m as? CGEnumValueDefinition {
+				self.generateCommentStatement(member.Comment)
 				self.generateAttributes(member.Attributes, inline: member.InlineAttributes)
 				self.generateIdentifier(member.Name)
 				if let value = member.Value {
