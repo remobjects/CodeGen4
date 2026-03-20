@@ -528,7 +528,7 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 	}
 
 	override func generatePointerDereferenceExpression(_ expression: CGPointerDereferenceExpression) {
-		//todo
+		assert(false, "generatePointerDereferenceExpression not implemented")
 	}
 
 	override func generateRangeExpression(_ expression: CGRangeExpression) {

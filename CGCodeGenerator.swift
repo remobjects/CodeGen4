@@ -280,8 +280,6 @@
 		{
 			RestoreState(oldstate)
 		}
-		return false;
-
 	}
 
 	internal func SameCondition<T>(_ list: List<T>,_ index: Int32) -> Boolean {
