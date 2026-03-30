@@ -1816,11 +1816,13 @@
 				if p > 0 {
 					Append(",")
 				}
-				generateTypeReference(param, ignoreNullability: false)
+				generateTypeReference(param, ignoreNullability: !supportNullabilityInGenerics)
 			}
 			Append(">")
 		}
 	}
+
+	internal var supportNullabilityInGenerics: Boolean  { true }
 
 	internal func generateNamedTypeReference(_ type: CGNamedTypeReference, ignoreNullability: Boolean) {
 		generateNamedTypeReference(type, ignoreNamespace: false, ignoreNullability: ignoreNullability)

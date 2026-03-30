@@ -28,6 +28,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 
 	public var Dialect: CGSwiftCodeGeneratorDialect = .Standard
 
+	internal override var supportNullabilityInGenerics: Boolean { Dialect != .Standard }
+
 	public convenience init(dialect: CGSwiftCodeGeneratorDialect) {
 		init()
 		Dialect = dialect
