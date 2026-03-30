@@ -26,6 +26,9 @@ public class CGCommentStatement : CGBaseMultilineStatement {
 public class CGXmlDocumentationStatement : CGBaseMultilineStatement {
 }
 
+public class CGJSTagDocumentationStatement : CGCommentStatement {
+}
+
 public class CGSingleLineCommentStatement : CGStatement {
 	public let Comment: String
 

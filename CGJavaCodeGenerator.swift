@@ -39,7 +39,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if let namespace = currentUnit.Namespace {
 			Append("package ")
 			generateIdentifier(namespace.Name, alwaysEmitNamespace: true)
-			AppendLine(";")
+			generateStatementTerminator()
 			AppendLine()
 		}
 	}
@@ -51,12 +51,12 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		if imp.StaticClass != nil {
 			Append("import ")
 			generateIdentifier(imp.StaticClass!.Name, alwaysEmitNamespace: true)
-			AppendLine(";")
 		} else {
 			Append("import ")
 			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
-			AppendLine(".*;")
+			Append(".*")
 		}
+		generateStatementTerminator()
 	}
 
 	override func generateGlobals() {
@@ -240,7 +240,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	override func generateAssignmentStatement(_ statement: CGAssignmentStatement) {
@@ -959,7 +959,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
-			AppendLine(";")
+			generateStatementTerminator()
 			return
 		}
 
@@ -1007,7 +1007,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 
 		if definitionOnly {
-			AppendLine(";")
+			generateStatementTerminator()
 			return
 		}
 
@@ -1044,7 +1044,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -1199,7 +1199,7 @@ public class CGJavaCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 		}
 		generateIdentifier(event.Name)
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {

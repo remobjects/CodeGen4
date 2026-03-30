@@ -66,12 +66,11 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		if imp.StaticClass != nil {
 			Append("using static ")
 			generateIdentifier(imp.StaticClass!.Name, alwaysEmitNamespace: true)
-			AppendLine(";")
 		} else {
 			Append("using ")
 			generateIdentifier(imp.Namespace!.Name, alwaysEmitNamespace: true)
-			AppendLine(";")
 		}
+		generateStatementTerminator()
 	}
 
 	override func generateGlobals() {
@@ -275,7 +274,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	/*
@@ -943,7 +942,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateGenericParameters(type.GenericParameters)
 		Append(" = ")
 		generateTypeReference(type.ActualType)
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	override func generateBlockType(_ block: CGBlockTypeDefinition) {
@@ -1166,7 +1165,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		cSharpGenerateGenericConstraints(method.GenericParameters)
 
 		if type is CGInterfaceTypeDefinition || method.Virtuality == CGMemberVirtualityKind.Abstract || method.External || definitionOnly {
-			AppendLine(";")
+			generateStatementTerminator()
 			return
 		}
 
@@ -1222,7 +1221,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 
 		if ctor.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly {
-			AppendLine(";")
+			generateStatementTerminator()
 			return
 		}
 
@@ -1252,7 +1251,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 
 		if finalizer.Virtuality == CGMemberVirtualityKind.Abstract || definitionOnly {
-			AppendLine(";")
+			generateStatementTerminator()
 			return
 		}
 
@@ -1311,7 +1310,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append(" = ")
 			generateExpression(value)
 		}
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	override func generatePropertyDefinition(_ property: CGPropertyDefinition, type: CGTypeDefinition) {
@@ -1459,7 +1458,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 			Append(" ")
 		}
 		generateIdentifier(event.Name)
-		AppendLine(";")
+		generateStatementTerminator()
 	}
 
 	override func generateCustomOperatorDefinition(_ customOperator: CGCustomOperatorDefinition, type: CGTypeDefinition) {
@@ -1512,7 +1511,7 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		Append(")")
 
 		if type is CGInterfaceTypeDefinition || customOperator.Virtuality == CGMemberVirtualityKind.Abstract || customOperator.External || definitionOnly {
-			AppendLine(";")
+			generateStatementTerminator()
 			return
 		}
 

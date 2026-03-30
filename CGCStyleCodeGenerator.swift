@@ -178,11 +178,10 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		if let value = statement.Value {
 			Append("return ")
 			generateExpression(value)
-			generateStatementTerminator()
 		} else {
 			Append("return")
-			generateStatementTerminator()
 		}
+		generateStatementTerminator()
 	}
 
 	override func generateBreakStatement(_ statement: CGBreakStatement) {

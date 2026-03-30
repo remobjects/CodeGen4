@@ -597,7 +597,9 @@
 		statement.startLocation = currentLocation
 
 		// descendant should not override
-		if let commentStatement = statement as? CGXmlDocumentationStatement {
+		if let commentStatement = statement as? CGJSTagDocumentationStatement {
+			generateJSTagDocumentationStatement(commentStatement)
+		} else if let commentStatement = statement as? CGXmlDocumentationStatement {
 			generateXmlDocumentationStatement(commentStatement)
 		} else if let commentStatement = statement as? CGCommentStatement {
 			generateCommentStatement(commentStatement)
@@ -686,6 +688,19 @@
 		}
 	}
 
+	internal func generateJSTagDocumentationStatement(_ jstagDocumentationStatement: CGJSTagDocumentationStatement?) {
+		if let jstagDocumentationStatement = jstagDocumentationStatement, jstagDocumentationStatement.Lines.Count > 0  {
+			if !isNewLine {
+				AppendLine()
+			}
+			AppendLine("/**")
+			for line in jstagDocumentationStatement.Lines {
+				Append("* ")
+				AppendLine(line)
+			}
+			AppendLine("*/")
+		}
+	}
 	internal func generateXmlDocumentationStatement(_ xmlDocumentationStatement: CGXmlDocumentationStatement?) {
 		if let xmlDocumentationStatement = xmlDocumentationStatement {
 			if !isNewLine {

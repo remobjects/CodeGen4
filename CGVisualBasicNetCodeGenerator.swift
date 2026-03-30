@@ -881,7 +881,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 				if Dialect == .Standard {
 					// Do nothing for Standard VB.NET dialect
 				} else {
-					Append("{ NOT SUPPORTED }")
+					Append("{ generateUnaryOperator: NOT SUPPORTED }")
 				}
 		}
 	}
@@ -923,7 +923,7 @@ public class CGVisualBasicNetCodeGenerator : CGCodeGenerator {
 			case .AssignDivision: Append("/=")
 			case .AddEvent: break // handled separately
 			case .RemoveEvent: break // handled separately
-			default: Append("/* NOT SUPPORTED */")
+			default: Append("/* generateBinaryOperator: NOT SUPPORTED */")
 		}
 	}
 
