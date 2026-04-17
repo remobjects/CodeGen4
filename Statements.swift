@@ -372,6 +372,17 @@ public class CGVariableDeclarationStatement: CGStatement, ICGHasCondition {
 	}
 }
 
+// used in JS only
+public class CGLocalClassTypeDeclarationStatement: CGStatement, ICGHasCondition {
+	public var `Type`: CGClassTypeDefinition
+	public var Condition: CGConditionalDefine?
+
+	public init(_ type: CGClassTypeDefinition) {
+		`Type` = type
+	}
+}
+
+
 public class CGAssignmentStatement: CGStatement {
 	public var Target: CGExpression
 	public var Value: CGExpression
