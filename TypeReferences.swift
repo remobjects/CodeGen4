@@ -551,6 +551,6 @@ public class CGDictionaryTypeReference : CGTypeReference {
 	}
 
 	@ToString public func ToString() -> String {
-		return "<dinctionary of \(`KeyType`.ToString()):\(`ValueType`.ToString())>";
+		return "<dictionary of \(`KeyType`.ToString()):\(`ValueType`.ToString())>";
 	}
 }
