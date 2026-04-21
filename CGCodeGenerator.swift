@@ -1441,6 +1441,8 @@
 			generateAliasType(type)
 		} else if let type = type as? CGCombinedInterfaceDefinition {
 			generateCombinedInterfaceType(type)
+		} else if let type = type as? CGUnionTypeDefinition {
+			generateUnionType(type)
 		} else if let type = type as? CGBlockTypeDefinition {
 			generateBlockType(type)
 		} else if let type = type as? CGEnumTypeDefinition {
@@ -1500,6 +1502,11 @@
 	internal func generateCombinedInterfaceType(_ type: CGCombinedInterfaceDefinition) {
 		// descendant must override
 		assert(false, "generateCombinedInterfaceType not implemented")
+	}
+
+	internal func generateUnionType(_ type: CGUnionTypeDefinition) {
+		// descendant must override
+		assert(false, "generateUnionType not implemented")
 	}
 
 	internal func generateBlockType(_ type: CGBlockTypeDefinition) {
