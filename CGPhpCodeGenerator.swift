@@ -433,6 +433,8 @@
 			case .Is: Append("instanceof")
 			case .AddEvent: Append("+=")
 			case .RemoveEvent: Append("-=")
+			case .StrictEquals:  Append("===")
+			case .StrictNotEquals:  Append("!==")
 			default: super.generateBinaryOperator(`operator`)
 		}
 	}
@@ -1166,5 +1168,4 @@
 		}
 		generateGenericArguments(type.GenericArguments)
 	}
-
 }

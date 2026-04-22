@@ -344,6 +344,9 @@ public enum CGBinaryOperatorKind {
 	case AssignShr*/
 	case AddEvent
 	case RemoveEvent
+	case StrictEquals // ===
+	case StrictNotEquals // !==
+
 	#warning "add support for php operators"
 /*
 	https://www.w3schools.com/php/php_operators.asp
