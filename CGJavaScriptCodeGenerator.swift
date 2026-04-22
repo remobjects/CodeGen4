@@ -2,9 +2,9 @@
 
 	public override var defaultFileExtension: String { return "js" }
 
-	override func generateUnionType(_ type: CGUnionTypeDefinition) {
+	override func generateUnionTypeReference(_ type: CGUnionTypeReference, ignoreNullability: Boolean = false) {
 		helpGenerateCommaSeparatedList(type.Types, separator: { self.Append(" | ")}) { type in
-			self.generateTypeReference(type)
+			self.generateTypeReference(type, ignoreNullability: ignoreNullability)
 		}
 	}
 
