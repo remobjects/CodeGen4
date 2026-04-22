@@ -435,7 +435,7 @@ public class CGSequenceTypeReference : CGTypeReference {
 	}
 
 	@ToString public func ToString() -> String {
-		return "<sequence od \(`Type`.ToString())>";
+		return "<sequence of \(`Type`.ToString())>";
 	}
 }
 

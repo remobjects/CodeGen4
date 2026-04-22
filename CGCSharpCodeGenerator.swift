@@ -903,14 +903,14 @@ public class CGCSharpCodeGenerator : CGCStyleCodeGenerator {
 		}
 	}
 
-	func cSharpGenerateAbstractPrefix(_ isPartial: Boolean) {
-		if isPartial {
+	func cSharpGenerateAbstractPrefix(_ isAbstract: Boolean) {
+		if isAbstract {
 			Append("abstract ")
 		}
 	}
 
-	func cSharpGeneratePartialPrefix(_ isAbstract: Boolean) {
-		if isAbstract {
+	func cSharpGeneratePartialPrefix(_ isPartial: Boolean) {
+		if isPartial {
 			Append("partial ")
 		}
 	}
