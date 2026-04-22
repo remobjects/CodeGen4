@@ -373,11 +373,11 @@ public class CGVariableDeclarationStatement: CGStatement, ICGHasCondition {
 }
 
 // used in JS only
-public class CGLocalClassTypeDeclarationStatement: CGStatement, ICGHasCondition {
-	public var `Type`: CGClassTypeDefinition
+public class CGLocalTypeDeclarationStatement: CGStatement, ICGHasCondition {
+	public var `Type`: CGTypeDefinition
 	public var Condition: CGConditionalDefine?
 
-	public init(_ type: CGClassTypeDefinition) {
+	public init(_ type: CGTypeDefinition) {
 		`Type` = type
 	}
 }

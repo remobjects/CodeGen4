@@ -653,8 +653,8 @@
 			generateVariableDeclarationStatement(statement)
 		} else if let statement = statement as? CGAssignmentStatement {
 			generateAssignmentStatement(statement)
-		} else if let statement = statement as? CGLocalClassTypeDeclarationStatement {
-			generateLocalClassTypeDeclarationStatement(statement)
+		} else if let statement = statement as? CGLocalTypeDeclarationStatement {
+			generateLocalTypeDeclarationStatement(statement)
 		} else if let statement = statement as? CGConstructorCallStatement {
 			generateConstructorCallStatement(statement)
 		} else if let statement = statement as? CGEmptyStatement {
@@ -913,9 +913,9 @@
 		assert(false, "generateAssignmentStatement not implemented")
 	}
 
-	internal func generateLocalClassTypeDeclarationStatement(_ statement: CGLocalClassTypeDeclarationStatement) {
+	internal func generateLocalTypeDeclarationStatement(_ statement: CGLocalTypeDeclarationStatement) {
 		// descendant must override this
-		assert(false, "generateLocalClassTypeDeclarationStatement not implemented")
+		assert(false, "generateLocalTypeDeclarationStatement not implemented")
 	}
 
 	internal func generateConstructorCallStatement(_ statement: CGConstructorCallStatement) {
