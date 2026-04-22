@@ -65,15 +65,6 @@ public class CGCombinedInterfaceDefinition : CGTypeDefinition {
 	}
 }
 
-public class CGUnionTypeDefinition : CGTypeDefinition {
-	public var Types: List<CGTypeReference>
-
-	public init(_ name: String, _ types: List<CGTypeReference>) {
-		super.init(name)
-		Types = types
-	}
-}
-
 public class CGBlockTypeDefinition : CGTypeDefinition {
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?

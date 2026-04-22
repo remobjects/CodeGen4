@@ -457,6 +457,25 @@ public class CGSetTypeReference : CGTypeReference {
 	}
 }
 
+public class CGUnionTypeReference : CGTypeReference {
+	public var Types: List<CGTypeReference>
+
+	public init(_ types: List<CGTypeReference>) {
+		super.init()
+		Types = types
+		DefaultNullability = .NotNullable
+	}
+
+	override func copyWithNullability(_ nullability: CGTypeNullabilityKind) -> CGTypeReference {
+		let result = CGUnionTypeReference(Types)
+
+		result.Nullability = nullability
+		result.DefaultValue = DefaultValue
+		result.IsClassType = IsClassType
+		return result
+	}
+}
+
 /* Arrays */
 
 public enum CGArrayKind {

@@ -1463,8 +1463,6 @@
 			generateAliasType(type)
 		} else if let type = type as? CGCombinedInterfaceDefinition {
 			generateCombinedInterfaceType(type)
-		} else if let type = type as? CGUnionTypeDefinition {
-			generateUnionType(type)
 		} else if let type = type as? CGBlockTypeDefinition {
 			generateBlockType(type)
 		} else if let type = type as? CGEnumTypeDefinition {
@@ -1524,11 +1522,6 @@
 	internal func generateCombinedInterfaceType(_ type: CGCombinedInterfaceDefinition) {
 		// descendant must override
 		assert(false, "generateCombinedInterfaceType not implemented")
-	}
-
-	internal func generateUnionType(_ type: CGUnionTypeDefinition) {
-		// descendant must override
-		assert(false, "generateUnionType not implemented")
 	}
 
 	internal func generateBlockType(_ type: CGBlockTypeDefinition) {
@@ -1800,6 +1793,8 @@
 			generateMetaTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSetTypeReference {
 			generateSetTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGUnionTypeReference {
+			generateUnionTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSequenceTypeReference {
 			generateSequenceTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGArrayTypeReference {
@@ -1925,6 +1920,10 @@
 
 	internal func generateSetTypeReference(_ type: CGSetTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateSetTypeReference not implemented")
+	}
+
+	internal func generateUnionTypeReference(_ type: CGUnionTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateUnionTypeReference not implemented")
 	}
 
 	internal func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
