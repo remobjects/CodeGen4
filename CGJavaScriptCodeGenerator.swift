@@ -2,6 +2,12 @@
 
 	public override var defaultFileExtension: String { return "js" }
 
+	override func generateUnionType(_ type: CGUnionTypeDefinition) {
+		helpGenerateCommaSeparatedList(type.Types, separator: { self.Append(" | ")}) { type in
+			self.generateTypeReference(type)
+		}
+	}
+
 	internal func javascriptGenerateCallSiteForExpression(_ expression: CGMemberAccessExpression) {
 		if let callSite = expression.CallSite {
 			generateExpression(callSite)
@@ -252,5 +258,4 @@
 			Append("throw")
 		}
 	}
-
 }
