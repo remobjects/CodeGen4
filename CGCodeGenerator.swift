@@ -1795,6 +1795,8 @@
 			generateSetTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGUnionTypeReference {
 			generateUnionTypeReference(type, ignoreNullability: ignoreNullability)
+		} else if let type = type as? CGIntersectionTypeReference {
+			generateIntersectionTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGSequenceTypeReference {
 			generateSequenceTypeReference(type, ignoreNullability: ignoreNullability)
 		} else if let type = type as? CGArrayTypeReference {
@@ -1924,6 +1926,10 @@
 
 	internal func generateUnionTypeReference(_ type: CGUnionTypeReference, ignoreNullability: Boolean = false) {
 		assert(false, "generateUnionTypeReference not implemented")
+	}
+
+	internal func generateIntersectionTypeReference(_ type: CGIntersectionTypeReference, ignoreNullability: Boolean = false) {
+		assert(false, "generateIntersectionTypeReference not implemented")
 	}
 
 	internal func generateSequenceTypeReference(_ type: CGSequenceTypeReference, ignoreNullability: Boolean = false) {
@@ -2121,6 +2127,18 @@
 		return currentCode.ToString()
 	}
 
+	public final func ExpressionToString_safe(_ expression: CGExpression) -> String {
+		let old_state = SaveState()
+		__try
+		{
+			return ExpressionToString(expression)
+		}
+		__finally
+		{
+			RestoreState(old_state)
+		}
+	}
+
 	public final func StatementToString(_ statement: CGStatement) -> String {
 		currentCode = StringBuilder()
 
@@ -2128,6 +2146,17 @@
 		return currentCode.ToString()
 	}
 
+	public final func StatementToString_safe(_ statement: CGStatement) -> String {
+		let old_state = SaveState()
+		__try
+		{
+			return StatementToString(statement)
+		}
+		__finally
+		{
+			RestoreState(old_state)
+		}
+	}
 
 	private struct SavedState
 	{

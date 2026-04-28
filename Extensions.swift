@@ -207,6 +207,12 @@ public extension CGFieldDefinition {
 	}
 }
 
+public extension CGTypeDefinition {
+	public func AsTypeReference() -> CGTypeReference {
+		return CGNamedTypeReference(Name)
+	}
+}
+
 @if(defined("TOFFEE") && exists(Swift.Array))
 public extension Swift.Array {
 	public func ToList() -> List<T> {
