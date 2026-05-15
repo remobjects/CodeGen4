@@ -87,8 +87,16 @@ public __abstract class CGCStyleCodeGenerator : CGCodeGenerator {
 		AppendLine(")")
 		generateStatementIndentedUnlessItsABeginEndBlock(statement.IfStatement)
 		if let elseStatement = statement.ElseStatement {
-			AppendLine("else")
-			generateStatementIndentedUnlessItsABeginEndBlock(elseStatement)
+			Append("else")
+			if let elseStatement = elseStatement as? CGIfThenElseStatement {
+				Append(" ")
+				generateIfElseStatement(elseStatement)
+			}
+			else
+			{
+				AppendLine()
+				generateStatementIndentedUnlessItsABeginEndBlock(elseStatement)
+			}
 		}
 	}
 
