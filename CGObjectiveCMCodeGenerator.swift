@@ -97,6 +97,10 @@
 				Append("id ")
 			}
 			generateIdentifier(field.Name)
+			if let value = field.Initializer {
+				Append(" = ")
+				generateExpression(value)
+			}
 			AppendLine(";")
 		}
 		// instance fields are generated in TypeStart
