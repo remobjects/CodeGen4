@@ -85,7 +85,7 @@
 							}
 						}
 						if l_detected != nil {
-							dict[l_detected].Add(type)
+							dict[l_detected]!.Add(type)
 						} else {
 							dict.Add(cond, [type].ToList())
 						}
