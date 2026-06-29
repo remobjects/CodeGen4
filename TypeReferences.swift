@@ -13,6 +13,7 @@ public __abstract class CGTypeReference : CGEntity {
 	public /*fileprivate(set)*/ var DefaultNullability: CGTypeNullabilityKind = .NotNullable
 	public /*fileprivate(set)*/ var DefaultValue: CGExpression?
 	public /*fileprivate(set)*/ var IsClassType = false
+	public var Attribute: CGAttribute?  // Apple Swift only
 
 	public lazy var NullableUnwrapped: CGTypeReference    = ActualNullability == CGTypeNullabilityKind.NullableUnwrapped    ? self : self.copyWithNullability(CGTypeNullabilityKind.NullableUnwrapped)
 	public lazy var NullableNotUnwrapped: CGTypeReference = ActualNullability == CGTypeNullabilityKind.NullableNotUnwrapped ? self : self.copyWithNullability(CGTypeNullabilityKind.NullableNotUnwrapped)
