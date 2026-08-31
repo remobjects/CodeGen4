@@ -21,7 +21,7 @@ public class CGOxygeneCodeGenerator : CGPascalCodeGenerator {
 		keywords = ["abstract", "add", "and", "array", "as", "asc", "aspect", "assembly", "async", "autoreleasepool", "await",
 					"begin", "block", "break", "by",
 					"case", "class", "const", "constructor", "continue",
-					"default", "delegate", "deprecated", "desc", "distinct", "div", "do", "downto", "dynamic",
+					"default", "delegate", "deprecated", "desc", "dimension", "distinct", "div", "do", "downto", "dynamic",
 					"each", "else", "empty", "end", "ensure", "enum", "equals", "event", "except", "exit", "extension", "external",
 					"false", "finalizer", "finally", "flags", "for", "from", "function",
 					"global", "goto", "group",
