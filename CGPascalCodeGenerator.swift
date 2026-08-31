@@ -563,9 +563,13 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 			if c.Statements.Count == 1 {
 				generateOneLineStatement(c.Statements.First())
 			} else {
+				AppendLine("begin")
+				incIndent()
 				generateStatements(c.Statements)
+				decIndent()
+				Append("end")
+				generateStatementTerminator()
 			}
-
 		}
 
 		// in Pascal/Delphi, `else` on the same indent as `case` keyword
