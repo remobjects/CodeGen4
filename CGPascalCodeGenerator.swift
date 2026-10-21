@@ -1193,6 +1193,10 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 		}
 	}
 
+	internal func pascalGenerateUnicodeCode(_ char: Char) -> String {
+		return "#$\(Convert.ToHexString(ord(char), 4))"
+	}
+
 	internal func AppendPascalEscapeCharactersInStringLiteral(_ string: String, quoteChar: Char) {
 		let len = string.Length
 
@@ -1254,7 +1258,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 							Append(quoteChar)
 							inQuotes = false
 						}
-						Append("#\(ord(ch))")
+						Append(pascalGenerateUnicodeCode(ch))
 					}
 			}
 		}
@@ -1269,10 +1273,12 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 
 	override func generateCharacterLiteralExpression(_ expression: CGCharacterLiteralExpression) {
 		var x = ord(expression.Value)
-		if (x >= 32) && (x < 127) {
+		if x < 32 {
+			Append("#\(ord(expression.Value))")
+		} else if (x >= 32) && (x < 127) {
 			Append("'"+expression.Value+"'");
 		} else {
-			Append("#\(ord(expression.Value))")
+			pascalGenerateUnicodeCode(expression.Value)
 		}
 	}
 
