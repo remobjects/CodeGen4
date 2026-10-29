@@ -669,7 +669,7 @@
 			generateExpressionStatement(expression)
 		}
 		else {
-			assert(false, "unsupported statement found: \(typeOf(statement).ToString())")
+			assert(false, "unsupported statement found: \(typeOf(statement))")
 		}
 
 		//if !assigned(statement.endLocation) {
@@ -1064,7 +1064,7 @@
 
 		else {
 			Append("[UNSUPPORTED: "+expression.ToString()+"]")
-			assert(false, "unsupported expression found: \(typeOf(expression).ToString())")
+			assert(false, "unsupported expression found: \(typeOf(expression))")
 		}
 
 		//if !assigned(expression.endLocation) {
@@ -1367,7 +1367,7 @@
 		} else if let global = global as? CGGlobalPropertyDefinition {
 			member = global.Property
 		} else {
-			assert(false, "unsupported global found: \(typeOf(global).ToString())")
+			assert(false, "unsupported global found: \(typeOf(global))")
 		}
 
 		generateConditionStart(list, index)
@@ -1480,7 +1480,7 @@
 		}
 
 		else {
-			assert(false, "unsupported type found: \(typeOf(type).ToString())")
+			assert(false, "unsupported type found: \(typeOf(type))")
 		}
 
 		if !assigned(type.endLocation) {
@@ -1664,7 +1664,7 @@
 		} //...
 
 		else {
-			assert(false, "unsupported type member found: \(typeOf(type).ToString())")
+			assert(false, "unsupported type member found: \(typeOf(type))")
 		}
 
 		//72543: Silver: cannot check if nullable struct is assigned
@@ -1806,7 +1806,7 @@
 		}
 
 		else {
-			assert(false, "unsupported type reference found: \(typeOf(type).ToString())")
+			assert(false, "unsupported type reference found: \(typeOf(type))")
 		}
 
 		//if !assigned(type.endLocation) {

@@ -348,7 +348,7 @@
 				// skip global properties
 				Append("// global properties are not supported.")
 			} else {
-				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+				assert(false, "unsupported global found: \(typeOf(g))")
 			}
 		}
 
@@ -374,7 +374,7 @@
 			} else if let global = g as? CGGlobalFunctionDefinition {
 				// will be processed in delphiGenerateGlobalInterfaceMethods
 			} else {
-				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+				assert(false, "unsupported global found: \(typeOf(g))")
 			}
 		}
 		for index in (0 ..< list.Count) {
@@ -393,7 +393,7 @@
 					list.Add(global)
 				}
 			} else {
-				assert(false, "unsupported global found: \(typeOf(g).ToString())")
+				assert(false, "unsupported global found: \(typeOf(g))")
 			}
 		}
 

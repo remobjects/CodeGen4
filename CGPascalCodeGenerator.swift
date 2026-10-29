@@ -124,7 +124,7 @@ public __abstract class CGPascalCodeGenerator : CGCodeGenerator {
 				// skip global properties
 				Append("// global properties are not supported.")
 			} else {
-				assert(false, "unsupported global found: \(typeOf(global).ToString())")
+				assert(false, "unsupported global found: \(typeOf(global))")
 			}
 
 		}
