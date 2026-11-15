@@ -244,7 +244,15 @@ public enum CGCallingConventionKind {
 	case Register    /* C++Builder and Delphi */
 }
 
+public enum CGReceiverMutationKind {
+	case Never
+	case Sometimes
+	case Always
+}
+
 public __abstract class CGMethodLikeMemberDefinition: CGMemberDefinition {
+	public var ReceiverMutation: CGReceiverMutationKind?
+	public var ResultOwnership: CGOutgoingOwnershipKind?
 	public var Parameters = List<CGParameterDefinition>()
 	public var ReturnType: CGTypeReference?
 	public var Inline = false
@@ -518,7 +526,34 @@ public enum CGParameterModifierKind {
 	case Params
 }
 
+public enum CGIncomingOwnershipKind {
+	case Copied
+	case Borrowed
+	case Shared
+	case Retained
+	case Owned
+}
+
+public enum CGOutgoingOwnershipKind {
+	case Copied
+	case Retained
+	case Released
+}
+
+// Directions are carried by CGParameterModifierKind. A missing ownership
+// value leaves that direction unspecified.
+public struct CGParameterOwnership {
+	public var Incoming: CGIncomingOwnershipKind?
+	public var Outgoing: CGOutgoingOwnershipKind?
+
+	public init(incoming: CGIncomingOwnershipKind? = nil, outgoing: CGOutgoingOwnershipKind? = nil) {
+		Incoming = incoming
+		Outgoing = outgoing
+	}
+}
+
 public class CGParameterDefinition : CGEntity {
+	public var Ownership: CGParameterOwnership?
 	public var Name: String
 	public var ExternalName: String?
 	public var `Type`: CGTypeReference?

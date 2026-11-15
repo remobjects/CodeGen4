@@ -790,6 +790,7 @@ public class CGPropertyAccessExpression: CGMemberAccessExpression {
 }
 
 public class CGCallParameter: CGEntity {
+	public var Ownership: CGParameterOwnership?
 	public var Name: String? // optional, for named parameters or prooperty initialziers
 	public var Value: CGExpression
 	public var Modifier: CGParameterModifierKind = .In

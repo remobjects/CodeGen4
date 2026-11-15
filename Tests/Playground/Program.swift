@@ -15,7 +15,11 @@ unit.Namespace = CGNamespaceReference("UnitOne");
 //e.Members.Add(CGEnumValueDefinition("ValueC"))
 
 var cls1 = CGClassTypeDefinition("Test")
+cls1.Deprecated = true
+//cls1.DeprecationMessage = "because"
 var m = CGMethodDefinition("x")
+m.Deprecated = true
+//m.DeprecationMessage = "also because"
 //var n = CGTypeNullabilityKind.Nullable
 //var t = "RemObjects.SDK.IMessage".AsTypeReference().copyWithNullability()
 var p = CGParameterDefinition("msg", CGPredefinedTypeReference.Object);
@@ -138,7 +142,7 @@ m.Statements.Add(v);
 //unit.Types.Add(cls)
 //unit.Types.Add(intf)
 
-var cg = CGCPlusPlusCPPCodeGenerator()
+var cg = CGDelphiCodeGenerator()
 //var cg = CGSwiftCodeGenerator(dialect: .Silver)
 //var cg = CGOxygeneCodeGenerator(style: .Unified)
 cg.wrapEnums = true
