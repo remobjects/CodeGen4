@@ -122,6 +122,15 @@ public class CGPythonCodeGenerator : CGCodeGenerator {
 
 	// Imports and conditional blocks
 
+	override func generateHeader() {
+		super.generateHeader()
+		if Dialect == .Promethium, let namespace = currentUnit.Namespace {
+			Append("@namespace(")
+			generateStringLiteralExpression(CGStringLiteralExpression(namespace.Name))
+			AppendLine(")")
+		}
+	}
+
 	override func generateImport(_ imp: CGImport) {
 		Append("import ")
 		AppendLine(imp.Name)
@@ -606,6 +615,16 @@ public class CGPythonCodeGenerator : CGCodeGenerator {
 	// Type definitions and members
 
 	override func generateAttribute(_ attribute: CGAttribute, inline: Boolean) {
+		if Dialect == .Promethium {
+			Append(attribute.Scope == .Assembly ? "@assembly_attribute(" : "@attribute(")
+			generateTypeReference(attribute.`Type`)
+			if let parameters = attribute.Parameters, parameters.Count > 0 {
+				Append(", ")
+				pythonGenerateCallParameters(parameters)
+			}
+			AppendLine(")")
+			return
+		}
 		Append("# [")
 		generateTypeReference(attribute.`Type`)
 		AppendLine("]")
@@ -660,6 +679,7 @@ public class CGPythonCodeGenerator : CGCodeGenerator {
 	}
 
 	private func pythonGenerateClassTypeStart(_ type: CGClassOrStructTypeDefinition) {
+		if Dialect == .Promethium && type.Partial { AppendLine("@partial") }
 		Append("class ")
 		generateIdentifier(type.Name)
 		if type.Ancestors.Count > 0 || type.ImplementedInterfaces.Count > 0 {
@@ -694,6 +714,12 @@ public class CGPythonCodeGenerator : CGCodeGenerator {
 	override func generateMappedTypeEnd(_ type: CGMappedTypeDefinition) { decIndent() }
 
 	override func generateMethodDefinition(_ method: CGMethodDefinition, type: CGTypeDefinition) {
+		if Dialect == .Promethium {
+			if method.Virtuality == .Override { AppendLine("@override") }
+			if method.Static && !(type is CGGlobalTypeDefinition) {
+				AppendLine("@staticmethod")
+			}
+		}
 		Append(method.Async ? "async def " : "def ")
 		generateIdentifier(method.Name)
 		Append("(")
@@ -752,6 +778,18 @@ public class CGPythonCodeGenerator : CGCodeGenerator {
 			if let initializer = property.Initializer { generateExpression(initializer) }
 			else { Append("None") }
 			AppendLine()
+			return
+		}
+		if Dialect == .Promethium && !property.Static && property.Parameters.Count == 0,
+		   let getter = property.GetterMethodDefinition(prefix: "") {
+			AppendLine("@property")
+			generateMethodDefinition(getter, type: type)
+			if !property.ReadOnly, let setter = property.SetterMethodDefinition(prefix: "") {
+				Append("@")
+				generateIdentifier(property.Name)
+				AppendLine(".setter")
+				generateMethodDefinition(setter, type: type)
+			}
 			return
 		}
 		if let getter = property.GetterMethodDefinition(prefix: "get_") { generateMethodDefinition(getter, type: type) }
