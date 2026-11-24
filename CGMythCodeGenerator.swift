@@ -1,4 +1,4 @@
-//
+﻿//
 // CodeGen4 emitter for Myth version 1.
 //
 public class CGMythCodeGenerator : CGCStyleCodeGenerator {
@@ -48,7 +48,7 @@ public class CGMythCodeGenerator : CGCStyleCodeGenerator {
 	override func generateSingleLineCommentPrefix() { Append("// ") }
 
 	private func generateDeclaredName(_ name: String) {
-		if name.Length > 0 && Char.IsLower(name[0]) { Append("~") }
+		if name.Length > 0 && name[0].IsLower { Append("~") }
 		Append(name)
 	}
 
