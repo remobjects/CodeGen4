@@ -364,6 +364,8 @@ public class CGFieldDefinition: CGFieldOrPropertyDefinition {
 	public var Constant = false
 	public var Volatile = false
 	public var WithEvents = false // Visual Basic only.
+	// Emit __field instead of a stored property in Silver.
+	public var NativeField = false
 }
 
 public class CGPropertyDefinition: CGFieldOrPropertyDefinition {

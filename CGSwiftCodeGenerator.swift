@@ -1342,6 +1342,8 @@ public class CGSwiftCodeGenerator : CGCStyleCodeGenerator {
 		swiftGenerateStorageModifierPrefixIfNeeded(field.StorageModifier)
 		if field.Constant {
 			Append("let ")
+		} else if IsSilver && field.NativeField {
+			Append("__field ")
 		} else {
 			Append("var ")
 		}
